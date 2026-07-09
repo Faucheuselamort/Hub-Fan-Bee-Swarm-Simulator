@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruche & Outils — Hub Bee Swarm Simulator</title>
+<meta name="description" content="Hub fan de Bee Swarm Simulator : items, stickers, amulettes, beequips et outils (calculateurs d'ingrédients, de niveau d'abeilles, trade équitable, planificateur de ruche).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   PALETTE — dérivée du logo (bleu ardoise + jaune abeille + blanc)
+   ============================================================ */
+:root{
+  --ink:      #1B323E;   /* fond principal (bleu ardoise du logo) */
+  --ink-900:  #122530;   /* plus foncé : header, pied de page */
+  --ink-950:  #0E1D26;   /* le plus foncé */
+  --panel:    #223F4C;   /* surface des cartes */
+  --panel-2:  #2C4E5C;   /* surface surélevée / survol */
+  --honey:    #F4DD44;   /* jaune abeille (accent principal) */
+  --amber:    #F0B429;   /* miel (accent secondaire / survol) */
+  --cream:    #F3F4F1;   /* texte principal (blanc du logo) */
+  --muted:    #93A7B0;   /* texte secondaire */
+  --line:     rgba(244,221,68,.14);  /* filet fin teinté miel */
+  --line-soft:rgba(243,244,241,.08);
+  --good:     #6BD08B;
+  --bad:      #F0736A;
+  --radius:   16px;
+  --maxw:     1120px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:var(--ink);
+  color:var(--cream);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  /* motif signature : nid d'abeille très discret en fond */
+  background-image:
+    radial-gradient(1200px 600px at 80% -10%, rgba(244,221,68,.06), transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='96' viewBox='0 0 56 96'%3E%3Cpath fill='none' stroke='%23ffffff' stroke-opacity='0.03' stroke-width='2' d='M28 0l24 14v28L28 56 4 42V14zM28 56l24 14v28M28 56L4 70v28'/%3E%3C/svg%3E");
+}
+h1,h2,h3,h4,.display{font-family:'Fredoka',sans-serif;font-weight:600;line-height:1.15;letter-spacing:.2px}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+
+/* ============================================================
+   EN-TÊTE / NAVIGATION
+   ============================================================ */
+header.site{
+  position:sticky;top:0;z-index:50;
+  background:rgba(14,29,38,.86);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.nav-wrap{max-width:var(--maxw);margin:0 auto;padding:.7rem 1.1rem;display:flex;align-items:center;gap:1rem}
+.brand{display:flex;align-items:center;gap:.7rem;flex:0 0 auto}
+.brand .logo{
+  width:40px;height:40px;flex:0 0 auto;
+  background:var(--honey);
+  /* forme hexagone = nid d'abeille */
+  clip-path:polygon(25% 5%,75% 5%,100% 50%,75% 95%,25% 95%,0 50%);
+  display:grid;place-items:center;
+}
+.brand .logo span{
+  font-family:'Press Start 2P',monospace;font-size:15px;color:var(--ink-950);line-height:1;
+}
+.brand .word{font-family:'Press Start 2P',monospace;font-size:12px;color:var(--cream);letter-spacing:1px;white-space:nowrap}
+.brand .word b{color:var(--honey)}
+
+nav.tabs{display:flex;gap:.25rem;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+.tab-btn{
+  font-family:'Fredoka',sans-serif;font-weight:500;font-size:.98rem;
+  color:var(--muted);background:transparent;border:0;cursor:pointer;
+  padding:.5rem .85rem;border-radius:10px;white-space:nowrap;transition:.15s;
+}
+.tab-btn:hover{color:var(--cream);background:var(--line-soft)}
+.tab-btn.active{color:var(--ink-950);background:var(--honey)}
+
+/* ============================================================
+   MISE EN PAGE GÉNÉRALE
+   ============================================================ */
+main{max-width:var(--maxw);margin:0 auto;padding:2rem 1.1rem 4rem}
+.view{display:none;animation:fade .35s ease}
+.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.eyebrow{font-family:'Fredoka';font-weight:600;font-size:.8rem;letter-spacing:2px;text-transform:uppercase;color:var(--honey);margin-bottom:.5rem}
+.section-title{font-size:2rem;margin-bottom:.4rem}
+.lead{color:var(--muted);max-width:60ch;margin-bottom:1.6rem}
+
+/* ---- HERO (Accueil) ---- */
+.hero{display:grid;grid-template-columns:1.3fr .9fr;gap:2.5rem;align-items:center;
+  padding:1rem 0 2.5rem;border-bottom:1px solid var(--line)}
+.hero h1{font-size:clamp(2.2rem,5vw,3.4rem);margin-bottom:.8rem}
+.hero h1 em{color:var(--honey);font-style:normal}
+.hero p{color:var(--muted);font-size:1.08rem;max-width:52ch;margin-bottom:1.5rem}
+.hero-cta{display:flex;gap:.7rem;flex-wrap:wrap}
+.btn{
+  font-family:'Fredoka';font-weight:600;font-size:1rem;cursor:pointer;
+  border:0;border-radius:12px;padding:.75rem 1.25rem;transition:.15s;display:inline-flex;align-items:center;gap:.5rem;
+}
+.btn-primary{background:var(--honey);color:var(--ink-950)}
+.btn-primary:hover{background:var(--amber);transform:translateY(-2px)}
+.btn-ghost{background:transparent;color:var(--cream);border:1px solid var(--line)}
+.btn-ghost:hover{background:var(--line-soft);border-color:var(--honey)}
+.mascot{
+  aspect-ratio:1;max-width:300px;margin-left:auto;
+  background:var(--ink-900);border:3px solid var(--honey);
+  clip-path:polygon(25% 3%,75% 3%,100% 50%,75% 97%,25% 97%,0 50%);
+  display:grid;place-items:center;position:relative;
+}
+.mascot .face{width:62%;image-rendering:pixelated}
+.mascot::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 30%,rgba(244,221,68,.12),transparent 60%)}
+
+/* ---- grille d'aperçu des onglets sur l'accueil ---- */
+.home-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:2.2rem}
+.home-card{
+  background:var(--panel);border:1px solid var(--line-soft);border-radius:var(--radius);
+  padding:1.4rem;cursor:pointer;transition:.18s;position:relative;overflow:hidden;
+}
+.home-card:hover{transform:translateY(-4px);border-color:var(--honey);background:var(--panel-2)}
+.home-card .ico{font-size:1.6rem;margin-bottom:.6rem}
+.home-card h3{font-size:1.2rem;margin-bottom:.3rem}
+.home-card p{color:var(--muted);font-size:.92rem}
+
+/* ============================================================
+   CARTES DE CONTENU (items / stickers / amulettes / beequip)
+   ============================================================ */
+.toolbar{display:flex;gap:.7rem;flex-wrap:wrap;align-items:center;margin-bottom:1.5rem}
+.search{flex:1;min-width:220px;display:flex;align-items:center;gap:.5rem;
+  background:var(--panel);border:1px solid var(--line-soft);border-radius:12px;padding:.6rem .9rem}
+.search input{flex:1;background:transparent;border:0;color:var(--cream);font-size:1rem;outline:none;font-family:'Inter'}
+.search input::placeholder{color:var(--muted)}
+.chips{display:flex;gap:.4rem;flex-wrap:wrap}
+.chip{font-family:'Fredoka';font-weight:500;font-size:.88rem;cursor:pointer;color:var(--muted);
+  background:var(--panel);border:1px solid var(--line-soft);border-radius:20px;padding:.4rem .85rem;transition:.15s}
+.chip:hover{color:var(--cream)}
+.chip.active{background:var(--honey);color:var(--ink-950);border-color:var(--honey)}
+
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
+.card{
+  background:var(--panel);border:1px solid var(--line-soft);border-radius:var(--radius);
+  padding:1.2rem;transition:.18s;position:relative;
+}
+.card:hover{border-color:var(--line);transform:translateY(-3px)}
+.card .tag{position:absolute;top:1rem;right:1rem;font-family:'Fredoka';font-weight:600;font-size:.72rem;
+  text-transform:uppercase;letter-spacing:.5px;padding:.25rem .6rem;border-radius:20px;
+  background:var(--line-soft);color:var(--honey)}
+.card h3{font-size:1.25rem;margin-bottom:.5rem;padding-right:4rem}
+.card .desc{color:var(--muted);font-size:.94rem;margin-bottom:.9rem}
+.card .meta{display:flex;flex-direction:column;gap:.3rem;font-size:.9rem;border-top:1px solid var(--line-soft);padding-top:.8rem}
+.card .meta div{display:flex;justify-content:space-between;gap:1rem}
+.card .meta .k{color:var(--muted)}
+.card .meta .v{color:var(--cream);font-weight:600;text-align:right}
+.rarity{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:.4rem;vertical-align:middle}
+.empty{color:var(--muted);padding:3rem 1rem;text-align:center;grid-column:1/-1}
+
+/* ============================================================
+   OUTILS
+   ============================================================ */
+.tool-nav{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.8rem;border-bottom:1px solid var(--line);padding-bottom:1.2rem}
+.tool-nav button{font-family:'Fredoka';font-weight:500;font-size:.98rem;cursor:pointer;
+  color:var(--muted);background:var(--panel);border:1px solid var(--line-soft);
+  border-radius:12px;padding:.6rem 1rem;transition:.15s}
+.tool-nav button:hover{color:var(--cream);border-color:var(--line)}
+.tool-nav button.active{background:var(--honey);color:var(--ink-950);border-color:var(--honey)}
+.tool-panel{display:none}
+.tool-panel.active{display:block;animation:fade .3s ease}
+
+.panel{background:var(--panel);border:1px solid var(--line-soft);border-radius:var(--radius);padding:1.6rem}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.field{margin-bottom:1rem}
+.field label{display:block;font-family:'Fredoka';font-weight:500;font-size:.9rem;color:var(--muted);margin-bottom:.35rem}
+.field input,.field select{
+  width:100%;background:var(--ink-900);border:1px solid var(--line-soft);border-radius:10px;
+  color:var(--cream);font-size:1rem;padding:.6rem .8rem;font-family:'Inter';outline:none;transition:.15s
+}
+.field input:focus,.field select:focus{border-color:var(--honey)}
+.result-box{background:var(--ink-950);border:1px solid var(--line);border-radius:12px;padding:1.2rem;margin-top:1rem}
+.result-row{display:flex;justify-content:space-between;align-items:baseline;padding:.5rem 0;border-bottom:1px solid var(--line-soft);gap:1rem}
+.result-row:last-child{border-bottom:0}
+.result-row .lbl{color:var(--muted)}
+.result-row .num{font-family:'Fredoka';font-weight:600;font-size:1.15rem;color:var(--honey);text-align:right}
+.result-row .num.big{font-size:1.5rem}
+.hint{font-size:.85rem;color:var(--muted);margin-top:.8rem;line-height:1.5}
+.hint b{color:var(--honey)}
+
+table.calc{width:100%;border-collapse:collapse;margin-top:1rem}
+table.calc th,table.calc td{text-align:left;padding:.55rem .6rem;border-bottom:1px solid var(--line-soft);font-size:.95rem}
+table.calc th{color:var(--muted);font-family:'Fredoka';font-weight:500;font-size:.85rem;text-transform:uppercase;letter-spacing:.5px}
+table.calc td.n{text-align:right;font-family:'Fredoka';font-weight:600;color:var(--honey)}
+
+/* --- Niveau d'abeilles (tableau) --- */
+.lvl-bonus-row{display:flex;gap:1.2rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.lvl-bonus-row .field{flex:1;min-width:200px;margin:0}
+.toggle{display:flex;gap:.4rem}
+.toggle button{flex:1;font-family:'Fredoka';font-weight:500;font-size:.95rem;cursor:pointer;color:var(--muted);
+  background:var(--ink-900);border:1px solid var(--line-soft);border-radius:10px;padding:.6rem;transition:.15s}
+.toggle button:hover{color:var(--cream)}
+.toggle button.active{background:var(--honey);color:var(--ink-950);border-color:var(--honey)}
+.lvl-table-wrap{max-height:430px;overflow:auto;border:1px solid var(--line-soft);border-radius:12px}
+.lvl-table{width:100%;border-collapse:collapse;min-width:420px}
+.lvl-table th{text-align:left;font-family:'Fredoka';font-weight:500;font-size:.8rem;text-transform:uppercase;
+  letter-spacing:.5px;color:var(--muted);padding:.7rem .8rem;border-bottom:1px solid var(--line);
+  background:var(--ink-900);position:sticky;top:0;z-index:1}
+.lvl-table td{padding:.4rem .8rem;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+.lvl-table tr:last-child td{border-bottom:0}
+.lvl-table td.niv{font-family:'Fredoka';font-weight:600;color:var(--cream);text-align:center;width:72px}
+.lvl-table input,.lvl-table select{background:var(--ink-950);border:1px solid var(--line-soft);
+  border-radius:8px;color:var(--cream);padding:.45rem .5rem;font-family:'Inter';font-size:.95rem;outline:none}
+.lvl-table.lvl-dist input{width:100%;max-width:130px;text-align:center}
+.lvl-table input:focus,.lvl-table select:focus{border-color:var(--honey)}
+.col-total{display:inline-block;margin-left:.5rem;font-family:'Fredoka';font-weight:700;color:var(--honey);
+  background:var(--ink-950);border:1px solid var(--line);border-radius:20px;padding:.1rem .55rem;font-size:.8rem;
+  text-transform:none;letter-spacing:0}
+.price-out{background:var(--ink-950);border:1px solid var(--line);border-radius:14px;padding:1.8rem 1.4rem;text-align:center}
+.price-label{color:var(--muted);font-size:.95rem;margin-bottom:.5rem}
+.price-value{font-family:'Fredoka';font-weight:700;font-size:clamp(2rem,6vw,2.8rem);color:var(--honey);line-height:1}
+.price-value span{font-size:1.1rem;font-weight:500;color:var(--muted)}
+.price-sub{color:var(--muted);font-size:.85rem;margin-top:.7rem}
+
+/* --- Trade équitable --- */
+.trade{display:grid;grid-template-columns:1fr auto 1fr;gap:1.2rem;align-items:start}
+.trade-side{background:var(--ink-900);border:1px solid var(--line-soft);border-radius:12px;padding:1.1rem}
+.trade-side h4{font-size:1.1rem;margin-bottom:.8rem}
+.trade-side.you h4{color:var(--honey)}
+.trade-add{display:flex;gap:.4rem;margin-bottom:.8rem}
+.trade-add select{flex:1}
+.trade-add input{width:64px;text-align:center}
+.trade-add button{background:var(--honey);color:var(--ink-950);border:0;border-radius:10px;width:40px;font-size:1.3rem;cursor:pointer;font-family:'Fredoka'}
+.trade-list{list-style:none;display:flex;flex-direction:column;gap:.4rem;min-height:40px}
+.trade-list li{display:flex;justify-content:space-between;align-items:center;background:var(--panel);
+  border-radius:8px;padding:.45rem .7rem;font-size:.92rem}
+.trade-list li .rm{cursor:pointer;color:var(--bad);font-weight:700;padding:0 .3rem}
+.trade-total{margin-top:.9rem;padding-top:.8rem;border-top:1px solid var(--line-soft);
+  display:flex;justify-content:space-between;font-family:'Fredoka';font-weight:600}
+.trade-total .v{color:var(--honey)}
+.vs{align-self:center;font-family:'Press Start 2P';font-size:.8rem;color:var(--muted)}
+.verdict{margin-top:1.4rem;text-align:center;padding:1rem;border-radius:12px;font-family:'Fredoka';font-weight:600;font-size:1.15rem}
+.verdict.fair{background:rgba(107,208,139,.12);color:var(--good);border:1px solid rgba(107,208,139,.3)}
+.verdict.win{background:rgba(244,221,68,.12);color:var(--honey);border:1px solid var(--line)}
+.verdict.lose{background:rgba(240,115,106,.12);color:var(--bad);border:1px solid rgba(240,115,106,.3)}
+
+/* --- Live builder (planificateur de ruche) --- */
+.builder-top{display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.3rem}
+.bee-palette{flex:1;min-width:260px}
+.bee-palette h4{font-size:1rem;margin-bottom:.7rem;color:var(--muted)}
+.bee-swatches{display:flex;flex-wrap:wrap;gap:.5rem}
+.swatch{font-family:'Fredoka';font-weight:500;font-size:.85rem;cursor:pointer;
+  border:1px solid var(--line-soft);border-radius:10px;padding:.4rem .7rem;display:flex;align-items:center;gap:.4rem;
+  background:var(--ink-900);transition:.15s}
+.swatch:hover{border-color:var(--line)}
+.swatch.selected{border-color:var(--honey);background:var(--panel-2)}
+.swatch .dot{width:11px;height:11px;border-radius:3px}
+.hive{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;max-width:560px}
+.slot{aspect-ratio:1;background:var(--ink-950);border:1px solid var(--line-soft);border-radius:6px;
+  cursor:pointer;display:grid;place-items:center;font-size:.62rem;font-family:'Fredoka';font-weight:600;
+  color:var(--ink-950);transition:.1s;overflow:hidden;text-align:center;padding:2px;line-height:1}
+.slot:hover{outline:2px solid var(--honey);outline-offset:-2px}
+.slot.filled{border-color:transparent}
+.builder-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.8rem;margin-top:1.4rem}
+.stat{background:var(--ink-900);border:1px solid var(--line-soft);border-radius:12px;padding:.9rem 1rem}
+.stat .n{font-family:'Fredoka';font-weight:700;font-size:1.6rem;color:var(--honey);line-height:1}
+.stat .l{font-size:.82rem;color:var(--muted);margin-top:.2rem}
+
+/* ============================================================
+   PIED DE PAGE + DIVERS
+   ============================================================ */
+footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-top:3rem}
+.foot-wrap{max-width:var(--maxw);margin:0 auto;padding:2rem 1.1rem;display:flex;justify-content:space-between;
+  flex-wrap:wrap;gap:1rem;color:var(--muted);font-size:.9rem}
+.foot-wrap b{color:var(--cream)}
+.disclaimer{font-size:.8rem;max-width:60ch}
+
+.note{background:rgba(244,221,68,.08);border:1px solid var(--line);border-radius:12px;padding:.9rem 1.1rem;
+  font-size:.9rem;color:var(--cream);margin-bottom:1.5rem;display:flex;gap:.6rem;align-items:flex-start}
+.note .i{color:var(--honey);flex:0 0 auto}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media(max-width:820px){
+  .hero{grid-template-columns:1fr;text-align:center}
+  .hero p{margin-left:auto;margin-right:auto}
+  .hero-cta{justify-content:center}
+  .mascot{margin:0 auto;max-width:220px}
+  .grid-2{grid-template-columns:1fr}
+  .trade{grid-template-columns:1fr}
+  .vs{transform:rotate(90deg)}
+  .hive{grid-template-columns:repeat(10,1fr);max-width:100%}
+  .brand .word{display:none}
+}
+@media(max-width:520px){
+  .hive{gap:3px}
+  .slot{font-size:.5rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================ EN-TÊTE ============================ -->
+<header class="site">
+  <div class="nav-wrap">
+    <div class="brand" onclick="showView('accueil')" style="cursor:pointer">
+      <div class="logo"><span>:)</span></div>
+      <div class="word">RUCHE&amp;<b>OUTILS</b></div>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button class="tab-btn active" data-view="accueil">Accueil</button>
+      <button class="tab-btn" data-view="items">Items</button>
+      <button class="tab-btn" data-view="stickers">Stickers</button>
+      <button class="tab-btn" data-view="amulettes">Amulettes</button>
+      <button class="tab-btn" data-view="beequip">Beequip</button>
+      <button class="tab-btn" data-view="outils">Outils</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ============================ ACCUEIL ============================ -->
+<section class="view active" id="accueil">
+  <div class="hero">
+    <div>
+      <div class="eyebrow">Hub fan · Bee Swarm Simulator</div>
+      <h1>Tout pour ta <em>ruche</em>, au même endroit.</h1>
+      <p>Un centre de ressources pour Bee Swarm Simulator : parcours les items, stickers, amulettes et beequips du jeu, et utilise des outils qui font les calculs à ta place.</p>
+      <div class="hero-cta">
+        <button class="btn btn-primary" onclick="showView('outils')">🛠️ Ouvrir les outils</button>
+        <button class="btn btn-ghost" onclick="showView('items')">Parcourir les items</button>
+      </div>
+    </div>
+    <div class="mascot">
+      <!-- Mascotte pixel reprise de ton logo (dessinée en SVG pour rester nette) -->
+      <svg class="face" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+        <rect x="3" y="3" width="1.4" height="2.2" fill="#F3F4F1"/>
+        <rect x="7.6" y="3" width="1.4" height="2.2" fill="#F3F4F1"/>
+        <rect x="3.5" y="7.3" width="1" height="1" fill="#F3F4F1"/>
+        <rect x="4.3" y="8" width="1" height="1" fill="#F3F4F1"/>
+        <rect x="5.5" y="8.4" width="1" height="1" fill="#F3F4F1"/>
+        <rect x="6.7" y="8" width="1" height="1" fill="#F3F4F1"/>
+        <rect x="7.5" y="7.3" width="1" height="1" fill="#F3F4F1"/>
+      </svg>
+    </div>
+  </div>
+
+  <div style="margin-top:2.5rem">
+    <div class="eyebrow">Ce que tu peux faire ici</div>
+    <h2 class="section-title">Explore le site</h2>
+    <div class="home-grid">
+      <div class="home-card" onclick="showView('items')">
+        <div class="ico">🎁</div><h3>Items</h3>
+        <p>La description de chaque item : à quoi il sert, son coût et où l'obtenir.</p>
+      </div>
+      <div class="home-card" onclick="showView('stickers')">
+        <div class="ico">🏷️</div><h3>Stickers</h3>
+        <p>Le détail de tous les stickers, leur rareté et les bonus qu'ils donnent.</p>
+      </div>
+      <div class="home-card" onclick="showView('amulettes')">
+        <div class="ico">🔮</div><h3>Amulettes</h3>
+        <p>Toutes les amulettes, leurs effets et comment les fabriquer.</p>
+      </div>
+      <div class="home-card" onclick="showView('beequip')">
+        <div class="ico">🎒</div><h3>Beequip</h3>
+        <p>L'équipement des abeilles et les bonus associés à chaque pièce.</p>
+      </div>
+      <div class="home-card" onclick="showView('outils')">
+        <div class="ico">🛠️</div><h3>Outils</h3>
+        <p>Calcul d'ingrédients, niveau d'abeilles, trade équitable et planificateur de ruche.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ ITEMS ============================ -->
+<section class="view" id="items">
+  <div class="eyebrow">Base de données</div>
+  <h2 class="section-title">Items du jeu</h2>
+  <p class="lead">Description, coût et lieu d'obtention de chaque item. Utilise la recherche ou les filtres pour t'y retrouver.</p>
+  <div class="note"><span class="i">✏️</span><div>Les entrées ci-dessous sont des <b>exemples</b> pour te montrer la mise en forme. Complète-les dans le bloc <b>DONNÉES · ITEMS</b> du fichier <code>index.html</code>.</div></div>
+  <div class="toolbar">
+    <div class="search"><span>🔍</span><input type="text" placeholder="Rechercher un item…" oninput="filterCards('items',this.value)"></div>
+    <div class="chips" id="items-chips"></div>
+  </div>
+  <div class="card-grid" id="items-grid"></div>
+</section>
+
+<!-- ============================ STICKERS ============================ -->
+<section class="view" id="stickers">
+  <div class="eyebrow">Base de données</div>
+  <h2 class="section-title">Stickers</h2>
+  <p class="lead">Chaque sticker, sa rareté et le bonus qu'il applique à une abeille ou un beequip.</p>
+  <div class="note"><span class="i">✏️</span><div>Exemples de démonstration — complète le bloc <b>DONNÉES · STICKERS</b> dans le fichier.</div></div>
+  <div class="toolbar">
+    <div class="search"><span>🔍</span><input type="text" placeholder="Rechercher un sticker…" oninput="filterCards('stickers',this.value)"></div>
+    <div class="chips" id="stickers-chips"></div>
+  </div>
+  <div class="card-grid" id="stickers-grid"></div>
+</section>
+
+<!-- ============================ AMULETTES ============================ -->
+<section class="view" id="amulettes">
+  <div class="eyebrow">Base de données</div>
+  <h2 class="section-title">Amulettes</h2>
+  <p class="lead">Les amulettes, leurs effets et les ingrédients nécessaires pour les fabriquer.</p>
+  <div class="note"><span class="i">✏️</span><div>Exemples de démonstration — complète le bloc <b>DONNÉES · AMULETTES</b> dans le fichier.</div></div>
+  <div class="toolbar">
+    <div class="search"><span>🔍</span><input type="text" placeholder="Rechercher une amulette…" oninput="filterCards('amulettes',this.value)"></div>
+    <div class="chips" id="amulettes-chips"></div>
+  </div>
+  <div class="card-grid" id="amulettes-grid"></div>
+</section>
+
+<!-- ============================ BEEQUIP ============================ -->
+<section class="view" id="beequip">
+  <div class="eyebrow">Base de données</div>
+  <h2 class="section-title">Beequip</h2>
+  <p class="lead">L'équipement à poser sur tes abeilles et les statistiques que chaque pièce apporte.</p>
+  <div class="note"><span class="i">✏️</span><div>Exemples de démonstration — complète le bloc <b>DONNÉES · BEEQUIP</b> dans le fichier.</div></div>
+  <div class="toolbar">
+    <div class="search"><span>🔍</span><input type="text" placeholder="Rechercher un beequip…" oninput="filterCards('beequip',this.value)"></div>
+    <div class="chips" id="beequip-chips"></div>
+  </div>
+  <div class="card-grid" id="beequip-grid"></div>
+</section>
+
+<!-- ============================ OUTILS ============================ -->
+<section class="view" id="outils">
+  <div class="eyebrow">Boîte à outils</div>
+  <h2 class="section-title">Outils</h2>
+  <p class="lead">Des calculateurs qui font le travail à ta place. D'autres viendront s'ajouter plus tard.</p>
+
+  <div class="tool-nav">
+    <button class="active" data-tool="ingredients">🧪 Calcul d'ingrédients</button>
+    <button data-tool="niveau">🐝 Niveau d'abeilles</button>
+    <button data-tool="trade">⚖️ Trade équitable</button>
+    <button data-tool="builder">🏗️ Live builder</button>
+  </div>
+
+  <!-- ---- OUTIL : Calcul d'ingrédients ---- -->
+  <div class="tool-panel active" id="tool-ingredients">
+    <div class="grid-2">
+      <div class="panel">
+        <h3 style="font-size:1.3rem;margin-bottom:1rem">Combien d'ingrédients ?</h3>
+        <div class="field">
+          <label>Recette</label>
+          <select id="ing-recipe"></select>
+        </div>
+        <div class="field">
+          <label>Quantité à fabriquer</label>
+          <input type="number" id="ing-qty" value="1" min="1">
+        </div>
+        <p class="hint">Choisis une recette et le nombre d'exemplaires : l'outil additionne tout ce qu'il te faut. <b>Modifie les recettes</b> dans le bloc <b>DONNÉES · RECETTES</b>.</p>
+      </div>
+      <div class="panel">
+        <h3 style="font-size:1.3rem;margin-bottom:.4rem">Liste de courses</h3>
+        <div id="ing-result"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ---- OUTIL : Niveau d'abeilles ---- -->
+  <div class="tool-panel" id="tool-niveau">
+    <div class="panel">
+      <h3 style="font-size:1.3rem;margin-bottom:.4rem">Coût de montée en niveau de ta ruche</h3>
+      <p class="hint" style="margin-bottom:1.4rem">Pour chaque niveau, indique combien d'abeilles tu <b>as</b> et combien tu <b>veux</b>. Pas besoin de tout remplir — mais le total est limité à <b>50</b> (taille max d'une ruche). Les deux totaux doivent être égaux : ce sont les mêmes abeilles qui montent de niveau.</p>
+
+      <div class="lvl-bonus-row">
+        <div class="field">
+          <label>🐶 Puppy Gift</label>
+          <div class="toggle" id="lvl-puppy">
+            <button data-v="0" class="active">Non</button>
+            <button data-v="20">Oui (+20% bond)</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>🌙 Moon Amulet (bond)</label>
+          <select id="lvl-moon"></select>
+        </div>
+      </div>
+
+      <div class="lvl-table-wrap">
+        <table class="lvl-table lvl-dist">
+          <thead>
+            <tr>
+              <th>Niveau</th>
+              <th>Ce que tu as <span class="col-total" id="lvl-total-as">0 / 50</span></th>
+              <th>Ce que tu veux <span class="col-total" id="lvl-total-veux">0 / 50</span></th>
+            </tr>
+          </thead>
+          <tbody id="lvl-rows"></tbody>
+        </table>
+      </div>
+
+      <div class="price-out" id="lvl-result" style="margin-top:1.6rem"></div>
+    </div>
+  </div>
+
+  <!-- ---- OUTIL : Trade équitable ---- -->
+  <div class="tool-panel" id="tool-trade">
+    <div class="panel">
+      <h3 style="font-size:1.3rem;margin-bottom:.4rem">Ce trade est-il équitable ?</h3>
+      <p class="hint" style="margin-bottom:1.2rem">Ajoute des objets de chaque côté ; l'outil compare la valeur totale. <b>Les valeurs sont à ajuster</b> dans le bloc <b>DONNÉES · VALEURS DE TRADE</b> (elles changent souvent dans la communauté).</p>
+      <div class="trade">
+        <div class="trade-side you">
+          <h4>Ton offre</h4>
+          <div class="trade-add">
+            <select id="trade-sel-you"></select>
+            <input type="number" id="trade-qty-you" value="1" min="1">
+            <button onclick="addTrade('you')">+</button>
+          </div>
+          <ul class="trade-list" id="trade-list-you"></ul>
+          <div class="trade-total"><span>Total</span><span class="v" id="trade-total-you">0</span></div>
+        </div>
+        <div class="vs">VS</div>
+        <div class="trade-side them">
+          <h4>Leur offre</h4>
+          <div class="trade-add">
+            <select id="trade-sel-them"></select>
+            <input type="number" id="trade-qty-them" value="1" min="1">
+            <button onclick="addTrade('them')">+</button>
+          </div>
+          <ul class="trade-list" id="trade-list-them"></ul>
+          <div class="trade-total"><span>Total</span><span class="v" id="trade-total-them">0</span></div>
+        </div>
+      </div>
+      <div class="verdict fair" id="trade-verdict">Ajoute des objets pour comparer.</div>
+    </div>
+  </div>
+
+  <!-- ---- OUTIL : Live builder (ruche) ---- -->
+  <div class="tool-panel" id="tool-builder">
+    <div class="panel">
+      <h3 style="font-size:1.3rem;margin-bottom:.4rem">Planificateur de ruche (50 emplacements)</h3>
+      <p class="hint" style="margin-bottom:1.2rem">Choisis une abeille, puis clique sur les cases pour remplir ta ruche. Clique une case remplie pour la vider. <b>Modifie la liste d'abeilles</b> dans le bloc <b>DONNÉES · ABEILLES</b>.</p>
+      <div class="builder-top">
+        <div class="bee-palette">
+          <h4>Palette d'abeilles</h4>
+          <div class="bee-swatches" id="bee-swatches"></div>
+          <button class="btn btn-ghost" style="margin-top:1rem" onclick="clearHive()">🗑️ Vider la ruche</button>
+        </div>
+      </div>
+      <div class="hive" id="hive"></div>
+      <div class="builder-stats" id="hive-stats"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================ PIED DE PAGE ============================ -->
+<footer class="site">
+  <div class="foot-wrap">
+    <div><b>Ruche &amp; Outils</b> — hub fan pour Bee Swarm Simulator.</div>
+    <div class="disclaimer">Site non officiel réalisé par un fan. Bee Swarm Simulator est une création d'Onett. Toutes les marques appartiennent à leurs propriétaires respectifs.</div>
+  </div>
+</footer>
+
+<script>
+/* ============================================================================
+   ██  DONNÉES DU JEU — c'est ICI que tu ajoutes / modifies le contenu  ██
+   ============================================================================
+   Chaque section est un tableau. Copie une ligne { ... } pour en ajouter.
+   ============================================================================ */
+
+/* ---------- DONNÉES · ITEMS ---------- */
+/* categorie sert aux filtres. cout / lieu / desc s'affichent sur la carte. */
+const ITEMS = [
+  { nom:"Œuf de base",     categorie:"Œufs",    desc:"Fait éclore une abeille commune ou rare aléatoire.", cout:"295 miel",        lieu:"Boutique près de la ruche" },
+  { nom:"Gelée royale",    categorie:"Jelly",   desc:"Transforme une abeille normale en abeille rare aléatoire.", cout:"Robux / quêtes", lieu:"Dispensers, quêtes, événements" },
+  { nom:"Gelée étoilée",   categorie:"Jelly",   desc:"Transforme une abeille en l'abeille de ton choix.", cout:"Événements / codes", lieu:"Événements, codes, Robux" },
+  { nom:"Faux",            categorie:"Outils",  desc:"Outil de collecte : ramasse plus de pollen d'un coup.", cout:"Miel",           lieu:"Boutique d'outils" },
+  { nom:"Ticket",          categorie:"Monnaie", desc:"Monnaie pour la tente à tickets (abeilles, objets).", cout:"—",              lieu:"Mobs, quêtes, cadeaux quotidiens" },
+];
+const ITEMS_CATS = ["Tous","Œufs","Jelly","Outils","Monnaie"];
+
+/* ---------- DONNÉES · STICKERS ---------- */
+/* rarete : "Commun" | "Rare" | "Épique" | "Légendaire" | "Mythique" */
+const STICKERS = [
+  { nom:"Sticker Pollen +",   rarete:"Commun",     desc:"Petit bonus de pollen sur l'abeille équipée.", effet:"+5 % Pollen" },
+  { nom:"Sticker Rouge",      rarete:"Rare",       desc:"Renforce les abeilles rouges.", effet:"+10 % bonus abeilles rouges" },
+  { nom:"Sticker Bleu",       rarete:"Rare",       desc:"Renforce les abeilles bleues.", effet:"+10 % bonus abeilles bleues" },
+  { nom:"Sticker Diamant",    rarete:"Légendaire", desc:"Gros bonus multi-stats.", effet:"+15 % Pollen, +10 % Vitesse" },
+];
+const STICKERS_CATS = ["Tous","Commun","Rare","Épique","Légendaire","Mythique"];
+
+/* ---------- DONNÉES · AMULETTES ---------- */
+const AMULETTES = [
+  { nom:"Amulette de base",   rarete:"Commun",     desc:"Première amulette, bonus légers pendant un temps limité.", effet:"Bonus mineurs temporaires" },
+  { nom:"Amulette étoilée",   rarete:"Épique",     desc:"Bonus permanents plus forts, fabriquée avec des ingrédients.", effet:"Bonus permanents moyens" },
+  { nom:"Amulette lunaire",   rarete:"Légendaire", desc:"Améliore le bond gagné via les treats, entre autres.", effet:"+10 % bond depuis les treats" },
+];
+const AMULETTES_CATS = ["Tous","Commun","Rare","Épique","Légendaire","Mythique"];
+
+/* ---------- DONNÉES · BEEQUIP ---------- */
+const BEEQUIP = [
+  { nom:"Antlers du renne",  rarete:"Légendaire", desc:"À poser sur la Puppy Bee : booste le bond global.", effet:"+3 % bond (sur Puppy Bee)" },
+  { nom:"Casque simple",     rarete:"Commun",     desc:"Petit bonus de capacité pour l'abeille équipée.", effet:"+ Capacité" },
+  { nom:"Cape brillante",    rarete:"Épique",     desc:"Bonus de vitesse et de pollen.", effet:"+ Vitesse, + Pollen" },
+];
+const BEEQUIP_CATS = ["Tous","Commun","Rare","Épique","Légendaire","Mythique"];
+
+/* ---------- DONNÉES · RECETTES (outil ingrédients) ---------- */
+/* Chaque recette = liste d'ingrédients { ing:"nom", qte:nombre }. */
+const RECETTES = {
+  "Amulette étoilée (exemple)": [
+    { ing:"Gelée royale", qte:5 },
+    { ing:"Ticket",       qte:20 },
+    { ing:"Glue",         qte:10 },
+  ],
+  "Potion violette (exemple)": [
+    { ing:"Enzymes",      qte:8 },
+    { ing:"Glue",         qte:4 },
+    { ing:"Œuf de base",  qte:2 },
+  ],
+};
+
+/* ---------- DONNÉES · VALEURS DE TRADE (outil trade) ---------- */
+/* Valeur en "points" pour comparer les objets. Ajuste selon la communauté. */
+const VALEURS_TRADE = {
+  "Gelée royale":    1,
+  "Gelée étoilée":   12,
+  "Ticket":          0.5,
+  "Œuf de base":     0.8,
+  "Amulette étoilée":25,
+  "Antlers du renne":40,
+};
+
+/* ---------- DONNÉES · ABEILLES (outil live builder) ---------- */
+/* couleur : "rouge" | "bleu" | "blanc" | "incolore". */
+const ABEILLES = [
+  { nom:"Basique",   couleur:"blanc",    rarete:"Commun" },
+  { nom:"Bomber",    couleur:"blanc",    rarete:"Rare" },
+  { nom:"Rad",       couleur:"rouge",    rarete:"Épique" },
+  { nom:"Fuzzy",     couleur:"bleu",     rarete:"Épique" },
+  { nom:"Bucko",     couleur:"bleu",     rarete:"Légendaire" },
+  { nom:"Riley",     couleur:"rouge",    rarete:"Légendaire" },
+  { nom:"Vicious",   couleur:"incolore", rarete:"Mythique" },
+  { nom:"Tabby",     couleur:"rouge",    rarete:"Mythique" },
+  { nom:"Puppy",     couleur:"bleu",     rarete:"Mythique" },
+];
+
+/* ---------- DONNÉES · PRIX NIVEAU (outil niveau d'abeilles) ---------- */
+/* Prix EN MIEL pour passer d'un niveau AU SUIVANT, SANS bonus.
+   L'index = niveau de départ :
+     PRIX_NIVEAU[1] = coût pour passer du niveau 1 au niveau 2
+     PRIX_NIVEAU[2] = coût du niveau 2 au niveau 3, etc. (jusqu'à 24 -> 25)
+   👉 REMPLACE ces valeurs par les tiennes quand tu me les donnes.
+   (Valeurs de départ = celles communément citées par la communauté.)      */
+const PRIX_NIVEAU = [
+  0,                      // (non utilisé)
+  10000,                  // niveau 1 -> 2
+  40000,                  // 2 -> 3
+  200000,                 // 3 -> 4
+  750000,                 // 4 -> 5
+  4000000,                // 5 -> 6
+  15000000,               // 6 -> 7
+  60000000,               // 7 -> 8
+  270000000,              // 8 -> 9
+  450000000,              // 9 -> 10
+  1200000000,             // 10 -> 11
+  2000000000,             // 11 -> 12
+  4000000000,             // 12 -> 13
+  7000000000,             // 13 -> 14
+  15000000000,            // 14 -> 15
+  120000000000,           // 15 -> 16
+  450000000000,           // 16 -> 17
+  1900000000000,          // 17 -> 18
+  7500000000000,          // 18 -> 19
+  15000000000000,         // 19 -> 20
+  475000000000000,        // 20 -> 21
+  4500000000000000,       // 21 -> 22
+  95000000000000000,      // 22 -> 23
+  5e18,                   // 23 -> 24
+  95e18,                  // 24 -> 25
+];
+
+/* ============================================================================
+   ██  LOGIQUE DU SITE — normalement tu n'as pas besoin d'y toucher  ██
+   ============================================================================ */
+
+/* ---------- Navigation entre onglets ---------- */
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.view===id));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.getElementById('tabs').addEventListener('click',e=>{
+  if(e.target.dataset.view) showView(e.target.dataset.view);
+});
+
+/* ---------- Couleurs de rareté ---------- */
+const COULEUR_RARETE = {
+  "Commun":"#93A7B0","Rare":"#5AA9E6","Épique":"#B77BE0",
+  "Légendaire":"#F0B429","Mythique":"#F0736A"
+};
+
+/* ---------- Génération des cartes de contenu ---------- */
+function carteHTML(o){
+  const rarite = o.rarete
+    ? `<span class="rarity" style="background:${COULEUR_RARETE[o.rarete]||'#888'}"></span>${o.rarete}`
+    : '';
+  const tag = o.categorie || o.rarete || '';
+  let meta = '';
+  if(o.cout)  meta += `<div><span class="k">Coût</span><span class="v">${o.cout}</span></div>`;
+  if(o.lieu)  meta += `<div><span class="k">Où l'obtenir</span><span class="v">${o.lieu}</span></div>`;
+  if(o.effet) meta += `<div><span class="k">Effet</span><span class="v">${o.effet}</span></div>`;
+  if(o.rarete && !o.cout) meta += `<div><span class="k">Rareté</span><span class="v">${rarite}</span></div>`;
+  return `<div class="card" data-name="${o.nom.toLowerCase()}" data-cat="${tag}">
+    <span class="tag">${tag}</span>
+    <h3>${o.nom}</h3>
+    <div class="desc">${o.desc||''}</div>
+    <div class="meta">${meta}</div>
+  </div>`;
+}
+function renderCards(key,data,cats){
+  const grid = document.getElementById(key+'-grid');
+  grid.innerHTML = data.map(carteHTML).join('') || `<div class="empty">Rien à afficher pour le moment.</div>`;
+  const chips = document.getElementById(key+'-chips');
+  chips.innerHTML = cats.map((c,i)=>`<span class="chip ${i===0?'active':''}" data-cat="${c}">${c}</span>`).join('');
+  chips.addEventListener('click',e=>{
+    if(!e.target.dataset.cat) return;
+    chips.querySelectorAll('.chip').forEach(ch=>ch.classList.toggle('active',ch===e.target));
+    filterCards(key,document.querySelector(`#${key} .search input`).value, e.target.dataset.cat);
+  });
+}
+function filterCards(key,term='',cat=null){
+  term = term.toLowerCase();
+  if(cat===null){
+    const active = document.querySelector(`#${key}-chips .chip.active`);
+    cat = active ? active.dataset.cat : 'Tous';
+  }
+  let visible = 0;
+  document.querySelectorAll(`#${key}-grid .card`).forEach(c=>{
+    const okName = c.dataset.name.includes(term);
+    const okCat  = cat==='Tous' || c.dataset.cat===cat;
+    const show = okName && okCat;
+    c.style.display = show ? '' : 'none';
+    if(show) visible++;
+  });
+  const grid = document.getElementById(key+'-grid');
+  let e = grid.querySelector('.empty');
+  if(visible===0){ if(!e){e=document.createElement('div');e.className='empty';e.textContent='Aucun résultat.';grid.appendChild(e);} }
+  else if(e){ e.remove(); }
+}
+renderCards('items',ITEMS,ITEMS_CATS);
+renderCards('stickers',STICKERS,STICKERS_CATS);
+renderCards('amulettes',AMULETTES,AMULETTES_CATS);
+renderCards('beequip',BEEQUIP,BEEQUIP_CATS);
+
+/* ---------- Navigation entre outils ---------- */
+document.querySelector('.tool-nav').addEventListener('click',e=>{
+  const t = e.target.dataset.tool; if(!t) return;
+  document.querySelectorAll('.tool-nav button').forEach(b=>b.classList.toggle('active',b===e.target));
+  document.querySelectorAll('.tool-panel').forEach(p=>p.classList.toggle('active',p.id==='tool-'+t));
+});
+
+/* ---------- Formatage des grands nombres (K, M, B, T, Qa, Qn...) ---------- */
+function fmt(n){
+  if(n<1000) return Number.isInteger(n)? n.toString() : n.toFixed(1);
+  const suf = ['','K','M','B','T','Qa','Qn','Sx','Sp','Oc','No','Dc'];
+  let i = Math.floor(Math.log10(n)/3);
+  if(i>=suf.length) i = suf.length-1;
+  return (n/Math.pow(1000,i)).toFixed(2).replace(/\.00$/,'') + suf[i];
+}
+
+/* ---------- OUTIL 1 : Calcul d'ingrédients ---------- */
+function initIngredients(){
+  const sel = document.getElementById('ing-recipe');
+  sel.innerHTML = Object.keys(RECETTES).map(r=>`<option>${r}</option>`).join('');
+  const compute = ()=>{
+    const rec = RECETTES[sel.value] || [];
+    const q = Math.max(1, parseInt(document.getElementById('ing-qty').value)||1);
+    const rows = rec.map(x=>`<tr><td>${x.ing}</td><td class="n">${fmt(x.qte*q)}</td></tr>`).join('');
+    document.getElementById('ing-result').innerHTML =
+      `<table class="calc"><thead><tr><th>Ingrédient</th><th style="text-align:right">Total</th></tr></thead><tbody>${rows}</tbody></table>`;
+  };
+  sel.addEventListener('change',compute);
+  document.getElementById('ing-qty').addEventListener('input',compute);
+  compute();
+}
+
+/* ---------- OUTIL 2 : Niveau d'abeilles (répartition de la ruche) ---------- */
+const NIV_MAX = 25;      // niveau maximum d'une abeille
+const RUCHE_MAX = 50;    // nombre max d'abeilles dans une ruche
+let puppyBonus = 0;                              // 0 ou 20 selon le Puppy Gift
+let asCounts   = new Array(NIV_MAX+1).fill(0);   // abeilles que tu AS, par niveau
+let veuxCounts = new Array(NIV_MAX+1).fill(0);   // abeilles que tu VEUX, par niveau
+let CUM = [];                                    // coût cumulé pour atteindre chaque niveau
+
+/* Coût cumulé depuis le niveau 1 : CUM[L] = miel pour amener une abeille du niv 1 au niv L. */
+function buildCumul(){
+  CUM = new Array(NIV_MAX+1).fill(0);
+  for(let L=2; L<=NIV_MAX; L++) CUM[L] = CUM[L-1] + (PRIX_NIVEAU[L-1]||0);
+}
+
+function initNiveau(){
+  buildCumul();
+  const moon = document.getElementById('lvl-moon');
+  for(let p=0;p<=10;p++) moon.insertAdjacentHTML('beforeend',`<option value="${p}"${p===0?' selected':''}>${p}% bond</option>`);
+  moon.addEventListener('change',computeNiveau);
+
+  const puppyBox = document.getElementById('lvl-puppy');
+  puppyBox.addEventListener('click',e=>{
+    if(e.target.dataset.v===undefined) return;
+    puppyBonus = parseInt(e.target.dataset.v);
+    puppyBox.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b===e.target));
+    computeNiveau();
+  });
+
+  // Toutes les cases à zéro par défaut
+
+  // Construire les 25 lignes (une par niveau)
+  let html='';
+  for(let L=1; L<=NIV_MAX; L++){
+    html += `<tr>
+      <td class="niv">${L}</td>
+      <td><input type="number" min="0" max="${RUCHE_MAX}" value="${asCounts[L]}" data-col="as" data-lvl="${L}"></td>
+      <td><input type="number" min="0" max="${RUCHE_MAX}" value="${veuxCounts[L]}" data-col="veux" data-lvl="${L}"></td>
+    </tr>`;
+  }
+  const tbody = document.getElementById('lvl-rows');
+  tbody.innerHTML = html;
+  tbody.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',()=>onCountInput(inp)));
+  computeNiveau();
+}
+
+function totalCol(arr){ return arr.reduce((a,b)=>a+b,0); }
+
+/* Saisie d'une case : on borne à 0 et on empêche le total de la colonne de dépasser 50. */
+function onCountInput(inp){
+  const col = inp.dataset.col, L = parseInt(inp.dataset.lvl);
+  const arr = (col==='as') ? asCounts : veuxCounts;
+  let v = Math.max(0, parseInt(inp.value)||0);
+  const autres = totalCol(arr) - arr[L];
+  if(autres + v > RUCHE_MAX){ v = Math.max(0, RUCHE_MAX - autres); inp.value = v; } // plafond 50
+  arr[L] = v;
+  computeNiveau();
+}
+
+function bonusActuel(){ return puppyBonus + (parseInt(document.getElementById('lvl-moon').value)||0); }
+
+function computeNiveau(){
+  const totAs = totalCol(asCounts), totVeux = totalCol(veuxCounts);
+
+  // Compteurs d'en-tête
+  const cAs = document.getElementById('lvl-total-as'), cVe = document.getElementById('lvl-total-veux');
+  cAs.textContent = `${totAs} / ${RUCHE_MAX}`;
+  cVe.textContent = `${totVeux} / ${RUCHE_MAX}`;
+  cAs.style.color = totAs>RUCHE_MAX ? 'var(--bad)' : 'var(--honey)';
+  cVe.style.color = totVeux>RUCHE_MAX ? 'var(--bad)' : 'var(--honey)';
+
+  const box = document.getElementById('lvl-result');
+
+  if(totAs===0 && totVeux===0){
+    box.innerHTML = `<div class="price-label">Renseigne tes abeilles pour voir le prix.</div>
+      <div class="price-value">0 <span>miel</span></div>`;
+    return;
+  }
+  if(totAs !== totVeux){
+    box.innerHTML = `<div class="price-label">⚠️ Les deux totaux doivent être identiques : tu as <b>${totAs}</b> abeille(s) à gauche et <b>${totVeux}</b> à droite (ce sont les mêmes abeilles).</div>`;
+    return;
+  }
+
+  // On déplie les répartitions en listes triées, puis on associe la plus basse avec la plus basse.
+  const cur=[], tar=[];
+  for(let L=1; L<=NIV_MAX; L++){
+    for(let i=0;i<asCounts[L];i++)   cur.push(L);
+    for(let i=0;i<veuxCounts[L];i++) tar.push(L);
+  }
+  cur.sort((a,b)=>a-b); tar.sort((a,b)=>a-b);
+
+  let base=0, impossible=false;
+  for(let i=0;i<cur.length;i++){
+    if(tar[i] < cur[i]){ impossible=true; break; }   // une abeille devrait baisser de niveau
+    base += CUM[tar[i]] - CUM[cur[i]];
+  }
+  if(impossible){
+    box.innerHTML = `<div class="price-label">⚠️ Répartition impossible : une abeille devrait <b>baisser</b> de niveau. Vérifie la colonne « ce que tu veux ».</div>`;
+    return;
+  }
+
+  const bonus = bonusActuel();
+  const total = base / (1 + bonus/100);
+  box.innerHTML = `
+    <div class="price-label">Prix pour faire évoluer tes ${totAs} abeille${totAs>1?'s':''}</div>
+    <div class="price-value">${fmt(total)} <span>miel</span></div>
+    <div class="price-sub">Sans bonus : ${fmt(base)} miel · Bonus de bond appliqué : +${bonus}%</div>`;
+}
+
+/* ---------- OUTIL 3 : Trade équitable ---------- */
+const trade = { you:[], them:[] };
+function initTrade(){
+  const opts = Object.keys(VALEURS_TRADE).map(k=>`<option>${k}</option>`).join('');
+  document.getElementById('trade-sel-you').innerHTML = opts;
+  document.getElementById('trade-sel-them').innerHTML = opts;
+  renderTrade();
+}
+function addTrade(side){
+  const item = document.getElementById('trade-sel-'+side).value;
+  const qty = Math.max(1, parseInt(document.getElementById('trade-qty-'+side).value)||1);
+  const existing = trade[side].find(x=>x.item===item);
+  if(existing) existing.qty += qty; else trade[side].push({item,qty});
+  renderTrade();
+}
+function removeTrade(side,item){
+  trade[side] = trade[side].filter(x=>x.item!==item);
+  renderTrade();
+}
+function renderTrade(){
+  let totals = {};
+  ['you','them'].forEach(side=>{
+    const ul = document.getElementById('trade-list-'+side);
+    let total = 0;
+    ul.innerHTML = trade[side].map(x=>{
+      const val = (VALEURS_TRADE[x.item]||0)*x.qty; total += val;
+      return `<li><span>${x.qty}× ${x.item} <small style="color:var(--muted)">(${fmt(val)})</small></span>
+        <span class="rm" onclick="removeTrade('${side}','${x.item.replace(/'/g,"\\'")}')">✕</span></li>`;
+    }).join('') || '<li style="background:transparent;color:var(--muted);justify-content:center">Vide</li>';
+    document.getElementById('trade-total-'+side).textContent = fmt(total);
+    totals[side] = total;
+  });
+  const v = document.getElementById('trade-verdict');
+  const a = totals.you, b = totals.them;
+  if(a===0 && b===0){ v.className='verdict fair'; v.textContent='Ajoute des objets pour comparer.'; return; }
+  const diff = b - a;                       // positif = leur offre vaut plus (à ton avantage)
+  const base = Math.max(a,b) || 1;
+  const pct = Math.abs(diff)/base*100;
+  if(pct <= 5){ v.className='verdict fair'; v.textContent=`⚖️ Trade équitable (écart ${pct.toFixed(0)} %).`; }
+  else if(diff>0){ v.className='verdict win'; v.textContent=`✅ À ton avantage : tu reçois ${fmt(Math.abs(diff))} de plus (+${pct.toFixed(0)} %).`; }
+  else { v.className='verdict lose'; v.textContent=`❌ En ta défaveur : tu donnes ${fmt(Math.abs(diff))} de trop (−${pct.toFixed(0)} %).`; }
+}
+
+/* ---------- OUTIL 4 : Live builder (ruche) ---------- */
+const COULEUR_BEE = { rouge:"#F0736A", bleu:"#5AA9E6", blanc:"#F3F4F1", incolore:"#93A7B0" };
+let hive = new Array(50).fill(null);
+let selectedBee = 0;
+function initBuilder(){
+  const sw = document.getElementById('bee-swatches');
+  sw.innerHTML = ABEILLES.map((b,i)=>
+    `<div class="swatch ${i===0?'selected':''}" data-i="${i}">
+       <span class="dot" style="background:${COULEUR_BEE[b.couleur]}"></span>${b.nom}</div>`).join('');
+  sw.addEventListener('click',e=>{
+    const s = e.target.closest('.swatch'); if(!s) return;
+    selectedBee = parseInt(s.dataset.i);
+    sw.querySelectorAll('.swatch').forEach(x=>x.classList.toggle('selected',x===s));
+  });
+  const h = document.getElementById('hive');
+  h.innerHTML = hive.map((_,i)=>`<div class="slot" data-i="${i}"></div>`).join('');
+  h.addEventListener('click',e=>{
+    const slot = e.target.closest('.slot'); if(!slot) return;
+    const i = parseInt(slot.dataset.i);
+    hive[i] = (hive[i]===selectedBee) ? null : selectedBee; // reclic sur même abeille = vide
+    paintHive();
+  });
+  paintHive();
+}
+function paintHive(){
+  document.querySelectorAll('#hive .slot').forEach((slot,i)=>{
+    if(hive[i]===null){ slot.className='slot'; slot.style.background=''; slot.textContent=''; }
+    else{
+      const b = ABEILLES[hive[i]];
+      slot.className='slot filled';
+      slot.style.background = COULEUR_BEE[b.couleur];
+      slot.textContent = b.nom.slice(0,5);
+      slot.style.color = (b.couleur==='blanc') ? '#1B323E' : '#0E1D26';
+    }
+  });
+  // Stats
+  const filled = hive.filter(x=>x!==null);
+  const parCouleur = {rouge:0,bleu:0,blanc:0,incolore:0};
+  filled.forEach(i=>parCouleur[ABEILLES[i].couleur]++);
+  document.getElementById('hive-stats').innerHTML = `
+    <div class="stat"><div class="n">${filled.length}<small style="color:var(--muted);font-size:1rem">/50</small></div><div class="l">Abeilles placées</div></div>
+    <div class="stat"><div class="n" style="color:${COULEUR_BEE.rouge}">${parCouleur.rouge}</div><div class="l">Rouges</div></div>
+    <div class="stat"><div class="n" style="color:${COULEUR_BEE.bleu}">${parCouleur.bleu}</div><div class="l">Bleues</div></div>
+    <div class="stat"><div class="n" style="color:${COULEUR_BEE.blanc}">${parCouleur.blanc}</div><div class="l">Blanches</div></div>
+    <div class="stat"><div class="n" style="color:${COULEUR_BEE.incolore}">${parCouleur.incolore}</div><div class="l">Incolores</div></div>`;
+}
+function clearHive(){ hive = new Array(50).fill(null); paintHive(); }
+
+/* ---------- Initialisation ---------- */
+initIngredients();
+initNiveau();
+initTrade();
+initBuilder();
+</script>
+</body>
+</html>
