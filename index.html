@@ -234,27 +234,56 @@ table.calc td.n{text-align:right;font-family:'Fredoka';font-weight:600;color:var
 .verdict.win{background:rgba(244,221,68,.12);color:var(--honey);border:1px solid var(--line)}
 .verdict.lose{background:rgba(240,115,106,.12);color:var(--bad);border:1px solid rgba(240,115,106,.3)}
 
-/* --- Live builder (planificateur de ruche) --- */
-.builder-top{display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.3rem}
-.bee-palette{flex:1;min-width:260px}
-.bee-palette h4{font-size:1rem;margin-bottom:.7rem;color:var(--muted)}
-.bee-swatches{display:flex;flex-wrap:wrap;gap:.5rem}
-.swatch{font-family:'Fredoka';font-weight:500;font-size:.85rem;cursor:pointer;
-  border:1px solid var(--line-soft);border-radius:10px;padding:.4rem .7rem;display:flex;align-items:center;gap:.4rem;
-  background:var(--ink-900);transition:.15s}
-.swatch:hover{border-color:var(--line)}
-.swatch.selected{border-color:var(--honey);background:var(--panel-2)}
-.swatch .dot{width:11px;height:11px;border-radius:3px}
-.hive{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;max-width:560px}
-.slot{aspect-ratio:1;background:var(--ink-950);border:1px solid var(--line-soft);border-radius:6px;
-  cursor:pointer;display:grid;place-items:center;font-size:.62rem;font-family:'Fredoka';font-weight:600;
-  color:var(--ink-950);transition:.1s;overflow:hidden;text-align:center;padding:2px;line-height:1}
-.slot:hover{outline:2px solid var(--honey);outline-offset:-2px}
-.slot.filled{border-color:transparent}
-.builder-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.8rem;margin-top:1.4rem}
-.stat{background:var(--ink-900);border:1px solid var(--line-soft);border-radius:12px;padding:.9rem 1rem}
-.stat .n{font-family:'Fredoka';font-weight:700;font-size:1.6rem;color:var(--honey);line-height:1}
-.stat .l{font-size:.82rem;color:var(--muted);margin-top:.2rem}
+/* --- Build your Hive --- */
+.builder-layout{display:grid;grid-template-columns:1fr 330px;gap:1.6rem;align-items:start}
+.hive-wrap{min-width:0}
+.hive{position:relative;margin:0 auto}
+.cell{position:absolute;cursor:pointer}
+.cell .hex,.cell .inner{position:absolute;inset:0;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+.cell .hex{background:#2a4653;transition:.1s}
+.cell:hover .hex{background:var(--cream)}
+.cell.gifted .hex{background:var(--honey)}
+.cell.selected{transform:scale(1.09);z-index:5}
+.cell .inner{inset:4px;background:var(--ink-950);display:grid;place-items:center;overflow:hidden}
+.cell .inner img{width:100%;height:100%;object-fit:cover;image-rendering:pixelated}
+.cell .name-fallback{font-family:'Fredoka';font-weight:700;font-size:10px;color:#fff;text-align:center;
+  padding:2px;line-height:1.05;text-shadow:0 1px 2px #000,0 0 3px #000;pointer-events:none}
+.cell .lvl{position:absolute;left:6px;bottom:5px;font-family:'Fredoka';font-weight:700;font-size:13px;
+  color:#fff;text-shadow:0 0 3px #000,0 1px 2px #000;pointer-events:none;line-height:1}
+.cell .bq{position:absolute;right:4px;top:5px;font-size:12px;pointer-events:none;filter:drop-shadow(0 0 2px #000)}
+
+.builder-side{background:var(--ink-900);border:1px solid var(--line-soft);border-radius:14px;padding:1.1rem;position:sticky;top:80px}
+.builder-side h4{font-size:1rem;margin-bottom:.6rem}
+.rar-chips{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.8rem}
+.rar-chips .chip{font-size:.76rem;padding:.28rem .55rem}
+.bee-list{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;max-height:290px;overflow:auto;padding-right:4px}
+.bee-opt{display:flex;align-items:center;gap:.4rem;cursor:pointer;background:var(--ink-950);
+  border:1px solid var(--line-soft);border-radius:9px;padding:.35rem .4rem;transition:.12s;min-width:0}
+.bee-opt:hover{border-color:var(--line)}
+.bee-opt.active{border-color:var(--honey);background:var(--panel-2)}
+.bee-opt .ic{width:26px;height:26px;flex:0 0 auto;border-radius:6px;display:grid;place-items:center;
+  font-size:8px;font-weight:700;font-family:'Fredoka';color:#fff;overflow:hidden;text-shadow:0 1px 1px #000}
+.bee-opt .ic img{width:100%;height:100%;object-fit:cover}
+.bee-opt .rdot{width:7px;height:7px;border-radius:50%;flex:0 0 auto}
+.bee-opt .nm{font-size:.8rem;font-family:'Fredoka';font-weight:500;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.cell-config{margin-top:1.1rem;border-top:1px solid var(--line-soft);padding-top:1rem}
+.cell-config.hidden{display:none}
+.cell-config h4{margin-bottom:.9rem}
+.cc-row{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-bottom:.8rem}
+.cc-row label{font-size:.85rem;color:var(--muted);font-family:'Fredoka';font-weight:500}
+.cc-row input[type=range]{flex:1;accent-color:var(--honey)}
+.cc-lvl-val{font-family:'Fredoka';font-weight:700;color:var(--honey);min-width:24px;text-align:right}
+.cc-toggle{width:44px;height:24px;border-radius:20px;background:var(--ink-950);border:1px solid var(--line-soft);position:relative;cursor:pointer;transition:.15s;flex:0 0 auto}
+.cc-toggle::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:var(--muted);transition:.15s}
+.cc-toggle.on{background:var(--honey);border-color:var(--honey)}
+.cc-toggle.on::after{left:22px;background:var(--ink-950)}
+
+.builder-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:.7rem;margin-top:1.4rem}
+.stat{background:var(--ink-900);border:1px solid var(--line-soft);border-radius:12px;padding:.8rem .9rem}
+.stat .n{font-family:'Fredoka';font-weight:700;font-size:1.5rem;color:var(--honey);line-height:1}
+.stat .n small{color:var(--muted);font-size:.9rem}
+.stat .l{font-size:.78rem;color:var(--muted);margin-top:.2rem}
 
 /* ============================================================
    PIED DE PAGE + DIVERS
@@ -280,12 +309,9 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
   .grid-2{grid-template-columns:1fr}
   .trade{grid-template-columns:1fr}
   .vs{transform:rotate(90deg)}
-  .hive{grid-template-columns:repeat(10,1fr);max-width:100%}
+  .builder-layout{grid-template-columns:1fr}
+  .builder-side{position:static}
   .brand .word{display:none}
-}
-@media(max-width:520px){
-  .hive{gap:3px}
-  .slot{font-size:.5rem}
 }
 </style>
 </head>
@@ -350,7 +376,7 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
       </div>
       <div class="home-card" onclick="showView('outils')">
         <div class="ico">🛠️</div><h3>Outils</h3>
-        <p>Calcul d'ingrédients, niveau d'abeilles, trade équitable et planificateur de ruche.</p>
+        <p>Calcul d'ingrédients, niveau d'abeilles, trade équitable et Build your Hive.</p>
       </div>
     </div>
   </div>
@@ -418,7 +444,7 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
     <button class="active" data-tool="ingredients">🧪 Calcul d'ingrédients</button>
     <button data-tool="niveau">🐝 Niveau d'abeilles</button>
     <button data-tool="trade">⚖️ Trade équitable</button>
-    <button data-tool="builder">🏗️ Live builder</button>
+    <button data-tool="builder">🐝 Build your Hive</button>
   </div>
 
   <!-- ---- OUTIL : Calcul d'ingrédients ---- -->
@@ -512,20 +538,43 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
     </div>
   </div>
 
-  <!-- ---- OUTIL : Live builder (ruche) ---- -->
+  <!-- ---- OUTIL : Build your Hive ---- -->
   <div class="tool-panel" id="tool-builder">
     <div class="panel">
-      <h3 style="font-size:1.3rem;margin-bottom:.4rem">Planificateur de ruche (50 emplacements)</h3>
-      <p class="hint" style="margin-bottom:1.2rem">Choisis une abeille, puis clique sur les cases pour remplir ta ruche. Clique une case remplie pour la vider. <b>Modifie la liste d'abeilles</b> dans le bloc <b>DONNÉES · ABEILLES</b>.</p>
-      <div class="builder-top">
-        <div class="bee-palette">
-          <h4>Palette d'abeilles</h4>
-          <div class="bee-swatches" id="bee-swatches"></div>
-          <button class="btn btn-ghost" style="margin-top:1rem" onclick="clearHive()">🗑️ Vider la ruche</button>
+      <h3 style="font-size:1.3rem;margin-bottom:.4rem">Build your Hive</h3>
+      <p class="hint" style="margin-bottom:1.4rem">Choisis une abeille dans le menu, clique une case vide pour la placer. Clique une case remplie pour régler son <b>niveau</b> (1-25), la passer <b>gifted</b> (contour jaune) ou lui mettre un <b>beequip</b> (15 max). <b>Ajoute tes images</b> dans le bloc <b>DONNÉES · ABEILLES</b>.</p>
+
+      <div class="builder-layout">
+        <div class="hive-wrap">
+          <div class="hive" id="hive"></div>
+          <div class="builder-stats" id="hive-stats"></div>
+          <button class="btn btn-ghost" style="margin-top:1.2rem" onclick="clearHive()">🗑️ Vider la ruche</button>
+        </div>
+
+        <div class="builder-side">
+          <h4>Choisir une abeille</h4>
+          <div class="rar-chips" id="bee-rar-chips"></div>
+          <div class="bee-list" id="bee-list"></div>
+
+          <div class="cell-config hidden" id="cell-config">
+            <h4 id="cc-title">Case</h4>
+            <div class="cc-row">
+              <label>Niveau</label>
+              <input type="range" id="cc-level" min="1" max="25" value="1">
+              <span class="cc-lvl-val" id="cc-level-val">1</span>
+            </div>
+            <div class="cc-row">
+              <label>Gifted (contour jaune)</label>
+              <div class="cc-toggle" id="cc-gifted"></div>
+            </div>
+            <div class="cc-row">
+              <label>Beequip <span id="cc-bq-count" style="color:var(--muted)"></span></label>
+              <div class="cc-toggle" id="cc-beequip"></div>
+            </div>
+            <button class="btn btn-ghost" style="width:100%;margin-top:.2rem" onclick="clearSelectedCell()">Vider cette case</button>
+          </div>
         </div>
       </div>
-      <div class="hive" id="hive"></div>
-      <div class="builder-stats" id="hive-stats"></div>
     </div>
   </div>
 </section>
@@ -610,18 +659,58 @@ const VALEURS_TRADE = {
   "Antlers du renne":40,
 };
 
-/* ---------- DONNÉES · ABEILLES (outil live builder) ---------- */
-/* couleur : "rouge" | "bleu" | "blanc" | "incolore". */
+/* ---------- DONNÉES · ABEILLES (outil Build your Hive) ---------- */
+/* couleur : "rouge" | "bleu" | "incolore"
+   rarete  : "Basic" | "Rare" | "Épique" | "Légendaire" | "Mythique" | "Événement"
+   img     : lien d'une image (laisse "" -> rendu de secours coloré + nom)
+   👉 Colle tes images dans "img" pour afficher les vraies abeilles.
+   ⚠️ Couleurs/raretés à vérifier : elles peuvent changer avec les mises à jour. */
 const ABEILLES = [
-  { nom:"Basique",   couleur:"blanc",    rarete:"Commun" },
-  { nom:"Bomber",    couleur:"blanc",    rarete:"Rare" },
-  { nom:"Rad",       couleur:"rouge",    rarete:"Épique" },
-  { nom:"Fuzzy",     couleur:"bleu",     rarete:"Épique" },
-  { nom:"Bucko",     couleur:"bleu",     rarete:"Légendaire" },
-  { nom:"Riley",     couleur:"rouge",    rarete:"Légendaire" },
-  { nom:"Vicious",   couleur:"incolore", rarete:"Mythique" },
-  { nom:"Tabby",     couleur:"rouge",    rarete:"Mythique" },
-  { nom:"Puppy",     couleur:"bleu",     rarete:"Mythique" },
+  { nom:"Basic", couleur:"incolore", rarete:"Basic", img:"" },
+  { nom:"Bomber", couleur:"incolore", rarete:"Rare", img:"" },
+  { nom:"Brave", couleur:"rouge", rarete:"Rare", img:"" },
+  { nom:"Bumble", couleur:"bleu", rarete:"Rare", img:"" },
+  { nom:"Cool", couleur:"bleu", rarete:"Rare", img:"" },
+  { nom:"Hasty", couleur:"incolore", rarete:"Rare", img:"" },
+  { nom:"Looker", couleur:"incolore", rarete:"Rare", img:"" },
+  { nom:"Rad", couleur:"rouge", rarete:"Rare", img:"" },
+  { nom:"Rascal", couleur:"rouge", rarete:"Rare", img:"" },
+  { nom:"Stubborn", couleur:"incolore", rarete:"Rare", img:"" },
+  { nom:"Bubble", couleur:"bleu", rarete:"Épique", img:"" },
+  { nom:"Bucko", couleur:"bleu", rarete:"Épique", img:"" },
+  { nom:"Commander", couleur:"incolore", rarete:"Épique", img:"" },
+  { nom:"Demo", couleur:"incolore", rarete:"Épique", img:"" },
+  { nom:"Exhausted", couleur:"incolore", rarete:"Épique", img:"" },
+  { nom:"Fire", couleur:"rouge", rarete:"Épique", img:"" },
+  { nom:"Frosty", couleur:"bleu", rarete:"Épique", img:"" },
+  { nom:"Honey", couleur:"incolore", rarete:"Épique", img:"" },
+  { nom:"Rage", couleur:"rouge", rarete:"Épique", img:"" },
+  { nom:"Riley", couleur:"rouge", rarete:"Épique", img:"" },
+  { nom:"Shocked", couleur:"incolore", rarete:"Épique", img:"" },
+  { nom:"Baby", couleur:"bleu", rarete:"Légendaire", img:"" },
+  { nom:"Carpenter", couleur:"incolore", rarete:"Légendaire", img:"" },
+  { nom:"Demon", couleur:"rouge", rarete:"Légendaire", img:"" },
+  { nom:"Diamond", couleur:"bleu", rarete:"Légendaire", img:"" },
+  { nom:"Fuzzy", couleur:"incolore", rarete:"Légendaire", img:"" },
+  { nom:"Music", couleur:"bleu", rarete:"Légendaire", img:"" },
+  { nom:"Ninja", couleur:"incolore", rarete:"Légendaire", img:"" },
+  { nom:"Shy", couleur:"bleu", rarete:"Légendaire", img:"" },
+  { nom:"Buoyant", couleur:"bleu", rarete:"Mythique", img:"" },
+  { nom:"Photon", couleur:"incolore", rarete:"Mythique", img:"" },
+  { nom:"Precise", couleur:"rouge", rarete:"Mythique", img:"" },
+  { nom:"Puppy", couleur:"bleu", rarete:"Mythique", img:"" },
+  { nom:"Spicy", couleur:"rouge", rarete:"Mythique", img:"" },
+  { nom:"Tabby", couleur:"rouge", rarete:"Mythique", img:"" },
+  { nom:"Tadpole", couleur:"bleu", rarete:"Mythique", img:"" },
+  { nom:"Vector", couleur:"incolore", rarete:"Mythique", img:"" },
+  { nom:"Bear", couleur:"incolore", rarete:"Événement", img:"" },
+  { nom:"Cobalt", couleur:"bleu", rarete:"Événement", img:"" },
+  { nom:"Crimson", couleur:"rouge", rarete:"Événement", img:"" },
+  { nom:"Digital", couleur:"incolore", rarete:"Événement", img:"" },
+  { nom:"Festive", couleur:"incolore", rarete:"Événement", img:"" },
+  { nom:"Gummy", couleur:"incolore", rarete:"Événement", img:"" },
+  { nom:"Vicious", couleur:"incolore", rarete:"Événement", img:"" },
+  { nom:"Windy", couleur:"incolore", rarete:"Événement", img:"" },
 ];
 
 /* ---------- DONNÉES · PRIX NIVEAU (outil niveau d'abeilles) ---------- */
@@ -915,53 +1004,176 @@ function renderTrade(){
   else { v.className='verdict lose'; v.textContent=`❌ En ta défaveur : tu donnes ${fmt(Math.abs(diff))} de trop (−${pct.toFixed(0)} %).`; }
 }
 
-/* ---------- OUTIL 4 : Live builder (ruche) ---------- */
-const COULEUR_BEE = { rouge:"#F0736A", bleu:"#5AA9E6", blanc:"#F3F4F1", incolore:"#93A7B0" };
-let hive = new Array(50).fill(null);
-let selectedBee = 0;
+/* ---------- OUTIL 4 : Build your Hive ---------- */
+const COULEUR_BEE = { rouge:"#E0554E", bleu:"#4F97D6", incolore:"#3a3f47" };
+const COULEUR_RARETE_BEE = {
+  "Basic":"#B08D57","Rare":"#E8ECEF","Épique":"#F0C948",
+  "Légendaire":"#7FC6F0","Mythique":"#B77BE0","Événement":"#6BD08B"
+};
+const HIVE_SIZE = 50, BEEQUIP_MAX = 15;
+let hive = new Array(HIVE_SIZE).fill(null);   // chaque case : {bee, level, gifted, beequip} ou null
+let activeBee = 0;         // abeille choisie dans le menu
+let selectedCell = null;   // case en cours d'édition
+let beeFilter = "Tous";
+
+function beeIconHTML(b, cls){
+  if(b.img) return `<span class="${cls}"><img src="${b.img}" alt=""></span>`;
+  return `<span class="${cls}" style="background:${COULEUR_BEE[b.couleur]||'#555'}">${b.nom.slice(0,3)}</span>`;
+}
+
 function initBuilder(){
-  const sw = document.getElementById('bee-swatches');
-  sw.innerHTML = ABEILLES.map((b,i)=>
-    `<div class="swatch ${i===0?'selected':''}" data-i="${i}">
-       <span class="dot" style="background:${COULEUR_BEE[b.couleur]}"></span>${b.nom}</div>`).join('');
-  sw.addEventListener('click',e=>{
-    const s = e.target.closest('.swatch'); if(!s) return;
-    selectedBee = parseInt(s.dataset.i);
-    sw.querySelectorAll('.swatch').forEach(x=>x.classList.toggle('selected',x===s));
+  buildHiveCells();
+  renderBeeChips();
+  renderBeeList();
+  paintHive();
+  document.getElementById('cc-level').addEventListener('input',e=>{
+    if(selectedCell===null || !hive[selectedCell]) return;
+    hive[selectedCell].level = parseInt(e.target.value);
+    document.getElementById('cc-level-val').textContent = e.target.value;
+    paintCell(selectedCell);
   });
-  const h = document.getElementById('hive');
-  h.innerHTML = hive.map((_,i)=>`<div class="slot" data-i="${i}"></div>`).join('');
-  h.addEventListener('click',e=>{
-    const slot = e.target.closest('.slot'); if(!slot) return;
-    const i = parseInt(slot.dataset.i);
-    hive[i] = (hive[i]===selectedBee) ? null : selectedBee; // reclic sur même abeille = vide
-    paintHive();
+  document.getElementById('cc-gifted').addEventListener('click',()=>{
+    if(selectedCell===null || !hive[selectedCell]) return;
+    hive[selectedCell].gifted = !hive[selectedCell].gifted;
+    syncConfig(); paintCell(selectedCell); updateStats();
   });
+  document.getElementById('cc-beequip').addEventListener('click',()=>{
+    if(selectedCell===null || !hive[selectedCell]) return;
+    const cur = hive[selectedCell].beequip;
+    if(!cur && countBeequip()>=BEEQUIP_MAX){ alert("15 beequips maximum dans la ruche."); return; }
+    hive[selectedCell].beequip = !cur;
+    syncConfig(); paintCell(selectedCell); updateStats();
+  });
+}
+
+// Ruche en nid d'abeille (pointe en haut) : 5 par rangée, 10 rangées, rangées décalées
+function buildHiveCells(){
+  const cols=5, rows=10, W=62, H=Math.round(W*1.1547);
+  const vstep=H*0.75;
+  const hiveEl=document.getElementById('hive');
+  hiveEl.style.width  = (cols*W + W/2)+'px';
+  hiveEl.style.height = ((rows-1)*vstep + H)+'px';
+  let html='';
+  for(let i=0;i<HIVE_SIZE;i++){
+    const row=Math.floor(i/cols), col=i%cols;
+    const x=col*W + (row%2?W/2:0);
+    const y=row*vstep;
+    html+=`<div class="cell" data-i="${i}" style="left:${x}px;top:${y}px;width:${W}px;height:${H}px">`
+        + `<div class="hex"></div><div class="inner"></div>`
+        + `<span class="lvl"></span><span class="bq"></span></div>`;
+  }
+  hiveEl.innerHTML=html;
+  hiveEl.querySelectorAll('.cell').forEach(c=>
+    c.addEventListener('click',()=>onCellClick(parseInt(c.dataset.i))));
+}
+
+function onCellClick(i){
+  if(hive[i]===null) hive[i]={bee:activeBee, level:1, gifted:false, beequip:false};
+  selectCell(i);
+  paintCell(i); updateStats();
+}
+
+function selectCell(i){
+  selectedCell=i;
+  document.querySelectorAll('#hive .cell').forEach(c=>
+    c.classList.toggle('selected',parseInt(c.dataset.i)===i));
+  const cfg=document.getElementById('cell-config');
+  if(i===null || hive[i]===null){ cfg.classList.add('hidden'); return; }
+  cfg.classList.remove('hidden');
+  syncConfig();
+}
+function syncConfig(){
+  const c=hive[selectedCell]; if(!c) return;
+  document.getElementById('cc-title').textContent = ABEILLES[c.bee].nom+" — case "+(selectedCell+1);
+  document.getElementById('cc-level').value=c.level;
+  document.getElementById('cc-level-val').textContent=c.level;
+  document.getElementById('cc-gifted').classList.toggle('on',c.gifted);
+  document.getElementById('cc-beequip').classList.toggle('on',c.beequip);
+  document.getElementById('cc-bq-count').textContent=`(${countBeequip()}/${BEEQUIP_MAX})`;
+}
+
+function paintCell(i){
+  const cell=document.querySelector(`#hive .cell[data-i="${i}"]`); if(!cell) return;
+  const c=hive[i];
+  const inner=cell.querySelector('.inner');
+  const lvl=cell.querySelector('.lvl');
+  const bq=cell.querySelector('.bq');
+  if(c===null){
+    cell.classList.remove('gifted','filled');
+    inner.innerHTML=''; inner.style.background=''; lvl.textContent=''; bq.textContent='';
+    return;
+  }
+  const b=ABEILLES[c.bee];
+  cell.classList.add('filled');
+  cell.classList.toggle('gifted',c.gifted);
+  if(b.img){ inner.innerHTML=`<img src="${b.img}" alt="${b.nom}">`; inner.style.background=''; }
+  else { inner.innerHTML=`<span class="name-fallback">${b.nom}</span>`; inner.style.background=COULEUR_BEE[b.couleur]||'#555'; }
+  lvl.textContent=c.level;
+  bq.textContent = c.beequip ? '🎒' : '';
+}
+function paintHive(){ for(let i=0;i<HIVE_SIZE;i++) paintCell(i); updateStats(); }
+function countBeequip(){ return hive.filter(c=>c&&c.beequip).length; }
+
+function renderBeeChips(){
+  const rars=["Tous","Basic","Rare","Épique","Légendaire","Mythique","Événement"];
+  const el=document.getElementById('bee-rar-chips');
+  el.innerHTML=rars.map((r,i)=>`<span class="chip ${i===0?'active':''}" data-r="${r}">${r}</span>`).join('');
+  el.addEventListener('click',e=>{
+    if(!e.target.dataset.r) return;
+    beeFilter=e.target.dataset.r;
+    el.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c===e.target));
+    renderBeeList();
+  });
+}
+function renderBeeList(){
+  const el=document.getElementById('bee-list');
+  el.innerHTML=ABEILLES.map((b,i)=>{
+    if(beeFilter!=="Tous" && b.rarete!==beeFilter) return '';
+    return `<div class="bee-opt ${i===activeBee?'active':''}" data-i="${i}" title="${b.nom} · ${b.rarete}">
+      ${beeIconHTML(b,'ic')}
+      <span class="rdot" style="background:${COULEUR_RARETE_BEE[b.rarete]||'#888'}"></span>
+      <span class="nm">${b.nom}</span></div>`;
+  }).join('') || `<div style="color:var(--muted);font-size:.85rem;grid-column:1/-1">Aucune abeille.</div>`;
+  el.querySelectorAll('.bee-opt').forEach(o=>{
+    o.addEventListener('click',()=>{
+      activeBee=parseInt(o.dataset.i);
+      el.querySelectorAll('.bee-opt').forEach(x=>x.classList.toggle('active',x===o));
+      // si une case est ouverte, on lui applique cette abeille
+      if(selectedCell!==null && hive[selectedCell]!==null){
+        hive[selectedCell].bee=activeBee; paintCell(selectedCell); syncConfig(); updateStats();
+      }
+    });
+  });
+}
+
+function updateStats(){
+  const filled=hive.filter(c=>c!==null);
+  const parC={rouge:0,bleu:0,incolore:0};
+  filled.forEach(c=>parC[ABEILLES[c.bee].couleur]++);
+  const gifted=filled.filter(c=>c.gifted).length;
+  document.getElementById('hive-stats').innerHTML=`
+    <div class="stat"><div class="n">${filled.length}<small>/50</small></div><div class="l">Abeilles</div></div>
+    <div class="stat"><div class="n" style="color:${COULEUR_BEE.rouge}">${parC.rouge}</div><div class="l">Rouges</div></div>
+    <div class="stat"><div class="n" style="color:${COULEUR_BEE.bleu}">${parC.bleu}</div><div class="l">Bleues</div></div>
+    <div class="stat"><div class="n" style="color:#9aa7b0">${parC.incolore}</div><div class="l">Incolores</div></div>
+    <div class="stat"><div class="n">${gifted}</div><div class="l">Gifted</div></div>
+    <div class="stat"><div class="n">${countBeequip()}<small>/15</small></div><div class="l">Beequips</div></div>`;
+}
+
+function clearSelectedCell(){
+  if(selectedCell===null) return;
+  hive[selectedCell]=null;
+  paintCell(selectedCell);
+  document.getElementById('cell-config').classList.add('hidden');
+  document.querySelectorAll('#hive .cell').forEach(c=>c.classList.remove('selected'));
+  selectedCell=null; updateStats();
+}
+function clearHive(){
+  hive=new Array(HIVE_SIZE).fill(null);
+  selectedCell=null;
+  document.getElementById('cell-config').classList.add('hidden');
   paintHive();
 }
-function paintHive(){
-  document.querySelectorAll('#hive .slot').forEach((slot,i)=>{
-    if(hive[i]===null){ slot.className='slot'; slot.style.background=''; slot.textContent=''; }
-    else{
-      const b = ABEILLES[hive[i]];
-      slot.className='slot filled';
-      slot.style.background = COULEUR_BEE[b.couleur];
-      slot.textContent = b.nom.slice(0,5);
-      slot.style.color = (b.couleur==='blanc') ? '#1B323E' : '#0E1D26';
-    }
-  });
-  // Stats
-  const filled = hive.filter(x=>x!==null);
-  const parCouleur = {rouge:0,bleu:0,blanc:0,incolore:0};
-  filled.forEach(i=>parCouleur[ABEILLES[i].couleur]++);
-  document.getElementById('hive-stats').innerHTML = `
-    <div class="stat"><div class="n">${filled.length}<small style="color:var(--muted);font-size:1rem">/50</small></div><div class="l">Abeilles placées</div></div>
-    <div class="stat"><div class="n" style="color:${COULEUR_BEE.rouge}">${parCouleur.rouge}</div><div class="l">Rouges</div></div>
-    <div class="stat"><div class="n" style="color:${COULEUR_BEE.bleu}">${parCouleur.bleu}</div><div class="l">Bleues</div></div>
-    <div class="stat"><div class="n" style="color:${COULEUR_BEE.blanc}">${parCouleur.blanc}</div><div class="l">Blanches</div></div>
-    <div class="stat"><div class="n" style="color:${COULEUR_BEE.incolore}">${parCouleur.incolore}</div><div class="l">Incolores</div></div>`;
-}
-function clearHive(){ hive = new Array(50).fill(null); paintHive(); }
 
 /* ---------- Initialisation ---------- */
 initIngredients();
