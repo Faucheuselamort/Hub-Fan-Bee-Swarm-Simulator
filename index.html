@@ -242,6 +242,11 @@ table.calc td.n{text-align:right;font-family:'Fredoka';font-weight:600;color:var
 .all-level-ctl{display:flex;align-items:center;gap:.7rem}
 .all-level-ctl input[type=range]{flex:1;accent-color:var(--honey)}
 .all-level-ctl .btn{padding:.5rem .95rem;font-size:.9rem;flex:0 0 auto}
+.hive-actions{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.2rem}
+.hive-actions .btn{flex:1;min-width:150px}
+.hive-legend{font-size:.78rem;color:var(--muted);margin-top:.7rem;line-height:1.6}
+.hive-legend b{color:var(--cream);font-weight:600}
+.hive-legend i{color:var(--muted)}
 
 /* --- Trade équitable --- */
 .trade{display:grid;grid-template-columns:1fr auto 1fr;gap:1.2rem;align-items:start}
@@ -629,7 +634,19 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
               <button class="btn btn-primary" onclick="applyAllLevel()">Appliquer</button>
             </div>
           </div>
-          <button class="btn btn-ghost" style="margin-top:1rem" onclick="clearHive()">🗑️ Vider la ruche</button>
+          <div class="hive-actions">
+            <button class="btn btn-ghost" onclick="exportHive()">⬇️ Exporter en fichier</button>
+            <button class="btn btn-ghost" onclick="downloadHiveImage()">🖼️ Exporter en image</button>
+            <button class="btn btn-ghost" onclick="document.getElementById('import-hive').click()">⬆️ Importer</button>
+            <button class="btn btn-ghost" onclick="clearHive()">🗑️ Vider</button>
+            <input type="file" id="import-hive" accept="application/json,.json" style="display:none"
+                   onchange="if(this.files[0])importHive(this.files[0]); this.value='';">
+          </div>
+          <p class="hive-legend">
+            <b>Exporter en fichier</b> : sauvegarde modifiable, à ré-importer plus tard pour continuer ta ruche.
+            <b>Exporter en image</b> : une image PNG à garder ou partager (Discord…).
+            <b>Importer</b> : recharge une sauvegarde <i>.json</i>.
+          </p>
         </div>
 
         <div class="builder-side">
@@ -1476,6 +1493,116 @@ function clearSelectedCell(){
   document.getElementById('cell-config').classList.add('hidden');
   document.querySelectorAll('#hive .cell').forEach(c=>c.classList.remove('selected'));
   selectedCell=null; updateStats(); highlightCells();
+}
+function downloadHiveImage(){
+  const cols=5, rows=10, W=64, H=Math.round(W*0.866), hstep=W*0.75, vstep=H, pad=26, scale=2;
+  const cw=(cols-1)*hstep+W+pad*2, ch=(rows-1)*vstep+H+H/2+pad*2;
+  const canvas=document.createElement('canvas');
+  canvas.width=cw*scale; canvas.height=ch*scale;
+  const ctx=canvas.getContext('2d'); ctx.scale(scale,scale);
+  ctx.fillStyle='#1B323E'; ctx.fillRect(0,0,cw,ch);
+
+  // hexagone "face plate" centré en (cx,cy), échelle s
+  const OFFS=[[-0.25,-0.5],[0.25,-0.5],[0.5,0],[0.25,0.5],[-0.25,0.5],[-0.5,0]];
+  function hexPath(cx,cy,s){
+    ctx.beginPath();
+    OFFS.forEach((o,i)=>{ const px=cx+o[0]*W*s, py=cy+o[1]*H*s; i?ctx.lineTo(px,py):ctx.moveTo(px,py); });
+    ctx.closePath();
+  }
+  // précharger les images
+  const srcs=new Set();
+  hive.forEach(c=>{ if(!c) return;
+    srcs.add(imgSrc('bees',ABEILLES[c.bee]));
+    if(c.beequip){ const bq=BEEQUIP.find(x=>x.nom===c.beequip)||{nom:c.beequip}; srcs.add(imgSrc('beequip',bq)); }
+  });
+  const imgMap={}; let pending=srcs.size;
+  const done=()=>{ if(--pending<=0) render(); };
+  if(pending===0){ render(); }
+  else srcs.forEach(src=>{ const im=new Image();
+    im.onload=()=>{imgMap[src]=im;done();}; im.onerror=()=>{imgMap[src]=null;done();}; im.src=src; });
+
+  function render(){
+    for(let i=0;i<HIVE_SIZE;i++){
+      const c=hive[i]; if(!c) continue;
+      const wave=Math.floor(i/cols), col=i%cols;
+      const x=pad+col*hstep, y=pad+wave*vstep+((col%2)?0:H/2);
+      const cx=x+W/2, cy=y+H/2, b=ABEILLES[c.bee];
+      hexPath(cx,cy,1); ctx.fillStyle=c.gifted?'#F4DD44':'#2a4653'; ctx.fill();          // bordure
+      ctx.save(); hexPath(cx,cy,0.9); ctx.clip();                                         // intérieur
+      ctx.fillStyle=COULEUR_BEE[b.couleur]||'#555'; hexPath(cx,cy,0.9); ctx.fill();
+      const bi=imgMap[imgSrc('bees',b)];
+      if(bi){ ctx.drawImage(bi, x+W*0.05, y+H*0.05, W*0.9, H*0.9); }
+      else { ctx.fillStyle='#fff'; ctx.font='700 10px Fredoka, sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(b.nom, cx, cy); }
+      ctx.restore();
+      ctx.font='800 14px Fredoka, sans-serif'; ctx.textAlign='left'; ctx.textBaseline='alphabetic';   // niveau
+      ctx.lineWidth=3; ctx.strokeStyle='rgba(0,0,0,.9)'; ctx.lineJoin='round';
+      ctx.strokeText(''+c.level, x+4, y+H-4);
+      ctx.fillStyle=c.mutation?c.mutation.couleur:'#fff'; ctx.fillText(''+c.level, x+4, y+H-4);
+      if(c.beequip){                                                                      // beequip
+        const bq=BEEQUIP.find(x=>x.nom===c.beequip)||{nom:c.beequip};
+        const bqi=imgMap[imgSrc('beequip',bq)], bs=26, bx=x+W-bs, by=y+H-bs+2;
+        if(bqi) ctx.drawImage(bqi, bx, by, bs, bs);
+        else { ctx.font='15px sans-serif'; ctx.textAlign='center'; ctx.fillText('🎒', bx+bs/2, by+bs*0.78); }
+      }
+    }
+    try{
+      canvas.toBlob(blob=>{ const url=URL.createObjectURL(blob); const a=document.createElement('a');
+        a.href=url; a.download='ma-ruche-bss.png'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); });
+    }catch(e){ alert("Impossible de générer l'image (images externes non autorisées)."); }
+  }
+}
+function exportHive(){
+  const data = {
+    version: 1,
+    hive: hive.map(c => c ? {
+      bee:      ABEILLES[c.bee].nom,
+      level:    c.level,
+      gifted:   c.gifted,
+      beequip:  c.beequip || null,
+      mutation: c.mutation ? c.mutation.nom : null
+    } : null)
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url  = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'ma-ruche-bss.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+function importHive(file){
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      const arr  = Array.isArray(data) ? data : (data.hive || []);
+      const next = new Array(HIVE_SIZE).fill(null);
+      arr.forEach((c,i) => {
+        if(i>=HIVE_SIZE || !c) return;
+        const beeIdx = ABEILLES.findIndex(b => b.nom === c.bee);
+        if(beeIdx < 0) return;                       // abeille inconnue -> ignorée
+        let mutation = null;
+        if(c.mutation){
+          const m = MUTATIONS.find(m => m.nom === c.mutation);
+          if(m) mutation = { nom:m.nom, couleur:m.couleur };
+        }
+        next[i] = {
+          bee: beeIdx,
+          level: Math.max(1, Math.min(25, parseInt(c.level)||1)),
+          gifted: !!c.gifted,
+          beequip: c.beequip || null,
+          mutation: mutation
+        };
+      });
+      hive = next;
+      selectedCell = null;
+      document.getElementById('cell-config').classList.add('hidden');
+      document.querySelectorAll('#hive .cell').forEach(x=>x.classList.remove('selected'));
+      paintHive(); highlightCells();
+    } catch(err) {
+      alert("Fichier invalide : impossible d'importer cette ruche.");
+    }
+  };
+  reader.readAsText(file);
 }
 function applyAllLevel(){
   const lvl = parseInt(document.getElementById('all-level').value)||1;
