@@ -271,6 +271,8 @@ table.calc td.n{text-align:right;font-family:'Fredoka';font-weight:600;color:var
 .cell:hover .hex{background:var(--cream)}
 .cell.gifted .hex{background:var(--honey)}
 .cell.selected{transform:scale(1.06);z-index:5}
+.cell.can .hex{background:#37c26b}
+.cell.cant .hex{background:#e0554e}
 .cell .inner{inset:6px;background:var(--ink-950);display:grid;place-items:center;overflow:hidden}
 .cell .inner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;image-rendering:pixelated}
 .cell .name-fallback{font-family:'Fredoka';font-weight:700;font-size:10px;color:#fff;text-align:center;
@@ -1158,7 +1160,7 @@ const COULEUR_RARETE_BEE = {
 };
 const HIVE_SIZE = 50, BEEQUIP_MAX = 15;
 let hive = new Array(HIVE_SIZE).fill(null);   // chaque case : {bee, level, gifted, beequip} ou null
-let activeBee = 0;         // abeille choisie dans le menu
+let activeBee = -1;        // abeille choisie dans le menu (-1 = aucune)
 let activeObject = null;   // objet choisi (beequip/mutation) à appliquer par clic
 let selectedCell = null;   // case en cours d'édition
 let beeFilter = "Tous";
@@ -1172,6 +1174,7 @@ function initBuilder(){
   renderBeeChips();
   renderBeeList();
   paintHive();
+  updateModeHint();
   document.getElementById('cc-level').addEventListener('input',e=>{
     if(selectedCell===null || !hive[selectedCell]) return;
     hive[selectedCell].level = parseInt(e.target.value);
@@ -1224,10 +1227,56 @@ function renderLabels(){
   layer.innerHTML=html;
 }
 
+/* ---------- RÈGLES DE PLACEMENT (vert = autorisé, rouge = bloqué) ---------- */
+/* Règles par beequip. Vide = autorisé partout. Exemples :
+   const BEEQUIP_REGLES = {
+     "Demon Talisman": { abeilles:["Demon"] },      // seulement sur Demon Bee
+     "Charm Bracelet": { couleurs:["rouge","bleu"] } // seulement rouges/bleues
+   };
+   👉 On complètera ces règles ensemble. */
+const BEEQUIP_REGLES = {
+};
+function beequipAllowed(beequipNom, beeIdx){
+  const r = BEEQUIP_REGLES[beequipNom];
+  if(!r) return true;
+  const b = ABEILLES[beeIdx];
+  if(r.abeilles && !r.abeilles.includes(b.nom)) return false;
+  if(r.couleurs && !r.couleurs.includes(b.couleur)) return false;
+  if(r.raretes  && !r.raretes.includes(b.rarete))  return false;
+  return true;
+}
+// Une abeille peut-elle être placée sur la case i ?
+function canPlaceBee(beeIdx, i){
+  if(hive[i]!==null) return false;
+  const b = ABEILLES[beeIdx];
+  if(b.rarete==='Événement' && hive.some(c=>c && ABEILLES[c.bee].nom===b.nom)) return false; // une seule fois
+  return true;
+}
+// Un objet peut-il être appliqué sur la case i ?
+function canApplyObject(obj, i){
+  if(hive[i]===null) return false;
+  if(obj.kind==='mutation') return true;
+  return beequipAllowed(obj.nom, hive[i].bee);
+}
+// Allume les cases en vert/rouge selon la sélection courante
+function highlightCells(){
+  document.querySelectorAll('#hive .cell').forEach(cell=>{
+    cell.classList.remove('can','cant');
+    const i=parseInt(cell.dataset.i);
+    if(activeObject){
+      if(hive[i]!==null) cell.classList.add(canApplyObject(activeObject,i)?'can':'cant');
+    } else if(activeBee>=0){
+      if(hive[i]===null) cell.classList.add(canPlaceBee(activeBee,i)?'can':'cant');
+    }
+  });
+}
+
 function onCellClick(i){
-  // Mode objet : on applique le beequip / la mutation à l'abeille de la case
+  // Mode objet : appliquer un beequip / une mutation
   if(activeObject){
     if(hive[i]===null) return;                       // case vide : rien à équiper
+    if(hive[i].beequip!==activeObject.nom && hive[i].mutation?.nom!==activeObject.nom
+       && !canApplyObject(activeObject,i)) return;   // bloqué (rouge)
     if(activeObject.kind==='mutation'){
       const same = hive[i].mutation && hive[i].mutation.nom===activeObject.nom;
       hive[i].mutation = same ? null : {nom:activeObject.nom, couleur:activeObject.couleur};
@@ -1236,13 +1285,22 @@ function onCellClick(i){
       if(!same && countBeequip()>=BEEQUIP_MAX){ alert("15 beequips maximum dans la ruche."); return; }
       hive[i].beequip = same ? null : activeObject.nom;
     }
-    selectCell(i); paintCell(i); updateStats();
+    selectCell(i); paintCell(i); updateStats(); highlightCells();
     return;
   }
-  // Mode abeille : placer / sélectionner
-  if(hive[i]===null) hive[i]={bee:activeBee>=0?activeBee:0, level:1, gifted:false, beequip:null, mutation:null};
-  selectCell(i);
-  paintCell(i); updateStats();
+  // Mode abeille : une abeille est sélectionnée
+  if(activeBee>=0){
+    if(hive[i]===null){
+      if(!canPlaceBee(activeBee,i)) return;          // bloqué (rouge)
+      hive[i]={bee:activeBee, level:1, gifted:false, beequip:null, mutation:null};
+      selectCell(i); paintCell(i); updateStats(); highlightCells();
+    } else {
+      selectCell(i);                                 // case remplie : ouvrir la config
+    }
+    return;
+  }
+  // Mode libre : cliquer une case remplie pour la modifier
+  if(hive[i]!==null) selectCell(i);
 }
 
 function selectCell(i){
@@ -1321,12 +1379,16 @@ function renderBeeList(){
   }).join('') || `<div style="color:var(--muted);font-size:.85rem;grid-column:1/-1">Aucune abeille.</div>`;
   el.querySelectorAll('.bee-opt').forEach(o=>{
     o.addEventListener('click',()=>{
-      activeBee=parseInt(o.dataset.i);
-      activeObject=null;
-      document.querySelector('.builder-layout').classList.remove('obj-mode');
-      document.querySelectorAll('#obj-list .obj-opt').forEach(x=>x.classList.remove('active'));
-      el.querySelectorAll('.bee-opt').forEach(x=>x.classList.toggle('active',x===o));
-      updateBrushLabel(); updateModeHint();
+      const idx=parseInt(o.dataset.i);
+      if(activeBee===idx && !activeObject){         // re-clic => désélection
+        activeBee=-1; o.classList.remove('active');
+      } else {
+        activeBee=idx; activeObject=null;
+        document.querySelector('.builder-layout').classList.remove('obj-mode');
+        document.querySelectorAll('#obj-list .obj-opt').forEach(x=>x.classList.remove('active'));
+        el.querySelectorAll('.bee-opt').forEach(x=>x.classList.toggle('active',x===o));
+      }
+      updateBrushLabel(); updateModeHint(); highlightCells();
     });
   });
 }
@@ -1352,13 +1414,13 @@ function clearSelectedCell(){
   paintCell(selectedCell);
   document.getElementById('cell-config').classList.add('hidden');
   document.querySelectorAll('#hive .cell').forEach(c=>c.classList.remove('selected'));
-  selectedCell=null; updateStats();
+  selectedCell=null; updateStats(); highlightCells();
 }
 function clearHive(){
   hive=new Array(HIVE_SIZE).fill(null);
   selectedCell=null;
   document.getElementById('cell-config').classList.add('hidden');
-  paintHive();
+  paintHive(); highlightCells();
 }
 
 /* ---------- Menu d'objets (Mutation / Beequip / Beesmas) ---------- */
@@ -1387,19 +1449,25 @@ function renderObjets(){
   el.querySelectorAll('.obj-opt').forEach(op=>{
     op.addEventListener('click',()=>{
       const o=list[parseInt(op.dataset.idx)];
-      activeObject={ kind: objCat==='mutation'?'mutation':'beequip', nom:o.nom, couleur:o.couleur||null };
-      el.querySelectorAll('.obj-opt').forEach(x=>x.classList.toggle('active',x===op));
-      activeBee=-1;                                   // désactive l'abeille
-      document.querySelectorAll('#bee-list .bee-opt').forEach(x=>x.classList.remove('active'));
-      document.querySelector('.builder-layout').classList.add('obj-mode');
-      updateModeHint();
+      if(activeObject && activeObject.nom===o.nom){   // re-clic => désélection
+        activeObject=null; op.classList.remove('active');
+        document.querySelector('.builder-layout').classList.remove('obj-mode');
+      } else {
+        activeObject={ kind: objCat==='mutation'?'mutation':'beequip', nom:o.nom, couleur:o.couleur||null };
+        el.querySelectorAll('.obj-opt').forEach(x=>x.classList.toggle('active',x===op));
+        activeBee=-1;
+        document.querySelectorAll('#bee-list .bee-opt').forEach(x=>x.classList.remove('active'));
+        document.querySelector('.builder-layout').classList.add('obj-mode');
+      }
+      updateModeHint(); highlightCells();
     });
   });
 }
 function updateModeHint(){
   const el=document.getElementById('item-soon'); if(!el) return;
-  if(activeObject) el.innerHTML=`▸ <b style="color:var(--honey)">${activeObject.nom}</b> : clique une abeille`;
-  else el.textContent="Clique un objet, puis une abeille.";
+  if(activeObject) el.innerHTML=`▸ <b style="color:var(--honey)">${activeObject.nom}</b> : clique une case verte`;
+  else if(activeBee>=0) el.innerHTML=`▸ <b style="color:var(--honey)">${ABEILLES[activeBee].nom}</b> : clique une case verte`;
+  else el.textContent="Clique une abeille ou un objet, puis une case. Reclique pour désélectionner.";
 }
 
 function renderMutations(){
