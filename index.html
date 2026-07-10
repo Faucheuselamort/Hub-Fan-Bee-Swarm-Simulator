@@ -1201,7 +1201,7 @@ function renderLabels(){
     html+=`<span class="hive-label" style="left:${g.x+3}px;top:${g.y+g.H-17}px;color:${col}">${c.level}</span>`;
     if(c.beequip){
       const bq=BEEQUIP.find(b=>b.nom===c.beequip); const bimg=bq&&bq.img;
-      html+=`<span class="hive-badge" style="left:${g.x+g.W-23}px;top:${g.y+2}px">${bimg?`<img src="${bimg}" alt="">`:'🎒'}</span>`;
+      html+=`<span class="hive-badge" style="left:${g.x+g.W-23}px;top:${g.y+g.H-22}px">${bimg?`<img src="${bimg}" alt="">`:'🎒'}</span>`;
     }
   }
   layer.innerHTML=html;
