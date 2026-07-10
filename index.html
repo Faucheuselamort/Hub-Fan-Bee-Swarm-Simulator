@@ -221,7 +221,8 @@ table.calc td.n{text-align:right;font-family:'Fredoka';font-weight:600;color:var
 .obj-opt .odot{width:9px;height:9px;border-radius:50%;flex:0 0 auto;margin-left:auto}
 .hive-badge{position:absolute;width:20px;height:20px;border-radius:50%;background:var(--ink-950);
   border:1.5px solid var(--honey);display:grid;place-items:center;font-size:10px;overflow:hidden}
-.hive-badge img{width:100%;height:100%;object-fit:contain}
+.hive-badge{position:relative}
+.hive-badge img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 .cc-obj{display:flex;justify-content:space-between;align-items:center;gap:.5rem;font-family:'Fredoka';
   font-weight:600;font-size:.85rem;background:var(--ink-950);border:1px solid var(--line-soft);
   border-radius:8px;padding:.4rem .6rem;margin-bottom:.5rem}
@@ -271,7 +272,7 @@ table.calc td.n{text-align:right;font-family:'Fredoka';font-weight:600;color:var
 .cell.gifted .hex{background:var(--honey)}
 .cell.selected{transform:scale(1.06);z-index:5}
 .cell .inner{inset:6px;background:var(--ink-950);display:grid;place-items:center;overflow:hidden}
-.cell .inner img{width:100%;height:100%;object-fit:cover;image-rendering:pixelated}
+.cell .inner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;image-rendering:pixelated}
 .cell .name-fallback{font-family:'Fredoka';font-weight:700;font-size:10px;color:#fff;text-align:center;
   padding:2px;line-height:1.05;text-shadow:0 1px 2px #000,0 0 3px #000;pointer-events:none}
 /* chiffres de niveau : couche au-dessus de TOUT, en bas à gauche */
@@ -291,7 +292,8 @@ table.calc td.n{text-align:right;font-family:'Fredoka';font-weight:600;color:var
   border:1px solid var(--line-soft);border-radius:8px;padding:.3rem .35rem;transition:.12s;min-width:0}
 .obj-opt:hover{border-color:var(--honey)}
 .obj-opt .oic{width:26px;height:26px;flex:0 0 auto;border-radius:6px;display:grid;place-items:center;font-size:13px;background:var(--panel);overflow:hidden}
-.obj-opt .oic img{width:100%;height:100%;object-fit:contain}
+.obj-opt .oic{position:relative}
+.obj-opt .oic img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 .obj-opt .onm{font-family:'Fredoka';font-weight:500;font-size:.72rem;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .item-soon{font-size:.66rem;color:var(--muted);text-align:center;margin-top:.5rem;line-height:1.3}
 
@@ -306,7 +308,8 @@ table.calc td.n{text-align:right;font-family:'Fredoka';font-weight:600;color:var
 .bee-opt.active{border-color:var(--honey);background:var(--panel-2)}
 .bee-opt .ic{width:26px;height:26px;flex:0 0 auto;border-radius:6px;display:grid;place-items:center;
   font-size:8px;font-weight:700;font-family:'Fredoka';color:#fff;overflow:hidden;text-shadow:0 1px 1px #000}
-.bee-opt .ic img{width:100%;height:100%;object-fit:cover}
+.bee-opt .ic{position:relative}
+.bee-opt .ic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .bee-opt .rdot{width:7px;height:7px;border-radius:50%;flex:0 0 auto}
 .bee-opt .nm{font-size:.8rem;font-family:'Fredoka';font-weight:500;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
@@ -878,6 +881,21 @@ const PRIX_NIVEAU = [
    ██  LOGIQUE DU SITE — normalement tu n'as pas besoin d'y toucher  ██
    ============================================================================ */
 
+/* ============================================================================
+   ██  IMAGES — dossier "images/" avec un sous-dossier par type  ██
+   Arborescence attendue (à la racine du dépôt, à côté de index.html) :
+     images/bees/       -> ex : images/bees/Basic.png
+     images/beequip/    -> ex : images/beequip/Thimble.png
+     images/item/       -> images/stickers/ -> images/amulette/
+   Le nom du fichier = le nom exact affiché + ".png". Si le fichier n'existe
+   pas encore, un rendu de secours (couleur + nom) s'affiche automatiquement.
+   Tu peux forcer une autre image en remplissant le champ img:"..." d'un objet.
+   ============================================================================ */
+function imgSrc(folder, o){
+  if(o && o.img) return o.img;                 // chemin explicite prioritaire
+  return `images/${folder}/${encodeURIComponent(o.nom)}.png`;
+}
+
 /* ---------- Navigation entre onglets ---------- */
 function showView(id){
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
@@ -895,7 +913,7 @@ const COULEUR_RARETE = {
 };
 
 /* ---------- Génération des cartes de contenu ---------- */
-function carteHTML(o){
+function carteHTML(o, folder){
   const rarite = o.rarete
     ? `<span class="rarity" style="background:${COULEUR_RARETE[o.rarete]||'#888'}"></span>${o.rarete}`
     : '';
@@ -905,7 +923,7 @@ function carteHTML(o){
   if(o.lieu)  meta += `<div><span class="k">Où l'obtenir</span><span class="v">${o.lieu}</span></div>`;
   if(o.effet) meta += `<div><span class="k">Effet</span><span class="v">${o.effet}</span></div>`;
   if(o.rarete && !o.cout) meta += `<div><span class="k">Rareté</span><span class="v">${rarite}</span></div>`;
-  const img = o.img ? `<div class="card-img"><img src="${o.img}" alt="${o.nom}"></div>` : '';
+  const img = `<div class="card-img"><img src="${imgSrc(folder,o)}" alt="${o.nom}" onerror="this.parentNode.style.display='none'"></div>`;
   return `<div class="card" data-name="${o.nom.toLowerCase()}" data-cat="${tag}">
     <span class="tag">${tag}</span>
     ${img}
@@ -914,9 +932,9 @@ function carteHTML(o){
     <div class="meta">${meta}</div>
   </div>`;
 }
-function renderCards(key,data,cats){
+function renderCards(key,data,cats,folder){
   const grid = document.getElementById(key+'-grid');
-  grid.innerHTML = data.map(carteHTML).join('') || `<div class="empty">Rien à afficher pour le moment.</div>`;
+  grid.innerHTML = data.map(o=>carteHTML(o,folder)).join('') || `<div class="empty">Rien à afficher pour le moment.</div>`;
   const chips = document.getElementById(key+'-chips');
   chips.innerHTML = cats.map((c,i)=>`<span class="chip ${i===0?'active':''}" data-cat="${c}">${c}</span>`).join('');
   chips.addEventListener('click',e=>{
@@ -944,10 +962,10 @@ function filterCards(key,term='',cat=null){
   if(visible===0){ if(!e){e=document.createElement('div');e.className='empty';e.textContent='Aucun résultat.';grid.appendChild(e);} }
   else if(e){ e.remove(); }
 }
-renderCards('items',ITEMS,ITEMS_CATS);
-renderCards('stickers',STICKERS,STICKERS_CATS);
-renderCards('amulettes',AMULETTES,AMULETTES_CATS);
-renderCards('beequip',BEEQUIP,BEEQUIP_CATS);
+renderCards('items',ITEMS,ITEMS_CATS,'item');
+renderCards('stickers',STICKERS,STICKERS_CATS,'stickers');
+renderCards('amulettes',AMULETTES,AMULETTES_CATS,'amulette');
+renderCards('beequip',BEEQUIP,BEEQUIP_CATS,'beequip');
 
 /* ---------- Navigation entre outils ---------- */
 document.querySelector('.tool-nav').addEventListener('click',e=>{
@@ -1146,8 +1164,7 @@ let selectedCell = null;   // case en cours d'édition
 let beeFilter = "Tous";
 
 function beeIconHTML(b, cls){
-  if(b.img) return `<span class="${cls}"><img src="${b.img}" alt=""></span>`;
-  return `<span class="${cls}" style="background:${COULEUR_BEE[b.couleur]||'#555'}">${b.nom.slice(0,3)}</span>`;
+  return `<span class="${cls}" style="background:${COULEUR_BEE[b.couleur]||'#555'}">${b.nom.slice(0,3)}<img src="${imgSrc('bees',b)}" alt="" onerror="this.remove()"></span>`;
 }
 
 function initBuilder(){
@@ -1200,8 +1217,8 @@ function renderLabels(){
     const col = c.mutation ? c.mutation.couleur : '#fff';        // mutation => couleur du chiffre
     html+=`<span class="hive-label" style="left:${g.x+3}px;top:${g.y+g.H-17}px;color:${col}">${c.level}</span>`;
     if(c.beequip){
-      const bq=BEEQUIP.find(b=>b.nom===c.beequip); const bimg=bq&&bq.img;
-      html+=`<span class="hive-badge" style="left:${g.x+g.W-23}px;top:${g.y+g.H-22}px">${bimg?`<img src="${bimg}" alt="">`:'🎒'}</span>`;
+      const bq=BEEQUIP.find(b=>b.nom===c.beequip)||{nom:c.beequip};
+      html+=`<span class="hive-badge" style="left:${g.x+g.W-23}px;top:${g.y+g.H-22}px">🎒<img src="${imgSrc('beequip',bq)}" alt="" onerror="this.remove()"></span>`;
     }
   }
   layer.innerHTML=html;
@@ -1276,8 +1293,8 @@ function paintCell(i){
   const b=ABEILLES[c.bee];
   cell.classList.add('filled');
   cell.classList.toggle('gifted',c.gifted);
-  if(b.img){ inner.innerHTML=`<img src="${b.img}" alt="${b.nom}">`; inner.style.background=''; }
-  else { inner.innerHTML=`<span class="name-fallback">${b.nom}</span>`; inner.style.background=COULEUR_BEE[b.couleur]||'#555'; }
+  inner.style.background = COULEUR_BEE[b.couleur]||'#555';
+  inner.innerHTML = `<span class="name-fallback">${b.nom}</span><img src="${imgSrc('bees',b)}" alt="${b.nom}" onerror="this.remove()">`;
 }
 function paintHive(){ for(let i=0;i<HIVE_SIZE;i++) paintCell(i); updateStats(); }
 function countBeequip(){ return hive.filter(c=>c&&c.beequip).length; }
@@ -1360,7 +1377,8 @@ function renderObjets(){
   const el=document.getElementById('obj-list');
   const list=OBJETS[objCat]||[];
   el.innerHTML = list.map((o,idx)=>{
-    const ic = o.img?`<img src="${o.img}" alt="">`:(objCat==='mutation'?'🧬':'🎒');
+    const ic = (objCat==='mutation') ? '🧬'
+             : `🎒<img src="${imgSrc('beequip',o)}" alt="" onerror="this.remove()">`;
     const dot = (objCat==='mutation'&&o.couleur)?`<span class="odot" style="background:${o.couleur}"></span>`:'';
     const active = (activeObject && activeObject.nom===o.nom) ? ' active':'';
     return `<div class="obj-opt${active}" data-idx="${idx}" title="${o.nom}">
