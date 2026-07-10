@@ -1870,13 +1870,14 @@ function downloadHiveImage(){
     im.onload=()=>{imgMap[src]=im;done();}; im.onerror=()=>{imgMap[src]=null;done();}; im.src=src; });
 
   function render(){
+    // --- Passage 1 : alvéoles, faces, images, badges beequip ---
     for(let i=0;i<HIVE_SIZE;i++){
       const c=hive[i]; if(!c) continue;
       const wave=Math.floor(i/cols), col=i%cols;
       const x=pad+col*hstep, y=pad+wave*vstep+((col%2)?0:H/2);
       const cx=x+W/2, cy=y+H/2, b=ABEILLES[c.bee];
       const sB=0.86, sI=0.74;                                                            // écart entre alvéoles
-      const hb=cy+0.5*H*sB, hl=cx-0.5*W*sB, hr=cx+0.5*W*sB;
+      const hb=cy+0.5*H*sB, hr=cx+0.5*W*sB;
       hexPath(cx,cy,sB); ctx.fillStyle=c.gifted?'#F4DD44':'#2a4653'; ctx.fill();          // bordure
       ctx.save(); hexPath(cx,cy,sI); ctx.clip();                                          // intérieur
       ctx.fillStyle=COULEUR_BEE[b.couleur]||'#555'; hexPath(cx,cy,sI); ctx.fill();
@@ -1884,16 +1885,26 @@ function downloadHiveImage(){
       if(bi){ ctx.drawImage(bi, cx-0.5*W*sI, cy-0.5*H*sI, W*sI, H*sI); }
       else { ctx.fillStyle='#fff'; ctx.font='700 10px Fredoka, sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(b.nom, cx, cy); }
       ctx.restore();
-      ctx.font='800 14px Fredoka, sans-serif'; ctx.textAlign='left'; ctx.textBaseline='alphabetic';   // niveau
-      ctx.lineWidth=3; ctx.strokeStyle='rgba(0,0,0,.9)'; ctx.lineJoin='round';
-      ctx.strokeText(''+c.level, hl+2, hb);
-      ctx.fillStyle=c.mutation?c.mutation.couleur:'#fff'; ctx.fillText(''+c.level, hl+2, hb);
       if(c.beequip){                                                                      // beequip
         const bq=BEEQUIP.find(x=>x.nom===c.beequip)||{nom:c.beequip};
         const bqi=imgMap[imgSrc('beequip',bq)], bs=24, bx=hr-bs, by=hb-bs;
         if(bqi) ctx.drawImage(bqi, bx, by, bs, bs);
-        else { ctx.font='14px sans-serif'; ctx.textAlign='center'; ctx.fillText('🎒', bx+bs/2, by+bs*0.78); }
+        else { ctx.font='14px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='alphabetic'; ctx.fillText('🎒', bx+bs/2, by+bs*0.78); }
       }
+    }
+    // --- Passage 2 : les chiffres de niveau, TOUJOURS par-dessus ---
+    ctx.font='800 14px Fredoka, sans-serif'; ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+    ctx.lineWidth=3; ctx.lineJoin='round';
+    for(let i=0;i<HIVE_SIZE;i++){
+      const c=hive[i]; if(!c) continue;
+      const wave=Math.floor(i/cols), col=i%cols;
+      const x=pad+col*hstep, y=pad+wave*vstep+((col%2)?0:H/2);
+      const cx=x+W/2, cy=y+H/2;
+      const sB=0.86, hb=cy+0.5*H*sB, hl=cx-0.5*W*sB;
+      ctx.strokeStyle='rgba(0,0,0,.9)';
+      ctx.strokeText(''+c.level, hl+2, hb);
+      ctx.fillStyle=c.mutation?c.mutation.couleur:'#fff';
+      ctx.fillText(''+c.level, hl+2, hb);
     }
     try{
       canvas.toBlob(blob=>{ const url=URL.createObjectURL(blob); const a=document.createElement('a');
