@@ -237,6 +237,12 @@ table.calc td.n{text-align:right;font-family:'Fredoka';font-weight:600;color:var
 .mut-swatch .sw{width:16px;height:16px;border-radius:5px;border:1px solid rgba(255,255,255,.15);flex:0 0 auto}
 .mut-num{font-family:'Fredoka';font-weight:800;font-size:1.15rem;text-shadow:0 0 3px #000}
 
+.all-level{margin-top:1.4rem;background:var(--ink-900);border:1px solid var(--line-soft);border-radius:12px;padding:.9rem 1rem}
+.all-level label{display:block;font-family:'Fredoka';font-weight:500;font-size:.85rem;color:var(--muted);margin-bottom:.55rem}
+.all-level-ctl{display:flex;align-items:center;gap:.7rem}
+.all-level-ctl input[type=range]{flex:1;accent-color:var(--honey)}
+.all-level-ctl .btn{padding:.5rem .95rem;font-size:.9rem;flex:0 0 auto}
+
 /* --- Trade équitable --- */
 .trade{display:grid;grid-template-columns:1fr auto 1fr;gap:1.2rem;align-items:start}
 .trade-side{background:var(--ink-900);border:1px solid var(--line-soft);border-radius:12px;padding:1.1rem}
@@ -615,7 +621,15 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
         <div class="hive-wrap">
           <div class="hive" id="hive"></div>
           <div class="builder-stats" id="hive-stats"></div>
-          <button class="btn btn-ghost" style="margin-top:1.2rem" onclick="clearHive()">🗑️ Vider la ruche</button>
+          <div class="all-level">
+            <label>Niveau de toutes les abeilles</label>
+            <div class="all-level-ctl">
+              <input type="range" id="all-level" min="1" max="25" value="1" oninput="document.getElementById('all-level-val').textContent=this.value">
+              <span class="cc-lvl-val" id="all-level-val">1</span>
+              <button class="btn btn-primary" onclick="applyAllLevel()">Appliquer</button>
+            </div>
+          </div>
+          <button class="btn btn-ghost" style="margin-top:1rem" onclick="clearHive()">🗑️ Vider la ruche</button>
         </div>
 
         <div class="builder-side">
@@ -1361,7 +1375,7 @@ function selectCell(i){
 }
 function syncConfig(){
   const c=hive[selectedCell]; if(!c) return;
-  document.getElementById('cc-title').textContent = ABEILLES[c.bee].nom+" — case "+(selectedCell+1);
+  document.getElementById('cc-title').textContent = ABEILLES[c.bee].nom+" — case "+displayCaseNum(selectedCell);
   document.getElementById('cc-level').value=c.level;
   document.getElementById('cc-level-val').textContent=c.level;
   document.getElementById('cc-gifted').classList.toggle('on',c.gifted);
@@ -1462,6 +1476,17 @@ function clearSelectedCell(){
   document.getElementById('cell-config').classList.add('hidden');
   document.querySelectorAll('#hive .cell').forEach(c=>c.classList.remove('selected'));
   selectedCell=null; updateStats(); highlightCells();
+}
+function applyAllLevel(){
+  const lvl = parseInt(document.getElementById('all-level').value)||1;
+  for(let i=0;i<HIVE_SIZE;i++){ if(hive[i]) hive[i].level = lvl; }
+  if(selectedCell!==null && hive[selectedCell]) syncConfig();
+  updateStats();
+}
+// Numéro affiché d'une case : 1 en bas à gauche, gauche->droite, puis on remonte d'une rangée
+function displayCaseNum(i){
+  const cols=5, rows=10, wave=Math.floor(i/cols), col=i%cols;
+  return (rows-1-wave)*cols + col + 1;
 }
 function clearHive(){
   hive=new Array(HIVE_SIZE).fill(null);
