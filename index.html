@@ -1233,6 +1233,49 @@ function renderLabels(){
    };
    👉 On complètera ces règles ensemble. */
 const BEEQUIP_REGLES = {
+  // --- restriction par abeilles précises ---
+  "Candy Ring":      { abeilles:["Stubborn","Bumble","Honey","Diamond","Festive","Gummy"] },
+  "Rose Headband":   { abeilles:["Basic","Rascal","Riley","Diamond","Windy","Vicious"] },
+  "Autumn Sunhat":   { abeilles:["Hasty","Bumble","Looker","Exhausted","Diamond","Puppy"] },
+  "Camphor Lip Balm":{ abeilles:["Cool","Stubborn","Commander","Bubble","Crimson"] },
+  "Lei":             { abeilles:["Basic","Looker","Stubborn","Hasty","Exhausted"] },
+  "Whistle":         { abeilles:["Brave","Commander","Rascal","Demo","Cool","Rage"] },
+  "Kazoo":           { abeilles:["Brave","Bumble","Bubble","Riley","Shocked","Buoyant"] },
+  "Pink Shades":     { abeilles:["Basic","Rad","Bomber","Demo","Honey","Shy"] }, // + doit être gifted (non géré)
+  "Demon Talisman":  { abeilles:["Demon"] },        // rouge + Demon (mutation ignorée)
+  "Camo Bandana":    { abeilles:["Bomber","Demo"] },// "abeilles à capacité Bomb" — à vérifier/compléter
+
+  // --- restriction par couleur ---
+  "Beret":           { couleurs:["bleu"] },
+  "Thumbtack":       { couleurs:["rouge"] },
+
+  // --- restriction par rareté (= groupe d'abeilles) ---
+  "Bead Lizard":     { raretes:["Commun","Rare"] },
+  "Bottle Cap":      { raretes:["Commun","Rare"] },
+  "Bang Snap":       { raretes:["Commun","Rare","Épique"] },
+  "Paperclip":       { raretes:["Rare","Épique"] },
+  "Charm Bracelet":  { raretes:["Légendaire"] },
+
+  // === BEESMAS ===
+  "Festive Wreath":  { abeilles:["Festive"] },                 // rouge + Festive
+  "Electric Candle": { couleurs:["rouge"] },
+  "Toy Drum":        { abeilles:["Brave","Demo","Bucko","Riley"] },
+  "Paper Angel":     { abeilles:["Bomber","Rascal","Shy","Photon"] },
+  "Toy Horn":        { abeilles:["Brave","Rage","Lion","Cobalt","Crimson"] },
+  "Reindeer Antlers":{ abeilles:["Puppy"] },
+  "Snowglobe":       { abeilles:["Basic","Bumble","Cool","Bucko","Frosty","Windy"] },
+  "Snow Tiara":      { abeilles:["Cool","Stubborn","Shocked","Frosty","Diamond","Windy"] }, // + gifted (non géré)
+  "Pinecone":        { abeilles:["Bumble","Stubborn","Bucko","Frosty","Carpenter","Bear"] },
+  "Warm Scarf":      { abeilles:["Basic","Rad","Exhausted","Frosty","Shy"] },
+  "Icicles":         { couleurs:["bleu"] },                    // bleu + capacité Blue Bomb (couleur seule gérée)
+  "Beesmas Top":     { raretes:["Commun","Rare"] },
+  "Single Mitten":   { raretes:["Rare","Épique","Légendaire"] },
+
+  // Aucune restriction de couleur/abeille (mutation/gifted/capacité ignorés) -> autorisés partout :
+  //   Non-Event : Pink Eraser, Bandage, Smiley Sticker, Thimble, Sweatband
+  //   Beesmas   : Lump Of Coal, Elf Cap, Peppermint Antennas, Bubble Light (mutation Energy),
+  //               Beesmas Tree Hat (mutation), Poinsettia (capacité Boost)
+  //   (Camo Bandana = capacité Bomb -> réglé sur Bomber/Demo, à vérifier)
 };
 function beequipAllowed(beequipNom, beeIdx){
   const r = BEEQUIP_REGLES[beequipNom];
