@@ -185,6 +185,26 @@ table.calc th,table.calc td{text-align:left;padding:.55rem .6rem;border-bottom:1
 table.calc th{color:var(--muted);font-family:'Fredoka';font-weight:500;font-size:.85rem;text-transform:uppercase;letter-spacing:.5px}
 table.calc td.n{text-align:right;font-family:'Fredoka';font-weight:600;color:var(--honey)}
 
+.trade-search{position:relative;flex:1;min-width:0}
+.trade-add input,.trade-search input{background:var(--ink-950);border:1px solid var(--line-soft);border-radius:8px;
+  color:var(--cream);padding:.5rem .6rem;font-family:'Inter';font-size:.9rem;outline:none}
+.trade-add input:focus,.trade-search input:focus{border-color:var(--honey)}
+.trade-search input{width:100%;text-align:left}
+.trade-add input[type=number]{width:60px;text-align:center;flex:0 0 auto}
+.trade-results{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--ink-950);
+  border:1px solid var(--line);border-radius:10px;max-height:290px;overflow:auto;z-index:30;display:none;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.trade-results.open{display:block}
+.tr-item{display:flex;align-items:center;gap:.5rem;padding:.4rem .55rem;cursor:pointer}
+.tr-item:hover{background:var(--panel-2)}
+.tr-ic{width:26px;height:26px;flex:0 0 auto;border-radius:6px;background:var(--panel);overflow:hidden;display:grid;place-items:center}
+.tr-ic img{width:100%;height:100%;object-fit:contain}
+.tr-nm{flex:1;font-size:.86rem;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tr-val{font-family:'Fredoka';font-weight:600;font-size:.78rem;color:var(--honey);white-space:nowrap;flex:0 0 auto}
+.tr-empty{padding:.7rem;color:var(--muted);font-size:.85rem;text-align:center}
+.tl-info{display:flex;align-items:center;gap:.3rem;min-width:0}
+.tl-ic{width:22px;height:22px;flex:0 0 auto;border-radius:5px;background:var(--panel-2);overflow:hidden;display:grid;place-items:center}
+.tl-ic img{width:100%;height:100%;object-fit:contain}
+
 /* --- Niveau d'abeilles (tableau) --- */
 .lvl-bonus-row{display:flex;gap:1.2rem;flex-wrap:wrap;margin-bottom:1.5rem}
 .lvl-bonus-row .field{flex:1;min-width:200px;margin:0}
@@ -458,7 +478,7 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
   <div class="eyebrow">Base de données</div>
   <h2 class="section-title">Stickers</h2>
   <p class="lead">Chaque sticker, sa rareté et le bonus qu'il applique à une abeille ou un beequip.</p>
-  <div class="note"><span class="i">✏️</span><div>Exemples de démonstration — complète le bloc <b>DONNÉES · STICKERS</b> dans le fichier.</div></div>
+  <div class="note"><span class="i">✏️</span><div>Les 289 stickers avec leur valeur en <b>signs</b> (source : bssmvalues). Filtre par catégorie ou recherche par nom. Les images se placent dans <b>images/stickers/</b>.</div></div>
   <div class="toolbar">
     <div class="search"><span>🔍</span><input type="text" placeholder="Rechercher un sticker…" oninput="filterCards('stickers',this.value)"></div>
     <div class="chips" id="stickers-chips"></div>
@@ -578,14 +598,17 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
   <div class="tool-panel" id="tool-trade">
     <div class="panel">
       <h3 style="font-size:1.3rem;margin-bottom:.4rem">Ce trade est-il équitable ?</h3>
-      <p class="hint" style="margin-bottom:1.2rem">Ajoute des objets de chaque côté ; l'outil compare la valeur totale. <b>Les valeurs sont à ajuster</b> dans le bloc <b>DONNÉES · VALEURS DE TRADE</b> (elles changent souvent dans la communauté).</p>
+      <p class="hint" style="margin-bottom:1.2rem">Ajoute des objets de chaque côté ; l'outil compare la valeur totale. Les valeurs sont celles des <b>289 stickers en signs</b> (moyenne de la fourchette). Choisis dans les listes déroulantes (classées par catégorie).</p>
       <div class="trade">
         <div class="trade-side you">
           <h4>Ton offre</h4>
           <div class="trade-add">
-            <select id="trade-sel-you"></select>
-            <input type="number" id="trade-qty-you" value="1" min="1">
-            <button onclick="addTrade('you')">+</button>
+            <div class="trade-search">
+              <input type="text" id="trade-search-you" placeholder="Rechercher un sticker…" autocomplete="off"
+                     oninput="renderTradeSearch('you')" onfocus="renderTradeSearch('you')">
+              <div class="trade-results" id="trade-results-you"></div>
+            </div>
+            <input type="number" id="trade-qty-you" value="1" min="1" title="Quantité">
           </div>
           <ul class="trade-list" id="trade-list-you"></ul>
           <div class="trade-total"><span>Total</span><span class="v" id="trade-total-you">0</span></div>
@@ -594,9 +617,12 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
         <div class="trade-side them">
           <h4>Leur offre</h4>
           <div class="trade-add">
-            <select id="trade-sel-them"></select>
-            <input type="number" id="trade-qty-them" value="1" min="1">
-            <button onclick="addTrade('them')">+</button>
+            <div class="trade-search">
+              <input type="text" id="trade-search-them" placeholder="Rechercher un sticker…" autocomplete="off"
+                     oninput="renderTradeSearch('them')" onfocus="renderTradeSearch('them')">
+              <div class="trade-results" id="trade-results-them"></div>
+            </div>
+            <input type="number" id="trade-qty-them" value="1" min="1" title="Quantité">
           </div>
           <ul class="trade-list" id="trade-list-them"></ul>
           <div class="trade-total"><span>Total</span><span class="v" id="trade-total-them">0</span></div>
@@ -703,15 +729,317 @@ const ITEMS = [
 ];
 const ITEMS_CATS = ["Tous","Œufs","Jelly","Outils","Monnaie"];
 
-/* ---------- DONNÉES · STICKERS ---------- */
-/* rarete : "Commun" | "Rare" | "Épique" | "Légendaire" | "Mythique" */
+/* ---------- DONNÉES · STICKERS (valeurs en signs) ---------- */
+/* categorie = onglet de filtre. valeur = en signs. img auto depuis images/stickers/<nom>.png */
 const STICKERS = [
-  { nom:"Sticker Pollen +",   rarete:"Commun",     desc:"Petit bonus de pollen sur l'abeille équipée.", effet:"+5 % Pollen" },
-  { nom:"Sticker Rouge",      rarete:"Rare",       desc:"Renforce les abeilles rouges.", effet:"+10 % bonus abeilles rouges" },
-  { nom:"Sticker Bleu",       rarete:"Rare",       desc:"Renforce les abeilles bleues.", effet:"+10 % bonus abeilles bleues" },
-  { nom:"Sticker Diamant",    rarete:"Légendaire", desc:"Gros bonus multi-stats.", effet:"+15 % Pollen, +10 % Vitesse" },
+  // --- Cub Skins ---
+  { nom:"Star Cub", valeur:"10 - 10.5", categorie:"Cub Skins" },
+  { nom:"Robo Cub", valeur:"14 - 15", categorie:"Cub Skins" },
+  { nom:"Stick Cub", valeur:"23 - 25", categorie:"Cub Skins" },
+  { nom:"Brown Cub", valeur:"29 - 31", categorie:"Cub Skins" },
+  { nom:"Doodle Cub", valeur:"39 - 42", categorie:"Cub Skins" },
+  { nom:"Petal Cub", valeur:"52 - 55", categorie:"Cub Skins" },
+  { nom:"Gingerbread Cub", valeur:"57 - 60", categorie:"Cub Skins" },
+  { nom:"Noob Cub", valeur:"76 - 80", categorie:"Cub Skins" },
+  { nom:"Gloomy Cub", valeur:"80 - 85", categorie:"Cub Skins" },
+  { nom:"Peppermint Cub", valeur:"210 - 220", categorie:"Cub Skins" },
+  { nom:"Snow Cub", valeur:"230 - 240", categorie:"Cub Skins" },
+  { nom:"Bee Cub", valeur:"370 - 380", categorie:"Cub Skins" },
+  // --- Hive Skins ---
+  { nom:"Blue Hive Skin", valeur:"0.05 - 0.1", categorie:"Hive Skins" },
+  { nom:"Green Hive Skin", valeur:"0.05 - 0.1", categorie:"Hive Skins" },
+  { nom:"Pink Hive Skin", valeur:"0.05 - 0.1", categorie:"Hive Skins" },
+  { nom:"Red Hive Skin", valeur:"0.05 - 0.1", categorie:"Hive Skins" },
+  { nom:"Black Hive Skin", valeur:"0.1 - 0.15", categorie:"Hive Skins" },
+  { nom:"White Hive Skin", valeur:"0.1 - 0.15", categorie:"Hive Skins" },
+  { nom:"Wavy Festive Hive Skin", valeur:"0.25 - 0.33", categorie:"Hive Skins" },
+  { nom:"Wavy Gold Hive Skin", valeur:"0.75 - 1", categorie:"Hive Skins" },
+  { nom:"Wavy Cyan Hive Skin", valeur:"2.5 - 3", categorie:"Hive Skins" },
+  { nom:"Doodle Hive Skin", valeur:"13 - 14", categorie:"Hive Skins" },
+  { nom:"Wavy Purple Hive Skin", valeur:"27 - 30", categorie:"Hive Skins" },
+  { nom:"Icy Crowned Hive Skin", valeur:"60 - 64", categorie:"Hive Skins" },
+  // --- Vouchers ---
+  { nom:"Ticket Voucher", valeur:"0.7 - 0.75", categorie:"Vouchers" },
+  { nom:"Convert Speed Voucher", valeur:"4 - 4.5", categorie:"Vouchers" },
+  { nom:"Bee Gather Voucher", valeur:"6 - 6.5", categorie:"Vouchers" },
+  { nom:"Cub Voucher", valeur:"6 - 6.5", categorie:"Vouchers" },
+  { nom:"Bear Bee Voucher", valeur:"10", categorie:"Vouchers" },
+  { nom:"Offline Voucher", valeur:"24 - 26", categorie:"Vouchers" },
+  // --- Bees ---
+  { nom:"Fuzz Bomb", valeur:"0.05 - 0.1", categorie:"Bees" },
+  { nom:"Blob Bumble", valeur:"0.1 - 0.15", categorie:"Bees" },
+  { nom:"Round Rascal Bee", valeur:"0.1 - 0.15", categorie:"Bees" },
+  { nom:"Flying Brave Bee", valeur:"0.15 - 0.2", categorie:"Bees" },
+  { nom:"Flying Ninja Bee", valeur:"0.15 - 0.2", categorie:"Bees" },
+  { nom:"Flying Rad Bee", valeur:"0.15 - 0.2", categorie:"Bees" },
+  { nom:"Tabby Scratch", valeur:"0.15 - 0.2", categorie:"Bees" },
+  { nom:"Diamond Diamond Bee", valeur:"0.2 - 0.25", categorie:"Bees" },
+  { nom:"Shocked Hive Slot", valeur:"0.2 - 0.25", categorie:"Bees" },
+  { nom:"4-Pronged Vector Bee", valeur:"0.25 - 0.33", categorie:"Bees" },
+  { nom:"Precise Eye", valeur:"0.25 - 0.33", categorie:"Bees" },
+  { nom:"Flying Photon Bee", valeur:"0.33 - 0.5", categorie:"Bees" },
+  { nom:"Drooping Stubborn Bee", valeur:"0.5 - 0.66", categorie:"Bees" },
+  { nom:"Wobbly Looker", valeur:"0.5 - 0.75", categorie:"Bees" },
+  { nom:"Tabby From Behind", valeur:"2 - 2.5", categorie:"Bees" },
+  { nom:"Bear Bee Offer", valeur:"2.5 - 3", categorie:"Bees" },
+  { nom:"Round Basic", valeur:"10 - 11", categorie:"Bees" },
+  // --- Bears ---
+  { nom:"Chef Hat Polar Bear", valeur:"0.025 - 0.05", categorie:"Bears" },
+  { nom:"Honey Bee Bear", valeur:"0.025 - 0.05", categorie:"Bears" },
+  { nom:"Panicked Science Bear", valeur:"0.025 - 0.05", categorie:"Bears" },
+  { nom:"Sitting Green Shirt Bear", valeur:"0.025 - 0.05", categorie:"Bears" },
+  { nom:"Uplooking Bear", valeur:"0.025 - 0.05", categorie:"Bears" },
+  { nom:"Bomber Bear", valeur:"0.05 - 0.1", categorie:"Bears" },
+  { nom:"Squashed Head Bear", valeur:"0.05 - 0.1", categorie:"Bears" },
+  { nom:"Stretched Head Bear", valeur:"0.05 - 0.1", categorie:"Bears" },
+  { nom:"Sideways Spirit Bear", valeur:"0.15 - 0.25", categorie:"Bears" },
+  { nom:"Dapper Bear From Above", valeur:"0.5 - 0.66", categorie:"Bears" },
+  { nom:"Shy Brown Bear", valeur:"0.5 - 0.75", categorie:"Bears" },
+  { nom:"Sitting Mother Bear", valeur:"2 - 2.5", categorie:"Bears" },
+  { nom:"Glowering Gummy Bear", valeur:"18 - 20", categorie:"Bears" },
+  { nom:"Sunbear", valeur:"27 - 30", categorie:"Bears" },
+  // --- Mobs ---
+  { nom:"Coiled Snake", valeur:"0.025 - 0.05", categorie:"Mobs" },
+  { nom:"Forward Facing Aphid", valeur:"0.025 - 0.05", categorie:"Mobs" },
+  { nom:"Happy Fish", valeur:"0.025 - 0.05", categorie:"Mobs" },
+  { nom:"Menacing Mantis", valeur:"0.025 - 0.05", categorie:"Mobs" },
+  { nom:"Standing Caterpillar", valeur:"0.025 - 0.05", categorie:"Mobs" },
+  { nom:"Tadpole", valeur:"0.025 - 0.05", categorie:"Mobs" },
+  { nom:"Flying Magenta Critter", valeur:"0.05 - 0.1", categorie:"Mobs" },
+  { nom:"Forward Facing Spider", valeur:"0.05 - 0.1", categorie:"Mobs" },
+  { nom:"Left Facing Ant", valeur:"0.05 - 0.1", categorie:"Mobs" },
+  { nom:"Little Scorpion", valeur:"0.05 - 0.1", categorie:"Mobs" },
+  { nom:"Right Facing Stump Snail", valeur:"0.05 - 0.1", categorie:"Mobs" },
+  { nom:"Blue Triangle Critter", valeur:"0.15 - 0.2", categorie:"Mobs" },
+  { nom:"Orange Leg Critter", valeur:"0.15 - 0.2", categorie:"Mobs" },
+  { nom:"Purple Pointed Critter", valeur:"0.15 - 0.2", categorie:"Mobs" },
+  { nom:"Walking Stick Nymph", valeur:"0.15 - 0.2", categorie:"Mobs" },
+  { nom:"Round Green Critter", valeur:"0.2 - 0.25", categorie:"Mobs" },
+  { nom:"Small Blue Chick", valeur:"0.25 - 0.33", categorie:"Mobs" },
+  { nom:"Standing Bean Bug", valeur:"0.25 - 0.33", categorie:"Mobs" },
+  // --- Art ---
+  { nom:"Nessie", valeur:"≥70", categorie:"Art" },
+  { nom:"Red Doodle Person", valeur:"0 - 0.05", categorie:"Art" },
+  { nom:"Moai", valeur:"0.05 - 0.1", categorie:"Art" },
+  { nom:"Orange Step Array", valeur:"0.1 - 0.15", categorie:"Art" },
+  { nom:"Orange Green Tri Deco", valeur:"0.15 - 0.2", categorie:"Art" },
+  { nom:"Banana Painting", valeur:"0.5 - 1", categorie:"Art" },
+  { nom:"Pearl Girl", valeur:"0.5 - 1", categorie:"Art" },
+  { nom:"Prism Painting", valeur:"0.5 - 1", categorie:"Art" },
+  { nom:"Abstract Color Painting", valeur:"3 - 4", categorie:"Art" },
+  { nom:"Ionic Column Middle", valeur:"5 - 6", categorie:"Art" },
+  { nom:"Ionic Column Base", valeur:"27 - 30", categorie:"Art" },
+  { nom:"Ionic Column Top", valeur:"27 - 30", categorie:"Art" },
+  // --- Gems ---
+  { nom:"Blue And Green Marble", valeur:"0 - 0.05", categorie:"Gems" },
+  { nom:"Diamond Cluster", valeur:"0 - 0.05", categorie:"Gems" },
+  { nom:"Diamond Trim", valeur:"0 - 0.05", categorie:"Gems" },
+  { nom:"Orange Swirled Marble", valeur:"0 - 0.05", categorie:"Gems" },
+  { nom:"Yellow Swirled Marble", valeur:"0 - 0.05", categorie:"Gems" },
+  { nom:"Cyan Decorative Border", valeur:"0.05 - 0.1", categorie:"Gems" },
+  { nom:"Mythic M", valeur:"0.25 - 0.33", categorie:"Gems" },
+  { nom:"Purple Fleuron", valeur:"0.25 - 0.33", categorie:"Gems" },
+  { nom:"Royal Bear", valeur:"0.25 - 0.33", categorie:"Gems" },
+  { nom:"Left Gold Swirl Fleuron", valeur:"2 - 2.5", categorie:"Gems" },
+  { nom:"Left Mythic Gem Fleuron", valeur:"2 - 2.5", categorie:"Gems" },
+  { nom:"Right Gold Swirl Fleuron", valeur:"2 - 2.5", categorie:"Gems" },
+  { nom:"Right Mythic Gem Fleuron", valeur:"2 - 2.5", categorie:"Gems" },
+  { nom:"Left Shining Diamond Fleuron", valeur:"2.5 - 3", categorie:"Gems" },
+  { nom:"Right Shining Diamond Fleuron", valeur:"2.5 - 3", categorie:"Gems" },
+  { nom:"Royal Symbol", valeur:"14 - 15", categorie:"Gems" },
+  // --- Nectar Icons ---
+  { nom:"Comforting Nectar Icon", valeur:"0.2 - 0.25", categorie:"Nectar Icons" },
+  { nom:"Invigorating Nectar Icon", valeur:"0.2 - 0.25", categorie:"Nectar Icons" },
+  { nom:"Motivating Nectar Icon", valeur:"0.2 - 0.25", categorie:"Nectar Icons" },
+  { nom:"Refreshing Nectar Icon", valeur:"0.2 - 0.25", categorie:"Nectar Icons" },
+  { nom:"Satisfying Nectar Icon", valeur:"0.2 - 0.25", categorie:"Nectar Icons" },
+  // --- Flowers ---
+  { nom:"Small Dandelion", valeur:"0.025 - 0.05", categorie:"Flowers" },
+  { nom:"Small Pink Tulip", valeur:"0.025 - 0.05", categorie:"Flowers" },
+  { nom:"Small Tickseed", valeur:"0.025 - 0.05", categorie:"Flowers" },
+  { nom:"Small White Daisy", valeur:"0.025 - 0.05", categorie:"Flowers" },
+  { nom:"Purple 4-Point Flower", valeur:"0.25 - 0.33", categorie:"Flowers" },
+  // --- Mushrooms ---
+  { nom:"Spore Covered Puffshroom", valeur:"0.025 - 0.05", categorie:"Mushrooms" },
+  { nom:"White Button Mushroom", valeur:"0.025 - 0.05", categorie:"Mushrooms" },
+  { nom:"Fly Agaric Mushroom", valeur:"0.05 - 0.1", categorie:"Mushrooms" },
+  { nom:"Porcini Mushroom", valeur:"0.05 - 0.1", categorie:"Mushrooms" },
+  { nom:"Black Truffle Mushroom", valeur:"0.1 - 0.15", categorie:"Mushrooms" },
+  { nom:"Chanterelle Mushroom", valeur:"0.15 - 0.2", categorie:"Mushrooms" },
+  { nom:"Morel Mushroom", valeur:"0.15 - 0.2", categorie:"Mushrooms" },
+  { nom:"Oiler Mushroom", valeur:"0.15 - 0.2", categorie:"Mushrooms" },
+  { nom:"Shiitake Mushroom", valeur:"0.15 - 0.2", categorie:"Mushrooms" },
+  { nom:"Prismatic Mushroom", valeur:"1 - 1.25", categorie:"Mushrooms" },
+  // --- Leaves ---
+  { nom:"Blowing Leaf", valeur:"0 - 0.025", categorie:"Leaves" },
+  { nom:"Cordate Leaf", valeur:"0 - 0.025", categorie:"Leaves" },
+  { nom:"Cunate Leaf", valeur:"0 - 0.025", categorie:"Leaves" },
+  { nom:"Elliptic Leaf", valeur:"0 - 0.025", categorie:"Leaves" },
+  { nom:"Hastate Leaf", valeur:"0 - 0.025", categorie:"Leaves" },
+  { nom:"Lanceolate Leaf", valeur:"0 - 0.025", categorie:"Leaves" },
+  { nom:"Lyrate Leaf", valeur:"0 - 0.025", categorie:"Leaves" },
+  { nom:"Oblique Leaf", valeur:"0 - 0.025", categorie:"Leaves" },
+  { nom:"Reniform Leaf", valeur:"0 - 0.025", categorie:"Leaves" },
+  { nom:"Rhomboid Leaf", valeur:"0 - 0.025", categorie:"Leaves" },
+  { nom:"Spatulate Leaf", valeur:"0 - 0.025", categorie:"Leaves" },
+  // --- Tools ---
+  { nom:"Petal Wand", valeur:"0 - 0.025", categorie:"Tools" },
+  { nom:"Dark Scythe", valeur:"0.025 - 0.05", categorie:"Tools" },
+  { nom:"Porcelain Dipper", valeur:"0.025 - 0.05", categorie:"Tools" },
+  { nom:"Tide Popper", valeur:"0.025 - 0.05", categorie:"Tools" },
+  { nom:"Bubble Wand", valeur:"0.05 - 0.1", categorie:"Tools" },
+  { nom:"Golden Rake", valeur:"0.1 - 0.15", categorie:"Tools" },
+  { nom:"Honey Dipper", valeur:"0.15 - 0.2", categorie:"Tools" },
+  { nom:"Scythe", valeur:"0.15 - 0.2", categorie:"Tools" },
+  { nom:"Clippers", valeur:"0.2 - 0.25", categorie:"Tools" },
+  { nom:"Electro-Magnet", valeur:"0.2 - 0.25", categorie:"Tools" },
+  { nom:"Magnet", valeur:"0.2 - 0.25", categorie:"Tools" },
+  { nom:"Pulsar", valeur:"0.2 - 0.25", categorie:"Tools" },
+  { nom:"Rake", valeur:"0.2 - 0.25", categorie:"Tools" },
+  { nom:"Scissors", valeur:"0.2 - 0.25", categorie:"Tools" },
+  { nom:"Scooper", valeur:"0.2 - 0.25", categorie:"Tools" },
+  { nom:"Spark Staff", valeur:"0.2 - 0.25", categorie:"Tools" },
+  { nom:"Super-Scooper", valeur:"0.2 - 0.25", categorie:"Tools" },
+  { nom:"Vacuum", valeur:"0.2 - 0.25", categorie:"Tools" },
+  { nom:"Gummyballer", valeur:"0.25 - 0.33", categorie:"Tools" },
+  // --- Stamps ---
+  { nom:"Ant Field Stamp", valeur:"0.33 - 0.5", categorie:"Stamps" },
+  { nom:"Hub Field Stamp", valeur:"0.5 - 0.75", categorie:"Stamps" },
+  { nom:"Bamboo Field Stamp", valeur:"0.75 - 1", categorie:"Stamps" },
+  { nom:"Blue Flower Field Stamp", valeur:"0.75 - 1", categorie:"Stamps" },
+  { nom:"Cactus Field Stamp", valeur:"0.75 - 1", categorie:"Stamps" },
+  { nom:"Clover Field Stamp", valeur:"0.75 - 1", categorie:"Stamps" },
+  { nom:"Coconut Field Stamp", valeur:"0.75 - 1", categorie:"Stamps" },
+  { nom:"Dandelion Field Stamp", valeur:"0.75 - 1", categorie:"Stamps" },
+  { nom:"Mountain Top Field Stamp", valeur:"0.75 - 1", categorie:"Stamps" },
+  { nom:"Mushroom Field Stamp", valeur:"0.75 - 1", categorie:"Stamps" },
+  { nom:"Pineapple Patch Stamp", valeur:"0.75 - 1", categorie:"Stamps" },
+  { nom:"Pumpkin Patch Stamp", valeur:"0.75 - 1", categorie:"Stamps" },
+  { nom:"Strawberry Field Stamp", valeur:"0.75 - 1", categorie:"Stamps" },
+  { nom:"Stump Field Stamp", valeur:"0.75 - 1", categorie:"Stamps" },
+  { nom:"Sunflower Field Stamp", valeur:"0.75 - 1", categorie:"Stamps" },
+  { nom:"Rose Field Stamp", valeur:"1 - 1.25", categorie:"Stamps" },
+  { nom:"Spider Field Stamp", valeur:"1 - 1.25", categorie:"Stamps" },
+  { nom:"Pepper Patch Stamp", valeur:"4 - 5", categorie:"Stamps" },
+  { nom:"Pine Tree Forest Stamp", valeur:"4 - 5", categorie:"Stamps" },
+  // --- Beesmas ---
+  { nom:"BBM From Below", valeur:"TBD", categorie:"Beesmas" },
+  { nom:"Flying Bee Bear", valeur:"0 - 0.025", categorie:"Beesmas" },
+  { nom:"Critter In A Stocking", valeur:"0.05 - 0.1", categorie:"Beesmas" },
+  { nom:"Blue Beesmas Light", valeur:"0.1 - 0.15", categorie:"Beesmas" },
+  { nom:"Green Beesmas Light", valeur:"0.1 - 0.15", categorie:"Beesmas" },
+  { nom:"Red Beesmas Light", valeur:"0.1 - 0.15", categorie:"Beesmas" },
+  { nom:"Yellow Beesmas Light", valeur:"0.1 - 0.15", categorie:"Beesmas" },
+  { nom:"Festive Pufferfish", valeur:"0.2 - 0.25", categorie:"Beesmas" },
+  { nom:"Festive Pea", valeur:"0.33 - 0.5", categorie:"Beesmas" },
+  { nom:"Party Robo Bear", valeur:"0.75 - 1", categorie:"Beesmas" },
+  { nom:"Flying Festive Bee", valeur:"1 - 1.5", categorie:"Beesmas" },
+  // --- Miscellaneous ---
+  { nom:"Alert Icon", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Atom Symbol", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Blue Square", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Built Ship", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Classic Killroy", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Colorful Buttons", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Cop And Robber", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Desperate Booth", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Evil Pig", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Giraffe", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Green Check Mark", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Green Plus Sign", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Green Sell", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Grey Shape Companion", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Interrobang Block", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Killroy With Hair", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Launching Rocket", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Orphan Dog", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Pizza Delivery Man", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Pyramid", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Red X", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Rhubarb", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Rubber Duck", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Simple Cloud", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Simple Skyscraper", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Simple Sun", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Sprout", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Tough Potato", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Traffic Light", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Yellow Hi", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Yellow Umbrella", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Yellow Walking Wiggly Person", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Young Elf", valeur:"0 - 0.025", categorie:"Miscellaneous" },
+  { nom:"Waving Townsperson", valeur:"0 - 0.05", categorie:"Miscellaneous" },
+  { nom:"Barcode", valeur:"0.025 - 0.05", categorie:"Miscellaneous" },
+  { nom:"Baseball Swing", valeur:"0.025 - 0.05", categorie:"Miscellaneous" },
+  { nom:"Doodle S", valeur:"0.025 - 0.05", categorie:"Miscellaneous" },
+  { nom:"Eighth Note", valeur:"0.025 - 0.05", categorie:"Miscellaneous" },
+  { nom:"Fork And Knife", valeur:"0.025 - 0.05", categorie:"Miscellaneous" },
+  { nom:"Green Circle", valeur:"0.025 - 0.05", categorie:"Miscellaneous" },
+  { nom:"Grey Diamond Logo", valeur:"0.025 - 0.05", categorie:"Miscellaneous" },
+  { nom:"Pale Heart", valeur:"0.025 - 0.05", categorie:"Miscellaneous" },
+  { nom:"Peace Sign Hand", valeur:"0.025 - 0.05", categorie:"Miscellaneous" },
+  { nom:"Pink Chair", valeur:"0.025 - 0.05", categorie:"Miscellaneous" },
+  { nom:"Pink Cupcake", valeur:"0.025 - 0.05", categorie:"Miscellaneous" },
+  { nom:"Red Palm Hand", valeur:"0.025 - 0.05", categorie:"Miscellaneous" },
+  { nom:"Silly Tongue", valeur:"0.025 - 0.05", categorie:"Miscellaneous" },
+  { nom:"Simple Mountain", valeur:"0.025 - 0.05", categorie:"Miscellaneous" },
+  { nom:"Small Flame", valeur:"0.025 - 0.05", categorie:"Miscellaneous" },
+  { nom:"Theatrical Intruder", valeur:"0.025 - 0.05", categorie:"Miscellaneous" },
+  { nom:"Thumbs Up Hand", valeur:"0.025 - 0.05", categorie:"Miscellaneous" },
+  { nom:"Triple Exclamation", valeur:"0.025 - 0.05", categorie:"Miscellaneous" },
+  { nom:"White Flag", valeur:"0.025 - 0.05", categorie:"Miscellaneous" },
+  { nom:"Window", valeur:"0.025 - 0.05", categorie:"Miscellaneous" },
+  { nom:"Yellow Coffee Mug", valeur:"0.025 - 0.05", categorie:"Miscellaneous" },
+  { nom:"Yellow Right Arrow", valeur:"0.025 - 0.05", categorie:"Miscellaneous" },
+  { nom:"AFK", valeur:"0.05 - 0.1", categorie:"Miscellaneous" },
+  { nom:"Grey Raining Cloud", valeur:"0.05 - 0.1", categorie:"Miscellaneous" },
+  { nom:"Lightning", valeur:"0.05 - 0.1", categorie:"Miscellaneous" },
+  { nom:"Red Wailing Cry", valeur:"0.05 - 0.1", categorie:"Miscellaneous" },
+  { nom:"Saturn", valeur:"0.05 - 0.1", categorie:"Miscellaneous" },
+  { nom:"Shrugging Heart", valeur:"0.05 - 0.1", categorie:"Miscellaneous" },
+  { nom:"Standing Beekeeper", valeur:"0.05 - 0.1", categorie:"Miscellaneous" },
+  { nom:"Tiny House", valeur:"0.05 - 0.1", categorie:"Miscellaneous" },
+  { nom:"Waxing Crescent Moon", valeur:"0.05 - 0.1", categorie:"Miscellaneous" },
+  { nom:"Wishbone", valeur:"0.05 - 0.1", categorie:"Miscellaneous" },
+  { nom:"TNT", valeur:"0.05 - 0.15", categorie:"Miscellaneous" },
+  { nom:"Small Shield", valeur:"0.1 - 0.15", categorie:"Miscellaneous" },
+  { nom:"Yellow Left Arrow", valeur:"0.1 - 0.15", categorie:"Miscellaneous" },
+  { nom:"Shining Halo", valeur:"0.15 - 0.2", categorie:"Miscellaneous" },
+  { nom:"Cyan Star", valeur:"0.2 - 0.25", categorie:"Miscellaneous" },
+  { nom:"Palm Tree", valeur:"0.2 - 0.25", categorie:"Miscellaneous" },
+  { nom:"Prehistoric Boar", valeur:"0.2 - 0.25", categorie:"Miscellaneous" },
+  { nom:"Prehistoric Hand", valeur:"0.2 - 0.25", categorie:"Miscellaneous" },
+  { nom:"Shining Star", valeur:"0.2 - 0.25", categorie:"Miscellaneous" },
+  { nom:"Cool Backpack", valeur:"0.25 - 0.33", categorie:"Miscellaneous" },
+  { nom:"Hourglass", valeur:"0.25 - 0.33", categorie:"Miscellaneous" },
+  { nom:"Taunting Doodle Person", valeur:"0.25 - 0.33", categorie:"Miscellaneous" },
+  { nom:"Yellow Sticky Hand", valeur:"0.25 - 0.33", categorie:"Miscellaneous" },
+  { nom:"Black Star", valeur:"0.33 - 0.4", categorie:"Miscellaneous" },
+  { nom:"Black Diamond", valeur:"0.33 - 0.5", categorie:"Miscellaneous" },
+  { nom:"Glowing Smile", valeur:"0.33 - 0.5", categorie:"Miscellaneous" },
+  { nom:"Jack-0-Lantern", valeur:"0.33 - 0.5", categorie:"Miscellaneous" },
+  { nom:"Robot Head", valeur:"0.33 - 0.5", categorie:"Miscellaneous" },
+  { nom:"Dark Flame", valeur:"0.5 - 1", categorie:"Miscellaneous" },
+  { nom:"Tornado", valeur:"0.75 - 1", categorie:"Miscellaneous" },
+  { nom:"Eviction", valeur:"1 - 1.5", categorie:"Miscellaneous" },
+  { nom:"Auryn", valeur:"1 - 2", categorie:"Miscellaneous" },
+  { nom:"Wall Crack", valeur:"4 - 5", categorie:"Miscellaneous" },
+  { nom:"Cyan Hilted Sword", valeur:"10 - 11", categorie:"Miscellaneous" },
+  // --- Star Signs ---
+  { nom:"Aquarius Star Sign", valeur:"1", categorie:"Star Signs" },
+  { nom:"Aries Star Sign", valeur:"1", categorie:"Star Signs" },
+  { nom:"Cancer Star Sign", valeur:"1", categorie:"Star Signs" },
+  { nom:"Capricorn Star Sign", valeur:"1", categorie:"Star Signs" },
+  { nom:"Gemini Star Sign", valeur:"1", categorie:"Star Signs" },
+  { nom:"Leo Star Sign", valeur:"1", categorie:"Star Signs" },
+  { nom:"Libra Star Sign", valeur:"1", categorie:"Star Signs" },
+  { nom:"Pisces Star Sign", valeur:"1", categorie:"Star Signs" },
+  { nom:"Sagittarius Star Sign", valeur:"1", categorie:"Star Signs" },
+  { nom:"Scorpio Star Sign", valeur:"1", categorie:"Star Signs" },
+  { nom:"Taurus Star Sign", valeur:"1", categorie:"Star Signs" },
+  { nom:"Virgo Star Sign", valeur:"1", categorie:"Star Signs" },
 ];
-const STICKERS_CATS = ["Tous","Commun","Rare","Épique","Légendaire","Mythique"];
+const STICKERS_CATS = ["Tous","Cub Skins","Hive Skins","Vouchers","Bees","Bears","Mobs","Art","Gems","Nectar Icons","Flowers","Mushrooms","Leaves","Tools","Stamps","Beesmas","Miscellaneous","Star Signs"];
 
 /* ---------- DONNÉES · AMULETTES ---------- */
 const AMULETTES = [
@@ -783,16 +1111,16 @@ const RECETTES = {
   ],
 };
 
-/* ---------- DONNÉES · VALEURS DE TRADE (outil trade) ---------- */
-/* Valeur en "points" pour comparer les objets. Ajuste selon la communauté. */
-const VALEURS_TRADE = {
-  "Gelée royale":    1,
-  "Gelée étoilée":   12,
-  "Ticket":          0.5,
-  "Œuf de base":     0.8,
-  "Amulette étoilée":25,
-  "Antlers du renne":40,
-};
+/* ---------- OUTIL TRADE : valeurs = stickers (en signs) ---------- */
+/* Rempli automatiquement depuis STICKERS. Valeur = moyenne de la fourchette. */
+let VALEURS_TRADE = {};
+function stickerValNum(v){
+  if(!v || v==='TBD') return 0;
+  v = String(v).replace('≥','').replace('~','');
+  const parts = v.split('-').map(s=>parseFloat(s.trim())).filter(n=>!isNaN(n));
+  if(!parts.length) return 0;
+  return parts.reduce((a,b)=>a+b,0)/parts.length;
+}
 
 /* ---------- DONNÉES · MUTATIONS (couleurs du chiffre dans Build your Hive) ---------- */
 const MUTATIONS = [
@@ -950,6 +1278,7 @@ function carteHTML(o, folder){
     : '';
   const tag = o.categorie || o.rarete || '';
   let meta = '';
+  if(o.valeur) meta += `<div><span class="k">Valeur</span><span class="v">${o.valeur==='TBD'?'TBD':(o.valeur?o.valeur+' signs':'—')}</span></div>`;
   if(o.cout)  meta += `<div><span class="k">Coût</span><span class="v">${o.cout}</span></div>`;
   if(o.lieu)  meta += `<div><span class="k">Où l'obtenir</span><span class="v">${o.lieu}</span></div>`;
   if(o.effet) meta += `<div><span class="k">Effet</span><span class="v">${o.effet}</span></div>`;
@@ -1013,6 +1342,7 @@ function fmt(n){
   if(i>=suf.length) i = suf.length-1;
   return (n/Math.pow(1000,i)).toFixed(2).replace(/\.00$/,'') + suf[i];
 }
+function fmtSigns(n){ return (+Number(n).toFixed(3)).toString(); }
 
 /* ---------- OUTIL 1 : Calcul d'ingrédients ---------- */
 function initIngredients(){
@@ -1141,16 +1471,33 @@ function computeNiveau(){
 /* ---------- OUTIL 3 : Trade équitable ---------- */
 const trade = { you:[], them:[] };
 function initTrade(){
-  const opts = Object.keys(VALEURS_TRADE).map(k=>`<option>${k}</option>`).join('');
-  document.getElementById('trade-sel-you').innerHTML = opts;
-  document.getElementById('trade-sel-them').innerHTML = opts;
+  VALEURS_TRADE = {};
+  STICKERS.forEach(s=>{ VALEURS_TRADE[s.nom]=stickerValNum(s.valeur); });
+  document.addEventListener('click', e=>{
+    if(!e.target.closest('.trade-search'))
+      document.querySelectorAll('.trade-results').forEach(r=>r.classList.remove('open'));
+  });
   renderTrade();
 }
-function addTrade(side){
-  const item = document.getElementById('trade-sel-'+side).value;
+function renderTradeSearch(side){
+  const q = document.getElementById('trade-search-'+side).value.trim().toLowerCase();
+  const box = document.getElementById('trade-results-'+side);
+  if(!q){ box.innerHTML=''; box.classList.remove('open'); return; }
+  const matches = STICKERS.filter(s=>s.nom.toLowerCase().includes(q)).slice(0,40);
+  box.innerHTML = matches.length ? matches.map(s=>{
+    const val = s.valeur==='TBD' ? 'TBD' : (s.valeur ? s.valeur+' signs' : '—');
+    return `<div class="tr-item" onclick="addTradeItem('${side}',&quot;${s.nom.replace(/"/g,'&#34;')}&quot;)">
+      <span class="tr-ic"><img src="${imgSrc('stickers',s)}" alt="" onerror="this.remove()"></span>
+      <span class="tr-nm">${s.nom}</span><span class="tr-val">${val}</span></div>`;
+  }).join('') : '<div class="tr-empty">Aucun sticker</div>';
+  box.classList.add('open');
+}
+function addTradeItem(side, nom){
   const qty = Math.max(1, parseInt(document.getElementById('trade-qty-'+side).value)||1);
-  const existing = trade[side].find(x=>x.item===item);
-  if(existing) existing.qty += qty; else trade[side].push({item,qty});
+  const existing = trade[side].find(x=>x.item===nom);
+  if(existing) existing.qty += qty; else trade[side].push({item:nom, qty});
+  document.getElementById('trade-search-'+side).value='';
+  const box=document.getElementById('trade-results-'+side); box.innerHTML=''; box.classList.remove('open');
   renderTrade();
 }
 function removeTrade(side,item){
@@ -1164,10 +1511,11 @@ function renderTrade(){
     let total = 0;
     ul.innerHTML = trade[side].map(x=>{
       const val = (VALEURS_TRADE[x.item]||0)*x.qty; total += val;
-      return `<li><span>${x.qty}× ${x.item} <small style="color:var(--muted)">(${fmt(val)})</small></span>
-        <span class="rm" onclick="removeTrade('${side}','${x.item.replace(/'/g,"\\'")}')">✕</span></li>`;
+      const st = STICKERS.find(s=>s.nom===x.item) || {nom:x.item};
+      return `<li><span class="tl-info"><span class="tl-ic"><img src="${imgSrc('stickers',st)}" alt="" onerror="this.remove()"></span>${x.qty}× ${x.item} <small style="color:var(--muted)">(${fmtSigns(val)})</small></span>
+        <span class="rm" onclick="removeTrade('${side}',&quot;${x.item.replace(/"/g,'&#34;')}&quot;)">✕</span></li>`;
     }).join('') || '<li style="background:transparent;color:var(--muted);justify-content:center">Vide</li>';
-    document.getElementById('trade-total-'+side).textContent = fmt(total);
+    document.getElementById('trade-total-'+side).textContent = fmtSigns(total)+' signs';
     totals[side] = total;
   });
   const v = document.getElementById('trade-verdict');
@@ -1177,8 +1525,8 @@ function renderTrade(){
   const base = Math.max(a,b) || 1;
   const pct = Math.abs(diff)/base*100;
   if(pct <= 5){ v.className='verdict fair'; v.textContent=`⚖️ Trade équitable (écart ${pct.toFixed(0)} %).`; }
-  else if(diff>0){ v.className='verdict win'; v.textContent=`✅ À ton avantage : tu reçois ${fmt(Math.abs(diff))} de plus (+${pct.toFixed(0)} %).`; }
-  else { v.className='verdict lose'; v.textContent=`❌ En ta défaveur : tu donnes ${fmt(Math.abs(diff))} de trop (−${pct.toFixed(0)} %).`; }
+  else if(diff>0){ v.className='verdict win'; v.textContent=`✅ À ton avantage : tu reçois ${fmtSigns(Math.abs(diff))} signs de plus (+${pct.toFixed(0)} %).`; }
+  else { v.className='verdict lose'; v.textContent=`❌ En ta défaveur : tu donnes ${fmtSigns(Math.abs(diff))} signs de trop (−${pct.toFixed(0)} %).`; }
 }
 
 /* ---------- OUTIL 4 : Build your Hive ---------- */
@@ -1527,22 +1875,24 @@ function downloadHiveImage(){
       const wave=Math.floor(i/cols), col=i%cols;
       const x=pad+col*hstep, y=pad+wave*vstep+((col%2)?0:H/2);
       const cx=x+W/2, cy=y+H/2, b=ABEILLES[c.bee];
-      hexPath(cx,cy,1); ctx.fillStyle=c.gifted?'#F4DD44':'#2a4653'; ctx.fill();          // bordure
-      ctx.save(); hexPath(cx,cy,0.9); ctx.clip();                                         // intérieur
-      ctx.fillStyle=COULEUR_BEE[b.couleur]||'#555'; hexPath(cx,cy,0.9); ctx.fill();
+      const sB=0.86, sI=0.74;                                                            // écart entre alvéoles
+      const hb=cy+0.5*H*sB, hl=cx-0.5*W*sB, hr=cx+0.5*W*sB;
+      hexPath(cx,cy,sB); ctx.fillStyle=c.gifted?'#F4DD44':'#2a4653'; ctx.fill();          // bordure
+      ctx.save(); hexPath(cx,cy,sI); ctx.clip();                                          // intérieur
+      ctx.fillStyle=COULEUR_BEE[b.couleur]||'#555'; hexPath(cx,cy,sI); ctx.fill();
       const bi=imgMap[imgSrc('bees',b)];
-      if(bi){ ctx.drawImage(bi, x+W*0.05, y+H*0.05, W*0.9, H*0.9); }
+      if(bi){ ctx.drawImage(bi, cx-0.5*W*sI, cy-0.5*H*sI, W*sI, H*sI); }
       else { ctx.fillStyle='#fff'; ctx.font='700 10px Fredoka, sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(b.nom, cx, cy); }
       ctx.restore();
       ctx.font='800 14px Fredoka, sans-serif'; ctx.textAlign='left'; ctx.textBaseline='alphabetic';   // niveau
       ctx.lineWidth=3; ctx.strokeStyle='rgba(0,0,0,.9)'; ctx.lineJoin='round';
-      ctx.strokeText(''+c.level, x+4, y+H-4);
-      ctx.fillStyle=c.mutation?c.mutation.couleur:'#fff'; ctx.fillText(''+c.level, x+4, y+H-4);
+      ctx.strokeText(''+c.level, hl+2, hb);
+      ctx.fillStyle=c.mutation?c.mutation.couleur:'#fff'; ctx.fillText(''+c.level, hl+2, hb);
       if(c.beequip){                                                                      // beequip
         const bq=BEEQUIP.find(x=>x.nom===c.beequip)||{nom:c.beequip};
-        const bqi=imgMap[imgSrc('beequip',bq)], bs=26, bx=x+W-bs, by=y+H-bs+2;
+        const bqi=imgMap[imgSrc('beequip',bq)], bs=24, bx=hr-bs, by=hb-bs;
         if(bqi) ctx.drawImage(bqi, bx, by, bs, bs);
-        else { ctx.font='15px sans-serif'; ctx.textAlign='center'; ctx.fillText('🎒', bx+bs/2, by+bs*0.78); }
+        else { ctx.font='14px sans-serif'; ctx.textAlign='center'; ctx.fillText('🎒', bx+bs/2, by+bs*0.78); }
       }
     }
     try{
