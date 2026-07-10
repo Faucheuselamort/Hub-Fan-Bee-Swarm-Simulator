@@ -136,6 +136,8 @@ main{max-width:var(--maxw);margin:0 auto;padding:2rem 1.1rem 4rem}
   padding:1.2rem;transition:.18s;position:relative;
 }
 .card:hover{border-color:var(--line);transform:translateY(-3px)}
+.card-img{width:56px;height:56px;border-radius:10px;overflow:hidden;background:var(--ink-950);margin-bottom:.7rem;border:1px solid var(--line-soft)}
+.card-img img{width:100%;height:100%;object-fit:contain;image-rendering:pixelated}
 .card .tag{position:absolute;top:1rem;right:1rem;font-family:'Fredoka';font-weight:600;font-size:.72rem;
   text-transform:uppercase;letter-spacing:.5px;padding:.25rem .6rem;border-radius:20px;
   background:var(--line-soft);color:var(--honey)}
@@ -443,7 +445,7 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
   <div class="eyebrow">Base de données</div>
   <h2 class="section-title">Beequip</h2>
   <p class="lead">L'équipement à poser sur tes abeilles et les statistiques que chaque pièce apporte.</p>
-  <div class="note"><span class="i">✏️</span><div>Exemples de démonstration — complète le bloc <b>DONNÉES · BEEQUIP</b> dans le fichier.</div></div>
+  <div class="note"><span class="i">✏️</span><div>Liste complète des beequips (Non-Event et Beesmas). Ajoute les effets et les images dans le bloc <b>DONNÉES · BEEQUIP</b>.</div></div>
   <div class="toolbar">
     <div class="search"><span>🔍</span><input type="text" placeholder="Rechercher un beequip…" oninput="filterCards('beequip',this.value)"></div>
     <div class="chips" id="beequip-chips"></div>
@@ -650,12 +652,51 @@ const AMULETTES = [
 const AMULETTES_CATS = ["Tous","Commun","Rare","Épique","Légendaire","Mythique"];
 
 /* ---------- DONNÉES · BEEQUIP ---------- */
+/* categorie : "Non-Event" | "Beesmas". Ajoute effet:"..." et img:"lien" quand tu veux. */
 const BEEQUIP = [
-  { nom:"Antlers du renne",  rarete:"Légendaire", desc:"À poser sur la Puppy Bee : booste le bond global.", effet:"+3 % bond (sur Puppy Bee)" },
-  { nom:"Casque simple",     rarete:"Commun",     desc:"Petit bonus de capacité pour l'abeille équipée.", effet:"+ Capacité" },
-  { nom:"Cape brillante",    rarete:"Épique",     desc:"Bonus de vitesse et de pollen.", effet:"+ Vitesse, + Pollen" },
+  { nom:"Thimble", categorie:"Non-Event", img:"", effet:"" },
+  { nom:"Sweatband", categorie:"Non-Event", img:"", effet:"" },
+  { nom:"Bandage", categorie:"Non-Event", img:"", effet:"" },
+  { nom:"Thumbtack", categorie:"Non-Event", img:"", effet:"" },
+  { nom:"Camo Bandana", categorie:"Non-Event", img:"", effet:"" },
+  { nom:"Bottle Cap", categorie:"Non-Event", img:"", effet:"" },
+  { nom:"Kazoo", categorie:"Non-Event", img:"", effet:"" },
+  { nom:"Smiley Sticker", categorie:"Non-Event", img:"", effet:"" },
+  { nom:"Whistle", categorie:"Non-Event", img:"", effet:"" },
+  { nom:"Charm Bracelet", categorie:"Non-Event", img:"", effet:"" },
+  { nom:"Paperclip", categorie:"Non-Event", img:"", effet:"" },
+  { nom:"Beret", categorie:"Non-Event", img:"", effet:"" },
+  { nom:"Bang Snap", categorie:"Non-Event", img:"", effet:"" },
+  { nom:"Bead Lizard", categorie:"Non-Event", img:"", effet:"" },
+  { nom:"Pink Shades", categorie:"Non-Event", img:"", effet:"" },
+  { nom:"Lei", categorie:"Non-Event", img:"", effet:"" },
+  { nom:"Demon Talisman", categorie:"Non-Event", img:"", effet:"" },
+  { nom:"Camphor Lip Balm", categorie:"Non-Event", img:"", effet:"" },
+  { nom:"Autumn Sunhat", categorie:"Non-Event", img:"", effet:"" },
+  { nom:"Rose Headband", categorie:"Non-Event", img:"", effet:"" },
+  { nom:"Pink Eraser", categorie:"Non-Event", img:"", effet:"" },
+  { nom:"Candy Ring", categorie:"Non-Event", img:"", effet:"" },
+  { nom:"Elf Cap", categorie:"Beesmas", img:"", effet:"" },
+  { nom:"Single Mitten", categorie:"Beesmas", img:"", effet:"" },
+  { nom:"Warm Scarf", categorie:"Beesmas", img:"", effet:"" },
+  { nom:"Peppermint Antennas", categorie:"Beesmas", img:"", effet:"" },
+  { nom:"Beesmas Top", categorie:"Beesmas", img:"", effet:"" },
+  { nom:"Pinecone", categorie:"Beesmas", img:"", effet:"" },
+  { nom:"Icicles", categorie:"Beesmas", img:"", effet:"" },
+  { nom:"Beesmas Tree Hat", categorie:"Beesmas", img:"", effet:"" },
+  { nom:"Bubble Light", categorie:"Beesmas", img:"", effet:"" },
+  { nom:"Snow Tiara", categorie:"Beesmas", img:"", effet:"" },
+  { nom:"Snowglobe", categorie:"Beesmas", img:"", effet:"" },
+  { nom:"Reindeer Antlers", categorie:"Beesmas", img:"", effet:"" },
+  { nom:"Toy Horn", categorie:"Beesmas", img:"", effet:"" },
+  { nom:"Paper Angel", categorie:"Beesmas", img:"", effet:"" },
+  { nom:"Toy Drum", categorie:"Beesmas", img:"", effet:"" },
+  { nom:"Lump Of Coal", categorie:"Beesmas", img:"", effet:"" },
+  { nom:"Poinsettia", categorie:"Beesmas", img:"", effet:"" },
+  { nom:"Electric Candle", categorie:"Beesmas", img:"", effet:"" },
+  { nom:"Festive Wreath", categorie:"Beesmas", img:"", effet:"" },
 ];
-const BEEQUIP_CATS = ["Tous","Commun","Rare","Épique","Légendaire","Mythique"];
+const BEEQUIP_CATS = ["Tous","Non-Event","Beesmas"];
 
 /* ---------- DONNÉES · RECETTES (outil ingrédients) ---------- */
 /* Chaque recette = liste d'ingrédients { ing:"nom", qte:nombre }. */
@@ -690,22 +731,9 @@ const OBJETS = {
   "mutation": [
     { nom:"(à compléter)", img:"" },
   ],
-  "beequip": [
-    { nom:"Charm Bracelet", img:"" },
-    { nom:"Lei",            img:"" },
-    { nom:"Pink Shades",    img:"" },
-    { nom:"Kazoo",          img:"" },
-    { nom:"Whistle",        img:"" },
-    { nom:"Toy Horn",       img:"" },
-    { nom:"Thumbtack",      img:"" },
-  ],
-  "beesmas": [
-    { nom:"Warm Scarf",     img:"" },
-    { nom:"Snow Tiara",     img:"" },
-    { nom:"Pinecone",       img:"" },
-    { nom:"Snowglobe",      img:"" },
-    { nom:"Paper Angel",    img:"" },
-  ],
+  // Beequip et Beesmas sont repris automatiquement de la liste BEEQUIP ci-dessus.
+  "beequip": BEEQUIP.filter(b=>b.categorie==="Non-Event").map(b=>({nom:b.nom,img:b.img||""})),
+  "beesmas": BEEQUIP.filter(b=>b.categorie==="Beesmas").map(b=>({nom:b.nom,img:b.img||""})),
 };
 
 /* ---------- DONNÉES · ABEILLES (outil Build your Hive) ---------- */
@@ -828,8 +856,10 @@ function carteHTML(o){
   if(o.lieu)  meta += `<div><span class="k">Où l'obtenir</span><span class="v">${o.lieu}</span></div>`;
   if(o.effet) meta += `<div><span class="k">Effet</span><span class="v">${o.effet}</span></div>`;
   if(o.rarete && !o.cout) meta += `<div><span class="k">Rareté</span><span class="v">${rarite}</span></div>`;
+  const img = o.img ? `<div class="card-img"><img src="${o.img}" alt="${o.nom}"></div>` : '';
   return `<div class="card" data-name="${o.nom.toLowerCase()}" data-cat="${tag}">
     <span class="tag">${tag}</span>
+    ${img}
     <h3>${o.nom}</h3>
     <div class="desc">${o.desc||''}</div>
     <div class="meta">${meta}</div>
