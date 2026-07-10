@@ -235,22 +235,39 @@ table.calc td.n{text-align:right;font-family:'Fredoka';font-weight:600;color:var
 .verdict.lose{background:rgba(240,115,106,.12);color:var(--bad);border:1px solid rgba(240,115,106,.3)}
 
 /* --- Build your Hive --- */
-.builder-layout{display:grid;grid-template-columns:1fr 330px;gap:1.6rem;align-items:start}
+.builder-layout{display:grid;grid-template-columns:156px 1fr 320px;gap:1.2rem;align-items:start}
 .hive-wrap{min-width:0}
 .hive{position:relative;margin:0 auto}
 .cell{position:absolute;cursor:pointer}
 .cell .hex,.cell .inner{position:absolute;inset:0;clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%)}
-.cell .hex{background:#2a4653;transition:.1s}
+.cell .hex{background:#2a4653;transition:.1s;inset:2.5px}
 .cell:hover .hex{background:var(--cream)}
 .cell.gifted .hex{background:var(--honey)}
-.cell.selected{transform:scale(1.09);z-index:5}
-.cell .inner{inset:4px;background:var(--ink-950);display:grid;place-items:center;overflow:hidden}
+.cell.selected{transform:scale(1.06);z-index:5}
+.cell .inner{inset:6px;background:var(--ink-950);display:grid;place-items:center;overflow:hidden}
 .cell .inner img{width:100%;height:100%;object-fit:cover;image-rendering:pixelated}
 .cell .name-fallback{font-family:'Fredoka';font-weight:700;font-size:10px;color:#fff;text-align:center;
   padding:2px;line-height:1.05;text-shadow:0 1px 2px #000,0 0 3px #000;pointer-events:none}
-.cell .lvl{position:absolute;left:6px;bottom:5px;font-family:'Fredoka';font-weight:700;font-size:13px;
-  color:#fff;text-shadow:0 0 3px #000,0 1px 2px #000;pointer-events:none;line-height:1}
-.cell .bq{position:absolute;right:4px;top:5px;font-size:12px;pointer-events:none;filter:drop-shadow(0 0 2px #000)}
+/* chiffres de niveau : couche au-dessus de TOUT, en bas à gauche */
+.hive-labels{position:absolute;inset:0;pointer-events:none;z-index:30}
+.hive-label{position:absolute;font-family:'Fredoka';font-weight:800;font-size:14px;line-height:1;
+  text-shadow:0 0 3px #000,0 1px 2px #000,-1px 0 2px #000,1px 0 2px #000}
+/* menu d'objets (gauche) */
+.items-menu{background:var(--ink-900);border:1px solid var(--line-soft);border-radius:14px;padding:.9rem .7rem;position:sticky;top:80px}
+.items-menu h4{font-size:.9rem;margin-bottom:.7rem;text-align:center}
+.obj-cats{display:flex;flex-direction:column;gap:.35rem;margin-bottom:.7rem}
+.obj-cat{font-family:'Fredoka';font-weight:600;font-size:.76rem;cursor:pointer;color:var(--muted);
+  background:var(--ink-950);border:1px solid var(--line-soft);border-radius:9px;padding:.45rem .5rem;transition:.12s;text-align:left}
+.obj-cat:hover{color:var(--cream)}
+.obj-cat.active{background:var(--honey);color:var(--ink-950);border-color:var(--honey)}
+.obj-list{display:flex;flex-direction:column;gap:.35rem;max-height:290px;overflow:auto;padding-right:2px}
+.obj-opt{display:flex;align-items:center;gap:.4rem;cursor:grab;background:var(--ink-950);
+  border:1px solid var(--line-soft);border-radius:8px;padding:.3rem .35rem;transition:.12s;min-width:0}
+.obj-opt:hover{border-color:var(--honey)}
+.obj-opt .oic{width:26px;height:26px;flex:0 0 auto;border-radius:6px;display:grid;place-items:center;font-size:13px;background:var(--panel);overflow:hidden}
+.obj-opt .oic img{width:100%;height:100%;object-fit:contain}
+.obj-opt .onm{font-family:'Fredoka';font-weight:500;font-size:.72rem;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-soon{font-size:.66rem;color:var(--muted);text-align:center;margin-top:.5rem;line-height:1.3}
 
 .builder-side{background:var(--ink-900);border:1px solid var(--line-soft);border-radius:14px;padding:1.1rem;position:sticky;top:80px}
 .builder-side h4{font-size:1rem;margin-bottom:.6rem}
@@ -542,9 +559,19 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
   <div class="tool-panel" id="tool-builder">
     <div class="panel">
       <h3 style="font-size:1.3rem;margin-bottom:.4rem">Build your Hive</h3>
-      <p class="hint" style="margin-bottom:1.4rem">Choisis une abeille dans le menu, clique une case vide pour la placer. Clique une case remplie pour régler son <b>niveau</b> (1-25), la passer <b>gifted</b> (contour jaune) ou lui mettre un <b>beequip</b> (15 max). <b>Ajoute tes images</b> dans le bloc <b>DONNÉES · ABEILLES</b>.</p>
+      <p class="hint" style="margin-bottom:1.4rem">Choisis une abeille dans le menu de droite, clique une case vide pour la placer, une case remplie pour régler son <b>niveau</b> ou la passer <b>gifted</b>. À gauche, les objets (Mutation, Beequip) — bientôt à glisser sur les abeilles. <b>Ajoute tes images</b> dans le bloc <b>DONNÉES · ABEILLES</b>.</p>
 
       <div class="builder-layout">
+        <div class="items-menu">
+          <h4>Objets</h4>
+          <div class="obj-cats" id="obj-cats">
+            <button class="obj-cat active" data-cat="mutation">🧬 Mutation</button>
+            <button class="obj-cat" data-cat="beequip">🎒 Beequip</button>
+            <button class="obj-cat" data-cat="beesmas">🎄 Beequip Beesmas</button>
+          </div>
+          <div class="obj-list" id="obj-list"></div>
+          <p class="item-soon">Bientôt : à glisser sur une abeille.</p>
+        </div>
         <div class="hive-wrap">
           <div class="hive" id="hive"></div>
           <div class="builder-stats" id="hive-stats"></div>
@@ -564,12 +591,8 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
               <span class="cc-lvl-val" id="cc-level-val">1</span>
             </div>
             <div class="cc-row">
-              <label>Gifted (contour jaune)</label>
+              <label>Gifted</label>
               <div class="cc-toggle" id="cc-gifted"></div>
-            </div>
-            <div class="cc-row">
-              <label>Beequip <span id="cc-bq-count" style="color:var(--muted)"></span></label>
-              <div class="cc-toggle" id="cc-beequip"></div>
             </div>
             <button class="btn btn-ghost" style="width:100%;margin-bottom:.5rem" onclick="replaceCellBee()">↻ Remplacer par <span id="cc-brush">l'abeille choisie</span></button>
             <button class="btn btn-ghost" style="width:100%" onclick="clearSelectedCell()">Vider cette case</button>
@@ -658,6 +681,31 @@ const VALEURS_TRADE = {
   "Œuf de base":     0.8,
   "Amulette étoilée":25,
   "Antlers du renne":40,
+};
+
+/* ---------- DONNÉES · OBJETS (menu de gauche du Build your Hive) ---------- */
+/* 3 catégories. Chaque objet : { nom, img }. img="" -> icône de secours.
+   👉 Complète chaque catégorie avec tes objets et colle leurs images dans "img". */
+const OBJETS = {
+  "mutation": [
+    { nom:"(à compléter)", img:"" },
+  ],
+  "beequip": [
+    { nom:"Charm Bracelet", img:"" },
+    { nom:"Lei",            img:"" },
+    { nom:"Pink Shades",    img:"" },
+    { nom:"Kazoo",          img:"" },
+    { nom:"Whistle",        img:"" },
+    { nom:"Toy Horn",       img:"" },
+    { nom:"Thumbtack",      img:"" },
+  ],
+  "beesmas": [
+    { nom:"Warm Scarf",     img:"" },
+    { nom:"Snow Tiara",     img:"" },
+    { nom:"Pinecone",       img:"" },
+    { nom:"Snowglobe",      img:"" },
+    { nom:"Paper Angel",    img:"" },
+  ],
 };
 
 /* ---------- DONNÉES · ABEILLES (outil Build your Hive) ---------- */
@@ -1011,7 +1059,7 @@ const COULEUR_RARETE_BEE = {
   "Commun":"#C8792E","Rare":"#E8ECEF","Épique":"#F0C948",
   "Légendaire":"#5FD6C8","Mythique":"#B77BE0","Événement":"#7BD44E"
 };
-const HIVE_SIZE = 50, BEEQUIP_MAX = 15;
+const HIVE_SIZE = 50;
 let hive = new Array(HIVE_SIZE).fill(null);   // chaque case : {bee, level, gifted, beequip} ou null
 let activeBee = 0;         // abeille choisie dans le menu
 let selectedCell = null;   // case en cours d'édition
@@ -1031,23 +1079,17 @@ function initBuilder(){
     if(selectedCell===null || !hive[selectedCell]) return;
     hive[selectedCell].level = parseInt(e.target.value);
     document.getElementById('cc-level-val').textContent = e.target.value;
-    paintCell(selectedCell);
+    paintCell(selectedCell); updateStats();
   });
   document.getElementById('cc-gifted').addEventListener('click',()=>{
     if(selectedCell===null || !hive[selectedCell]) return;
     hive[selectedCell].gifted = !hive[selectedCell].gifted;
     syncConfig(); paintCell(selectedCell); updateStats();
   });
-  document.getElementById('cc-beequip').addEventListener('click',()=>{
-    if(selectedCell===null || !hive[selectedCell]) return;
-    const cur = hive[selectedCell].beequip;
-    if(!cur && countBeequip()>=BEEQUIP_MAX){ alert("15 beequips maximum dans la ruche."); return; }
-    hive[selectedCell].beequip = !cur;
-    syncConfig(); paintCell(selectedCell); updateStats();
-  });
 }
 
 // Ruche en nid d'abeille (pointe en haut) : 5 par rangée, 10 rangées, rangées décalées
+let cellGeom=[];
 function buildHiveCells(){
   // Hexagones "face plate" (flat-top), 10 vagues de 5, colonnes décalées => vagues
   const cols=5, rows=10, W=64, H=Math.round(W*0.866);
@@ -1055,22 +1097,33 @@ function buildHiveCells(){
   const hiveEl=document.getElementById('hive');
   hiveEl.style.width  = ((cols-1)*hstep + W)+'px';
   hiveEl.style.height = ((rows-1)*vstep + H + H/2)+'px';
+  cellGeom=[];
   let html='';
   for(let i=0;i<HIVE_SIZE;i++){
     const wave=Math.floor(i/cols), col=i%cols;
     const x=col*hstep;
-    const y=wave*vstep + (col%2?H/2:0);
+    const y=wave*vstep + (col%2?0:H/2);   // colonnes paires décalées vers le bas
+    cellGeom[i]={x,y,W,H};
     html+=`<div class="cell" data-i="${i}" style="left:${x}px;top:${y}px;width:${W}px;height:${H}px">`
-        + `<div class="hex"></div><div class="inner"></div>`
-        + `<span class="lvl"></span><span class="bq"></span></div>`;
+        + `<div class="hex"></div><div class="inner"></div></div>`;
   }
-  hiveEl.innerHTML=html;
+  hiveEl.innerHTML = html + '<div class="hive-labels" id="hive-labels"></div>';
   hiveEl.querySelectorAll('.cell').forEach(c=>
     c.addEventListener('click',()=>onCellClick(parseInt(c.dataset.i))));
 }
+function renderLabels(){
+  const layer=document.getElementById('hive-labels'); if(!layer) return;
+  let html='';
+  for(let i=0;i<HIVE_SIZE;i++){
+    if(hive[i]===null) continue;
+    const g=cellGeom[i], c=hive[i];
+    html+=`<span class="hive-label" style="left:${g.x+3}px;top:${g.y+g.H-17}px;color:${c.numColor||'#fff'}">${c.level}</span>`;
+  }
+  layer.innerHTML=html;
+}
 
 function onCellClick(i){
-  if(hive[i]===null) hive[i]={bee:activeBee, level:1, gifted:false, beequip:false};
+  if(hive[i]===null) hive[i]={bee:activeBee, level:1, gifted:false, numColor:'#fff'};
   selectCell(i);
   paintCell(i); updateStats();
 }
@@ -1090,8 +1143,6 @@ function syncConfig(){
   document.getElementById('cc-level').value=c.level;
   document.getElementById('cc-level-val').textContent=c.level;
   document.getElementById('cc-gifted').classList.toggle('on',c.gifted);
-  document.getElementById('cc-beequip').classList.toggle('on',c.beequip);
-  document.getElementById('cc-bq-count').textContent=`(${countBeequip()}/${BEEQUIP_MAX})`;
   updateBrushLabel();
 }
 function updateBrushLabel(){
@@ -1108,11 +1159,9 @@ function paintCell(i){
   const cell=document.querySelector(`#hive .cell[data-i="${i}"]`); if(!cell) return;
   const c=hive[i];
   const inner=cell.querySelector('.inner');
-  const lvl=cell.querySelector('.lvl');
-  const bq=cell.querySelector('.bq');
   if(c===null){
     cell.classList.remove('gifted','filled');
-    inner.innerHTML=''; inner.style.background=''; lvl.textContent=''; bq.textContent='';
+    inner.innerHTML=''; inner.style.background='';
     return;
   }
   const b=ABEILLES[c.bee];
@@ -1120,11 +1169,8 @@ function paintCell(i){
   cell.classList.toggle('gifted',c.gifted);
   if(b.img){ inner.innerHTML=`<img src="${b.img}" alt="${b.nom}">`; inner.style.background=''; }
   else { inner.innerHTML=`<span class="name-fallback">${b.nom}</span>`; inner.style.background=COULEUR_BEE[b.couleur]||'#555'; }
-  lvl.textContent=c.level;
-  bq.textContent = c.beequip ? '🎒' : '';
 }
 function paintHive(){ for(let i=0;i<HIVE_SIZE;i++) paintCell(i); updateStats(); }
-function countBeequip(){ return hive.filter(c=>c&&c.beequip).length; }
 
 function renderBeeChips(){
   const rars=["Tous","Commun","Rare","Épique","Légendaire","Mythique","Événement"];
@@ -1165,8 +1211,8 @@ function updateStats(){
     <div class="stat"><div class="n" style="color:${COULEUR_BEE.rouge}">${parC.rouge}</div><div class="l">Rouges</div></div>
     <div class="stat"><div class="n" style="color:${COULEUR_BEE.bleu}">${parC.bleu}</div><div class="l">Bleues</div></div>
     <div class="stat"><div class="n" style="color:#9aa7b0">${parC.incolore}</div><div class="l">Incolores</div></div>
-    <div class="stat"><div class="n">${gifted}</div><div class="l">Gifted</div></div>
-    <div class="stat"><div class="n">${countBeequip()}<small>/15</small></div><div class="l">Beequips</div></div>`;
+    <div class="stat"><div class="n">${gifted}</div><div class="l">Gifted</div></div>`;
+  renderLabels();
 }
 
 function clearSelectedCell(){
@@ -1184,11 +1230,33 @@ function clearHive(){
   paintHive();
 }
 
+/* ---------- Menu d'objets (Mutation / Beequip / Beesmas) ---------- */
+let objCat = "mutation";
+function initObjets(){
+  const cats=document.getElementById('obj-cats');
+  cats.addEventListener('click',e=>{
+    const btn=e.target.closest('.obj-cat'); if(!btn) return;
+    objCat=btn.dataset.cat;
+    cats.querySelectorAll('.obj-cat').forEach(b=>b.classList.toggle('active',b===btn));
+    renderObjets();
+  });
+  renderObjets();
+}
+function renderObjets(){
+  const el=document.getElementById('obj-list');
+  const list=OBJETS[objCat]||[];
+  el.innerHTML = list.map(o=>`<div class="obj-opt" draggable="true" title="${o.nom}">
+      <span class="oic">${o.img?`<img src="${o.img}" alt="">`:'▪'}</span>
+      <span class="onm">${o.nom}</span></div>`).join('')
+    || `<div style="color:var(--muted);font-size:.72rem;padding:.4rem">Vide — complète cette catégorie.</div>`;
+}
+
 /* ---------- Initialisation ---------- */
 initIngredients();
 initNiveau();
 initTrade();
 initBuilder();
+initObjets();
 </script>
 </body>
 </html>
