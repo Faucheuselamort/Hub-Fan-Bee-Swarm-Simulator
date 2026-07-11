@@ -1543,7 +1543,7 @@ let selectedCell = null;   // case en cours d'édition
 let beeFilter = "Tous";
 
 function beeIconHTML(b, cls){
-  return `<span class="${cls}" style="background:${COULEUR_BEE[b.couleur]||'#555'}"><span class="ic-fb">${b.nom.slice(0,3)}</span><img src="${imgSrc('bees',b)}" alt="" onload="this.previousElementSibling.style.display='none'" onerror="this.remove()"></span>`;
+  return `<span class="${cls}" style="background:${COULEUR_RARETE_BEE[b.rarete]||'#555'}"><span class="ic-fb">${b.nom.slice(0,3)}</span><img src="${imgSrc('bees',b)}" alt="" onload="this.previousElementSibling.style.display='none'" onerror="this.remove()"></span>`;
 }
 
 function initBuilder(){
@@ -1777,7 +1777,7 @@ function paintCell(i){
   const b=ABEILLES[c.bee];
   cell.classList.add('filled');
   cell.classList.toggle('gifted',c.gifted);
-  inner.style.background = COULEUR_BEE[b.couleur]||'#555';
+  inner.style.background = COULEUR_RARETE_BEE[b.rarete]||'#555';   // fond = couleur de rareté
   inner.innerHTML = `<span class="name-fallback">${b.nom}</span><img src="${imgSrc('bees',b)}" alt="${b.nom}" onload="this.previousElementSibling.style.display='none'" onerror="this.remove()">`;
 }
 function paintHive(){ for(let i=0;i<HIVE_SIZE;i++) paintCell(i); updateStats(); }
@@ -1880,7 +1880,7 @@ function downloadHiveImage(){
       const hb=cy+0.5*H*sB, hr=cx+0.5*W*sB;
       hexPath(cx,cy,sB); ctx.fillStyle=c.gifted?'#F4DD44':'#2a4653'; ctx.fill();          // bordure
       ctx.save(); hexPath(cx,cy,sI); ctx.clip();                                          // intérieur
-      ctx.fillStyle=COULEUR_BEE[b.couleur]||'#555'; hexPath(cx,cy,sI); ctx.fill();
+      ctx.fillStyle=COULEUR_RARETE_BEE[b.rarete]||'#555'; hexPath(cx,cy,sI); ctx.fill();   // fond = rareté
       const bi=imgMap[imgSrc('bees',b)];
       if(bi){ ctx.drawImage(bi, cx-0.5*W*sI, cy-0.5*H*sI, W*sI, H*sI); }
       else { ctx.fillStyle='#fff'; ctx.font='700 10px Fredoka, sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(b.nom, cx, cy); }
