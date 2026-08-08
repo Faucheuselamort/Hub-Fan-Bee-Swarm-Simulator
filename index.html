@@ -599,16 +599,19 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 .inter-l span{font-size:.8rem;background:var(--ink-900);border:1px solid var(--line-soft);
   border-radius:20px;padding:.2rem .6rem;color:var(--cream)}
 
-/* ce que le stock permet de fabriquer */
-.poss{margin-top:1.2rem;border:1px solid rgba(107,208,139,.3);border-radius:14px;
-  background:linear-gradient(140deg,rgba(107,208,139,.08),transparent);overflow:hidden}
-.poss-t{font-family:'Fredoka';font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:1px;
-  color:#6BD08B;padding:.6rem .9rem;border-bottom:1px solid rgba(107,208,139,.2)}
-.poss-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.45rem;padding:.8rem .9rem}
-.poss-i{display:flex;align-items:center;gap:.45rem;background:var(--ink-950);
-  border:1px solid var(--line-soft);border-radius:12px;padding:.4rem .6rem}
-.poss-n{flex:1;font-size:.84rem;color:var(--cream)}
-.poss-i b{font-family:'Fredoka';font-weight:700;color:#6BD08B;font-size:.95rem}
+/* code couleur de la liste de courses */
+.ing-table tr.ok td{opacity:.6}
+.ing-table tr.ok .ing-c{border-left:2px solid #6BD08B;padding-left:.5rem}
+.ing-table tr.craft .ing-c{border-left:2px solid #F0B429;padding-left:.5rem}
+.ing-table tr.part .ing-c{border-left:2px solid rgba(240,180,41,.45);padding-left:.5rem}
+.ing-table .done{color:#6BD08B;font-weight:700;white-space:nowrap}
+.canmake{color:#F0B429;font-weight:700;white-space:nowrap}
+.canmake.sm{display:block;font-size:.68rem;font-weight:500;opacity:.85;margin-top:.1rem}
+.legende{display:flex;flex-wrap:wrap;gap:.5rem 1.1rem;margin-top:.9rem;
+  font-size:.76rem;color:var(--muted)}
+.legende span{display:flex;align-items:center;gap:.35rem}
+.lg{width:10px;height:10px;border-radius:3px;display:inline-block;flex:0 0 auto}
+.lg-v{background:#6BD08B}.lg-o{background:#F0B429}.lg-n{background:var(--line)}
 
 /* arbre de fabrication */
 .tree{border:1px solid var(--line-soft);border-radius:14px;background:var(--ink-950);
@@ -1290,7 +1293,7 @@ const ITEMS = [
   { nom:"Oil", mats:[[50,"Sunflower Seed"],[10,"Royal Jelly"]], categorie:"Fabrication", desc:"Huile : accélère les abeilles. Se fabrique avec 50 Sunflower Seeds et 10 Royal Jellies.", lieu:"Blender, quêtes" },
   { nom:"Glue", mats:[[50,"Gumdrops"],[10,"Royal Jelly"]], categorie:"Fabrication", desc:"Colle : ×1,25 pollen des outils et des abeilles pendant 10 minutes.", lieu:"Quêtes, planteurs, Sticker Stack" },
   { nom:"Tropical Drink", mats:[[10,"Coconut"],[2,"Enzymes"],[2,"Oil"]], categorie:"Fabrication", desc:"Boisson tropicale : boost lié aux champs de fin de jeu.", lieu:"Fabrication, quêtes" },
-  { nom:"Glitter", mats:[[25,"Moon Charm"],[1,"Sprout"]], categorie:"Fabrication", desc:"Paillettes : boost puissant et ingrédient rare. Se fabrique avec 25 Moon Charms et 1 Magic Bean.", lieu:"Blender, quêtes" },
+  { nom:"Glitter", mats:[[25,"Moon Charm"],[1,"Magic Bean"]], categorie:"Fabrication", desc:"Paillettes : boost puissant et ingrédient rare. Se fabrique avec 25 Moon Charms et 1 Magic Bean.", lieu:"Blender, quêtes" },
   { nom:"Purple Potion", mats:[[3,"Neonberry"],[3,"Blue Extract"],[3,"Red Extract"],[3,"Glue"]], categorie:"Fabrication", desc:"×1,25 capacité et convert rate à la ruche, ×1,5 pollen rouge et bleu, ×1,3 bee gather et pollen d'outils, pendant 15 minutes.", lieu:"Science Bear, quêtes" },
   { nom:"Super Smoothie", mats:[[3,"Neonberry"],[3,"Star Jelly"],[3,"Purple Potion"],[6,"Tropical Drink"]], categorie:"Fabrication", desc:"Smoothie : gros boost combiné de fin de jeu.", lieu:"Fabrication, quêtes" },
   { nom:"Turpentine", mats:[[10,"Super Smoothie"],[10,"Caustic Wax"],[100,"Star Jelly"],[1000,"Honeysuckle"]], categorie:"Divers", desc:"Térébenthine : ingrédient obtenu par certaines quêtes seulement.", lieu:"Quêtes exclusives" },
@@ -1343,8 +1346,7 @@ const ITEMS = [
   { nom:"Whirligig", categorie:"Divers", desc:"Hélice : téléporte instantanément le joueur à la ruche.", lieu:"Quêtes, planteurs" },
   { nom:"Jelly Beans", categorie:"Divers", desc:"Bonbons haricots : friandise donnée par de nombreuses quêtes.", lieu:"Quêtes, cadeaux" },
   { nom:"Marshmallow Bee", categorie:"Autre", desc:"Abeille en guimauve : objet spécial, hors des catégories habituelles.", lieu:"Événements" },
-  { nom:"Sprout", categorie:"Divers", desc:"Pousse magique : elle produit du pollen et des tokens sur un champ pendant plusieurs minutes. Sert aussi à fabriquer le Glitter.", lieu:"Magic Bean, quêtes" },
-  { nom:"Magic Bean", categorie:"Divers", desc:"Haricot magique : fait pousser un Sprout géant.", lieu:"Magic Bean Shop, quêtes" },
+  { nom:"Magic Bean", categorie:"Divers", desc:"Haricot magique : fait pousser un Sprout géant, qui produit du pollen et des tokens sur un champ pendant plusieurs minutes. C'est aussi l'ingrédient du Glitter.", lieu:"Magic Bean Shop, quêtes" },
   { nom:"Festive Bean", categorie:"Beesmas", desc:"Haricot festif : version Beesmas du haricot magique.", lieu:"Événement Beesmas" },
   { nom:"Cloud Vial", categorie:"Divers", desc:"Fiole de nuage : invoque un nuage qui fait pleuvoir des tokens sur un champ.", lieu:"Wind Shrine, quêtes" },
   { nom:"Bloom Shaker", categorie:"Divers", desc:"Secoueur de floraison : fait fleurir un champ pour booster la récolte.", lieu:"Quêtes, événements" },
@@ -2664,7 +2666,7 @@ const PRIX_NIVEAU = [
    Change simplement la valeur pour basculer un dossier entier. */
 const IMG_EXT = {
   item:     'webp',
-  stickers: 'png',
+  stickers: 'webp',
   amulette: 'png',
   beequip:  'png',
   bees:     'png',
@@ -3236,12 +3238,27 @@ function tableStock(titre, dico, note){
   const lignes = noms.map(nom=>{
     const brut = dico[nom].brut, manque = dico[nom].net;
     const possede = STOCK[nom] || 0;
-    return `<tr class="${manque===0?'ok':''}">
+    const dejaFait = faisable(nom);                       // fabricable tout de suite
+    const couvert  = Math.min(dejaFait, manque);
+    let classe = '', cellule;
+    if(manque === 0){
+      classe = 'ok';
+      cellule = '<span class="done">✓ tu l\'as</span>';
+    } else if(couvert >= manque){
+      classe = 'craft';
+      cellule = `<span class="canmake">✦ ${fmtEntier(manque)} fabricable${manque>1?'s':''}</span>`;
+    } else if(couvert > 0){
+      classe = 'part';
+      cellule = `${fmtEntier(manque)}<span class="canmake sm">dont ${fmtEntier(couvert)} fabricable${couvert>1?'s':''}</span>`;
+    } else {
+      cellule = fmtEntier(manque);
+    }
+    return `<tr class="${classe}">
       <td class="ing-c"><span class="ing-img sm"><img src="${imgSrc('item',{nom})}" alt="" loading="lazy"
         onerror="imgFallback(this,'ph','${esc(initiales(nom))}')"></span>${esc(nom)}</td>
       <td class="n">${fmtEntier(brut)}</td>
       <td class="n"><input type="number" min="0" class="stk" data-n="${esc(nom)}" value="${possede||''}" placeholder="0"></td>
-      <td class="n manque">${manque===0?'<span class="done">✓</span>':fmtEntier(manque)}</td>
+      <td class="n manque">${cellule}</td>
     </tr>`;
   }).join('');
   return `<div class="tot-t">${titre}</div>
@@ -3263,32 +3280,6 @@ function faisable(nom){
   rec.mats.forEach(([q, ing]) => { n = Math.min(n, Math.floor((STOCK[ing] || 0) / q)); });
   if(rec.miel) n = Math.min(n, Math.floor((STOCK['Honey'] || 0) / rec.miel));
   return isFinite(n) ? n : 0;
-}
-
-function possibleHTML(){
-  const stockVide = Object.keys(STOCK).length === 0;
-  if(stockVide){
-    return `<div class="poss"><div class="poss-t">Ce que ton stock permet de fabriquer</div>
-      <p class="hint" style="padding:.2rem .9rem .8rem;margin:0">Renseigne tes quantités dans les tableaux ci-dessus : cette section listera aussitôt tout ce que tu peux fabriquer immédiatement.</p></div>`;
-  }
-  const dispo = Object.keys(CATALOGUE)
-    .map(nom => ({ nom, n:faisable(nom) }))
-    .filter(x => x.n > 0)
-    .sort((a,b) => b.n - a.n || a.nom.localeCompare(b.nom));
-
-  if(!dispo.length){
-    return `<div class="poss"><div class="poss-t">Ce que ton stock permet de fabriquer</div>
-      <p class="hint" style="padding:.2rem .9rem .8rem;margin:0">Avec ce que tu as pour l'instant, aucune recette complète n'est réalisable. Il te manque encore au moins un ingrédient sur chacune.</p></div>`;
-  }
-  const tuiles = dispo.map(x => `<div class="poss-i">
-      <span class="ing-img sm"><img src="${imgSrc('item',{nom:x.nom})}" alt="" loading="lazy"
-        onerror="imgFallback(this,'ph','${esc(initiales(x.nom))}')"></span>
-      <span class="poss-n">${esc(x.nom)}</span><b>×${fmtEntier(x.n)}</b>
-    </div>`).join('');
-  return `<div class="poss"><div class="poss-t">Ce que ton stock permet de fabriquer</div>
-    <div class="poss-g">${tuiles}</div>
-    <p class="hint" style="padding:0 .9rem .8rem;margin:0">Chaque recette est calculée séparément, à partir des ingrédients que tu possèdes déjà — sans fabriquer les sous-composants. Le même stock peut donc servir à plusieurs lignes : tu ne pourras pas tout faire en même temps.</p>
-  </div>`;
 }
 
 /* ---- la liste de courses ---- */
@@ -3341,7 +3332,11 @@ function renderCourses(){
   html += tableStock('3 · Ingrédients de base', base,
     "Ce qui ne se fabrique pas : le coût réel une fois toute la chaîne décomposée.");
 
-  html += possibleHTML();
+  html += `<div class="legende">
+    <span><i class="lg lg-v"></i>Vert : couvert par ce que tu possèdes</span>
+    <span><i class="lg lg-o"></i>Orange : tu as de quoi le fabriquer sur-le-champ</span>
+    <span><i class="lg lg-n"></i>Sans couleur : à récolter ou à acheter</span>
+  </div>`;
 
   if(prealables.length){
     html += `<div class="craft-pre" style="border:1px solid var(--line-soft);border-radius:12px;margin-top:.8rem">
