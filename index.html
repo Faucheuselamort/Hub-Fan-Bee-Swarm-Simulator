@@ -549,6 +549,9 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 .passif .p-meta{font-size:.74rem;color:var(--muted);font-family:'Fredoka';text-transform:uppercase;letter-spacing:.5px}
 .passif p{font-size:.88rem;color:var(--cream);line-height:1.6;opacity:.92}
 
+/* bouton « voir la page » dans la modale */
+.m-goto{width:100%;margin-top:1.2rem;justify-content:center;font-size:.98rem}
+
 /* bandeau d'avertissement sur les données manquantes */
 .warn{background:rgba(240,180,41,.09);border:1px solid rgba(240,180,41,.3);border-radius:14px;
   padding:.95rem 1.15rem;font-size:.88rem;color:var(--cream);line-height:1.6;margin:1.2rem 0;
@@ -655,7 +658,7 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
   <div class="eyebrow">Base de données</div>
   <div class="sec-head"><h2 class="section-title">Items du jeu</h2><span class="count-pill count-visible"></span></div>
   <p class="lead">Tous les objets du jeu, classés par famille : à quoi ils servent, combien ils coûtent et où les trouver.</p>
-  <div class="note"><span class="i">🍯</span><div>20 catégories, du Scooper au Planter Of Plenty. <b>Clique sur une carte</b> pour ouvrir sa fiche. Les prix seront ajoutés plus tard — pour l'instant chaque item indique où le trouver. Les images se placent dans <b>images/item/</b>, le nom du fichier devant reprendre exactement le nom de l'item.</div></div>
+  <div class="note"><span class="i">🍯</span><div>20 catégories, du Scooper au Planter Of Plenty. <b>Clique sur une carte</b> pour ouvrir sa fiche. Les prix seront ajoutés plus tard — pour l'instant chaque item indique où le trouver. Les images se placent dans <b>images/item/</b>, le nom du fichier devant reprendre exactement le nom de l'item. Le format est libre : <b>.png</b>, <b>.webp</b> ou <b>.jpg</b> — le site les essaie dans cet ordre. Deux exceptions gérées automatiquement : tous les œufs portant un nom d'abeille réutilisent l'image de <b>Basic Egg</b> (le Nectar Tester aussi), et toutes les gelées portant un nom d'abeille réutilisent celle de <b>Royal Jelly</b> — c'est ainsi dans le jeu, y compris pour les versions Gifted. Tu n'as donc que deux fichiers à fournir pour ces 50 entrées.</div></div>
   <div class="toolbar">
     <div class="search"><span>🔍</span><input type="text" placeholder="Rechercher un item…" oninput="filterCards('items',this.value)"></div>
     <div class="chips" id="items-chips"></div>
@@ -1051,9 +1054,9 @@ const ITEMS = [
   { nom:"Parachute", categorie:"Accessoire", desc:"Parachute : ralentit la chute pour traverser la carte en douceur.", lieu:"Boutique" },
   { nom:"Glider", categorie:"Accessoire", desc:"Deltaplane : vol plané sur de longues distances.", lieu:"Boutique" },
   { nom:"Hive Slot", categorie:"Accessoire", desc:"Emplacement de ruche supplémentaire : de 25 à 50 abeilles maximum. Le prix augmente de façon exponentielle.", lieu:"Mountain Top Shop" },
-  { nom:"Amulet", categorie:"Accessoire", desc:"Amulette : bonus permanents obtenus via les défis et les générateurs. Voir l'onglet Amulettes.", lieu:"Défis et générateurs" },
-  { nom:"Beequip", categorie:"Accessoire", desc:"Équipement à poser sur une abeille. Stats aléatoires selon un potentiel de 0 à 5 ★. Voir l'onglet Beequip.", lieu:"Planteurs, Dapper Bear" },
-  { nom:"Sticker", categorie:"Accessoire", desc:"Autocollant à poser sur sa ruche, à échanger ou à empiler dans le Sticker Stack. Voir l'onglet Stickers.", lieu:"Murs cachés, Sticker Printer, quêtes" },
+  { nom:"Amulet", categorie:"Accessoire", vue:"amulettes", vueNom:"les 7 amulettes", desc:"Amulette : bonus permanents obtenus via les défis et les générateurs. Une de chaque type peut être portée en même temps.", lieu:"Défis et générateurs" },
+  { nom:"Beequip", categorie:"Accessoire", vue:"beequip", vueNom:"les 41 beequips", desc:"Équipement à poser sur une abeille. Stats aléatoires selon un potentiel de 0 à 5 ★, renforçables aux cires.", lieu:"Planteurs, Dapper Bear" },
+  { nom:"Sticker", categorie:"Accessoire", vue:"stickers", vueNom:"les 291 stickers", desc:"Autocollant à poser sur sa ruche, à échanger, ou à empiler dans le Sticker Stack pour un bonus permanent.", lieu:"Murs cachés, Sticker Printer, quêtes" },
 
   /* ================= PLANTER ================= */
   { nom:"Paper Planter", categorie:"Planter", desc:"Planteur en papier : usage unique, très rapide, petites récompenses. Idéal pour débuter.", lieu:"Quêtes, Blender" },
@@ -1083,50 +1086,50 @@ const ITEMS = [
   { nom:"Gold Gift Egg", categorie:"Œufs", desc:"Version « gifted » de l'œuf or.", lieu:"Boutique Robux, événements" },
   { nom:"Diamond Gift Egg", categorie:"Œufs", desc:"Version « gifted » de l'œuf diamant.", lieu:"Boutique Robux, événements" },
   { nom:"Mythic Gift Egg", categorie:"Œufs", desc:"Version « gifted » de l'œuf mythique.", lieu:"Boutique Robux, événements" },
-  { nom:"Bumble Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne directement une Bumble Bee.", lieu:"Quêtes, événements (très rare)" },
-  { nom:"Rascal Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne directement une Rascal Bee.", lieu:"Quêtes, événements (très rare)" },
-  { nom:"Bubble Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne directement une Bubble Bee.", lieu:"Quêtes, événements (très rare)" },
-  { nom:"Honey Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne directement une Honey Bee.", lieu:"Quêtes, événements (très rare)" },
-  { nom:"Music Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne directement une Music Bee.", lieu:"Quêtes, événements (très rare)" },
-  { nom:"Gifted Exhausted Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne une Exhausted Bee déjà Gifted.", lieu:"Quêtes, événements (très rare)" },
-  { nom:"Gifted Frosty Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne une Frosty Bee déjà Gifted.", lieu:"Quêtes, événements (très rare)" },
-  { nom:"Gifted Carpenter Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne une Carpenter Bee déjà Gifted.", lieu:"Quêtes, événements (très rare)" },
-  { nom:"Gifted Diamond Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne une Diamond Bee déjà Gifted.", lieu:"Quêtes, événements (très rare)" },
-  { nom:"Bear Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Bear Bee.", lieu:"Bear Bee Voucher, événements" },
-  { nom:"Vicious Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Vicious Bee.", lieu:"Plateforme de réclamation, événements" },
-  { nom:"Tabby Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Tabby Bee.", lieu:"Événements" },
-  { nom:"Puppy Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Puppy Bee.", lieu:"Événements" },
-  { nom:"Photon Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Photon Bee.", lieu:"Événements" },
-  { nom:"Festive Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Festive Bee.", lieu:"Événement Beesmas" },
-  { nom:"Gummy Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Gummy Bee.", lieu:"Événements" },
-  { nom:"Windy Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Windy Bee.", lieu:"Événements" },
-  { nom:"Cobalt Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Cobalt Bee.", lieu:"Événements" },
-  { nom:"Crimson Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Crimson Bee.", lieu:"Événements" },
-  { nom:"Digital Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Digital Bee.", lieu:"Événements, codes" },
+  { img:"images/item/Basic%20Egg.png", nom:"Bumble Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne directement une Bumble Bee.", lieu:"Quêtes, événements (très rare)" },
+  { img:"images/item/Basic%20Egg.png", nom:"Rascal Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne directement une Rascal Bee.", lieu:"Quêtes, événements (très rare)" },
+  { img:"images/item/Basic%20Egg.png", nom:"Bubble Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne directement une Bubble Bee.", lieu:"Quêtes, événements (très rare)" },
+  { img:"images/item/Basic%20Egg.png", nom:"Honey Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne directement une Honey Bee.", lieu:"Quêtes, événements (très rare)" },
+  { img:"images/item/Basic%20Egg.png", nom:"Music Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne directement une Music Bee.", lieu:"Quêtes, événements (très rare)" },
+  { img:"images/item/Basic%20Egg.png", nom:"Gifted Exhausted Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne une Exhausted Bee déjà Gifted.", lieu:"Quêtes, événements (très rare)" },
+  { img:"images/item/Basic%20Egg.png", nom:"Gifted Frosty Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne une Frosty Bee déjà Gifted.", lieu:"Quêtes, événements (très rare)" },
+  { img:"images/item/Basic%20Egg.png", nom:"Gifted Carpenter Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne une Carpenter Bee déjà Gifted.", lieu:"Quêtes, événements (très rare)" },
+  { img:"images/item/Basic%20Egg.png", nom:"Gifted Diamond Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne une Diamond Bee déjà Gifted.", lieu:"Quêtes, événements (très rare)" },
+  { img:"images/item/Basic%20Egg.png", nom:"Bear Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Bear Bee.", lieu:"Bear Bee Voucher, événements" },
+  { img:"images/item/Basic%20Egg.png", nom:"Vicious Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Vicious Bee.", lieu:"Plateforme de réclamation, événements" },
+  { img:"images/item/Basic%20Egg.png", nom:"Tabby Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Tabby Bee.", lieu:"Événements" },
+  { img:"images/item/Basic%20Egg.png", nom:"Puppy Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Puppy Bee.", lieu:"Événements" },
+  { img:"images/item/Basic%20Egg.png", nom:"Photon Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Photon Bee.", lieu:"Événements" },
+  { img:"images/item/Basic%20Egg.png", nom:"Festive Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Festive Bee.", lieu:"Événement Beesmas" },
+  { img:"images/item/Basic%20Egg.png", nom:"Gummy Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Gummy Bee.", lieu:"Événements" },
+  { img:"images/item/Basic%20Egg.png", nom:"Windy Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Windy Bee.", lieu:"Événements" },
+  { img:"images/item/Basic%20Egg.png", nom:"Cobalt Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Cobalt Bee.", lieu:"Événements" },
+  { img:"images/item/Basic%20Egg.png", nom:"Crimson Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Crimson Bee.", lieu:"Événements" },
+  { img:"images/item/Basic%20Egg.png", nom:"Digital Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Digital Bee.", lieu:"Événements, codes" },
 
   /* ================= GELÉES ================= */
   { nom:"Royal Jelly", categorie:"Gelées", desc:"Transforme une abeille en une autre abeille aléatoire. Fait perdre mutation et statut Gifted.", lieu:"Distributeur, quêtes, planteurs, mobs" },
   { nom:"Star Jelly", categorie:"Gelées", desc:"Gelée étoilée : transforme une abeille en l'abeille exacte de ton choix.", lieu:"Événements, codes, Robux" },
-  { nom:"Bumble Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Bumble Bee.", lieu:"Quêtes, événements" },
-  { nom:"Rascal Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Rascal Bee.", lieu:"Quêtes, événements" },
-  { nom:"Bubble Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Bubble Bee.", lieu:"Quêtes, événements" },
-  { nom:"Exhausted Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Exhausted Bee.", lieu:"Quêtes, événements" },
-  { nom:"Honey Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Honey Bee.", lieu:"Quêtes, événements" },
-  { nom:"Shocked Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Shocked Bee.", lieu:"Quêtes, codes, événements" },
-  { nom:"Diamond Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Diamond Bee.", lieu:"Quêtes, événements" },
-  { nom:"Music Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Music Bee.", lieu:"Quêtes, événements" },
-  { nom:"Buoyant Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Buoyant Bee.", lieu:"Quêtes, événements" },
-  { nom:"Bear Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Bear Bee.", lieu:"Événements" },
-  { nom:"Vicious Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Vicious Bee.", lieu:"Événements" },
-  { nom:"Tabby Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Tabby Bee.", lieu:"Événements" },
-  { nom:"Puppy Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Puppy Bee.", lieu:"Événements" },
-  { nom:"Photon Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Photon Bee.", lieu:"Événements" },
-  { nom:"Festive Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Festive Bee.", lieu:"Événement Beesmas" },
-  { nom:"Gummy Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Gummy Bee.", lieu:"Événements" },
-  { nom:"Windy Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Windy Bee.", lieu:"Événements" },
-  { nom:"Cobalt Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Cobalt Bee.", lieu:"Événements" },
-  { nom:"Crimson Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Crimson Bee.", lieu:"Événements" },
-  { nom:"Digital Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Digital Bee.", lieu:"Événements, codes" },
+  { img:"images/item/Royal%20Jelly.png", nom:"Bumble Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Bumble Bee.", lieu:"Quêtes, événements" },
+  { img:"images/item/Royal%20Jelly.png", nom:"Rascal Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Rascal Bee.", lieu:"Quêtes, événements" },
+  { img:"images/item/Royal%20Jelly.png", nom:"Bubble Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Bubble Bee.", lieu:"Quêtes, événements" },
+  { img:"images/item/Royal%20Jelly.png", nom:"Exhausted Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Exhausted Bee.", lieu:"Quêtes, événements" },
+  { img:"images/item/Royal%20Jelly.png", nom:"Honey Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Honey Bee.", lieu:"Quêtes, événements" },
+  { img:"images/item/Royal%20Jelly.png", nom:"Shocked Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Shocked Bee.", lieu:"Quêtes, codes, événements" },
+  { img:"images/item/Royal%20Jelly.png", nom:"Diamond Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Diamond Bee.", lieu:"Quêtes, événements" },
+  { img:"images/item/Royal%20Jelly.png", nom:"Music Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Music Bee.", lieu:"Quêtes, événements" },
+  { img:"images/item/Royal%20Jelly.png", nom:"Buoyant Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Buoyant Bee.", lieu:"Quêtes, événements" },
+  { img:"images/item/Royal%20Jelly.png", nom:"Bear Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Bear Bee.", lieu:"Événements" },
+  { img:"images/item/Royal%20Jelly.png", nom:"Vicious Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Vicious Bee.", lieu:"Événements" },
+  { img:"images/item/Royal%20Jelly.png", nom:"Tabby Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Tabby Bee.", lieu:"Événements" },
+  { img:"images/item/Royal%20Jelly.png", nom:"Puppy Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Puppy Bee.", lieu:"Événements" },
+  { img:"images/item/Royal%20Jelly.png", nom:"Photon Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Photon Bee.", lieu:"Événements" },
+  { img:"images/item/Royal%20Jelly.png", nom:"Festive Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Festive Bee.", lieu:"Événement Beesmas" },
+  { img:"images/item/Royal%20Jelly.png", nom:"Gummy Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Gummy Bee.", lieu:"Événements" },
+  { img:"images/item/Royal%20Jelly.png", nom:"Windy Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Windy Bee.", lieu:"Événements" },
+  { img:"images/item/Royal%20Jelly.png", nom:"Cobalt Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Cobalt Bee.", lieu:"Événements" },
+  { img:"images/item/Royal%20Jelly.png", nom:"Crimson Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Crimson Bee.", lieu:"Événements" },
+  { img:"images/item/Royal%20Jelly.png", nom:"Digital Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Digital Bee.", lieu:"Événements, codes" },
 
   /* ================= TREATS ================= */
   { nom:"Coconut", categorie:"Treats", desc:"Noix de coco : friandise du Coconut Field, aussi utilisée en fabrication.", lieu:"Coconut Field, Coconut Crab" },
@@ -1176,7 +1179,7 @@ const ITEMS = [
   { nom:"Black Balloon", categorie:"Balloon", desc:"Ballon noir : le plus puissant des ballons.", lieu:"Quêtes avancées, Sticker Stack" },
 
   /* ================= NECTAR ================= */
-  { nom:"Nectar Tester", categorie:"Nectar", desc:"Testeur de nectar : objet de quête pour analyser le nectar.", lieu:"Quêtes exclusives" },
+  { img:"images/item/Basic%20Egg.png", nom:"Nectar Tester", categorie:"Nectar", desc:"Testeur de nectar : objet de quête pour analyser le nectar.", lieu:"Quêtes exclusives" },
   { nom:"Comforting Vial", categorie:"Nectar", desc:"Fiole de nectar apaisant : applique le buff Comforting, orienté pollen bleu.", lieu:"Nectar Pot, Sticker Stack" },
   { nom:"Invigorating Vial", categorie:"Nectar", desc:"Fiole de nectar revigorant : buff orienté pollen rouge.", lieu:"Nectar Pot, Sticker Stack" },
   { nom:"Motivating Vial", categorie:"Nectar", desc:"Fiole de nectar motivant : buff orienté bee ability rate.", lieu:"Nectar Pot, Sticker Stack" },
@@ -2516,9 +2519,38 @@ const PRIX_NIVEAU = [
    pas encore, un rendu de secours (couleur + nom) s'affiche automatiquement.
    Tu peux forcer une autre image en remplissant le champ img:"..." d'un objet.
    ============================================================================ */
+/* Extensions testées, dans l'ordre. Si Nom.png est absent, le site essaie
+   automatiquement Nom.webp puis Nom.jpg avant d'afficher les initiales. */
+const IMG_EXTS = ['png','webp','jpg','jpeg'];
+
 function imgSrc(folder, o){
   if(o && o.img) return o.img;                 // chemin explicite prioritaire
-  return `images/${folder}/${encodeURIComponent(o.nom)}.png`;
+  return `images/${folder}/${encodeURIComponent(o.nom)}.${IMG_EXTS[0]}`;
+}
+
+/* Repli : on rejoue la même adresse avec les autres extensions, puis on
+   remplace l'image par un contenu de secours (initiales, emoji, rien…). */
+function imgNext(el){
+  const cur = el.getAttribute('src') || '';
+  const m = cur.match(/\.([a-z0-9]+)(\?.*)?$/i);
+  if(!m) return false;
+  const tried = (el.dataset.tried || '').split(',').filter(Boolean);
+  tried.push(m[1].toLowerCase());
+  const next = IMG_EXTS.find(e => tried.indexOf(e) === -1);
+  if(!next) return false;
+  el.dataset.tried = tried.join(',');
+  el.setAttribute('src', cur.replace(/\.[a-z0-9]+(\?.*)?$/i, '.' + next));
+  return true;
+}
+/* mode : 'ph' = initiales, 'emoji' = emoji de secours, 'gone' = on retire */
+function imgFallback(el, mode, valeur){
+  if(imgNext(el)) return;
+  const parent = el.parentNode;
+  el.remove();
+  if(!parent) return;
+  if(mode === 'ph')    parent.insertAdjacentHTML('beforeend', '<span class="ph">' + valeur + '</span>');
+  if(mode === 'emoji') parent.textContent = valeur;
+  if(mode === 'hide')  parent.style.display = 'none';
 }
 
 /* ---------- Navigation entre onglets ---------- */
@@ -2588,7 +2620,7 @@ function carteHTML(o, folder, key, idx){
   const tag = o.categorie || o.rarete || '';
   const kl  = keylineOf(o);
   const img = `<div class="card-img"><img src="${imgSrc(folder,o)}" alt="${esc(o.nom)}"
-      onerror="this.remove();this.parentNode.insertAdjacentHTML('beforeend','<span class=&quot;ph&quot;>${esc(initiales(o.nom))}</span>')"></div>`;
+      onerror="imgFallback(this,'ph','${esc(initiales(o.nom))}')"></div>`;
   return `<div class="card" data-name="${esc(o.nom.toLowerCase())}" data-cat="${esc(tag)}"
       data-key="${key}" data-idx="${idx}"
       style="--accent:${accent};--glow:${hexToGlow(accent,.18)}">
@@ -2600,7 +2632,8 @@ function carteHTML(o, folder, key, idx){
     <div class="card-body">
       <h3>${esc(o.nom)}</h3>
       <div class="desc">${o.desc?esc(o.desc):'<i style="opacity:.5">Pas encore de description.</i>'}</div>
-      ${kl?`<div class="keyline"><span class="k">${kl.k}</span><span class="v">${esc(kl.v)}</span></div>`:''}
+      ${o.vue?`<div class="keyline"><span class="k">Page dédiée</span><span class="v">Voir →</span></div>`
+             :(kl?`<div class="keyline"><span class="k">${kl.k}</span><span class="v">${esc(kl.v)}</span></div>`:'')}
     </div>
   </div>`;
 }
@@ -2634,13 +2667,14 @@ function ouvrirModale(key, idx){
   back.style.setProperty('--glow', hexToGlow(accent,.18));
   back.querySelector('.m-img').innerHTML =
     `<img src="${imgSrc(ds.folder,o)}" alt="${esc(o.nom)}"
-      onerror="this.remove();this.parentNode.insertAdjacentHTML('beforeend','<span class=&quot;ph&quot;>${esc(initiales(o.nom))}</span>')">`;
+      onerror="imgFallback(this,'ph','${esc(initiales(o.nom))}')">`;
   back.querySelector('.m-title').innerHTML =
     `<h3>${esc(o.nom)}</h3>${o.categorie?`<span class="m-tag">${esc(o.categorie)}</span>`:''}`;
   back.querySelector('.m-desc').innerHTML = o.desc ? esc(o.desc) : '<i style="opacity:.55">Aucune description pour le moment. Ajoute-la dans le bloc DONNÉES du fichier index.html.</i>';
   back.querySelector('.m-rows').innerHTML = rows.map(([k,v,hl])=>
     `<div class="m-row"><span class="k">${k}</span><span class="v${hl?' hl':''}">${esc(v)}</span></div>`).join('')
-    + (o.tiersId ? tiersTableHTML(o.tiersId) : '');
+    + (o.tiersId ? tiersTableHTML(o.tiersId) : '')
+    + (o.vue ? `<button class="btn btn-primary m-goto" data-vue="${o.vue}">Voir ${esc(o.vueNom||'la page')} →</button>` : '');
   back.classList.add('open');
   document.body.style.overflow='hidden';
 }
@@ -2736,6 +2770,8 @@ function majCompteur(key, n){
 
 /* ---------- Ouverture de la modale au clic ---------- */
 document.addEventListener('click',e=>{
+  const goto = e.target.closest('.m-goto');
+  if(goto){ fermerModale(); showView(goto.dataset.vue); return; }
   const card = e.target.closest('.card[data-key]');
   if(card){ ouvrirModale(card.dataset.key, +card.dataset.idx); return; }
   if(e.target.id==='modal-back' || e.target.closest('.m-close')) fermerModale();
@@ -2977,7 +3013,7 @@ function renderTradeSearch(side){
   box.innerHTML = matches.length ? matches.map(s=>{
     const val = s.valeur==='TBD' ? 'TBD' : (s.valeur ? s.valeur+' signs' : '—');
     return `<div class="tr-item" onclick="addTradeItem('${side}',&quot;${s.nom.replace(/"/g,'&#34;')}&quot;)">
-      <span class="tr-ic"><img src="${imgSrc('stickers',s)}" alt="" onerror="this.remove()"></span>
+      <span class="tr-ic"><img src="${imgSrc('stickers',s)}" alt="" onerror="imgFallback(this,'gone')"></span>
       <span class="tr-nm">${s.nom}</span><span class="tr-val">${val}</span></div>`;
   }).join('') : '<div class="tr-empty">Aucun sticker</div>';
   box.classList.add('open');
@@ -3002,7 +3038,7 @@ function renderTrade(){
     ul.innerHTML = trade[side].map(x=>{
       const val = (VALEURS_TRADE[x.item]||0)*x.qty; total += val;
       const st = STICKERS.find(s=>s.nom===x.item) || {nom:x.item};
-      return `<li><span class="tl-info"><span class="tl-ic"><img src="${imgSrc('stickers',st)}" alt="" onerror="this.remove()"></span>${x.qty}× ${x.item} <small style="color:var(--muted)">(${fmtSigns(val)})</small></span>
+      return `<li><span class="tl-info"><span class="tl-ic"><img src="${imgSrc('stickers',st)}" alt="" onerror="imgFallback(this,'gone')"></span>${x.qty}× ${x.item} <small style="color:var(--muted)">(${fmtSigns(val)})</small></span>
         <span class="rm" onclick="removeTrade('${side}',&quot;${x.item.replace(/"/g,'&#34;')}&quot;)">✕</span></li>`;
     }).join('') || '<li style="background:transparent;color:var(--muted);justify-content:center">Vide</li>';
     document.getElementById('trade-total-'+side).textContent = fmtSigns(total)+' signs';
@@ -3033,7 +3069,7 @@ let selectedCell = null;   // case en cours d'édition
 let beeFilter = "Tous";
 
 function beeIconHTML(b, cls){
-  return `<span class="${cls}" style="background:${COULEUR_RARETE_BEE[b.rarete]||'#555'}"><span class="ic-fb">${b.nom.slice(0,3)}</span><img src="${imgSrc('bees',b)}" alt="" onload="this.previousElementSibling.style.display='none'" onerror="this.remove()"></span>`;
+  return `<span class="${cls}" style="background:${COULEUR_RARETE_BEE[b.rarete]||'#555'}"><span class="ic-fb">${b.nom.slice(0,3)}</span><img src="${imgSrc('bees',b)}" alt="" onload="this.previousElementSibling.style.display='none'" onerror="imgFallback(this,'gone')"></span>`;
 }
 
 function initBuilder(){
@@ -3088,7 +3124,7 @@ function renderLabels(){
     html+=`<span class="hive-label" style="left:${g.x+3}px;top:${g.y+g.H-17}px;color:${col}">${c.level}</span>`;
     if(c.beequip){
       const bq=BEEQUIP.find(b=>b.nom===c.beequip)||{nom:c.beequip};
-      html+=`<span class="hive-badge" style="left:${g.x+g.W-29}px;top:${g.y+g.H-28}px"><img src="${imgSrc('beequip',bq)}" alt="" onerror="this.parentNode.textContent='🎒'"></span>`;
+      html+=`<span class="hive-badge" style="left:${g.x+g.W-29}px;top:${g.y+g.H-28}px"><img src="${imgSrc('beequip',bq)}" alt="" onerror="imgFallback(this,'emoji','🎒')"></span>`;
     }
   }
   layer.innerHTML=html;
@@ -3268,7 +3304,7 @@ function paintCell(i){
   cell.classList.add('filled');
   cell.classList.toggle('gifted',c.gifted);
   inner.style.background = COULEUR_RARETE_BEE[b.rarete]||'#555';   // fond = couleur de rareté
-  inner.innerHTML = `<span class="name-fallback">${b.nom}</span><img src="${imgSrc('bees',b)}" alt="${b.nom}" onload="this.previousElementSibling.style.display='none'" onerror="this.remove()">`;
+  inner.innerHTML = `<span class="name-fallback">${b.nom}</span><img src="${imgSrc('bees',b)}" alt="${b.nom}" onload="this.previousElementSibling.style.display='none'" onerror="imgFallback(this,'gone')">`;
 }
 function paintHive(){ for(let i=0;i<HIVE_SIZE;i++) paintCell(i); updateStats(); }
 function countBeequip(){ return hive.filter(c=>c&&c.beequip).length; }
@@ -3357,7 +3393,15 @@ function downloadHiveImage(){
   const done=()=>{ if(--pending<=0) render(); };
   if(pending===0){ render(); }
   else srcs.forEach(src=>{ const im=new Image();
-    im.onload=()=>{imgMap[src]=im;done();}; im.onerror=()=>{imgMap[src]=null;done();}; im.src=src; });
+    let tries = IMG_EXTS.slice();
+    const attempt = () => {
+      const ext = tries.shift();
+      if(!ext){ imgMap[src]=null; done(); return; }
+      im.onload=()=>{imgMap[src]=im;done();};
+      im.onerror=attempt;
+      im.src = src.replace(/\.[a-z0-9]+(\?.*)?$/i, '.'+ext);
+    };
+    attempt(); });
 
   function render(){
     // --- Passage 1 : alvéoles, faces, images, badges beequip ---
@@ -3490,7 +3534,7 @@ function renderObjets(){
   const list=OBJETS[objCat]||[];
   el.innerHTML = list.map((o,idx)=>{
     const ic = (objCat==='mutation') ? '🧬'
-             : `<img src="${imgSrc('beequip',o)}" alt="" onerror="this.parentNode.textContent='🎒'">`;
+             : `<img src="${imgSrc('beequip',o)}" alt="" onerror="imgFallback(this,'emoji','🎒')">`;
     const dot = (objCat==='mutation'&&o.couleur)?`<span class="odot" style="background:${o.couleur}"></span>`:'';
     const active = (activeObject && activeObject.nom===o.nom) ? ' active':'';
     return `<div class="obj-opt${active}" data-idx="${idx}" title="${o.nom}">
