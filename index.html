@@ -507,6 +507,60 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
 }
 
 /* ============================================================
+   ✦ PALIERS, ZONES, RÈGLES, PASSIFS
+   ============================================================ */
+.tiers-wrap{margin-top:1.2rem;border:1px solid var(--line-soft);border-radius:14px;overflow:hidden;background:var(--ink-950)}
+.tiers-title{font-family:'Fredoka';font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:1px;
+  color:var(--muted);padding:.7rem 1rem;border-bottom:1px solid var(--line-soft);background:rgba(255,255,255,.03)}
+.tiers-table{width:100%;border-collapse:collapse}
+.tiers-table th{text-align:left;font-family:'Fredoka';font-weight:500;font-size:.72rem;text-transform:uppercase;
+  letter-spacing:.5px;color:var(--muted);padding:.55rem .9rem;border-bottom:1px solid var(--line-soft)}
+.tiers-table td{padding:.6rem .9rem;border-bottom:1px solid var(--line-soft);font-size:.86rem;vertical-align:top;color:var(--cream)}
+.tiers-table tr:last-child td{border-bottom:0}
+.tier-pill{display:inline-block;font-family:'Fredoka';font-weight:700;font-size:.76rem;white-space:nowrap;
+  color:var(--tc);border:1px solid var(--tc);border-radius:20px;padding:.15rem .6rem;background:rgba(0,0,0,.25)}
+
+/* zones dépliables (emplacements cachés) */
+details.zone{background:var(--panel);border:1px solid var(--line-soft);border-radius:14px;margin-bottom:.6rem;overflow:hidden}
+details.zone summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;padding:.85rem 1.1rem;font-family:'Fredoka';font-weight:600;font-size:.96rem;color:var(--cream)}
+details.zone summary::-webkit-details-marker{display:none}
+details.zone summary::after{content:"▾";color:var(--honey);font-size:.85rem;transition:transform .18s}
+details.zone[open] summary::after{transform:rotate(180deg)}
+details.zone summary b{margin-left:auto;font-family:'Fredoka';font-size:.74rem;color:var(--ink-950);
+  background:var(--honey);border-radius:20px;padding:.1rem .5rem}
+details.zone ul{list-style:none;padding:0 1.1rem 1rem;display:grid;gap:.32rem}
+details.zone li{font-size:.86rem;color:var(--muted);padding-left:1rem;position:relative;line-height:1.5}
+details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey);font-weight:700}
+
+/* règles (sticker book, stack…) */
+.regles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.7rem;margin-bottom:1.4rem}
+.regle{background:var(--ink-900);border:1px solid var(--line-soft);border-radius:14px;padding:.95rem 1.1rem}
+.regle h4{font-size:.95rem;margin-bottom:.35rem;color:var(--honey)}
+.regle p{font-size:.85rem;color:var(--muted);line-height:1.55}
+.regle b{color:var(--cream)}
+
+/* passifs des Star Amulets */
+.passifs-grid{display:grid;gap:.7rem;margin-top:1rem}
+.passif{background:linear-gradient(150deg,var(--panel),var(--ink-950));border:1px solid var(--line-soft);
+  border-left:3px solid var(--honey);border-radius:0 14px 14px 0;padding:1rem 1.2rem}
+.passif .p-head{display:flex;align-items:baseline;gap:.8rem;flex-wrap:wrap;margin-bottom:.45rem}
+.passif h4{font-size:1.05rem;color:var(--honey)}
+.passif .p-meta{font-size:.74rem;color:var(--muted);font-family:'Fredoka';text-transform:uppercase;letter-spacing:.5px}
+.passif p{font-size:.88rem;color:var(--cream);line-height:1.6;opacity:.92}
+
+/* bandeau d'avertissement sur les données manquantes */
+.warn{background:rgba(240,180,41,.09);border:1px solid rgba(240,180,41,.3);border-radius:14px;
+  padding:.95rem 1.15rem;font-size:.88rem;color:var(--cream);line-height:1.6;margin:1.2rem 0;
+  display:flex;gap:.7rem;align-items:flex-start}
+.warn .i{color:var(--amber);flex:0 0 auto;font-size:1.05rem}
+.warn b{color:var(--amber)}
+
+/* sous-titres de section */
+.sub-h{font-size:1.15rem;margin:2rem 0 .5rem;display:flex;align-items:center;gap:.5rem}
+.sub-h::before{content:"";width:4px;height:1.1em;background:var(--honey);border-radius:3px;flex:0 0 auto}
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media(max-width:820px){
@@ -620,6 +674,18 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
     <div class="chips" id="stickers-chips"></div>
   </div>
   <div class="card-grid" id="stickers-grid"></div>
+
+  <h3 class="sub-h">Comment on obtient les stickers</h3>
+  <div class="info-grid" id="stickers-obt"></div>
+
+  <h3 class="sub-h">Sticker Book, Stack et Inbox</h3>
+  <div class="regles-grid" id="stickers-regles"></div>
+
+  <h3 class="sub-h">Où trouver les stickers cachés</h3>
+  <p class="lead">Emplacements relevés sur le wiki, regroupés par zone. Un lot réapparaît chaque jour et reste 7 jours.</p>
+  <div id="stickers-spots"></div>
+
+  <div class="warn"><span class="i">⚠︎</span><div>La <b>source précise de chaque sticker</b> (quel succès, quelle quête, quel mur) n'est publiée sur le wiki que sous forme d'icônes dans une colonne « Where it's from », que je ne peux pas lire automatiquement. Les 289 fiches ont donc leur description et leur Stack Boost, mais pas leur source individuelle : c'est le champ qu'il te restera à remplir à la main si tu veux aller jusque-là.</div></div>
 </section>
 
 <!-- ============================ AMULETTES ============================ -->
@@ -633,19 +699,27 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
     <div class="chips" id="amulettes-chips"></div>
   </div>
   <div class="card-grid" id="amulettes-grid"></div>
+  <p class="hint" style="margin-top:.8rem">Clique une amulette pour voir le détail de ses paliers (Bronze, Argent, Or, Diamant, Suprême) et ses conditions d'obtention.</p>
+
+  <h3 class="sub-h">Les capacités passives des Star Amulets</h3>
+  <p class="lead">Le Diamond Star Amulet peut tirer l'un des deux premiers passifs, avec 1 chance sur 100. Le Supreme Star Amulet en tire toujours un parmi les six, avec 1 chance sur 6 pour chacun — et 1 chance sur 50 d'en avoir deux, soit 1 sur 750 pour une paire précise.</p>
+  <div class="passifs-grid" id="star-passifs"></div>
+
+  <div class="warn"><span class="i">⚠︎</span><div>Les <b>plages de valeurs exactes et les probabilités de chaque statistique</b>, palier par palier, vivent dans un module Lua du wiki (<i>Module:Amulet Stats/data</i>) qui ne se lit pas automatiquement : les tableaux sont générés à l'affichage. J'ai donc mis tout ce qui est vérifiable — paliers, conditions, coûts en miel, passifs complets — mais pas le détail statistique ligne par ligne.</div></div>
 </section>
 
 <!-- ============================ BEEQUIP ============================ -->
 <section class="view" id="beequip">
   <div class="eyebrow">Base de données</div>
   <div class="sec-head"><h2 class="section-title">Beequip</h2><span class="count-pill count-visible"></span></div>
-  <p class="lead">L'équipement à poser sur tes abeilles. Les stats sont générées aléatoirement selon un potentiel de 0 à 5 ★, puis renforcées avec les cires.</p>
+  <p class="lead">L'équipement à poser sur tes abeilles : niveau minimum, limite dans la ruche, couleur, abeilles autorisées, bonus individuels et bonus de ruche. Clique une carte pour tout voir.</p>
   <div class="info-grid" id="beequip-info"></div>
   <div class="toolbar">
     <div class="search"><span>🔍</span><input type="text" placeholder="Rechercher un beequip…" oninput="filterCards('beequip',this.value)"></div>
     <div class="chips" id="beequip-chips"></div>
   </div>
   <div class="card-grid" id="beequip-grid"></div>
+  <div class="warn"><span class="i">⚠︎</span><div>Huit beequips gardent un <b>« ? »</b> sur le niveau ou la limite — Lei, Single Mitten, Warm Scarf, Beesmas Tree Hat, Toy Horn, Paper Angel, Toy Drum, Electric Candle. Leurs pages wiki n'étaient pas lisibles automatiquement ; les autres valeurs sont vérifiées. Les plages chiffrées exactes de chaque statistique sont, elles aussi, générées par un module Lua non lisible : seules celles que le wiki écrit en texte sont reprises (Bubble Light, Pinecone, Snowglobe, Icicles).</div></div>
 </section>
 
 <!-- ============================ MUTATIONS ============================ -->
@@ -664,7 +738,12 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
     <table class="mut-table" id="mut-table"></table>
   </div>
 
-  <h3 style="font-size:1.15rem;margin:2rem 0 .4rem">Bon à savoir</h3>
+  <h3 class="sub-h">Le rôle du niveau de l'abeille</h3>
+  <div class="info-grid" id="mut-niveau"></div>
+
+  <div class="warn"><span class="i">⚠︎</span><div>Il n'existe <b>pas de table publiée « probabilité par niveau »</b> : les 11 pourcentages ci-dessus sont constants quel que soit le niveau. Le niveau agit uniquement sur la <b>valeur maximale</b> atteignable. Le wiki ne documente que le seuil du niveau 20 et un exemple au niveau 21 (+5 % Bee Ability Rate) — le reste n'est pas connu publiquement.</div></div>
+
+  <h3 class="sub-h">Bon à savoir</h3>
   <ul class="notes-list" id="mut-notes"></ul>
 </section>
 
@@ -1604,6 +1683,135 @@ const STICKER_INFO = [
 ["Gamer Chat Icon","Pour ta contribution positive aux discussions BSS.","+10 000 Capacité","10 Tickets"],
 ];
 
+/* ---------- DONNÉES · OBTENTION DES STICKERS ---------- */
+/* Source : wiki Bee Swarm Simulator (Sticker). */
+const STICKERS_OBTENTION = [
+  { ico:"🧱", t:"Stickers cachés sur la carte", fort:"1 ticket en prime",
+    d:"Ils apparaissent collés sur les murs et les décors, et se ramassent en cliquant dessus. Un nouveau lot apparaît <b>chaque jour</b> et reste <b>7 jours</b> avant de disparaître. Le nombre présent en même temps dépend de ta ruche : 1 sticker à 0 abeille, jusqu'à <b>7 à partir de 40 abeilles</b>. La liste des emplacements connus est plus bas." },
+  { ico:"🔍", t:"Seeker Stickers", fort:"Sticker-Seeker requis",
+    d:"Une catégorie spéciale de stickers cachés, <b>visibles uniquement avec le Sticker-Seeker équipé</b> et pendant une quête active de la Sticker-Seeker Quest Machine. Ils sont plus faciles à repérer, peuvent être côte à côte, et ne donnent pas de récompense : ils font avancer la quête." },
+  { ico:"🖨️", t:"Sticker Printer", fort:"Mountain Top",
+    d:"La machine du Mountain Top imprime des stickers. C'est la source la plus régulière quand on cherche à remplir son index." },
+  { ico:"🏆", t:"Succès (achievements)", fort:"1 fois par compte",
+    d:"Certains stickers récompensent un exploit précis et ne peuvent être obtenus <b>qu'une seule fois par joueur</b>. Ce sont souvent les plus chers en trade." },
+  { ico:"📜", t:"Quêtes et événements", fort:"—",
+    d:"Beaucoup de stickers sortent de quêtes d'ours, de cadeaux quotidiens, de Beesmas et des autres événements saisonniers. Les stickers de signes astrologiques ne sont obtenables que <b>pendant la période du signe correspondant</b>." },
+  { ico:"🔄", t:"Trade entre joueurs", fort:"—",
+    d:"Les stickers s'échangent contre d'autres stickers, des beequips ou des hive skins. C'est pour ça que la colonne « Valeur » en signs existe : c'est la monnaie de référence de la communauté." },
+];
+
+/* Règles du Sticker Book, du Stack et de l'Inbox */
+const STICKERS_REGLES = [
+  { t:"Sticker Book", d:"En haut de l'inventaire. <b>16 emplacements</b> au départ, +8 par amélioration payée en tickets, jusqu'à <b>400</b>. Le coût démarre à 20 tickets et plafonne à 1 000 tickets par palier (à partir de 112 emplacements). Pour aller de 16 à 120 places, il faut <b>5 420 tickets</b> au total." },
+  { t:"Sticker Stack = bonus permanents", d:"Déposer un sticker dans le Stack active son <b>Stack Boost</b> définitivement et donne son <b>Stack Reward</b>. Un seul exemplaire de chaque sticker peut y aller. Attention : un sticker <b>posé sur la ruche n'active pas</b> son boost — décoration et bonus sont deux choses distinctes." },
+  { t:"Sur la ruche", d:"Maximum <b>50 stickers</b> collés sur ta ruche en même temps. Interdit sur le pad de spawn et sur la section des abeilles." },
+  { t:"Inbox : 48 heures", d:"Quand le Book est plein, les nouveaux stickers tombent dans l'Inbox (200 places, non extensible). Ils y sont <b>supprimés automatiquement au bout de 48 h</b>. Ils ne peuvent pas être posés, donnés au Stack, ni échangés depuis l'Inbox." },
+  { t:"Index", d:"L'index recense tout — stickers, Cub Skins, Hive Skins — et coche en vert (✅) ce qui est déjà dans le Stack. Jeter un sticker déjà stacké ne retire pas la coche." },
+  { t:"Cub Skins et Hive Skins", d:"Il faut <b>4 clics supplémentaires</b> pour les donner au Stack : c'est une protection volontaire contre les dons accidentels d'objets de grande valeur." },
+];
+
+/* Emplacements connus des stickers cachés, par zone */
+const STICKERS_SPOTS = [
+  { zone:"Zone de départ · Noob Shop · Ticket Tent", spots:[
+    "À droite du Royal Jelly Dispenser",
+    "Mur à gauche, sous l'entrée du Ant Gate",
+    "Au-dessus du Ticket Tent",
+    "À l'intérieur du Ticket Tent, murs gauche et droit",
+    "À la sortie du Ticket Tent, à gauche du Red Cannon",
+    "Mur près du Clover Field",
+    "À l'intérieur de la planque du Commando Chick",
+    "Dans le Noob Shop, murs du fond et de droite",
+    "Derrière le Honey Dispenser, mur droit du Noob Shop",
+    "En bas à droite du Basic Bee Gate",
+    "Mur près du Strawberry Dispenser",
+    "À gauche du Treat Shop",
+    "Sur la rampe qui mène au portail des 5 abeilles",
+    "Mur gauche du Sunflower Field, sous le Red HQ",
+    "Contre le mur droit de l'entrée du Ant Gate",
+    "Sur un rocher juste à côté du Ant Gate",
+  ]},
+  { zone:"Blue HQ · Bamboo · Panda Bear", spots:[
+    "Dans le Blue HQ, coin du toit à côté du Blue Field Booster",
+    "Mur sous le téléporteur bleu",
+    "Dans le Blue HQ, sur le chemin vers le 2ᵉ étage",
+    "Mur gauche ou droit du Blue Flower Field",
+    "Mur extérieur droit du Blue HQ, près de la Wealth Clock",
+    "À côté du Blueberry Dispenser dans le Blue HQ",
+    "Mur bleu près du Bamboo Field",
+    "Pente bleue près du Strawberry Field",
+    "Côté gauche de la plateforme de réclamation de l'œuf de Vicious Bee",
+    "Au début du passage secret vers la Royal Jelly, dans la pente bleue près du Bamboo Field",
+    "Derrière les bambous du Bamboo Field",
+    "Sur la plateforme du Panda Bear",
+    "À l'avant du Blue HQ : entrer dans le tunnel à gauche, puis sauter à droite",
+  ]},
+  { zone:"Dapper Bear · Pineapple Patch · Pro Shop", spots:[
+    "Mur droit du bâtiment de la boutique de Dapper Bear",
+    "Mur gauche du Pineapple Patch",
+    "Mur gauche au début des escaliers vers la boutique de Dapper Bear",
+    "À gauche en sortant de la boutique de Dapper Bear",
+    "Derrière l'Instant Converter",
+    "Sur le toit de la boutique de Dapper Bear",
+    "Mur gauche à l'intérieur de la boutique de Dapper Bear",
+    "Mur gauche de l'entrée de la boutique de Dapper Bear",
+    "Dans le labyrinthe du Pro Shop",
+    "À l'entrée du White Tunnel",
+    "Sous le Magic Bean Shop, murs avant et gauche",
+    "Mur droit du Pro Shop",
+  ]},
+  { zone:"Badge Bearer's Guild · Red HQ · Rose Field", spots:[
+    "Près de l'entrée de la Badge Bearer's Guild, derrière un pan de mur",
+    "Au bout de la pente vers le Rose Field",
+    "Dans la Guild, derrière le Mega Memory Match",
+    "Dans la Guild, mur gauche de la salle des accessoires",
+    "Dans la Guild, mur entre le Blender et les Sprinklers",
+    "Dans la Guild, derrière la boutique Ace Badge Honeycomb",
+    "Près de l'invocation de la Mythic Meteor Shower",
+    "À gauche du Robo Bear",
+    "À droite du Robo Bear",
+    "Mur en face de la Honey Bee",
+    "À côté de la Honey Bee, caché derrière un pin",
+    "Entre le Honey Bee Gate et le petit pin à côté",
+    "Sur le côté de la plateforme enneigée derrière le Polar Bear",
+    "Côté gauche du toit du Red HQ",
+    "Dans le Red HQ, derrière l'échelle",
+    "Dans le Red HQ, caché derrière ou à côté du téléporteur rouge",
+    "Sur le flanc de la pente marron près du Rose Field",
+    "À l'entrée du parkour du Diamond Mask",
+  ]},
+  { zone:"Ant Field · Hive Hub · Stinger Shop", spots:[
+    "Derrière le bâtiment du défi du Ant Field",
+    "À côté du panneau d'information de l'Ant Challenge",
+    "Côté droit du portail du Hive Hub",
+    "Côté gauche du portail, à côté du Stinger Shop",
+    "Dans le tunnel derrière le classement des Top Ant Exterminators",
+  ]},
+  { zone:"Mountain Top · Onett", spots:[
+    "À l'intérieur du Mountain Top Shop, sur les murs",
+    "Mur près de l'entrée du Mountain Top Shop",
+    "Sur le côté de la plateforme sous celle du Sticker Printer",
+    "Sur le côté de la plateforme de l'Instant Converter",
+    "Côté droit du Mountain Top Field",
+    "Derrière le Ticket Shop",
+    "Devant le Nectar Pot",
+    "Devant le Robo Pass Dispenser",
+    "Sur le côté du sol, près du Robo Pass Dispenser",
+    "Mur à côté du Bubble Bee Man",
+    "Derrière Onett",
+    "Sur le mur, près du bord de la plateforme d'Onett",
+  ]},
+  { zone:"Pepper Patch · Wind Shrine · Coconut Field", spots:[
+    "Mur gauche juste derrière le Windy Bee Gate",
+    "Sur le côté de la plateforme du Pepper Patch",
+    "Côté gauche de la plateforme du Wind Shrine",
+    "Côté droit de la plateforme du Wind Shrine, derrière le Nectar Condenser",
+    "Mur droit à l'intérieur de la Coconut Cave",
+    "Face arrière de l'entrée du Petal Shop",
+    "Derrière le Petal Shop",
+    "Mur droit à côté du Coconut Field",
+  ]},
+];
+
 /* Alias : nom utilisé sur le site  ->  nom exact du wiki */
 const STICKER_ALIAS = {
   "peppermintcub":"peppermintrobocub",
@@ -1634,129 +1842,354 @@ STICKERS.forEach(s=>{
 });
 
 /* ---------- DONNÉES · AMULETTES ---------- */
-/* 7 types d'amulettes dans le jeu. On peut en porter UNE de chaque type en même temps.
-   Source : wiki Bee Swarm Simulator (Amulet). */
+/* 7 types d'amulettes. On peut en porter UNE de chaque type en même temps.
+   Source : wiki Bee Swarm Simulator (Amulet, Star Amulet, Moon Amulet…). */
 const AMULETTES = [
   {
-    nom:"King Beetle Amulet", categorie:"Boss", rarete:"Sans palier",
-    desc:"Une des toutes premières amulettes accessibles. 1 chance sur 7 de tomber en battant le King Beetle (la Loot Luck ne change rien).",
-    effet:"3 à 4 bonus — pollen, capacité, et un bonus d'attaque aléatoire",
-    lieu:"King Beetle Lair", paliers:"Aucun palier — la qualité monte avec le nombre de victoires consécutives (jusqu'à 100)"
+    nom:"Star Amulet", categorie:"Défi", rarete:"5 paliers", tiersId:"star",
+    desc:"L'amulette la plus puissante et la plus complexe du jeu. Elle s'achète avec du miel aux machines du Star Hall, au-dessus du Noob Shop. Chaque palier exige un nombre minimum de types d'abeilles Gifted découverts. Plus tu en as découvert, plus les stats ont de chances de sortir au maximum. Les paliers Diamant et Suprême ajoutent des capacités passives — c'est le fameux « SSA ».",
+    effet:"Capacité qui grimpe à chaque palier + capacités passives (Diamant et Suprême)",
+    lieu:"Star Hall, au-dessus du Noob Shop",
+    paliers:"Bronze → Argent → Or → Diamant → Suprême",
+    notes:"1 seconde d'attente entre deux générations. Le Diamond Star Amulet a 1 chance sur 1 000 000 de donner un Star Cub Skin."
   },
   {
-    nom:"Star Amulet", categorie:"Défi", rarete:"5 paliers",
-    desc:"L'amulette la plus puissante et la plus complexe du jeu. Elle s'achète avec du miel aux machines du Star Hall, au-dessus du Noob Shop. Il faut avoir découvert les types d'abeilles Gifted correspondants.",
-    effet:"Gros bonus de capacité par palier + capacités passives uniques (Star Saw, Pop Star, Gummy Star, Scorching Star, Star Shower)",
-    lieu:"Star Hall (au-dessus du Noob Shop)", paliers:"Bronze → Argent → Or → Diamant → Suprême"
+    nom:"King Beetle Amulet", categorie:"Boss", rarete:"Sans palier", tiersId:"kingbeetle",
+    desc:"Une des toutes premières amulettes accessibles. Elle a 1 chance sur 7 de tomber en battant le King Beetle, et la Loot Luck n'y change rien. Elle n'a pas de paliers : sa qualité monte avec le nombre de victoires consécutives, jusqu'à 100. C'est aussi la seule amulette donnée directement, sans passer par un token.",
+    effet:"3 à 4 bonus au total, dont un bonus d'attaque qui n'apparaît pas toujours",
+    lieu:"King Beetle Lair",
+    paliers:"Aucun palier — qualité liée aux victoires consécutives (max 100)",
+    notes:"Position visuelle : au-dessus de la tête avec 1 amulette, épaule gauche avec 2, épaule droite avec 3 ou plus."
   },
   {
-    nom:"Supreme Star Amulet", categorie:"Suprême", rarete:"Palier maximum",
-    desc:"Le sommet des Star Amulets. Seule amulette du jeu capable de porter deux capacités passives à la fois. Sa couleur change légèrement, comme toutes les amulettes suprêmes.",
-    effet:"Statistiques maximales + jusqu'à 2 passifs",
-    lieu:"Générateur Supreme Star Amulet, Star Hall", paliers:"Palier 5/5 des Star Amulets"
+    nom:"Ant Amulet", categorie:"Défi", rarete:"5 paliers", tiersId:"generic5",
+    desc:"L'amulette de base obtenue via l'Ant Challenge, dans le Ant Field. Ton score au défi détermine directement la qualité de l'amulette générée : plus tu marques, plus les stats sortent hautes. Le score est affiché au-dessus des récompenses.",
+    effet:"Bonus variés — pollen, capacité, conversion, attaque — selon le palier et le score",
+    lieu:"Ant Challenge (Ant Field, nécessite un Ant Pass)",
+    paliers:"Bronze → Argent → Or → Diamant → Suprême",
+    notes:"Comme le Star Amulet, elle existe en version Suprême, dont la couleur change légèrement."
   },
   {
-    nom:"Ant Amulet", categorie:"Défi", rarete:"5 paliers",
-    desc:"L'amulette de base obtenue via l'Ant Challenge. Ton score au défi détermine la qualité de l'amulette générée : plus tu marques, meilleures sont les stats.",
-    effet:"Bonus variés (pollen, capacité, conversion, attaque) selon le palier et le score",
-    lieu:"Ant Challenge (Ant Field, nécessite un Ant Pass)", paliers:"Bronze → Argent → Or → Diamant → Suprême"
-  },
-  {
-    nom:"Moon Amulet", categorie:"Génération", rarete:"Sans palier",
-    desc:"Se crée en dépensant 100 Moon Charms au Moon Amulet Generator, entre le Spider Field et le Bamboo Field. Elle permet aussi de marcher sur les plateformes en forme de lune.",
+    nom:"Moon Amulet", categorie:"Génération", rarete:"Sans palier", tiersId:"moon",
+    desc:"Elle se fabrique en dépensant 100 Moon Charms au Moon Amulet Generator, situé entre le Spider Field et le Bamboo Field. On y accède par le parcours d'obstacles, en tombant depuis un canon avec un outil de vol plané, ou en se laissant tomber depuis la rampe du Lion Bee Gate. Elle permet aussi de marcher sur les plateformes en forme de lune, derrière la boutique de Dapper Bear notamment.",
     effet:"Capacité +25 000 par génération, jusqu'à +250 000 · 3 à 5 bonus au total (Honey Per Pollen jusqu'à +8 %)",
-    lieu:"Moon Amulet Generator (parcours entre Spider Field et Bamboo Field)", paliers:"Aucun palier — 10 générations suffisent pour la capacité max, 25 pour le reste"
+    lieu:"Moon Amulet Generator (100 Moon Charms par génération)",
+    paliers:"Aucun palier — 10 générations pour la capacité max, 25 pour maximiser le reste",
+    notes:"Movement Collection et Ticket Chance sont deux bonus très rares : c'est en les décrochant qu'on atteint 5 lignes. Avec le King Beetle Amulet, c'est la seule amulette sans paliers."
   },
   {
-    nom:"Shell Amulet", categorie:"Boss", rarete:"5 paliers",
-    desc:"Obtenue en battant le Stump Snail. C'est la seule amulette qui donne des bonus de goo, de conversion du goo et de défense.",
-    effet:"Bonus de goo, conversion du goo, défense",
-    lieu:"Stump Snail (Stump Field)", paliers:"Bronze → Argent → Or → Diamant → Suprême"
+    nom:"Shell Amulet", categorie:"Boss", rarete:"5 paliers", tiersId:"generic5",
+    desc:"Obtenue en battant le Stump Snail, dans le Stump Field. C'est la seule amulette du jeu qui donne des bonus de goo, de conversion du goo et de défense — un profil unique qu'aucune autre ne remplace.",
+    effet:"Bonus de goo, de conversion du goo et de défense",
+    lieu:"Stump Snail (Stump Field)",
+    paliers:"Bronze → Argent → Or → Diamant → Suprême",
+    notes:"Indispensable si tu joues autour du goo et du Gummyballer."
   },
   {
-    nom:"Stick Bug Amulet", categorie:"Défi", rarete:"4 paliers",
-    desc:"S'obtient en terminant le Stick Bug Challenge. Attention : même avec un Stick Bug de haut niveau, une contribution trop faible au score ne donne aucune amulette.",
+    nom:"Stick Bug Amulet", categorie:"Défi", rarete:"4 paliers", tiersId:"stickbug",
+    desc:"S'obtient en terminant le Stick Bug Challenge. Attention au piège : même avec un Stick Bug de haut niveau, si ta contribution au score du défi est trop faible, tu ne reçois aucune amulette. Comme pour l'Ant Amulet, ton score s'affiche au-dessus des récompenses.",
     effet:"Bonus variés selon le score obtenu au défi",
-    lieu:"Stick Bug Challenge", paliers:"Seule amulette sans palier Suprême"
+    lieu:"Stick Bug Challenge",
+    paliers:"Bronze → Argent → Or → Diamant — c'est la seule amulette sans palier Suprême",
+    notes:"Contribution minimale obligatoire : farmer le défi en groupe sans participer ne donne rien."
   },
   {
-    nom:"Cog Amulet", categorie:"Défi", rarete:"5 paliers",
-    desc:"L'amulette mécanique du Robo Bear Challenge. Il faut un Robo Pass pour lancer le défi.",
+    nom:"Cog Amulet", categorie:"Défi", rarete:"5 paliers", tiersId:"generic5",
+    desc:"L'amulette mécanique du Robo Bear Challenge, qui se lance avec un Robo Pass. Comme les autres amulettes de défi, sa qualité dépend de ta performance dans le challenge.",
     effet:"Bonus orientés attaque, conversion et pollen des abilities dupliquées",
-    lieu:"Robo Bear Challenge (Robo Pass)", paliers:"Bronze → Argent → Or → Diamant → Suprême"
+    lieu:"Robo Bear Challenge (Robo Pass)",
+    paliers:"Bronze → Argent → Or → Diamant → Suprême",
+    notes:"Le Robo Pass s'obtient au Robo Pass Dispenser du Mountain Top et via les quêtes."
   },
 ];
-const AMULETTES_CATS = ["Tous","Boss","Défi","Génération","Suprême"];
+const AMULETTES_CATS = ["Tous","Boss","Défi","Génération"];
+
+/* ---- Paliers détaillés ---- */
+const AMULETTES_TIERS = {
+  star: {
+    titre:"Les 5 paliers du Star Amulet",
+    colonnes:["Palier","Abeilles Gifted découvertes","Coût","Capacités passives"],
+    lignes:[
+      ["Bronze",  "5 types",  "25 M miel",  "Aucune"],
+      ["Argent",  "10 types", "50 M miel",  "Aucune"],
+      ["Or",      "20 types", "250 M miel", "Aucune"],
+      ["Diamant", "30 types", "1 Md miel",  "1 chance sur 100 d'avoir Guiding Star ou Star Shower"],
+      ["Suprême", "40 types", "10 Md miel", "1 passif garanti sur 6 · 1 chance sur 50 d'en avoir deux · option 500 Md miel pour garantir le double"],
+    ],
+    couleurs:["#C08457","#C9D1D9","#F0B429","#7FE4E0","#F4DD44"]
+  },
+  moon: {
+    titre:"Progression du Moon Amulet",
+    colonnes:["Génération","Capacité accordée","Remarque"],
+    lignes:[
+      ["1ʳᵉ",  "+25 000",  "100 Moon Charms par génération"],
+      ["2ᵉ",   "+50 000",  "+25 000 à chaque nouvelle amulette"],
+      ["3ᵉ",   "+75 000",  "—"],
+      ["…",    "…",        "la 7ᵉ génération n'augmente pas la capacité"],
+      ["10ᵉ",  "+250 000", "capacité maximale atteinte"],
+      ["25ᵉ",  "+250 000", "les autres bonus atteignent leur maximum"],
+    ],
+    couleurs:["#B8A5ED","#B8A5ED","#B8A5ED","#93A7B0","#F4DD44","#F4DD44"]
+  },
+  kingbeetle: {
+    titre:"Qualité du King Beetle Amulet",
+    colonnes:["Victoires consécutives","Effet sur la qualité"],
+    lignes:[
+      ["1",        "Qualité minimale"],
+      ["10 → 50",  "La qualité progresse régulièrement"],
+      ["100",      "Qualité maximale — au-delà, plus d'amélioration"],
+    ],
+    couleurs:["#C08457","#F0B429","#F4DD44"]
+  },
+  generic5: {
+    titre:"Les 5 paliers",
+    colonnes:["Palier","Nombre de bonus","Qualité des bonus"],
+    lignes:[
+      ["Bronze",  "Le moins",  "Valeurs les plus basses"],
+      ["Argent",  "↑",         "↑"],
+      ["Or",      "↑↑",        "↑↑"],
+      ["Diamant", "↑↑↑",       "↑↑↑"],
+      ["Suprême", "Le plus",   "Valeurs les plus hautes · la couleur de l'amulette change légèrement"],
+    ],
+    couleurs:["#C08457","#C9D1D9","#F0B429","#7FE4E0","#F4DD44"]
+  },
+  stickbug: {
+    titre:"Les 4 paliers",
+    colonnes:["Palier","Nombre de bonus","Qualité des bonus"],
+    lignes:[
+      ["Bronze",  "Le moins", "Valeurs les plus basses"],
+      ["Argent",  "↑",        "↑"],
+      ["Or",      "↑↑",       "↑↑"],
+      ["Diamant", "Le plus",  "Valeurs les plus hautes — pas de palier Suprême"],
+    ],
+    couleurs:["#C08457","#C9D1D9","#F0B429","#7FE4E0"]
+  },
+};
+
+/* ---- Les capacités passives des Star Amulets ---- */
+const STAR_PASSIFS = [
+  { nom:"Guiding Star", pal:"Diamant (1/100) et Suprême", chance:"1/6 en Suprême", cd:"5 min",
+    d:"Tous les 250 Boost Tokens, une Guiding Star apparaît 10 minutes au-dessus d'un champ au hasard, choisi parmi les 5 champs où tu as le moins récolté. Elle donne ×2,5 pollen, capacité et convert rate au joueur qui l'a invoquée, et ×1,25 aux autres joueurs présents. Pendant ce temps elle pollinise 15 fleurs (+1 par type d'abeille gifted) toutes les 15 secondes. En Suprême, elle accorde en plus ×1,25 capacité en permanent." },
+  { nom:"Star Shower", pal:"Diamant (1/100) et Suprême", chance:"1/6 en Suprême", cd:"30 s",
+    d:"Tous les 40 Boost ou Mark Tokens, 10 étoiles filantes tombent sur le champ et convertissent instantanément 30 pollen (+50 % par type d'abeille gifted, +100 % par stack de Field Boost) sur 5 fleurs. Attraper une étoile donne un stack d'Inspire et convertit 1 M + 200 % de ton Convert Total. Accorde ×1,25 capacité en permanent." },
+  { nom:"Gummy Star", pal:"Suprême uniquement", chance:"1/6", cd:"60 s",
+    d:"Utiliser des Gumdrops sur un champ a 2 % de chances d'invoquer une Gummy Star — garantie au bout de 75 gumdrops sans apparition. Elle donne ×2 White Field Capacity et +10 % Goo Conversion pendant 45 s, et grossit à mesure que tu ramasses du goo (jusqu'à ×4 de goo bonus). À la fin elle éclate et disperse des Honey Tokens et des Gumdrops. Accorde ×1,25 White Field Capacity en permanent." },
+  { nom:"Pop Star", pal:"Suprême uniquement", chance:"1/6", cd:"60 s",
+    d:"Tous les 30 Boost Tokens, une Pop Star donne +10 % Instant Blue Conversion et ×2 Blue Pollen pendant 45 s, plus 2 minutes de « Bubble Bloat ». Chaque bulle éclatée fait grossir l'étoile : +1 % Blue Pollen (jusqu'à ×4,5) et +4 s de Bubble Bloat (1 s si la bulle n'est pas la tienne, 6 s si elle est dorée), ce qui pousse la Blue Field Capacity et le Convert Rate At Hive jusqu'à ×6 pendant 2 h 30. Accorde ×1,25 Blue Field Capacity en permanent." },
+  { nom:"Scorching Star", pal:"Suprême uniquement", chance:"1/6", cd:"60 s",
+    d:"Tous les 30 Boost Tokens, une Scorching Star apparaît 45 s : +50 % Instant Flame Conversion, +5 Conversion Links, ×2 Red Pollen et Convert Rate. Rester près des flammes la fait grossir, jusqu'à ×5 et 30 Conversion Links. À l'expiration, tout le pollen de ton conteneur est converti instantanément. Accorde ×1,25 Red Field Capacity en permanent." },
+  { nom:"Star Saw", pal:"Suprême uniquement", chance:"1/6", cd:"—",
+    d:"Un Stinger sur trois est gratuit et invoque une Star Saw pendant 30 s. Elle tourne autour de toi, infligeant 15 % de ton attaque totale (précision liée au niveau moyen de ta ruche, sans compter les invocations), ramasse les tokens et convertit instantanément 3 pollen (+0,5 par 100 d'attaque totale) sur 5 fleurs, 10 fois par seconde. Elle convertit en plus autant de pollen dans ton conteneur." },
+];
 
 /* Explications générales affichées en haut de l'onglet Amulettes */
 const AMULETTES_INFO = [
-  { t:"Une de chaque type", d:"Tu peux porter les 7 types d'amulettes en même temps : King Beetle, Star, Ant, Moon, Shell, Stick Bug et Cog. Mais une seule de chaque type." },
-  { t:"Le remplacement est définitif", d:"Quand tu en récupères une nouvelle, un tableau compare l'ancienne et la nouvelle. « Keep Old » garde l'ancienne, « Replace » la remplace — et c'est irréversible. Les autres récompenses sont données quoi qu'il arrive." },
-  { t:"Qualité = performance", d:"Chaque amulette est générée avec une « qualité » qui dépend de ta performance (score au défi, victoires consécutives…). Une qualité élevée augmente fortement les chances d'avoir de bonnes stats, sans jamais garantir le résultat." },
-  { t:"Stats tirées au sort", d:"Les stats sont piochées par groupes, certains n'apparaissant qu'avec une certaine probabilité : c'est pourquoi deux amulettes du même type peuvent avoir un nombre de lignes différent." },
+  { t:"Une de chaque type", d:"Tu peux porter les 7 types en même temps — King Beetle, Star, Ant, Moon, Shell, Stick Bug, Cog — mais une seule de chaque." },
+  { t:"Le remplacement est définitif", d:"Un tableau compare l'ancienne et la nouvelle. « Keep Old » garde l'ancienne, « Replace » la remplace, et c'est <b>irréversible</b>. Les autres récompenses tombent quoi qu'il arrive. Si tu te déconnectes sans choisir, tu récupères le choix en revenant." },
+  { t:"Qualité = performance", d:"Chaque amulette naît avec une « qualité » liée à ta performance : score au défi, victoires consécutives, nombre de générations. Une qualité élevée biaise fortement le tirage vers le haut de la plage, sans jamais garantir un bon résultat." },
+  { t:"Pourquoi le nombre de lignes varie", d:"Les stats sont piochées par groupes, et certains groupes n'apparaissent qu'avec une probabilité donnée. Après le tirage, une stat peut encore se retirer elle-même. C'est pour ça que deux amulettes du même palier n'ont pas forcément le même nombre de bonus — et ce filtrage <b>ne dépend pas</b> de la qualité." },
 ];
 
 
-/* ---------- DONNÉES · BEEQUIP ---------- */
-/* categorie : "Non-Event" | "Beesmas".
-   Les stats d'un beequip sont ALÉATOIRES : elles dépendent d'un potentiel de 0 à 5 ★
-   et se renforcent avec les cires. Les champs ci-dessous décrivent l'objet, pas ses stats.
-   Source : wiki Bee Swarm Simulator (Beequip). */
-const BEEQUIP = [
-  { nom:"Thimble",             categorie:"Non-Event", img:"", desc:"Dé à coudre. Un des premiers beequips que l'on croise.",                    lieu:"Planteurs (Dandelion Field surtout)" },
-  { nom:"Sweatband",           categorie:"Non-Event", img:"", desc:"Bandeau éponge : pour les abeilles qui travaillent dur.",                   lieu:"Planteurs (Dandelion Field surtout)" },
-  { nom:"Bandage",             categorie:"Non-Event", img:"", desc:"Pansement. Ça tient, plus ou moins.",                                       lieu:"Planteurs (Dandelion Field surtout)" },
-  { nom:"Thumbtack",           categorie:"Non-Event", img:"", desc:"Punaise : petite mais piquante.",                                           lieu:"Planteurs (Dandelion Field surtout)" },
-  { nom:"Camo Bandana",        categorie:"Non-Event", img:"", desc:"Bandana camouflage pour abeille discrète.",                                 lieu:"Planteurs (Dandelion Field surtout)" },
-  { nom:"Bottle Cap",          categorie:"Non-Event", img:"", desc:"Capsule de bouteille recyclée en couvre-chef.",                             lieu:"Planteurs (Dandelion Field surtout)" },
-  { nom:"Kazoo",               categorie:"Non-Event", img:"", desc:"Kazoo : l'instrument le moins sérieux de la ruche.",                        lieu:"Planteurs (Dandelion Field surtout)" },
-  { nom:"Smiley Sticker",      categorie:"Non-Event", img:"", desc:"Autocollant souriant collé sur l'abeille.",                                 lieu:"Planteurs (Dandelion Field surtout)" },
-  { nom:"Whistle",             categorie:"Non-Event", img:"", desc:"Sifflet : pour rappeler l'essaim à l'ordre.",                               lieu:"Planteurs (Dandelion Field surtout)" },
-  { nom:"Charm Bracelet",      categorie:"Non-Event", img:"", desc:"Bracelet à breloques, discret et efficace.",                                lieu:"Planteurs (Dandelion Field surtout)" },
-  { nom:"Paperclip",           categorie:"Non-Event", img:"", desc:"Trombone. Oui, un trombone.",                                               lieu:"Planteurs (Dandelion Field surtout)" },
-  { nom:"Beret",               categorie:"Non-Event", img:"", desc:"Béret : l'abeille passe en mode artiste.",                                  lieu:"Planteurs (Dandelion Field surtout)" },
-  { nom:"Bang Snap",           categorie:"Non-Event", img:"", desc:"Pétard à claquer : un beequip explosif.",                                   lieu:"Planteurs (Dandelion Field surtout)" },
-  { nom:"Bead Lizard",         categorie:"Non-Event", img:"", desc:"Lézard en perles, souvenir de colonie de vacances.",                        lieu:"Planteurs (Dandelion Field surtout)" },
-  { nom:"Pink Shades",         categorie:"Non-Event", img:"", desc:"Lunettes roses : tout va bien quand on les porte.",                         lieu:"Planteurs (Dandelion Field surtout)" },
-  { nom:"Lei",                 categorie:"Non-Event", img:"", desc:"Collier de fleurs hawaïen.",                                                lieu:"Planteurs (Dandelion Field surtout)" },
-  { nom:"Demon Talisman",      categorie:"Non-Event", img:"", desc:"Talisman démoniaque, très recherché en fin de jeu.",                        lieu:"Planteurs (Dandelion Field surtout)" },
-  { nom:"Camphor Lip Balm",    categorie:"Non-Event", img:"", desc:"Baume à lèvres au camphre. Ça pique un peu.",                               lieu:"Planteurs (Dandelion Field surtout)" },
-  { nom:"Autumn Sunhat",       categorie:"Non-Event", img:"", desc:"Chapeau de soleil automnal.",                                               lieu:"Planteurs (Dandelion Field surtout)" },
-  { nom:"Rose Headband",       categorie:"Non-Event", img:"", desc:"Serre-tête à roses, très prisé pour les builds rouges.",                    lieu:"Planteurs (Dandelion Field surtout)" },
-  { nom:"Pink Eraser",         categorie:"Non-Event", img:"", desc:"Gomme rose d'écolier.",                                                     lieu:"Planteurs (Dandelion Field surtout)" },
-  { nom:"Candy Ring",          categorie:"Non-Event", img:"", desc:"Bague en bonbon : sucrée et brillante.",                                    lieu:"Planteurs (Dandelion Field surtout)" },
 
-  { nom:"Elf Cap",             categorie:"Beesmas", img:"", desc:"Bonnet de lutin de Beesmas.",                                                 lieu:"Événement Beesmas" },
-  { nom:"Single Mitten",       categorie:"Beesmas", img:"", desc:"Une seule moufle. L'autre est perdue quelque part.",                          lieu:"Événement Beesmas" },
-  { nom:"Warm Scarf",          categorie:"Beesmas", img:"", desc:"Écharpe chaude pour les abeilles frileuses.",                                 lieu:"Événement Beesmas" },
-  { nom:"Peppermint Antennas", categorie:"Beesmas", img:"", desc:"Antennes en sucre d'orge.",                                                   lieu:"Événement Beesmas" },
-  { nom:"Beesmas Top",         categorie:"Beesmas", img:"", desc:"Pull de Beesmas, obligatoire en décembre.",                                   lieu:"Événement Beesmas" },
-  { nom:"Pinecone",            categorie:"Beesmas", img:"", desc:"Pomme de pin : un classique de Beesmas.",                                     lieu:"Événement Beesmas" },
-  { nom:"Icicles",             categorie:"Beesmas", img:"", desc:"Stalactites de glace accrochées à l'abeille.",                                lieu:"Événement Beesmas" },
-  { nom:"Beesmas Tree Hat",    categorie:"Beesmas", img:"", desc:"Sapin miniature en guise de chapeau.",  requis:"L'abeille doit avoir une mutation (n'importe laquelle)", lieu:"Événement Beesmas" },
-  { nom:"Bubble Light",        categorie:"Beesmas", img:"", desc:"Guirlande à bulles lumineuse.",         requis:"L'abeille doit avoir une mutation d'Énergie",           lieu:"Événement Beesmas" },
-  { nom:"Snow Tiara",          categorie:"Beesmas", img:"", desc:"Diadème de neige.",                                                           lieu:"Événement Beesmas" },
-  { nom:"Snowglobe",           categorie:"Beesmas", img:"", desc:"Boule à neige portative.",                                                    lieu:"Événement Beesmas" },
-  { nom:"Reindeer Antlers",    categorie:"Beesmas", img:"", desc:"Bois de renne. Anciennement beequip permanent.",                              lieu:"Événement Beesmas" },
-  { nom:"Toy Horn",            categorie:"Beesmas", img:"", desc:"Trompette jouet, très bruyante.",                                             lieu:"Événement Beesmas" },
-  { nom:"Paper Angel",         categorie:"Beesmas", img:"", desc:"Ange en papier posé sur l'abeille.",                                          lieu:"Événement Beesmas" },
-  { nom:"Toy Drum",            categorie:"Beesmas", img:"", desc:"Petit tambour de Beesmas.",                                                   lieu:"Événement Beesmas" },
-  { nom:"Lump Of Coal",        categorie:"Beesmas", img:"", desc:"Morceau de charbon : pour les abeilles qui n'ont pas été sages.",             lieu:"Événement Beesmas" },
-  { nom:"Poinsettia",          categorie:"Beesmas", img:"", desc:"Étoile de Noël rouge.",                                                       lieu:"Événement Beesmas" },
-  { nom:"Electric Candle",     categorie:"Beesmas", img:"", desc:"Bougie électrique, sans risque d'incendie.",                                  lieu:"Événement Beesmas" },
-  { nom:"Festive Wreath",      categorie:"Beesmas", img:"", desc:"Couronne de Beesmas. Anciennement beequip permanent.",                        lieu:"Événement Beesmas" },
+
+
+/* ---------- DONNÉES · BEEQUIP ---------- */
+/* niveau  : niveau minimum de l'abeille
+   limite  : nombre max équipés en même temps dans la ruche
+   couleur : contrainte de couleur de ruche
+   abeilles: restriction d'abeille / rareté / mutation
+   stats   : bonus sur l'abeille qui le porte
+   hive    : bonus appliqués à toute la ruche
+   Sources : wiki Bee Swarm Simulator (pages individuelles) + bsshive.com.
+   « ? » = valeur que je n'ai pas pu vérifier, à compléter. */
+const BEEQUIP = [
+  /* ================= NON-EVENT ================= */
+  { nom:"Thimble", categorie:"Non-Event", img:"", niveau:3, limite:3, couleur:"Toutes", abeilles:"Toutes",
+    stats:"+ Convert Amount, +% Convert Amount", hive:"+% Convert Rate, ×Convert Rate",
+    lieu:"Planteurs (Dandelion Field) · Beequip Shop de Dapper Bear",
+    desc:"Le beequip le plus basique et le plus courant. Sa vraie force est le bonus de ruche ×Convert Rate, qui grimpe très vite au-delà de +3 %." },
+  { nom:"Bandage", categorie:"Non-Event", img:"", niveau:3, limite:3, couleur:"Toutes", abeilles:"Toutes",
+    stats:"+ Gather Amount, +% Energy, +% Bee Attack", hive:"×Bee Attack",
+    lieu:"Planteurs (Dandelion Field) · Beequip Shop de Dapper Bear",
+    desc:"Polyvalent et facile à obtenir. Le ×Bee Attack de ruche en fait un bon choix de début." },
+  { nom:"Bottle Cap", categorie:"Non-Event", img:"", niveau:4, limite:2, couleur:"Toutes", abeilles:"Communes et Rares uniquement",
+    stats:"+ Convert Amount, +% Crit Power, +% Crit Chance, ajoute l'ability Buzz Bomb", hive:"+% Critical Power",
+    lieu:"Planteurs · Beequip Shop de Dapper Bear",
+    desc:"Le seul moyen de donner Buzz Bomb à une abeille commune ou rare qui ne l'a pas." },
+  { nom:"Sweatband", categorie:"Non-Event", img:"", niveau:5, limite:3, couleur:"Toutes", abeilles:"Toutes",
+    stats:"+% Bee Energy, +% White / Red / Blue Gather Amount", hive:"+% White / Red / Blue Pollen, +% Max Energy",
+    lieu:"Planteurs (Dandelion Field) · Beequip Shop de Dapper Bear",
+    desc:"Excellent premier beequip : il touche les trois couleurs de pollen à la fois." },
+  { nom:"Thumbtack", categorie:"Non-Event", img:"", niveau:6, limite:2, couleur:"Rouge", abeilles:"Abeilles rouges uniquement",
+    stats:"+ Gather Amount, +% Critical Power, +% Bee Attack", hive:"+% Red Attack, +% Bee Attack",
+    lieu:"Drop très rare du Red Clay Planter et du Heat-Treated Planter · Beequip Shop de Dapper Bear",
+    desc:"Beequip d'attaque pour ruche rouge." },
+  { nom:"Paperclip", categorie:"Non-Event", img:"", niveau:7, limite:2, couleur:"Toutes", abeilles:"Rares et Épiques uniquement",
+    stats:"+% Bee Ability Rate, +% Ability Pollen, + Token Link", hive:"+% Token Lifespan, +% Bee Ability Pollen",
+    lieu:"Planteurs · Beequip Shop de Dapper Bear",
+    desc:"Spécialisé abilities : très bon sur les abeilles à tokens." },
+  { nom:"Smiley Sticker", categorie:"Non-Event", img:"", niveau:7, limite:2, couleur:"Toutes", abeilles:"Gifted uniquement",
+    stats:"+% Energy, +% Bomb Pollen, +% Mark Duration, ajoute Honey Mark et Blue Bomb", hive:"+% Mark Duration, +% Max Bee Energy",
+    lieu:"Planteurs · Beequip Shop de Dapper Bear",
+    desc:"Ajoute deux abilities d'un coup, mais réservé aux abeilles gifted." },
+  { nom:"Camo Bandana", categorie:"Non-Event", img:"", niveau:8, limite:3, couleur:"Toutes", abeilles:"Abeilles connaissant l'ability Bomb",
+    stats:"+% Gather Amount, +% Buzz Bomb Pollen, +% Critical Power", hive:"+% Buzz Bomb Pollen, +% Super-Crit Power",
+    lieu:"Planteurs · Beequip Shop de Dapper Bear",
+    desc:"Le beequip Buzz Bomb de référence, et une limite généreuse de 3." },
+  { nom:"Whistle", categorie:"Non-Event", img:"", niveau:8, limite:1, couleur:"Toutes", abeilles:"Brave, Commander, Rascal, Demo, Cool, Rage",
+    stats:"+% Movespeed, +% Critical Power, ajoute Haste et Melody · −% Energy", hive:"+% Bee Movespeed, ×Player Movespeed",
+    lieu:"Planteurs · Beequip Shop de Dapper Bear",
+    desc:"Donne Melody sans Music Bee, au prix d'une pénalité d'énergie." },
+  { nom:"Bead Lizard", categorie:"Non-Event", img:"", niveau:9, limite:1, couleur:"Toutes", abeilles:"Communes et Rares uniquement",
+    stats:"Synergie flamme / bulles (valeurs exactes à compléter)", hive:"à compléter",
+    lieu:"Pesticide Planter (meilleure chance)",
+    desc:"Beequip de niche, orienté synergies flamme et bulles." },
+  { nom:"Kazoo", categorie:"Non-Event", img:"", niveau:9, limite:1, couleur:"Toutes", abeilles:"Brave, Bumble, Bubble, Riley, Shocked, Buoyant",
+    stats:"+% Convert Amount, +% Critical Power, ajoute Melody · −% Energy", hive:"+% Critical Power, +% Super-Crit Power",
+    lieu:"Planteurs · Beequip Shop de Dapper Bear",
+    desc:"Un des huit beequips à donner une statistique négative." },
+  { nom:"Bang Snap", categorie:"Non-Event", img:"", niveau:10, limite:1, couleur:"Toutes", abeilles:"Communes, Rares et Épiques uniquement",
+    stats:"+% Bomb Pollen, +% Crit Chance, ajoute Bomb et Bomb+", hive:"+% Bomb Instant Conversion (tous les types de bombe)",
+    lieu:"Pesticide Planter (meilleure chance)",
+    desc:"Le beequip bombes par excellence : il ajoute deux abilities de bombe." },
+  { nom:"Pink Shades", categorie:"Non-Event", img:"", niveau:10, limite:1, couleur:"Toutes", abeilles:"Gifted uniquement — Basic, Rad, Bomber, Demo, Honey, Shy",
+    stats:"+% Crit Power, +% Crit Chance, +% Super-Crit Chance, ajoute Focus", hive:"+% Super-Crit Chance, +% Super-Crit Power",
+    lieu:"Planteurs · Beequip Shop de Dapper Bear",
+    desc:"Beequip 100 % critique, avec une double contrainte gifted + abeille précise." },
+  { nom:"Beret", categorie:"Non-Event", img:"", niveau:11, limite:2, couleur:"Bleu", abeilles:"Abeilles bleues uniquement",
+    stats:"+ Convert Amount, +% Convert Amount, +% Ability Pollen, ajoute Blue Boost", hive:"+ Capacity, +% Blue Field Capacity, +% Capacity",
+    lieu:"Planteurs · Beequip Shop de Dapper Bear",
+    desc:"Un des meilleurs beequips de capacité pour une ruche bleue." },
+  { nom:"Camphor Lip Balm", categorie:"Non-Event", img:"", niveau:12, limite:1, couleur:"Toutes", abeilles:"Cool, Stubborn, Commander, Bubble, Crimson",
+    stats:"Bulles, Critical Power et conversion instantanée (valeurs exactes à compléter)", hive:"à compléter",
+    lieu:"Beequip Shop de Dapper Bear",
+    desc:"Orienté bulles et conversion instantanée." },
+  { nom:"Charm Bracelet", categorie:"Non-Event", img:"", niveau:12, limite:1, couleur:"Toutes", abeilles:"Légendaires uniquement",
+    stats:"+% Convert Amount, +% Crit Chance, +% Mark Duration, ajoute Melody",
+    hive:"+% Loot Luck, +% Honey At Hive, +% Honey From Tokens, +% pollen des champs Mushroom / Blue Flower / Sunflower / Dandelion",
+    lieu:"Petal Planter (drop très rare) — la seule voie réaliste",
+    desc:"Un des beequips les plus recherchés du jeu, pour son +% Loot Luck de ruche." },
+  { nom:"Pink Eraser", categorie:"Non-Event", img:"", niveau:12, limite:1, couleur:"Toutes", abeilles:"Abeilles avec une mutation Convert Amount",
+    stats:"Conversion instantanée · comporte une statistique négative", hive:"à compléter",
+    lieu:"Beequip Shop de Dapper Bear",
+    desc:"Exige une mutation Convert Amount sur l'abeille : c'est le beequip le plus contraignant côté mutation, avec Bubble Light." },
+  { nom:"Demon Talisman", categorie:"Non-Event", img:"", niveau:13, limite:1, couleur:"Rouge", abeilles:"Demon Bee uniquement, et elle doit avoir une mutation",
+    stats:"+% Bee Attack, +% Gather Amount, +% Super-Crit Chance, ajoute Inferno · −% Movespeed, −% Energy",
+    hive:"+% Instant Red Bomb Conversion, +% Instant Flame Conversion, +% Super-Crit Power",
+    lieu:"Planteurs (très rare)",
+    desc:"Le beequip le plus exclusif du jeu côté conditions : Demon Bee rouge ET mutée." },
+  { nom:"Rose Headband", categorie:"Non-Event", img:"", niveau:13, limite:1, couleur:"Toutes", abeilles:"Basic, Rascal, Riley, Diamond, Windy, Vicious",
+    stats:"+ Bee Attack, +% Convert Amount, +% Crit Chance", hive:"+% Rose Field Pollen, +% Red Field Capacity, +% Bee Attack",
+    lieu:"Petal Planter · planteurs rouges",
+    desc:"Un des trois beequips à donner Gather Pollination Chance, avec le Lei et la Poinsettia." },
+  { nom:"Candy Ring", categorie:"Non-Event", img:"", niveau:14, limite:1, couleur:"Toutes", abeilles:"Stubborn, Bumble, Honey, Diamond, Festive, Gummy",
+    stats:"Énergie, gain de miel et synergie goo (valeurs exactes à compléter)", hive:"à compléter",
+    lieu:"Beequip Shop de Dapper Bear",
+    desc:"Beequip tardif orienté goo et miel." },
+  { nom:"Autumn Sunhat", categorie:"Non-Event", img:"", niveau:16, limite:1, couleur:"Toutes", abeilles:"Hasty, Bumble, Looker, Exhausted, Diamond, Puppy",
+    stats:"+ Convert Amount, +% White Gather Amount, +% Bee Ability Rate", hive:"+% Sunflower Field et Pumpkin Patch Pollen, +% White Field Capacity",
+    lieu:"Planteurs · Beequip Shop de Dapper Bear",
+    desc:"Le beequip au niveau requis le plus élevé du jeu : niveau 16." },
+  { nom:"Lei", categorie:"Non-Event", img:"", niveau:"?", limite:"?", couleur:"Toutes", abeilles:"à compléter",
+    stats:"Gather Amount et Gather Pollination Chance", hive:"à compléter",
+    lieu:"Petal Planter (drop très rare)",
+    desc:"Un des trois beequips à donner Gather Pollination Chance. Niveau et limite à vérifier sur le wiki." },
+
+  /* ================= BEESMAS ================= */
+  { nom:"Elf Cap", categorie:"Beesmas", img:"", niveau:3, limite:2, couleur:"Toutes", abeilles:"Toutes",
+    stats:"+ Convert Amount, +% Convert Rate At Hive", hive:"+% Convert Rate At Hive, +% Honey At Hive",
+    lieu:"Événement Beesmas",
+    desc:"Très fort pour une ruche bleue : il booste à la fois la conversion et le miel à la ruche." },
+  { nom:"Beesmas Top", categorie:"Beesmas", img:"", niveau:4, limite:3, couleur:"Toutes", abeilles:"Communes et Rares uniquement",
+    stats:"+% Critical Chance, +% Bee Ability Rate · comporte une statistique négative", hive:"à compléter",
+    lieu:"Événement Beesmas — plus obtenable autrement que par trade",
+    desc:"Bonus très puissants, mais limités aux abeilles communes et rares, ce qui bride son potentiel." },
+  { nom:"Poinsettia", categorie:"Beesmas", img:"", niveau:6, limite:2, couleur:"Toutes", abeilles:"Abeilles connaissant l'ability Boost",
+    stats:"+% Red Gather Amount, Gather Pollination Chance", hive:"+% Red Pollen",
+    lieu:"Toujours obtenable hors Beesmas (2ᵉ cas après les Icicles)",
+    desc:"Attention : le Red Gather ne s'applique qu'au pollen récolté par l'abeille, pas à celui des abilities." },
+  { nom:"Peppermint Antennas", categorie:"Beesmas", img:"", niveau:7, limite:3, couleur:"Toutes", abeilles:"Toutes",
+    stats:"+% Convert Amount, +% Gather Amount, +% Ability Pollen, +% Ability Rate, +% Movespeed", hive:"+% Bee Ability Rate",
+    lieu:"Événement Beesmas",
+    desc:"Aucune contrainte, une limite de 3 et cinq stats positives : un des Beesmas les plus faciles à placer." },
+  { nom:"Snowglobe", categorie:"Beesmas", img:"", niveau:7, limite:2, couleur:"Toutes", abeilles:"Basic, Bumble, Cool, Bucko, Frosty, Windy",
+    stats:"+% Bomb Pollen (+30 % à +50 % garanti), ability Snowglobe Shake (garantie)", hive:"à compléter",
+    lieu:"Événement Beesmas",
+    desc:"Un des trois beequips à ability unique. Hors Beesmas, c'est la seule source du buff Cool Breeze." },
+  { nom:"Bubble Light", categorie:"Beesmas", img:"", niveau:8, limite:3, couleur:"Toutes", abeilles:"Abeilles avec une mutation d'Énergie",
+    stats:"+ Convert Amount (+30 à +50 garanti, jusqu'à +120 aux cires — 100 % de réussite, 20 améliorations max), + Movespeed (+3 à +5)", hive:"à compléter",
+    lieu:"Événement Beesmas",
+    desc:"La contrepartie bleue de l'Electric Candle. Très bon sur Tadpole et Vector Bee — mais la mutation d'Énergie obligatoire le rend difficile à sortir." },
+  { nom:"Reindeer Antlers", categorie:"Beesmas", img:"", niveau:8, limite:1, couleur:"Toutes", abeilles:"Puppy Bee uniquement",
+    stats:"+% Convert Amount, +% Ability Pollen, ajoute Focus, Reindeer Fetch et Baby Love", hive:"×1,1 Capacity, +% Bond From Treats",
+    lieu:"Événement Beesmas — plus obtenable autrement que par trade",
+    desc:"Un des trois beequips à ability unique, et un des deux seuls visibles en 3D sur l'abeille. Il peut donner des Gingerbread Bears." },
+  { nom:"Pinecone", categorie:"Beesmas", img:"", niveau:9, limite:2, couleur:"Toutes", abeilles:"Bumble, Stubborn, Bucko, Frosty, Carpenter, Bear",
+    stats:"+% Convert Amount (+20 % à +30 % garanti)", hive:"+% Pine Tree Forest Capacity (+15 % à +25 %), +% Pine Tree Forest Pollen",
+    lieu:"Événement Beesmas — plus obtenable autrement que par trade",
+    desc:"Ne booste qu'un seul champ : utile surtout en ruche bleue qui farm la Pine Tree Forest." },
+  { nom:"Icicles", categorie:"Beesmas", img:"", niveau:10, limite:2, couleur:"Bleu", abeilles:"Abeilles connaissant l'ability Blue Bomb",
+    stats:"+% Bee Attack (jusqu'à +12 % voire plus avec les cires), +% Blue Bomb Pollen", hive:"+% Monster Respawn",
+    lieu:"Drop du Rogue Vicious Bee — 1er beequip Beesmas obtenable hors événement",
+    desc:"Excellente attaque, souvent monté sur une Vicious Bee. La limite est passée de 3 à 2 lors d'une mise à jour." },
+  { nom:"Festive Wreath", categorie:"Beesmas", img:"", niveau:10, limite:1, couleur:"Rouge", abeilles:"Festive Bee uniquement",
+    stats:"+ Gather Amount, + Convert Amount, +% Red Bomb Pollen, ajoute Festive Mark", hive:"+ Capacity, +% Ticket Chance, +% Honey At Hive",
+    lieu:"Événement Beesmas — plus obtenable autrement que par trade",
+    desc:"Un des trois beequips à ability unique. Avant 2024 c'était un beequip permanent, avec un potentiel fixe de 3 ★." },
+  { nom:"Snow Tiara", categorie:"Beesmas", img:"", niveau:12, limite:1, couleur:"Toutes", abeilles:"Gifted uniquement — Cool, Stubborn, Shocked, Frosty, Diamond, Windy",
+    stats:"+% Convert Amount, +% Blue / White Gather Amount, +% Critical Chance", hive:"+% Blue et White Field Capacity, +% Honey From Tokens",
+    lieu:"Catalogue de Bee Bear pendant Beesmas (bundles Royal Winter, Royal Blue, Snow Queen)",
+    desc:"Un des meilleurs beequips de capacité pour les ruches bleues et blanches. Peu utile en rouge." },
+  { nom:"Lump Of Coal", categorie:"Beesmas", img:"", niveau:13, limite:3, couleur:"Toutes", abeilles:"Toutes",
+    stats:"+% Bomb Pollen · −% Energy, −% Movespeed", hive:"+% tous les types de Bomb Pollen, +% White / Blue / Red Pollen",
+    lieu:"Événement Beesmas",
+    desc:"Deux stats négatives, mais des bonus de ruche larges et une limite de 3." },
+  { nom:"Single Mitten", categorie:"Beesmas", img:"", niveau:"?", limite:"?", couleur:"Toutes", abeilles:"à compléter",
+    stats:"+% Bomb Pollen, + Capacity", hive:"+ Capacity",
+    lieu:"Stockings de Beesmas (machine des ours)",
+    desc:"Considéré comme bas de tableau : capacité faible et bombe peu utile en fin de jeu. Niveau et limite à vérifier." },
+  { nom:"Warm Scarf", categorie:"Beesmas", img:"", niveau:"?", limite:"?", couleur:"Toutes", abeilles:"à compléter",
+    stats:"+% Energy", hive:"+% Field Capacity (bonus de ruche très puissant)",
+    lieu:"Stockings de Beesmas · scorpions · cadeau à Dapper Bear (Beesmas 2021)",
+    desc:"Peu intéressant pour l'abeille elle-même, mais son bonus de ruche est excellent. Niveau et limite à vérifier." },
+  { nom:"Beesmas Tree Hat", categorie:"Beesmas", img:"", niveau:"?", limite:"?", couleur:"Toutes", abeilles:"L'abeille doit avoir une mutation, n'importe laquelle",
+    stats:"+% Critical Chance, +% Ability Pollen", hive:"+% Convert Rate At Hive",
+    lieu:"Événement Beesmas",
+    desc:"Très bon car la mutation demandée n'a pas de type imposé : ça le rend posable sur presque n'importe quelle abeille mutée. Niveau et limite à vérifier." },
+  { nom:"Toy Horn", categorie:"Beesmas", img:"", niveau:"?", limite:"?", couleur:"Toutes", abeilles:"à compléter",
+    stats:"+% Ability Rate, +% Ability Pollen, ajoute Melody · −% Energy (l'énergie est divisée par deux)", hive:"à compléter",
+    lieu:"Événement Beesmas",
+    desc:"Sa Melody peut libérer deux emplacements de ruche en remplaçant des Music Bees. Niveau et limite à vérifier." },
+  { nom:"Paper Angel", categorie:"Beesmas", img:"", niveau:"?", limite:"?", couleur:"Toutes", abeilles:"à compléter",
+    stats:"+% White Gather Amount, bonus liés aux tokens", hive:"à compléter",
+    lieu:"Événement Beesmas",
+    desc:"Orienté ruche blanche. Fiable sans être décisif. Niveau et limite à vérifier." },
+  { nom:"Toy Drum", categorie:"Beesmas", img:"", niveau:"?", limite:"?", couleur:"Toutes", abeilles:"à compléter",
+    stats:"comporte une statistique négative", hive:"à compléter",
+    lieu:"Événement Beesmas",
+    desc:"Un des huit beequips à statistique négative. Détails à compléter." },
+  { nom:"Electric Candle", categorie:"Beesmas", img:"", niveau:"?", limite:3, couleur:"Toutes", abeilles:"à compléter",
+    stats:"orienté flamme", hive:"+% Flame Pollen",
+    lieu:"Événement Beesmas",
+    desc:"La contrepartie rouge de la Bubble Light. Avec une limite de 3, en équiper trois triple le bonus de Flame Pollen : redoutable en ruche rouge." },
 ];
 const BEEQUIP_CATS = ["Tous","Non-Event","Beesmas"];
 
 /* Explications affichées en haut de l'onglet Beequip */
 const BEEQUIP_INFO = [
-  { t:"Potentiel 0 → 5 ★", d:"Chaque beequip naît avec un potentiel fixe, impossible à changer. Plus il est haut, meilleures sont les stats de base, plus les cires donnent de stats rares, et plus les améliorations sont généreuses." },
-  { t:"Niveau minimum", d:"Un beequip ne peut être posé que sur une abeille dont le niveau est supérieur ou égal à celui du beequip. Certains exigent en plus une abeille précise ou une mutation particulière." },
-  { t:"Les cires", d:"Soft Wax = 1 point, Hard Wax = 2 points, Caustic Wax (et Debug Wax) = 4 points. Chaque point améliore exactement une stat. Une stat qui atteint son maximum sort du tirage, ce qui améliore les chances des autres." },
-  { t:"Swirled Wax", d:"Elle ne donne aucun point, mais régénère les stats de base ET relance tous les points de cire déjà posés. C'est la seule vraie « reroll » d'un beequip." },
-  { t:"Rangement", d:"Beequip Case : 5 emplacements au départ, 15 au maximum (quêtes de Dapper Bear et Bee Bear). Beequip Storage : 10 emplacements, extensibles jusqu'à 100 pour 123 500 tickets au total — mais on ne peut pas équiper depuis le Storage." },
-  { t:"Inbox 48 h", d:"Si la Case et le Storage sont pleins, les beequips atterrissent dans l'Inbox (25 max). Ils y sont supprimés automatiquement au bout de 48 heures." },
+  { t:"4 contraintes à respecter", d:"Un beequip impose un <b>niveau minimum</b> d'abeille, parfois une <b>couleur</b> de ruche, parfois une <b>liste d'abeilles</b> ou une rareté, et il a une <b>limite</b> d'exemplaires équipés simultanément (1 à 3). Certains exigent en plus une mutation précise." },
+  { t:"Potentiel 0 → 5 ★", d:"Le potentiel est fixé à la création et ne change jamais. Plus il est haut : meilleures stats de base, stats rares plus accessibles aux cires, améliorations plus généreuses. En jeu on ne voit que l'arrondi au ★ (0,5 ★ chez Dapper Bear)." },
+  { t:"Les cires", d:"Soft Wax = 1 point, Hard Wax = 2, Caustic Wax et Debug Wax = 4, Swirled Wax = 0. Un point améliore exactement une stat. Une stat au maximum sort du tirage, ce qui améliore les chances des autres." },
+  { t:"Swirled Wax = reroll", d:"Elle ne donne aucun point mais régénère les stats de base <b>et</b> relance tous les points de cire déjà posés. C'est la seule vraie relance." },
+  { t:"Où les trouver", d:"Non-Event : planteurs (le <b>Dandelion Field</b> a la meilleure chance) et <b>Beequip Shop de Dapper Bear</b> — il refuse de commercer si tu ne portes pas les Beekeeper's Boots et un chapeau. Beesmas : uniquement pendant l'événement, sauf Icicles et Poinsettia." },
+  { t:"Bonus de ruche cumulables", d:"Les lignes marquées [Ruche] s'appliquent à toutes tes abeilles et se cumulent entre exemplaires. C'est pourquoi trois Electric Candles donnent trois fois le bonus de Flame Pollen." },
+  { t:"Rangement", d:"Case : 5 emplacements au départ, 15 au max (quêtes de Dapper Bear et de Bee Bear). Storage : 10 emplacements, jusqu'à 100 pour 123 500 tickets — mais on ne peut pas équiper depuis le Storage. Inbox : 25 places, supprimé après 48 h." },
+  { t:"Déséquiper coûte", d:"Retirer un beequip d'une abeille coûte du miel, ou des tickets pour les niveaux élevés. Le coût augmente avec le niveau du beequip. Et mutter une abeille déséquipe automatiquement son beequip." },
 ];
+
+
+
 
 
 /* ---------- DONNÉES · RECETTES (outil ingrédients) ---------- */
@@ -1785,9 +2218,11 @@ function stickerValNum(v){
   return parts.reduce((a,b)=>a+b,0)/parts.length;
 }
 
-/* ---------- DONNÉES · MUTATIONS (couleurs du chiffre dans Build your Hive) ---------- */
-/* Source : wiki Bee Swarm Simulator (Mutation). Les plages indiquées valent pour les
-   abeilles de niveau 20 ou moins — au-delà, les valeurs peuvent monter plus haut. */
+/* ---------- DONNÉES · MUTATIONS ---------- */
+/* Source : wiki Bee Swarm Simulator (Mutation).
+   IMPORTANT : la colonne « chance » ne dépend PAS du niveau de l'abeille — c'est la
+   probabilité de tirer cette stat parmi les 11 quand une mutation se déclenche.
+   Ce qui dépend du niveau, c'est la VALEUR maximale atteignable. */
 const MUTATIONS = [
   { nom:"% Attack",             chance:"17.9 %", plage:"5 % – 20 %",  incr:"1 %", couleur:"#e83a36", couleurNom:"Rouge" },
   { nom:"+ Attack",             chance:"3.87 %", plage:"1 – 2",       incr:"1",   couleur:"#e83a36", couleurNom:"Rouge" },
@@ -1802,26 +2237,33 @@ const MUTATIONS = [
   { nom:"+ Movespeed",          chance:"1.87 %", plage:"2 – 6",       incr:"1",   couleur:"#4fb8f0", couleurNom:"Cyan foncé" },
 ];
 
-/* Comment obtenir une mutation (cartes affichées sur l'onglet Mutations) */
+/* Comment obtenir une mutation */
 const MUTATIONS_SOURCES = [
-  { ico:"🫐", t:"Bitterberry",     d:"1 chance sur 1 000 de déclencher une mutation aléatoire.", fort:"1 / 1 000" },
-  { ico:"☢️", t:"Abeille radioactive", d:"Une abeille déjà mutée devient parfois radioactive : la Bitterberry passe alors à 1 chance sur 100. La radioactivité se propage aux cases voisines.", fort:"1 / 100" },
-  { ico:"🍓", t:"Autres fruits",   d:"Toutes les autres friandises fruitées ont une chance très faible de mutter l'abeille.", fort:"1 / 25 000" },
-  { ico:"🧪", t:"Gelées & charmes", d:"Royal Jelly, Moon Charm, Star Jelly et friandises spéciales ont une chance de mutter l'abeille.", fort:"Chance variable" },
-  { ico:"⚛️", t:"Atomic Treat",    d:"Garantit une mutation, que l'abeille soit radioactive ou non.", fort:"100 %" },
+  { ico:"🫐", t:"Bitterberry",          d:"Sur une abeille normale : 1 chance sur 1 000 de déclencher une mutation aléatoire.", fort:"1 / 1 000" },
+  { ico:"☢️", t:"Bitterberry sur abeille radioactive", d:"Une abeille mutée devient parfois radioactive, et la radioactivité se propage aux cases voisines de la ruche. La Bitterberry passe alors à 1 sur 100 : c'est de très loin la meilleure méthode.", fort:"1 / 100" },
+  { ico:"🍓", t:"Tous les autres fruits", d:"Fraise, myrtille, ananas, graine de tournesol, Neonberry… chance très faible.", fort:"1 / 25 000" },
+  { ico:"🧪", t:"Gelées et charmes",     d:"Royal Jelly, Star Jelly, Moon Charm et friandises spéciales ont une chance de mutter l'abeille — chance non publiée.", fort:"Variable" },
+  { ico:"⚛️", t:"Atomic Treat",          d:"Garantit une mutation, que l'abeille soit radioactive ou non.", fort:"100 %" },
+];
+
+/* Rôle du niveau de l'abeille */
+const MUTATIONS_NIVEAU = [
+  { t:"Les probabilités ne bougent pas", d:"Les 11 pourcentages du tableau ci-dessus sont fixes : ils ne dépendent ni du niveau de l'abeille, ni de sa rareté, ni de la méthode utilisée. Ils décrivent uniquement <b>quelle</b> stat sort quand une mutation se déclenche." },
+  { t:"Ce qui change, c'est le plafond", d:"Le niveau de l'abeille détermine la <b>valeur maximale</b> qu'une mutation peut atteindre. Les plages du tableau valent pour les abeilles de <b>niveau 20 ou moins</b>." },
+  { t:"Niveau 21 et plus", d:"Au-delà du niveau 20, les valeurs peuvent dépasser les plages affichées. Exemple documenté : seule une abeille de <b>niveau 21 ou plus</b> peut obtenir un +5 % Bee Ability Rate, alors que le plafond est +4 % en dessous." },
+  { t:"Conséquence pratique", d:"Il vaut mieux <b>monter l'abeille au niveau maximum avant</b> de chercher la mutation. Mutter une abeille de bas niveau, c'est se condamner à des petites valeurs — et il faudra retenter plus tard." },
 ];
 
 /* Pièges et règles à connaître */
 const MUTATIONS_NOTES = [
   "Une abeille mutée a son numéro de niveau coloré, sur la case de ruche <b>et</b> sur ses ailes — la couleur dépend de la stat mutée.",
-  "Utiliser une <b>Royal Jelly</b> ou un <b>œuf</b> sur une abeille mutée lui fait presque toujours perdre sa mutation (comme le statut Gifted).",
-  "Re-mutter une abeille peut redonner <b>la même stat en moins bien</b> : un +20 % Gather peut devenir +18 % Gather.",
-  "La valeur maximale dépend du niveau : par exemple, seules les abeilles de <b>niveau 21+</b> peuvent obtenir +5 % Bee Ability Rate.",
+  "Utiliser une <b>Royal Jelly</b> ou un <b>œuf</b> sur une abeille mutée lui fait presque toujours perdre sa mutation, exactement comme le statut Gifted.",
+  "Re-mutter une abeille peut redonner <b>la même stat en moins bien</b> : un +20 % Gather Amount peut redescendre à +18 %.",
+  "Nourrir une abeille mutée et radioactive avec sa friandise préférée peut lui faire gagner une nouvelle mutation <b>et perdre l'ancienne</b> — dangereux si la mutation actuelle est rare.",
   "Mutter une abeille <b>déséquipe automatiquement son beequip</b> : il faut le remettre à la main.",
-  "Le <b>Beesmas Tree Hat</b> exige une mutation quelconque, et la <b>Bubble Light</b> exige précisément une mutation d'Énergie.",
-  "Certaines mutations sont inutiles sur certaines abeilles : Attack sur Baby Bee, Ability Rate sur une Basic/Brave non-gifted sans beequip, Energy sur Photon ou Exhausted Bee.",
+  "Trois beequips dépendent des mutations : le <b>Beesmas Tree Hat</b> exige une mutation quelconque, la <b>Bubble Light</b> une mutation d'Énergie, le <b>Pink Eraser</b> une mutation de Convert Amount. Le <b>Demon Talisman</b> exige aussi une Demon Bee mutée.",
+  "Certaines mutations sont quasi inutiles : Attack sur Baby Bee (elle n'attaque pas — mais ça compte quand même dans l'attaque totale, donc ça booste la Star Saw), Ability Rate sur une Basic ou Brave non-gifted sans beequip (elles n'ont pas d'ability), Energy sur Photon ou Exhausted Bee (énergie infinie).",
 ];
-
 
 /* ---------- DONNÉES · OBJETS (menu de gauche du Build your Hive) ---------- */
 /* 3 catégories. Chaque objet : { nom, img }. img="" -> icône de secours.
@@ -1989,6 +2431,7 @@ const DATASETS = {};
 
 /* ---------- Ligne « clé » affichée en bas de carte ---------- */
 function keylineOf(o){
+  if(o.niveau !== undefined) return { k:"Niveau / limite", v:(o.niveau==='?'?'?':'Lv '+o.niveau)+' · '+(o.limite==='?'?'?':o.limite+' max') };
   if(o.valeur !== undefined) return { k:"Valeur", v: o.valeur==='TBD' ? 'TBD' : (o.valeur ? o.valeur+' signs' : '—') };
   if(o.cout)    return { k:"Coût",    v:o.cout };
   if(o.paliers) return { k:"Paliers", v:o.rarete||'—' };
@@ -2030,9 +2473,16 @@ function ouvrirModale(key, idx){
   if(o.boost)   rows.push(["Stack Boost", o.boost, true]);
   if(o.reward)  rows.push(["Stack Reward", o.reward, false]);
   if(o.cout)    rows.push(["Coût", o.cout, true]);
+  if(o.niveau!==undefined)  rows.push(["Niveau minimum de l'abeille", (o.niveau==='?'?'à vérifier':'Niveau '+o.niveau), true]);
+  if(o.limite!==undefined)  rows.push(["Limite dans la ruche", (o.limite==='?'?'à vérifier':o.limite+' max'), true]);
+  if(o.couleur) rows.push(["Couleur de ruche", o.couleur, false]);
+  if(o.abeilles)rows.push(["Abeilles autorisées", o.abeilles, false]);
+  if(o.stats)   rows.push(["Bonus sur l'abeille", o.stats, false]);
+  if(o.hive)    rows.push(["Bonus de ruche", o.hive, false]);
   if(o.effet)   rows.push(["Effet", o.effet, false]);
   if(o.paliers) rows.push(["Paliers", o.paliers, false]);
   if(o.requis)  rows.push(["Condition", o.requis, false]);
+  if(o.notes)   rows.push(["À savoir", o.notes, false]);
   if(o.lieu)    rows.push(["Où l'obtenir", o.lieu, false]);
   if(o.rarete)  rows.push(["Rareté", o.rarete, false]);
   if(o.categorie) rows.push(["Catégorie", o.categorie, false]);
@@ -2047,7 +2497,8 @@ function ouvrirModale(key, idx){
     `<h3>${esc(o.nom)}</h3>${o.categorie?`<span class="m-tag">${esc(o.categorie)}</span>`:''}`;
   back.querySelector('.m-desc').innerHTML = o.desc ? esc(o.desc) : '<i style="opacity:.55">Aucune description pour le moment. Ajoute-la dans le bloc DONNÉES du fichier index.html.</i>';
   back.querySelector('.m-rows').innerHTML = rows.map(([k,v,hl])=>
-    `<div class="m-row"><span class="k">${k}</span><span class="v${hl?' hl':''}">${esc(v)}</span></div>`).join('');
+    `<div class="m-row"><span class="k">${k}</span><span class="v${hl?' hl':''}">${esc(v)}</span></div>`).join('')
+    + (o.tiersId ? tiersTableHTML(o.tiersId) : '');
   back.classList.add('open');
   document.body.style.overflow='hidden';
 }
@@ -2167,6 +2618,48 @@ renderInfoCards('beequip-info',   BEEQUIP_INFO);
 renderInfoCards('mut-sources',    MUTATIONS_SOURCES);
 const mutNotes = document.getElementById('mut-notes');
 if(mutNotes) mutNotes.innerHTML = MUTATIONS_NOTES.map(n=>`<li>${n}</li>`).join('');
+
+/* ============================================================
+   RENDU DES NOUVEAUX BLOCS
+   ============================================================ */
+
+/* --- tableau de paliers d'une amulette --- */
+function tiersTableHTML(id){
+  const t = AMULETTES_TIERS[id]; if(!t) return '';
+  const rows = t.lignes.map((l,i)=>{
+    const c = (t.couleurs&&t.couleurs[i])||'var(--honey)';
+    return `<tr><td><span class="tier-pill" style="--tc:${c}">${l[0]}</span></td>` +
+      l.slice(1).map(v=>`<td>${v}</td>`).join('') + `</tr>`;
+  }).join('');
+  return `<div class="tiers-wrap"><div class="tiers-title">${t.titre}</div>
+    <table class="tiers-table"><thead><tr>${t.colonnes.map(c=>`<th>${c}</th>`).join('')}</tr></thead>
+    <tbody>${rows}</tbody></table></div>`;
+}
+
+/* --- liste dépliable générique --- */
+function renderSpots(elId, groupes){
+  const el = document.getElementById(elId); if(!el) return;
+  el.innerHTML = groupes.map((g,i)=>`<details class="zone" ${i===0?'open':''}>
+    <summary><span>${g.zone}</span><b>${g.spots.length}</b></summary>
+    <ul>${g.spots.map(s=>`<li>${s}</li>`).join('')}</ul></details>`).join('');
+}
+function renderRegles(elId, list){
+  const el = document.getElementById(elId); if(!el) return;
+  el.innerHTML = list.map(r=>`<div class="regle"><h4>${r.t}</h4><p>${r.d}</p></div>`).join('');
+}
+function renderPassifs(elId, list){
+  const el = document.getElementById(elId); if(!el) return;
+  el.innerHTML = list.map(p=>`<div class="passif">
+    <div class="p-head"><h4>${p.nom}</h4>
+      <span class="p-meta">${p.pal} · ${p.chance}${p.cd&&p.cd!=='—'?' · recharge '+p.cd:''}</span></div>
+    <p>${p.d}</p></div>`).join('');
+}
+
+renderInfoCards('stickers-obt',   STICKERS_OBTENTION);
+renderRegles('stickers-regles',   STICKERS_REGLES);
+renderSpots('stickers-spots',     STICKERS_SPOTS);
+renderInfoCards('mut-niveau',     MUTATIONS_NIVEAU);
+renderPassifs('star-passifs',     STAR_PASSIFS);
 
 /* ---------- Statistiques de l'accueil ---------- */
 (function(){
