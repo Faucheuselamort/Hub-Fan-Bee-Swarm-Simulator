@@ -601,9 +601,14 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 
 /* code couleur de la liste de courses */
 .ing-table tr.ok td{opacity:.6}
-.ing-table tr.ok .ing-c{border-left:2px solid #6BD08B;padding-left:.5rem}
-.ing-table tr.craft .ing-c{border-left:2px solid #F0B429;padding-left:.5rem}
-.ing-table tr.part .ing-c{border-left:2px solid rgba(240,180,41,.45);padding-left:.5rem}
+.ing-table tr td:first-child{box-shadow:inset 2px 0 0 transparent}
+.ing-table tr.ok    td:first-child{box-shadow:inset 2px 0 0 #6BD08B}
+.ing-table tr.craft td:first-child{box-shadow:inset 2px 0 0 #F0B429}
+.ing-table tr.part  td:first-child{box-shadow:inset 2px 0 0 rgba(240,180,41,.45)}
+.ing-table tr.craft{background:rgba(240,180,41,.05)}
+.ing-table tr.part{background:rgba(240,180,41,.025)}
+.ing-table td{vertical-align:middle}
+.ing-table td.manque{line-height:1.3}
 .ing-table .done{color:#6BD08B;font-weight:700;white-space:nowrap}
 .canmake{color:#F0B429;font-weight:700;white-space:nowrap}
 .canmake.sm{display:block;font-size:.68rem;font-weight:500;opacity:.85;margin-top:.1rem}
@@ -2681,7 +2686,7 @@ const IMG_EXT_DEFAUT = 'png';
    Les tirets déjà présents dans un nom sont toujours conservés. */
 const IMG_STYLE = {
   item:     'underscore',
-  stickers: 'espace',
+  stickers: 'underscore',
   amulette: 'espace',
   beequip:  'espace',
   bees:     'espace',
@@ -2699,6 +2704,15 @@ const IMG_FICHIER = {
   "item/Beequip":             "Festive_Wreath",
   "item/Sticker":             "Smile_sticker_icon",
   "item/Aged Gingerbread Bear": "Gingerbread_Bear",
+
+  /* --- dossier stickers : fichiers dont le nom ne suit pas la règle --- */
+  "stickers/Cub Voucher":          "Cub_Buddy_Voucher",
+  "stickers/Blue Hive Skin":       "Hive_model_basic_blue",
+  "stickers/Green Hive Skin":      "Hive_model_basic_green",
+  "stickers/Pink Hive Skin":       "Hive_model_basic_pink",
+  "stickers/Red Hive Skin":        "Hive_model_basic_red",
+  "stickers/Black Hive Skin":      "Hive_model_basic_black",
+  "stickers/White Hive Skin":      "Hive_model_basic_white",
 };
 
 function imgNom(folder, nom){
