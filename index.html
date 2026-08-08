@@ -376,6 +376,137 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
 .note .i{color:var(--honey);flex:0 0 auto}
 
 /* ============================================================
+   ✦ MISE À NIVEAU VISUELLE — cartes, modale, blocs d'info
+   ============================================================ */
+
+/* --- bandeau de statistiques sur l'accueil --- */
+.hero-stats{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.6rem}
+.hero-stat{background:rgba(255,255,255,.04);border:1px solid var(--line-soft);border-radius:14px;
+  padding:.6rem .9rem;min-width:92px}
+.hero-stat b{display:block;font-family:'Fredoka';font-weight:700;font-size:1.4rem;color:var(--honey);line-height:1}
+.hero-stat span{font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+
+/* --- en-tête de section avec compteur --- */
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.count-pill{font-family:'Fredoka';font-weight:700;font-size:.82rem;color:var(--ink-950);
+  background:var(--honey);border-radius:20px;padding:.25rem .8rem;white-space:nowrap}
+.count-pill.ghost{background:transparent;color:var(--muted);border:1px solid var(--line-soft)}
+
+/* --- barre d'outils : tri --- */
+.sortbox{display:flex;align-items:center;gap:.45rem;background:var(--panel);
+  border:1px solid var(--line-soft);border-radius:12px;padding:.45rem .7rem}
+.sortbox span{font-size:.8rem;color:var(--muted);white-space:nowrap}
+.sortbox select{background:transparent;border:0;color:var(--cream);font-family:'Fredoka';
+  font-weight:500;font-size:.9rem;outline:none;cursor:pointer}
+.sortbox select option{background:var(--ink-950)}
+
+/* --- CARTES : refonte complète --- */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:.95rem}
+.card{
+  background:linear-gradient(165deg,var(--panel) 0%,var(--ink-900) 100%);
+  border:1px solid var(--line-soft);border-radius:18px;padding:0;overflow:hidden;
+  cursor:pointer;position:relative;display:flex;flex-direction:column;
+  transition:transform .18s cubic-bezier(.2,.8,.3,1),border-color .18s,box-shadow .18s;
+}
+.card::before{content:"";position:absolute;inset:0;border-radius:18px;pointer-events:none;
+  background:radial-gradient(420px 160px at 50% -20%,var(--glow,rgba(244,221,68,.16)),transparent 70%);
+  opacity:0;transition:opacity .2s}
+.card:hover{transform:translateY(-5px);border-color:var(--accent,var(--honey));
+  box-shadow:0 16px 34px rgba(0,0,0,.42)}
+.card:hover::before{opacity:1}
+.card .card-top{position:relative;display:flex;align-items:center;justify-content:center;
+  padding:1.15rem 1rem .55rem;min-height:104px}
+.card .card-img{width:74px;height:74px;border-radius:16px;background:rgba(0,0,0,.28);
+  border:1px solid var(--line-soft);display:grid;place-items:center;margin:0;overflow:hidden;
+  transition:transform .18s}
+.card:hover .card-img{transform:scale(1.06)}
+.card .card-img img{width:100%;height:100%;object-fit:contain;image-rendering:pixelated}
+.card .card-img .ph{font-family:'Fredoka';font-weight:700;font-size:1.5rem;color:var(--accent,var(--honey));opacity:.75}
+.card .tag{position:absolute;top:.7rem;right:.7rem;font-family:'Fredoka';font-weight:600;font-size:.66rem;
+  text-transform:uppercase;letter-spacing:.6px;padding:.22rem .55rem;border-radius:20px;
+  background:rgba(0,0,0,.35);color:var(--accent,var(--honey));border:1px solid var(--line-soft);max-width:62%;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card .card-body{padding:0 1.05rem 1.05rem;display:flex;flex-direction:column;flex:1}
+.card h3{font-size:1.05rem;margin:0 0 .35rem;padding:0;line-height:1.25}
+.card .desc{color:var(--muted);font-size:.85rem;line-height:1.45;margin:0 0 .75rem;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card .keyline{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:.5rem;
+  border-top:1px solid var(--line-soft);padding-top:.6rem;font-size:.8rem}
+.card .keyline .k{color:var(--muted)}
+.card .keyline .v{font-family:'Fredoka';font-weight:700;color:var(--accent,var(--honey));text-align:right}
+.card .accent-bar{position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent,var(--honey));opacity:.6}
+
+/* --- modale de détail --- */
+.modal-back{position:fixed;inset:0;background:rgba(6,14,19,.78);backdrop-filter:blur(6px);
+  z-index:200;display:none;align-items:center;justify-content:center;padding:1.2rem}
+.modal-back.open{display:flex;animation:fade .2s ease}
+.modal{background:linear-gradient(170deg,var(--panel) 0%,var(--ink-950) 110%);
+  border:1px solid var(--line);border-radius:22px;max-width:520px;width:100%;
+  max-height:88vh;overflow:auto;box-shadow:0 30px 70px rgba(0,0,0,.6);position:relative}
+.modal .m-close{position:absolute;top:.8rem;right:.9rem;width:32px;height:32px;border-radius:50%;
+  background:rgba(0,0,0,.35);border:1px solid var(--line-soft);color:var(--cream);cursor:pointer;
+  font-size:1.1rem;line-height:1;display:grid;place-items:center;z-index:2}
+.modal .m-close:hover{background:var(--honey);color:var(--ink-950)}
+.m-head{display:flex;gap:1rem;align-items:center;padding:1.6rem 1.6rem 1.1rem;
+  border-bottom:1px solid var(--line-soft);
+  background:radial-gradient(500px 180px at 20% 0%,var(--glow,rgba(244,221,68,.14)),transparent 70%)}
+.m-img{width:82px;height:82px;flex:0 0 auto;border-radius:18px;background:rgba(0,0,0,.3);
+  border:1px solid var(--line-soft);display:grid;place-items:center;overflow:hidden}
+.m-img img{width:100%;height:100%;object-fit:contain;image-rendering:pixelated}
+.m-img .ph{font-family:'Fredoka';font-weight:700;font-size:1.8rem;color:var(--accent,var(--honey));opacity:.8}
+.m-title h3{font-size:1.5rem;margin-bottom:.3rem}
+.m-title .m-tag{display:inline-block;font-family:'Fredoka';font-weight:600;font-size:.7rem;
+  text-transform:uppercase;letter-spacing:.8px;padding:.22rem .6rem;border-radius:20px;
+  background:rgba(0,0,0,.3);border:1px solid var(--line-soft);color:var(--accent,var(--honey))}
+.m-body{padding:1.3rem 1.6rem 1.6rem}
+.m-desc{color:var(--cream);font-size:.96rem;line-height:1.6;margin-bottom:1.2rem}
+.m-rows{display:flex;flex-direction:column;gap:.1rem}
+.m-row{display:flex;justify-content:space-between;gap:1.2rem;padding:.65rem 0;
+  border-bottom:1px solid var(--line-soft);font-size:.92rem}
+.m-row:last-child{border-bottom:0}
+.m-row .k{color:var(--muted);flex:0 0 auto}
+.m-row .v{text-align:right;font-weight:600}
+.m-row .v.hl{font-family:'Fredoka';font-weight:700;color:var(--accent,var(--honey))}
+
+/* --- blocs d'information (amulettes, beequip, mutations) --- */
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:.85rem;margin-bottom:2rem}
+.info-card{background:var(--panel);border:1px solid var(--line-soft);border-radius:16px;padding:1.05rem 1.15rem;
+  position:relative;overflow:hidden}
+.info-card::after{content:"";position:absolute;left:0;top:0;width:100%;height:2px;
+  background:linear-gradient(90deg,var(--honey),transparent)}
+.info-card h4{font-size:1rem;margin-bottom:.4rem;color:var(--cream)}
+.info-card p{font-size:.86rem;color:var(--muted);line-height:1.55}
+.info-card .big{font-family:'Fredoka';font-weight:700;font-size:1.35rem;color:var(--honey);
+  display:block;margin-bottom:.15rem}
+.info-card .ico{font-size:1.35rem;display:block;margin-bottom:.45rem}
+
+.notes-list{list-style:none;display:grid;gap:.55rem;margin-top:1.4rem}
+.notes-list li{background:var(--ink-900);border:1px solid var(--line-soft);border-left:3px solid var(--honey);
+  border-radius:0 12px 12px 0;padding:.75rem 1rem;font-size:.9rem;color:var(--muted);line-height:1.55}
+.notes-list li b{color:var(--cream)}
+
+/* --- tableau des mutations : barre de probabilité --- */
+.mut-bar{position:relative;height:7px;border-radius:6px;background:rgba(255,255,255,.07);
+  overflow:hidden;min-width:70px;margin-top:.3rem}
+.mut-bar i{position:absolute;left:0;top:0;bottom:0;border-radius:6px;display:block}
+.mut-chance{font-family:'Fredoka';font-weight:700;color:var(--cream)}
+.mut-table td .mut-plage{font-family:'Fredoka';font-weight:600;color:var(--cream)}
+
+/* --- micro-ajustements --- */
+.section-title{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.card .meta{display:none}
+@media(max-width:560px){
+  .card-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.65rem}
+  .card .card-top{min-height:88px;padding:.9rem .8rem .4rem}
+  .card .card-img{width:58px;height:58px;border-radius:13px}
+  .card .card-body{padding:0 .8rem .85rem}
+  .card h3{font-size:.95rem}
+  .card .desc{font-size:.78rem;-webkit-line-clamp:2}
+  .m-head{flex-direction:column;text-align:center;padding:1.4rem 1.1rem 1rem}
+  .m-body{padding:1.1rem}
+}
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media(max-width:820px){
@@ -426,6 +557,7 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
         <button class="btn btn-primary" onclick="showView('outils')">🛠️ Ouvrir les outils</button>
         <button class="btn btn-ghost" onclick="showView('items')">Parcourir les items</button>
       </div>
+      <div class="hero-stats" id="hero-stats"></div>
     </div>
     <div class="mascot">
       <img src="data:image/png;base64,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" alt="Mascotte Bee Swarm">
@@ -452,6 +584,10 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
         <div class="ico">🎒</div><h3>Beequip</h3>
         <p>L'équipement des abeilles et les bonus associés à chaque pièce.</p>
       </div>
+      <div class="home-card" onclick="showView('mutations')">
+        <div class="ico">🧬</div><h3>Mutations</h3>
+        <p>Les 11 mutations d'abeilles, leur probabilité, leur plage et leur couleur.</p>
+      </div>
       <div class="home-card" onclick="showView('outils')">
         <div class="ico">🛠️</div><h3>Outils</h3>
         <p>Calcul d'ingrédients, niveau d'abeilles, trade équitable et Build your Hive.</p>
@@ -463,9 +599,9 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
 <!-- ============================ ITEMS ============================ -->
 <section class="view" id="items">
   <div class="eyebrow">Base de données</div>
-  <h2 class="section-title">Items du jeu</h2>
-  <p class="lead">Description, coût et lieu d'obtention de chaque item. Utilise la recherche ou les filtres pour t'y retrouver.</p>
-  <div class="note"><span class="i">✏️</span><div>Les entrées ci-dessous sont des <b>exemples</b> pour te montrer la mise en forme. Complète-les dans le bloc <b>DONNÉES · ITEMS</b> du fichier <code>index.html</code>.</div></div>
+  <div class="sec-head"><h2 class="section-title">Items du jeu</h2><span class="count-pill count-visible"></span></div>
+  <p class="lead">Tous les objets du jeu, classés par famille : à quoi ils servent, combien ils coûtent et où les trouver.</p>
+  <div class="note"><span class="i">🍯</span><div>Outils, œufs, gelées, matériaux de fabrication, monnaies, accessoires, planteurs… <b>Clique sur une carte</b> pour ouvrir sa fiche détaillée. Les images se placent dans <b>images/item/</b> (nom exact du fichier = nom de l'item).</div></div>
   <div class="toolbar">
     <div class="search"><span>🔍</span><input type="text" placeholder="Rechercher un item…" oninput="filterCards('items',this.value)"></div>
     <div class="chips" id="items-chips"></div>
@@ -476,9 +612,9 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
 <!-- ============================ STICKERS ============================ -->
 <section class="view" id="stickers">
   <div class="eyebrow">Base de données</div>
-  <h2 class="section-title">Stickers</h2>
-  <p class="lead">Chaque sticker, sa rareté et le bonus qu'il applique à une abeille ou un beequip.</p>
-  <div class="note"><span class="i">✏️</span><div>Les 289 stickers avec leur valeur en <b>signs</b> (source : bssmvalues). Filtre par catégorie ou recherche par nom. Les images se placent dans <b>images/stickers/</b>.</div></div>
+  <div class="sec-head"><h2 class="section-title">Stickers</h2><span class="count-pill count-visible"></span></div>
+  <p class="lead">Chaque sticker, sa valeur de trade en signs, sa description et le bonus permanent qu'il donne une fois déposé dans le Sticker Stack.</p>
+  <div class="note"><span class="i">🏷️</span><div>Les 289 stickers avec leur valeur en <b>signs</b> (bssmvalues) et, pour la plupart, leur description et leur <b>Stack Boost</b> (wiki officiel). La recherche fouille aussi dans les descriptions et les bonus : tape « Critical Power » ou « Capacity » pour voir. Images dans <b>images/stickers/</b>.</div></div>
   <div class="toolbar">
     <div class="search"><span>🔍</span><input type="text" placeholder="Rechercher un sticker…" oninput="filterCards('stickers',this.value)"></div>
     <div class="chips" id="stickers-chips"></div>
@@ -489,9 +625,9 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
 <!-- ============================ AMULETTES ============================ -->
 <section class="view" id="amulettes">
   <div class="eyebrow">Base de données</div>
-  <h2 class="section-title">Amulettes</h2>
-  <p class="lead">Les amulettes, leurs effets et les ingrédients nécessaires pour les fabriquer.</p>
-  <div class="note"><span class="i">✏️</span><div>Exemples de démonstration — complète le bloc <b>DONNÉES · AMULETTES</b> dans le fichier.</div></div>
+  <div class="sec-head"><h2 class="section-title">Amulettes</h2><span class="count-pill count-visible"></span></div>
+  <p class="lead">Les 7 types d'amulettes du jeu : où les obtenir, quels bonus elles donnent et comment leur qualité est déterminée.</p>
+  <div class="info-grid" id="amulettes-info"></div>
   <div class="toolbar">
     <div class="search"><span>🔍</span><input type="text" placeholder="Rechercher une amulette…" oninput="filterCards('amulettes',this.value)"></div>
     <div class="chips" id="amulettes-chips"></div>
@@ -502,9 +638,9 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
 <!-- ============================ BEEQUIP ============================ -->
 <section class="view" id="beequip">
   <div class="eyebrow">Base de données</div>
-  <h2 class="section-title">Beequip</h2>
-  <p class="lead">L'équipement à poser sur tes abeilles et les statistiques que chaque pièce apporte.</p>
-  <div class="note"><span class="i">✏️</span><div>Liste complète des beequips (Non-Event et Beesmas). Ajoute les effets et les images dans le bloc <b>DONNÉES · BEEQUIP</b>.</div></div>
+  <div class="sec-head"><h2 class="section-title">Beequip</h2><span class="count-pill count-visible"></span></div>
+  <p class="lead">L'équipement à poser sur tes abeilles. Les stats sont générées aléatoirement selon un potentiel de 0 à 5 ★, puis renforcées avec les cires.</p>
+  <div class="info-grid" id="beequip-info"></div>
   <div class="toolbar">
     <div class="search"><span>🔍</span><input type="text" placeholder="Rechercher un beequip…" oninput="filterCards('beequip',this.value)"></div>
     <div class="chips" id="beequip-chips"></div>
@@ -514,12 +650,22 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
 
 <!-- ============================ MUTATIONS ============================ -->
 <section class="view" id="mutations">
-  <div class="eyebrow">Beequips</div>
-  <h2 class="section-title">Mutation détails</h2>
-  <p class="lead">Chaque beequip peut obtenir une mutation aléatoire. Voici les mutations, leur chance d'apparition, la plage de valeurs et la couleur du chiffre correspondante (celle utilisée dans le Build your Hive).</p>
+  <div class="eyebrow">Mécanique de jeu</div>
+  <div class="sec-head"><h2 class="section-title">Mutations d'abeilles</h2>
+    <span class="count-pill">11 mutations</span></div>
+  <p class="lead">Une mutation booste définitivement une statistique d'une abeille. Son numéro de niveau change alors de couleur, sur la case de ruche comme sur ses ailes — c'est cette couleur qui est reprise dans le <b>Build your Hive</b>.</p>
+
+  <h3 style="font-size:1.15rem;margin:1.6rem 0 .8rem">Comment obtenir une mutation</h3>
+  <div class="info-grid" id="mut-sources"></div>
+
+  <h3 style="font-size:1.15rem;margin:.4rem 0 .8rem">Les 11 mutations possibles</h3>
+  <p class="lead" style="margin-bottom:1rem">Les plages ci-dessous valent pour les abeilles de <b>niveau 20 ou moins</b> : au-delà, on peut obtenir des valeurs plus élevées.</p>
   <div class="mut-table-wrap">
     <table class="mut-table" id="mut-table"></table>
   </div>
+
+  <h3 style="font-size:1.15rem;margin:2rem 0 .4rem">Bon à savoir</h3>
+  <ul class="notes-list" id="mut-notes"></ul>
 </section>
 
 <!-- ============================ OUTILS ============================ -->
@@ -711,6 +857,22 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
   </div>
 </footer>
 
+
+<!-- ============================ MODALE DE DÉTAIL ============================ -->
+<div class="modal-back" id="modal-back">
+  <div class="modal">
+    <button class="m-close" aria-label="Fermer">✕</button>
+    <div class="m-head">
+      <div class="m-img"></div>
+      <div class="m-title"></div>
+    </div>
+    <div class="m-body">
+      <div class="m-desc"></div>
+      <div class="m-rows"></div>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ============================================================================
    ██  DONNÉES DU JEU — c'est ICI que tu ajoutes / modifies le contenu  ██
@@ -719,15 +881,121 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
    ============================================================================ */
 
 /* ---------- DONNÉES · ITEMS ---------- */
-/* categorie sert aux filtres. cout / lieu / desc s'affichent sur la carte. */
+/* categorie sert aux filtres. cout / lieu / desc s'affichent sur la carte.
+   Source : wiki Bee Swarm Simulator (Items, Tools, Inventory). */
 const ITEMS = [
-  { nom:"Œuf de base",     categorie:"Œufs",    desc:"Fait éclore une abeille commune ou rare aléatoire.", cout:"295 miel",        lieu:"Boutique près de la ruche" },
-  { nom:"Gelée royale",    categorie:"Jelly",   desc:"Transforme une abeille normale en abeille rare aléatoire.", cout:"Robux / quêtes", lieu:"Dispensers, quêtes, événements" },
-  { nom:"Gelée étoilée",   categorie:"Jelly",   desc:"Transforme une abeille en l'abeille de ton choix.", cout:"Événements / codes", lieu:"Événements, codes, Robux" },
-  { nom:"Faux",            categorie:"Outils",  desc:"Outil de collecte : ramasse plus de pollen d'un coup.", cout:"Miel",           lieu:"Boutique d'outils" },
-  { nom:"Ticket",          categorie:"Monnaie", desc:"Monnaie pour la tente à tickets (abeilles, objets).", cout:"—",              lieu:"Mobs, quêtes, cadeaux quotidiens" },
+  /* ===== OUTILS (20 dans le jeu) ===== */
+  { nom:"Scooper", categorie:"Outils", desc:"L'outil de départ de tout joueur. Petite portée, mais il fait le travail au tout début.", cout:"Gratuit", lieu:"Donné au début du jeu" },
+  { nom:"Rake", categorie:"Outils", desc:"Râteau qui gratte le pollen des fleurs sans abîmer leur tige. Meilleure portée que le Scooper.", cout:"Bon marché", lieu:"Noob Shop (0 – 14 K miel)" },
+  { nom:"Clippers", categorie:"Outils", desc:"Sécateur rapide. Ne cours pas avec ça.", cout:"Bon marché", lieu:"Noob Shop (0 – 14 K miel)" },
+  { nom:"Magnet", categorie:"Outils", desc:"Aimant qui attire le pollen des fleurs alentour.", cout:"Bon marché", lieu:"Noob Shop (0 – 14 K miel)" },
+  { nom:"Vacuum", categorie:"Outils", desc:"Aspirateur à pollen : large zone de collecte.", cout:"Bon marché", lieu:"Noob Shop (0 – 14 K miel)" },
+  { nom:"Super-Scooper", categorie:"Outils", desc:"Version améliorée du Scooper, peinture bleu et jaune plus aérodynamique.", cout:"Moyen", lieu:"Pro Shop (40 K – 1,5 M miel)" },
+  { nom:"Pulsar", categorie:"Outils", desc:"Outil à impulsions. Possiblement radioactif.", cout:"Moyen", lieu:"Pro Shop (40 K – 1,5 M miel)" },
+  { nom:"Electro-Magnet", categorie:"Outils", desc:"Deux aimants en un, pour deux fois plus de pollen.", cout:"Moyen", lieu:"Pro Shop (40 K – 1,5 M miel)" },
+  { nom:"Scissors", categorie:"Outils", desc:"Ciseaux à grande portée. Ça coupe et ça claque.", cout:"Moyen", lieu:"Pro Shop (40 K – 1,5 M miel)" },
+  { nom:"Honey Dipper", categorie:"Outils", desc:"L'outil de fabrication de miel par excellence. Bonus de conversion.", cout:"Moyen", lieu:"Pro Shop (40 K – 1,5 M miel)" },
+  { nom:"Bubble Wand", categorie:"Outils", desc:"Recouvre les fleurs d'eau savonneuse. Favorise le pollen bleu.", cout:"Élevé", lieu:"Blue HQ (3,5 M – 2,5 T miel)" },
+  { nom:"Scythe", categorie:"Outils", desc:"Faux enflammée : tranche et brûle. Favorise le pollen rouge.", cout:"Élevé", lieu:"Red HQ (3,5 M – 2,5 T miel)" },
+  { nom:"Golden Rake", categorie:"Outils", desc:"Un râteau de jardinage totalement superflu… mais très efficace.", cout:"20 M – 150 M miel", lieu:"Mountain Top Shop" },
+  { nom:"Spark Staff", categorie:"Outils", desc:"Bâton électrique. Zap zap zap.", cout:"20 M – 150 M miel", lieu:"Mountain Top Shop" },
+  { nom:"Porcelain Dipper", categorie:"Outils", desc:"Le cuiller de ceux qui sont encore en « early-mid game ».", cout:"20 M – 150 M miel", lieu:"Mountain Top Shop" },
+  { nom:"Petal Wand", categorie:"Outils", desc:"Le parasol de Spirit Bear. Très gros bonus de collecte.", cout:"~1,5 Md miel", lieu:"Petal Shop" },
+  { nom:"Tide Popper", categorie:"Outils", desc:"Le secouer crée des vagues. Outil bleu haut de gamme, à fabriquer.", cout:"Fabrication", lieu:"Blue HQ" },
+  { nom:"Dark Scythe", categorie:"Outils", desc:"Pour moissonner les flammes. Outil rouge haut de gamme, à fabriquer.", cout:"Fabrication", lieu:"Red HQ" },
+  { nom:"Gummyballer", categorie:"Outils", desc:"L'arme préférée des Gummy Soldiers. Seul outil capable de retirer directement le goo d'un champ. Outil le plus cher du jeu.", cout:"10 000 Md miel + matériaux", lieu:"Gummy Bear's Lair" },
+  { nom:"Sticker-Seeker", categorie:"Outils", desc:"Le plus récent outil. Rend visibles les Seeker Stickers cachés sur la carte.", cout:"—", lieu:"Ajouté avec la mise à jour Stickers" },
+
+  /* ===== ŒUFS ===== */
+  { nom:"Basic Egg", categorie:"Œufs", desc:"Fait éclore une abeille Commune ou Rare. Le premier œuf du jeu.", cout:"295 miel", lieu:"Noob Shop, quêtes, tokens" },
+  { nom:"Silver Egg", categorie:"Œufs", desc:"Fait éclore une abeille Rare ou Épique.", cout:"Miel / Robux", lieu:"Boutiques, quêtes, cadeaux" },
+  { nom:"Gold Egg", categorie:"Œufs", desc:"Fait éclore une abeille Épique, Légendaire ou Mythique.", cout:"Miel / Robux", lieu:"Boutiques, quêtes, événements" },
+  { nom:"Diamond Egg", categorie:"Œufs", desc:"Fait éclore une abeille Légendaire ou Mythique.", cout:"Robux / événements", lieu:"Quêtes, événements, Robux" },
+  { nom:"Mythic Egg", categorie:"Œufs", desc:"Garantit une abeille Mythique.", cout:"Rare", lieu:"Quêtes avancées, événements" },
+  { nom:"Star Egg", categorie:"Œufs", desc:"Permet de choisir précisément l'abeille que l'on veut obtenir.", cout:"Très rare", lieu:"Événements, codes, Robux" },
+  { nom:"Gifted Egg", categorie:"Œufs", desc:"Variante « gifted » des œufs Silver / Gold / Diamond / Mythic : l'abeille éclose est directement Gifted.", cout:"Robux / événements", lieu:"Boutique Robux, événements" },
+  { nom:"Œuf d'abeille spécifique", categorie:"Œufs", desc:"Œuf lié à une abeille précise (Bear Bee, Vicious Bee, Tabby Bee…). Donne toujours cette abeille.", cout:"Variable", lieu:"Quêtes, événements, vouchers" },
+
+  /* ===== GELÉES & TREATS ===== */
+  { nom:"Royal Jelly", categorie:"Gelées & Treats", desc:"Transforme une abeille en une autre abeille aléatoire de rareté supérieure ou égale. Fait perdre mutation et statut Gifted.", cout:"—", lieu:"Distributeur, quêtes, planteurs, mobs" },
+  { nom:"Star Jelly", categorie:"Gelées & Treats", desc:"Gelée étoilée : transforme une abeille en l'abeille exacte de ton choix.", cout:"Très rare", lieu:"Événements, codes, Robux" },
+  { nom:"Treat", categorie:"Gelées & Treats", desc:"Friandise de base : donne de l'XP et du bond à une abeille.", cout:"—", lieu:"Treat Shop, quêtes, tokens" },
+  { nom:"Blueberry", categorie:"Gelées & Treats", desc:"Friandise préférée des abeilles bleues : bond bonus pour elles.", cout:"—", lieu:"Distributeur Blue HQ" },
+  { nom:"Strawberry", categorie:"Gelées & Treats", desc:"Friandise préférée des abeilles rouges : bond bonus pour elles.", cout:"—", lieu:"Distributeur Strawberry Field" },
+  { nom:"Pineapple", categorie:"Gelées & Treats", desc:"Friandise préférée de plusieurs abeilles incolores.", cout:"—", lieu:"Pineapple Patch" },
+  { nom:"Sunflower Seed", categorie:"Gelées & Treats", desc:"Graine de tournesol, friandise préférée de certaines abeilles.", cout:"—", lieu:"Sunflower Field" },
+  { nom:"Bitterberry", categorie:"Gelées & Treats", desc:"Baie amère : 1 chance sur 1 000 de donner une mutation à l'abeille nourrie (1 sur 100 si elle est radioactive).", cout:"—", lieu:"Quêtes, planteurs, mobs" },
+  { nom:"Neonberry", categorie:"Gelées & Treats", desc:"Baie néon : friandise rare qui donne beaucoup de bond.", cout:"—", lieu:"Quêtes, planteurs" },
+  { nom:"Moon Charm", categorie:"Gelées & Treats", desc:"Charme lunaire : gros bond, peut mutter une abeille. Sert aussi à fabriquer.", cout:"—", lieu:"Mother Bear, Wind Shrine, nuit" },
+  { nom:"Atomic Treat", categorie:"Gelées & Treats", desc:"Friandise atomique : garantit une mutation sur l'abeille nourrie, radioactive ou non.", cout:"Très rare", lieu:"Quêtes de haut niveau, événements" },
+  { nom:"Gumdrops", categorie:"Gelées & Treats", desc:"Bonbons gélifiés, monnaie et ingrédient lié au Gummy Bear.", cout:"—", lieu:"Gummy Bear, planteurs, mobs" },
+  { nom:"Jelly Beans", categorie:"Gelées & Treats", desc:"Friandise donnée par plusieurs quêtes, bon rapport bond/quantité.", cout:"—", lieu:"Quêtes, cadeaux" },
+
+  /* ===== FABRICATION ===== */
+  { nom:"Glue", categorie:"Fabrication", desc:"Colle : x1,25 pollen des outils et des abeilles pendant 10 minutes. Aussi utilisée en fabrication.", cout:"—", lieu:"Quêtes, planteurs, sticker stack" },
+  { nom:"Enzymes", categorie:"Fabrication", desc:"Boost de conversion en miel. Ingrédient de nombreuses recettes.", cout:"—", lieu:"Quêtes, planteurs, mobs" },
+  { nom:"Oil", categorie:"Fabrication", desc:"Huile : accélère les abeilles et sert à beaucoup de fabrications.", cout:"—", lieu:"Quêtes, planteurs" },
+  { nom:"Glitter", categorie:"Fabrication", desc:"Paillettes : boost puissant et ingrédient rare.", cout:"—", lieu:"Quêtes, événements" },
+  { nom:"Stinger", categorie:"Fabrication", desc:"Dard : ingrédient de fabrication (guards, masques, outils).", cout:"—", lieu:"Mobs, quêtes, Stinger Shop" },
+  { nom:"Soft Wax", categorie:"Fabrication", desc:"Cire tendre : +1 point de cire sur un beequip.", cout:"—", lieu:"Planteurs, quêtes, sticker stack" },
+  { nom:"Hard Wax", categorie:"Fabrication", desc:"Cire dure : +2 points de cire sur un beequip.", cout:"—", lieu:"Planteurs, quêtes" },
+  { nom:"Caustic Wax", categorie:"Fabrication", desc:"Cire caustique : +4 points de cire, et débloque des stats rares.", cout:"—", lieu:"Quêtes avancées, boss" },
+  { nom:"Swirled Wax", categorie:"Fabrication", desc:"Cire marbrée : 0 point de cire, mais relance entièrement les stats de base et tous les points déjà posés.", cout:"—", lieu:"Quêtes avancées, événements" },
+  { nom:"Red Extract", categorie:"Fabrication", desc:"Extrait rouge : boost du pollen rouge, ingrédient de fabrication.", cout:"—", lieu:"Red HQ, quêtes" },
+  { nom:"Blue Extract", categorie:"Fabrication", desc:"Extrait bleu : boost du pollen bleu, ingrédient de fabrication.", cout:"—", lieu:"Blue HQ, quêtes" },
+  { nom:"Purple Potion", categorie:"Fabrication", desc:"Potion violette : x1,25 capacité, x1,5 pollen rouge et bleu, x1,3 pollen d'outils… pendant 15 min.", cout:"—", lieu:"Science Bear, quêtes" },
+  { nom:"Micro-Converter", categorie:"Fabrication", desc:"Micro-convertisseur : convertit instantanément une part du pollen en miel.", cout:"—", lieu:"Quêtes, sticker stack" },
+  { nom:"Magic Bean", categorie:"Fabrication", desc:"Haricot magique : fait pousser un Sprout géant.", cout:"—", lieu:"Magic Bean Shop, quêtes" },
+  { nom:"Cloud Vial", categorie:"Fabrication", desc:"Fiole de nuage : invoque un nuage qui fait pleuvoir des tokens sur un champ.", cout:"—", lieu:"Wind Shrine, quêtes" },
+  { nom:"Field Dice", categorie:"Fabrication", desc:"Dé de champ : relance le multiplicateur de boost d'un champ.", cout:"—", lieu:"Quêtes, cadeaux" },
+  { nom:"Loaded Dice", categorie:"Fabrication", desc:"Dé pipé : garantit un bon résultat sur un boost de champ.", cout:"—", lieu:"Quêtes, événements" },
+  { nom:"Smooth Dice", categorie:"Fabrication", desc:"Dé lisse : version intermédiaire du dé de champ.", cout:"—", lieu:"Sticker stack, quêtes" },
+  { nom:"Whirligig", categorie:"Fabrication", desc:"Hélice : téléporte instantanément le joueur à la ruche.", cout:"—", lieu:"Quêtes, planteurs" },
+
+  /* ===== MONNAIE ===== */
+  { nom:"Honey", categorie:"Monnaie", desc:"La monnaie principale du jeu : sert à acheter outils, sacs, accessoires et emplacements de ruche.", cout:"—", lieu:"Conversion du pollen à la ruche" },
+  { nom:"Ticket", categorie:"Monnaie", desc:"Monnaie secondaire : emplacements de stickers et de beequips, Ticket Tent, boutiques spéciales.", cout:"—", lieu:"Mobs, quêtes, cadeaux quotidiens" },
+  { nom:"Goo", categorie:"Monnaie", desc:"Substance gluante laissée sur les champs, convertie en miel par certaines abeilles et outils.", cout:"—", lieu:"Champs, Gummy Bear" },
+  { nom:"Bond", categorie:"Monnaie", desc:"Lien d'une abeille : monte avec les friandises et débloque des niveaux.", cout:"—", lieu:"Nourrir les abeilles" },
+
+  /* ===== ACCESSOIRES ===== */
+  { nom:"Hive Slot", categorie:"Accessoires", desc:"Emplacement de ruche supplémentaire : passe de 25 à 50 abeilles maximum. Le prix augmente de façon exponentielle.", cout:"Miel (exponentiel)", lieu:"Mountain Top Shop" },
+  { nom:"Amulet", categorie:"Accessoires", desc:"Amulette : bonus permanents obtenus en réussissant des défis spéciaux. Voir l'onglet Amulettes.", cout:"Défis", lieu:"Boss et challenges" },
+  { nom:"Beequip", categorie:"Accessoires", desc:"Équipement à poser sur une abeille. Stats aléatoires selon un potentiel de 0 à 5 ★, améliorables aux cires.", cout:"—", lieu:"Planteurs (surtout Dandelion Field)" },
+  { nom:"Sticker", categorie:"Accessoires", desc:"Autocollant décoratif à poser sur sa ruche, à échanger, ou à empiler dans le Sticker Stack pour un bonus permanent.", cout:"—", lieu:"Murs cachés, Sticker Printer, quêtes" },
+  { nom:"Sac (Bag)", categorie:"Accessoires", desc:"Augmente la capacité de pollen transportable. Du Backpack de base au Port-O-Hive.", cout:"Miel", lieu:"Boutiques, fabrication" },
+  { nom:"Masque (Mask)", categorie:"Accessoires", desc:"Masques (Bubble, Gummy, Diamond, Beekeeper…) : bonus de pollen et effets spéciaux.", cout:"Miel + matériaux", lieu:"Badge Bearer's Guild, boutiques" },
+  { nom:"Guard", categorie:"Accessoires", desc:"Protections liées à une abeille (Blue Guard, Bomber Guard…) : bonus d'attaque et de pollen ciblés.", cout:"Miel + matériaux", lieu:"Fabrication" },
+  { nom:"Bottes (Boots)", categorie:"Accessoires", desc:"Bottes : vitesse de déplacement et bonus de collecte en marchant.", cout:"Miel + matériaux", lieu:"Boutiques, fabrication" },
+  { nom:"Ceinture (Belt)", categorie:"Accessoires", desc:"Ceintures : capacité et bonus divers.", cout:"Miel + matériaux", lieu:"Boutiques, fabrication" },
+  { nom:"Parachute / Glider", categorie:"Accessoires", desc:"Outils de vol plané pour traverser la carte rapidement.", cout:"Miel", lieu:"Boutiques" },
+
+  /* ===== PLANTEURS ===== */
+  { nom:"Paper Planter", categorie:"Planteurs", desc:"Planteur en papier : le plus rapide, petites récompenses. Idéal pour débuter.", cout:"—", lieu:"Quêtes, Blender" },
+  { nom:"Ticket Planter", categorie:"Planteurs", desc:"Planteur à tickets : récompense principalement en tickets.", cout:"—", lieu:"Quêtes, sticker stack" },
+  { nom:"Plastic Planter", categorie:"Planteurs", desc:"Planteur en plastique : bon compromis temps / récompense.", cout:"—", lieu:"Quêtes, boutiques" },
+  { nom:"Candy Planter", categorie:"Planteurs", desc:"Planteur bonbon : orienté gumdrops et goo.", cout:"—", lieu:"Gummy Bear, fabrication" },
+  { nom:"Blue Clay Planter", categorie:"Planteurs", desc:"Planteur d'argile bleue : boosté sur les champs bleus.", cout:"Fabrication", lieu:"Blender" },
+  { nom:"Red Clay Planter", categorie:"Planteurs", desc:"Planteur d'argile rouge : boosté sur les champs rouges.", cout:"Fabrication", lieu:"Blender" },
+  { nom:"Tacky Planter", categorie:"Planteurs", desc:"Planteur collant : très bon rendement en cires et beequips.", cout:"Fabrication", lieu:"Blender" },
+  { nom:"Pesticide Planter", categorie:"Planteurs", desc:"Planteur pesticide : élimine les mobs et donne des matériaux.", cout:"Fabrication", lieu:"Blender" },
+  { nom:"Petal Planter", categorie:"Planteurs", desc:"Planteur pétale : orienté Petal Shop et objets lunaires.", cout:"Fabrication", lieu:"Blender" },
+  { nom:"Coconut Canister", categorie:"Planteurs", desc:"Planteur noix de coco : long, mais très rentable en fin de jeu.", cout:"Fabrication", lieu:"Blender" },
+
+  /* ===== PASSES & DIVERS ===== */
+  { nom:"Ant Pass", categorie:"Divers", desc:"Passe fourmi : donne accès à l'Ant Challenge dans le Ant Field.", cout:"—", lieu:"Quêtes, planteurs, mobs" },
+  { nom:"Robo Pass", categorie:"Divers", desc:"Passe robot : lance le Robo Bear Challenge.", cout:"—", lieu:"Robo Pass Dispenser, quêtes" },
+  { nom:"Box-O-Frogs", categorie:"Divers", desc:"Boîte de grenouilles : invoque des grenouilles qui produisent des tokens.", cout:"—", lieu:"Quêtes, sticker stack" },
+  { nom:"Balloon", categorie:"Divers", desc:"Ballon : fait pleuvoir des tokens sur un champ pendant un moment.", cout:"—", lieu:"Quêtes, cadeaux" },
+  { nom:"Black Balloon", categorie:"Divers", desc:"Ballon noir : version plus puissante du ballon classique.", cout:"—", lieu:"Quêtes avancées, sticker stack" },
+  { nom:"Honeysuckle", categorie:"Divers", desc:"Chèvrefeuille : attire des tokens sur un champ.", cout:"—", lieu:"Quêtes, sticker stack" },
+  { nom:"Coconut", categorie:"Divers", desc:"Noix de coco : ingrédient et friandise du Coconut Field.", cout:"—", lieu:"Coconut Field, Coconut Crab" },
+  { nom:"Drives", categorie:"Divers", desc:"Disques du Robo Bear : ingrédients de fabrication mécaniques.", cout:"—", lieu:"Robo Bear Challenge" },
+  { nom:"7-Pronged Cog", categorie:"Divers", desc:"Engrenage à 7 dents : ingrédient rare du Robo Bear Challenge.", cout:"—", lieu:"Golden Cogmower" },
+  { nom:"Sprout", categorie:"Divers", desc:"Pousse magique : produit du pollen et des tokens pendant plusieurs minutes sur un champ.", cout:"—", lieu:"Magic Bean, quêtes" },
 ];
-const ITEMS_CATS = ["Tous","Œufs","Jelly","Outils","Monnaie"];
+const ITEMS_CATS = ["Tous","Outils","Œufs","Gelées & Treats","Fabrication","Monnaie","Accessoires","Planteurs","Divers"];
+
 
 /* ---------- DONNÉES · STICKERS (valeurs en signs) ---------- */
 /* categorie = onglet de filtre. valeur = en signs. img auto depuis images/stickers/<nom>.png */
@@ -1041,60 +1309,455 @@ const STICKERS = [
 ];
 const STICKERS_CATS = ["Tous","Cub Skins","Hive Skins","Vouchers","Bees","Bears","Mobs","Art","Gems","Nectar Icons","Flowers","Mushrooms","Leaves","Tools","Stamps","Beesmas","Miscellaneous","Star Signs"];
 
-/* ---------- DONNÉES · AMULETTES ---------- */
-const AMULETTES = [
-  { nom:"Amulette de base",   rarete:"Commun",     desc:"Première amulette, bonus légers pendant un temps limité.", effet:"Bonus mineurs temporaires" },
-  { nom:"Amulette étoilée",   rarete:"Épique",     desc:"Bonus permanents plus forts, fabriquée avec des ingrédients.", effet:"Bonus permanents moyens" },
-  { nom:"Amulette lunaire",   rarete:"Légendaire", desc:"Améliore le bond gagné via les treats, entre autres.", effet:"+10 % bond depuis les treats" },
+/* ---------- DONNÉES · DÉTAIL DES STICKERS ---------- */
+/* Format : [ nom (wiki), description (traduite), Stack Boost, Stack Reward ]
+   Le Stack Boost est le bonus permanent obtenu en déposant le sticker dans le Sticker Stack.
+   Source : wiki Bee Swarm Simulator (Sticker). */
+const STICKER_INFO = [
+["Brown Cub Skin","Un ourson un peu joufflu qui a goûté à la Royal Jelly.","+1% Pollen","10 Tickets"],
+["Robo Cub Skin","Il manquait quelques Drives à la construction de ce Robo Bear.","+1% Duped Ability Pollen","10 Tickets"],
+["Stick Cub Skin","Une nymphe de phasme qui a évolué pour se camoufler en ours.","+1% Bee Attack","10 Tickets"],
+["Star Cub Skin","Un ourson cosmique venu d'une autre galaxie.","+1% Gifted Bee Pollen","10 Tickets"],
+["Noob Cub Skin","Ce petit noob ne sait pas du tout tenir une boutique.","+10 000 Capacité","10 Tickets"],
+["Bee Cub Skin","Un jeune ours polaire en pleine crise d'identité.","+10 000 Capacité","10 Tickets"],
+["Gingerbread Cub Skin","Un ourson en biscuit, ramené à la vie par la magie de Honeyday.","+10 000 Capacité","10 Tickets"],
+["Snow Cub Skin","Taillé dans la boule de neige d'un Snowbear niveau 20.","+10 000 Capacité","10 Tickets"],
+["Peppermint Robo Cub Skin","Un ourson mécanique fait d'engrenages et de sucres d'orge.","+10 000 Capacité","10 Tickets"],
+["Doodle Cub Skin","Découpé dans du carton et gribouillé aux crayons magiques.","+10 000 Capacité","10 Tickets"],
+["Gloomy Cub Skin","Son pessimisme s'est matérialisé en nuage permanent.","+10 000 Capacité","10 Tickets"],
+["Basic Red Hive Skin","Une version recolorée de la ruche de tous les jours.","+1% Honey At Hive","5 Tickets"],
+["Basic Blue Hive Skin","Une version recolorée de la ruche de tous les jours.","+1% Honey At Hive","5 Tickets"],
+["Basic Pink Hive Skin","Une version recolorée de la ruche de tous les jours.","+1% Honey At Hive","5 Tickets"],
+["Basic Green Hive Skin","Une version recolorée de la ruche de tous les jours.","+1% Honey At Hive","5 Tickets"],
+["Basic White Hive Skin","Une version recolorée de la ruche de tous les jours.","+1% Honey At Hive","5 Tickets"],
+["Basic Black Hive Skin","Une version recolorée de la ruche de tous les jours.","+1% Honey At Hive","5 Tickets"],
+["Wavy Yellow Hive Skin","Une ruche aux bords ondulés.","+1% Honey At Hive","5 Tickets"],
+["Wavy Cyan Hive Skin","Une ruche aux bords ondulés.","+1% Honey At Hive","5 Tickets"],
+["Wavy Purple Hive Skin","Une ruche aux bords ondulés.","+1% Honey At Hive","5 Tickets"],
+["Wavy Festive Hive Skin","Bords ondulés aux couleurs de la Festive Bee.","+1% Honey At Hive","5 Tickets"],
+["Wavy Doodle Hive Skin","Une ruche ondulée entièrement gribouillée au crayon.","+10 000 Capacité","5 Tickets"],
+["Icy Crowned Hive Skin","Une ruche couronnée de pics de glace ascendants.","+10 000 Capacité","5 Tickets"],
+["Bear Bee Voucher","Échangeable contre un œuf de Bear Bee (une fois par compte).","+0.5% Pollen","10 Tickets"],
+["Cub Buddy Voucher","Échangeable contre un Cub Buddy, si tu n'en as pas déjà un.","+2% Honey From Tokens","3 Micro-Converters"],
+["x2 Bee Gather Voucher","À utiliser pour activer x2 Bee Gather (une fois par compte).","+2 Bee Gather Pollen","1 Glue"],
+["x2 Convert Speed Voucher","À utiliser pour activer x2 Convert Speed (une fois par compte).","+10 Convert Rate","1 Enzymes"],
+["Flying Rad Bee","Même le soleil ne l'empêche pas de voler.","+2% Red Pollen","1 Red Extract"],
+["Flying Ninja Bee","Vision rare : la Ninja Bee reste dans l'ombre.","+0.25% Bee Movespeed","1 Blue Extract"],
+["Flying Brave Bee","La dernière chose que voient les monstres.","+2 Rare Bee Attack","3 Stingers"],
+["Flying Photon Bee","Elle fait ce qu'elle fait de mieux.","+5% Instant Event Bee Conversion","1 Oil"],
+["Drooping Stubborn Bee","On l'a forcée à aller là où elle ne voulait pas.","+1% Ability Token Lifespan","1 Oil"],
+["Wobbly Looker Bee","Elle a regardé d'un peu trop près.","+1% Critical Power","3 Neonberries"],
+["Blob Bumble Bee","Ce petit gars devient un peu trop mou.","+5% Blue Bomb Pollen","1 Blue Extract"],
+["Round Rascal Bee","Conçue pour rouler de rire.","+5% Red Bomb Pollen","1 Red Extract"],
+["Round Basic Bee","Une rondeur anormale.","x3 Common Bee Pollen","1 Basic Egg"],
+["Diamond Diamond Bee","Elle a pris son nom un peu trop au sérieux.","+5% Mutated Bee Convert Rate","10 Tickets"],
+["4-Pronged Vector Bee","Quand le Mythic Egg se trompe dans ses calculs.","+1% Mark Ability Pollen","10 Tickets"],
+["Shocked Hive Slot","C'est totalement réel. L'abeille est niveau 1.","+1% White Pollen","50 Pineapples"],
+["Bear Bee Offer","Offre à durée limitée ! (la durée de ta vie).","+2% Event Bee Pollen","10 Tickets"],
+["Tabby Scratch","Démonstration de férocité féline.","+10% Scratch Pollen","10 Tickets"],
+["Tabby From Behind","La première chose que tu vois au réveil.","+1% Critical Power","10 Tickets"],
+["Fuzz Bomb","Ça a l'air pointu et piquant, mais c'est une illusion.","+5% Buzz Bomb Pollen","1 Oil"],
+["Precise Eye","Un regard extrêmement jugeant.","+1% Super Crit Power","1 Hard Wax"],
+["Chef Hat Polar Bear","La toque de chef remonte au XVIe siècle.","+5% Instant Colorless Bee Conversion","10 Tickets"],
+["Honey Bee Bear","Son allure est aussi grande que son appétit.","+2% Honey From Tokens","1 Enzymes"],
+["Bomber Bee Bear","Le héros Bakudan Kuma.","+5% Buzz Bomb Pollen","1 Loaded Dice"],
+["Uplooking Bear","Il lève les yeux au ciel, ou il a la tête dans les nuages ?","+1% Critical Power","5 Tickets"],
+["Sitting Green Shirt Bear","Rien d'intéressant chez cet ours, à part son t-shirt.","+10 000 Capacité","5 Tickets"],
+["Shy Brown Bear","Il ne supporte pas la foule.","+0.25% Bee Ability Pollen","5 Royal Jellies"],
+["Sitting Mother Bear","Elle a bien besoin d'une pause après tout ce maternage.","+0.5% Gifted Bee Pollen","10 Tickets"],
+["Squashed Head Bear","Une Mythic Meteor lui est tombée dessus. Plus jamais comme avant.","+1% Super Critical Power","25 Bitterberries"],
+["Stretched Head Bear","Une Windy Bee a failli lui arracher la tête. Plus jamais comme avant.","+1% Super Crit Power","25 Bitterberries"],
+["Panicked Science Bear","Il y a eu une erreur de calcul.","+5% Mutated Bee Convert Rate","1 Enzymes"],
+["Dapper From Above","Ce que voient la plupart des gens en lui parlant.","+0.5% Pollen","1 Ticket Planter"],
+["Sideways Spirit Bear","Elle dort, promis.","+10% Instant Tool Conversion","1 Glitter"],
+["Glowering Gummy Bear","Il dégage une aura de pure volonté de conquête.","+1% Honey Per Goo","1 Glue"],
+["Stranded Sun Bear","Pas d'essence, pas de réseau, pas d'équipe de secours…","+10 000 Capacité","10 Jelly Beans"],
+["Menacing Mantis","Elle prie pour ta perte.","+5% Pineapple Patch Pollen","1 Blue Extract"],
+["Little Scorpion","On dirait un peu un homard.","+5% Rose Field Pollen","1 Red Extract"],
+["Left Facing Ant","Le fléau des pique-niques.","+1 Legendary Bee Attack","1 Ant Pass"],
+["Walking Stick Nymph","Elle vient de naître et elle vient déjà pour toi.","+1% Bee Attack","3 Stingers"],
+["Forward Facing Spider","Pas assez de pattes pour être techniquement une araignée.","+10% Spider Field Capacity","1 Enzymes"],
+["Forward Facing Aphid","Un minuscule insecte suceur de sève qui te fixe.","+1% Bee Attack","1 Magic Bean"],
+["Right Facing Stump Snail","Il tourne dans le sens des aiguilles d'une montre, pour toujours.","+5% Stump Field Pollen","1 Glue"],
+["Standing Bean Bug","Il en a fini de sauter.","+2% Pollen From Tools","5 Jelly Beans"],
+["Small Blue Chick","Il a éclos, et pourtant c'est encore un œuf.","+2% Blue Pollen","1 Blue Extract"],
+["Tadpole","Un étrange Tadpole Bee sans ailes.","+3% Bubble Pollen","1 Blue Extract"],
+["Happy Fish","Quand tu lui souris, il te sourit.","+3% Bubble Pollen","3 Tickets"],
+["Coiled Snake","On ne marche pas là-dessus.","+1 Epic Bee Attack","3 Stingers"],
+["Standing Caterpillar","Elle se tortille pour réussir dans la vie.","+10% Rare Bee Pollen","1 Enzymes"],
+["Round Green Critter","Une petite créature qui vit sur les Sprouts.","+2% Bee Gathering Pollen","1 Magic Bean"],
+["Flying Magenta Critter","Une petite créature qui vit sur les Sprouts.","+2% Bee Gathering Pollen","1 Magic Bean"],
+["Blue Triangle Critter","Une petite créature qui vit sur les Sprouts.","+2% Bee Gathering Pollen","1 Magic Bean"],
+["Purple Pointed Critter","Une petite créature qui vit sur les Sprouts.","+2% Bee Gathering Pollen","1 Magic Bean"],
+["Orange Leg Critter","Une petite créature qui vit sur les Sprouts.","+2% Bee Gathering Pollen","1 Magic Bean"],
+["Green Plus Sign","Peut signifier une addition, ou une pharmacie.","+10 000 Capacité","3 Tickets"],
+["Green Check Mark","Le sceau d'approbation standard.","+10 000 Capacité","3 Tickets"],
+["Red X","Exprime le dédain ou l'envie de supprimer.","+10% Convert Rate","1 Red Extract"],
+["Alert Icon","Te prévient qu'il se passe quelque chose.","+5% Red Bomb Pollen","3 Micro-Converters"],
+["Yellow Right Arrow","Un indicateur de direction.","+5% Instant Bee Gather Conversion","3 Tickets"],
+["Yellow Left Arrow","Un indicateur de direction.","+5% Instant Bee Gather Conversion","3 Tickets"],
+["Simple Sun","Il fait vivre presque toute la vie sur Terre.","+10% Convert Rate","5 Tickets"],
+["Pink Cupcake","Il y a de la confiture de fraise à l'intérieur.","+0.5% Honey Per Goo","50 Strawberries"],
+["Rubber Duck","Il couine au lieu de cancaner.","+10% Rare Bee Pollen","3 Tickets"],
+["Baseball Swing","Envoie-la hors du stade.","+2% Pollen From Tools","5 Jelly Beans"],
+["Yellow Coffee Mug","Le meilleur moment du réveil.","+10% Convert Rate","1 Oil"],
+["Launching Rocket","Le ciel n'est pas la limite.","+15 000 Capacité","10 Whirligigs"],
+["Thumbs Up Hand","Bien joué !","+10 000 Capacité","5 Tickets"],
+["Peace Sign Hand","Peut aussi vouloir dire Victoire.","+10% Convert Rate","5 Tickets"],
+["Traffic Light","Il envoie des messages contradictoires.","+10 000 Capacité","3 Neonberries"],
+["Window","Transforme ta ruche en vraie maison.","+1% Honey At Hive","3 Soft Waxes"],
+["Simple Skyscraper","Habitat à haute densité.","+1% Honey At Hive","3 Micro-Converters"],
+["Simple Mountain","Elle domine tout simplement le paysage.","+19% Mountain Top Field Capacity (affiché 10% en jeu)","10 Whirligigs"],
+["Pale Heart","Un soupçon discret d'amour.","+2% Bee Gathering Pollen","50 Strawberries"],
+["Colorful Buttons","Ressemble à une disposition de manette célèbre.","+10% Convert Rate","5 Jelly Beans"],
+["Giraffe","Son cou est long pour voir par-dessus les chevaux devant elle.","+10% Convert Rate","5 Tickets"],
+["Silly Tongue","Un geste irrévérencieux.","+2% Honey From Tokens","25 Gumdrops"],
+["White Flag","Fais savoir au monde que tu abandonnes.","+2% White Pollen","1 Oil"],
+["Pyramid","Ce tombeau traverse les âges.","+19% Cactus Field Capacity (affiché 10% en jeu)","5 Tickets"],
+["Tiny House","Impose un mode de vie minimaliste.","+10% Convert Rate At Hive","50 Sunflower Seeds"],
+["TNT","Trinitrotoluène.","+2% Bomb Pollen","3 Soft Waxes"],
+["Wishbone","Casse-le pour 50 % de chance d'avoir de la chance.","+1% Critical Power","5 Field Dice"],
+["Yellow Umbrella","Fabrique ton propre soleil un jour de pluie.","+10% Instant Rare Bee Conversion","1 Cloud Vial"],
+["Red Palm Hand","Ça veut dire qu'il est temps d'arrêter.","+2% Red Field Capacity","1 Hard Wax"],
+["Yellow Sticky Hand","Permet d'attraper des choses de loin, deux ou trois fois.","+0.5 Honey Per Goo","1 Glue"],
+["Yellow Walking Wiggly Person","Il se balade sans le moindre souci.","+5% Movement Collection Pollen","25 Gumdrops"],
+["Green SELL","Parfait pour monter ta propre boutique de stickers.","+10% Convert Rate At Hive","5 Tickets"],
+["Yellow Hi","Salutation en anglais.","+10% Convert Rate","1 Enzymes"],
+["AFK","Away From Keyboard.","+10% Convert Rate At Hive","1 Red Extract"],
+["Auryn","Un cycle épuisant et sans fin, automatisé.","+3% Capacité","1 Swirled Wax"],
+["Pink Chair","Vibrante et fonctionnelle.","+0.25% Bee Ability Pollen","10 Tickets"],
+["Doodle S","Une forme géométrique que seuls les gens cool savent dessiner.","+10 000 Capacité","5 Tickets"],
+["Triple Exclamation","Quand un seul point ne suffit pas.","+1% Critical Power","1 Loaded Dice"],
+["Eighth Note","Une croche, en solfège.","+1% Critical Power","5 Tickets"],
+["Eviction","Donné aux abeilles quand leur heure est venue.","+20 000 Capacité","1 Hard Wax"],
+["Fork And Knife","Le duo incontournable du repas.","+2% White Field Capacity","500 Treats"],
+["Shining Halo","Accordé aux êtres divins.","+0.5% Pollen","1 Glitter"],
+["Rhubarb","Idéale pour les tartes et les crumbles.","+2% Bee Gathering Pollen","50 Pineapples"],
+["Sprout","Toutes les pousses ne deviennent pas géantes.","+1% Capacité","1 Magic Bean"],
+["Palm Tree","Ses palmes peuvent peser plus de 45 kg.","+19% Coconut Field Capacity (affiché 10% en jeu)","10 Coconuts"],
+["Jack-O-Lantern","Une citrouille sculptée pour un Honeyday rarement évoqué.","+19% Pumpkin Patch Capacity (affiché 10% en jeu)","3 Soft Waxes"],
+["Lightning","Un éclair venu des cieux.","+1% Tool Swing Speed","3 Micro-Converters"],
+["Simple Cloud","Il fait de son mieux pour baisser l'indice UV.","+1% White Pollen","1 Cloud Vial"],
+["Grey Raining Cloud","Un orage se prépare.","+2% Blue Pollen","3 Cloud Vials"],
+["Tornado","Une force destructrice de la nature.","+10% Tornado Pollen","3 Cloud Vials"],
+["Small Flame","Réchauffe ta ruche.","+3% Flame Pollen","1 Red Extract"],
+["Dark Flame","Quelqu'un brûle de la crème de tartre.","+3% Flame Pollen","5 Stingers"],
+["Small Shield","Pourrait dévier un caillou ou deux.","+0.5% Dodge Chance","1 Hard Wax"],
+["Robot Head","Bip et boup.","+1% Duped Ability Pollen","1 Robo Pass"],
+["Cyan Hilted Sword","Défends ta ruche avec style.","+2% Bee Attack","10 Stingers"],
+["Cool Backpack","Porté par les gens autonomes.","+1% Capacité","1 Blue Extract"],
+["Standing Beekeeper","Il reste planté là alors qu'il devrait faire du miel.","+2% White Pollen","1 Oil"],
+["Red Wailing Cry","L'agonie à l'état pur.","+2% Instant Red Bee Conversion","3 Stingers"],
+["Hourglass","Une méthode de mesure du temps à peu près fiable.","+20 000 Capacité","5 Tickets"],
+["Atom Symbol","Des électrons en orbite autour d'un noyau.","+5% Instant Bomb Conversion","5 Neonberries"],
+["Barcode","Une méthode omniprésente de représenter des données.","+10% Convert Rate","3 Soft Waxes"],
+["Wall Crack","Il y a peut-être un souci avec tes fondations.","+10% Colorless Bee Convert Rate","10 Tickets"],
+["Green Circle","Pour les skieurs débutants.","+1% Critical Power","3 Tickets"],
+["Blue Square","Pour les skieurs intermédiaires.","+2% Critical Power","5 Tickets"],
+["Black Diamond","Pas pour les skieurs débutants.","+3% Critical Power","1 Caustic Wax"],
+["Waxing Crescent Moon","L'acolyte de la Terre.","+1% Capacité","10 Moon Charms"],
+["Glowing Smile","Un petit heureux hasard.","+2% Capacité","1 Glitter"],
+["Saturn","La sixième planète de notre système solaire.","+1% Mark Ability Pollen","5 Tickets"],
+["Black Star","Venue d'un village de Norvège.","+3% Bomb Pollen","1 Black Balloon"],
+["Cyan Star","Scintillement turquoise.","+3% Instant Gifted Bee Conversion","10 Tickets"],
+["Shining Star","Elle perd lentement de la masse.","+0.5% Gifted Bee Pollen","10 Tickets"],
+["Grey Diamond Logo","Carburant à l'ingéniosité. Ou quelque chose comme ça.","+2% Event Bee Pollen","3 Micro-Converters"],
+["Orphan Dog","Ce golden retriever cherche un foyer.","+2% Bee Gathering Pollen","3 Tickets"],
+["Pizza Delivery Man","Il enchaîne les missions dans cette économie de petits boulots.","+10% Red Bee Convert Rate","3 Tickets"],
+["Interrobang Block","Ce qu'il y a dedans va t'exciter et te perdre à la fois.","+1% Critical Power","3 Tickets"],
+["Theatrical Intruder","Il fait une entrée dramatique et pas franchement désirée.","+1% Bee Attack","3 Tickets"],
+["Desperate Booth","Tout le monde a besoin d'un coup de main de temps en temps.","+2% Honey From Tokens","3 Tickets"],
+["Built Ship","Parfaitement construit pour la chasse au trésor.","+2% Blue Field Capacity","3 Tickets"],
+["Grey Shape Companion","Cette drôle de créature se nourrit exclusivement de pièces.","+2% Honey From Tokens","3 Tickets"],
+["Evil Pig","Un dessin animé inoffensif qui a mal tourné.","+1 Epic Bee Attack","3 Tickets"],
+["Waving Townsperson","Il t'accueille dans le top des jeux Roblox.","+10% Blue Bee Convert Rate","3 Tickets"],
+["Cop And Robber","Le criminel a bidouillé un smartphone pour installer des apps.","+0.5 Blue Bee Attack","3 Tickets"],
+["Tough Potato","Une armée à elle seule, en version tubercule.","+1% Bee Attack","3 Stingers"],
+["Young Elf","Il gagnera des polygones en vieillissant.","+2% Ungifted Bee Pollen","5 Paper Planters"],
+["Shrugging Heart","Il ne sait pas ce qu'il aime.","+2% Red Pollen","1 Red Extract"],
+["Classic Killroy","Le proto-mème fouineur.","+1% White Pollen","5 Tickets"],
+["Killroy With Hair","Une variante du proto-mème.","+10% Convert Rate","5 Tickets"],
+["Taunting Doodle Person","Le roi contesté du groove.","+1% Critical Power","1 Enzymes"],
+["Prehistoric Hand","L'empreinte de quelqu'un qui n'a jamais pu jouer à ROBLOX.","+20% Convert Rate","1 Hard Wax"],
+["Prehistoric Boar","Le dessin d'un cochon certifié sans OGM.","+2% Capacité","1 Hard Wax"],
+["Red Doodle Person","Il apparaît spontanément dans le métro.","+2% Red Field Capacity","1 Red Extract"],
+["Pearl Girl","Étude d'un tableau d'un maître hollandais de l'époque baroque.","+2% White Field Capacity","1 Swirled Wax"],
+["Abstract Color Painting","Les rectangles colorés semblent se fondre les uns dans les autres.","+20 000 Capacité","1 Purple Potion"],
+["Prism Painting","Toutes les couleurs visibles existent dans la lumière blanche.","+5% Legendary Bee Pollen","10 Tickets"],
+["Banana Painting","Peint un dimanche matin.","+5% Legendary Bee Pollen","10 Tickets"],
+["Moai","Un des célèbres monolithes insulaires.","+2% Capacité","10 Tickets"],
+["Nessie","La bête solitaire du Loch Ness.","+2% Event Bee Pollen","10 Tickets"],
+["Ionic Column Top","Certainement pas dorique.","+20 000 Capacité","1 Hard Wax"],
+["Ionic Column Middle","Juste un segment de fût de colonne.","+20 000 Capacité","1 Hard Wax"],
+["Ionic Column Base","Une fondation solide.","+20 000 Capacité","1 Hard Wax"],
+["Orange Step Array","Une structure venue d'un autre monde.","+5 Convert Amount","1 Enzymes"],
+["Orange Green Tri Deco","Classe et anguleux.","+5 Convert Amount","1 Enzymes"],
+["Orange Swirled Marble","Une petite bille de verre striée d'orange et de rouge.","+3% Flame Pollen","3 Smooth Dice"],
+["Blue And Green Marble","Une bille qui ressemble un peu à la Terre.","+2% Blue Pollen","3 Smooth Dice"],
+["Yellow Swirled Marble","Une petite bille traversée d'une strie jaune.","+0.5% Honey Per Pollen","3 Smooth Dice"],
+["Diamond Cluster","Pare ta ruche de diamants.","+15% Convert Rate","10 Tickets"],
+["Diamond Trim","Pour les ruches débordant de richesse.","+0.5% Honey Per Pollen","10 Tickets"],
+["Cyan Decorative Border","Un M stylé. Parfait en bordure.","+0.5% Honey Per Pollen","10 Tickets"],
+["Left Gold Swirl Fleuron","Une fioriture réservée aux plus grands.","+0.5% Honey Per Pollen","10 Tickets"],
+["Right Gold Swirl Fleuron","Une fioriture réservée aux plus grands.","+0.5% Honey Per Pollen","10 Tickets"],
+["Left Shining Diamond Fleuron","Une fioriture pompeuse.","+0.5% Honey Per Pollen","10 Tickets"],
+["Right Shining Diamond Fleuron","Une fioriture pompeuse.","+0.5% Honey Per Pollen","10 Tickets"],
+["Left Mythic Gem Fleuron","Une pièce maîtresse incroyable.","+0.5% Honey Per Pollen","10 Tickets"],
+["Right Mythic Gem Fleuron","Une pièce maîtresse incroyable.","+0.5% Honey Per Pollen","10 Tickets"],
+["Purple Fleuron","Une fioriture décorative éclatante.","+1% Super Crit Power","1 Purple Potion"],
+["Royal Symbol","Pour quand les mots ne suffisent pas.","+1% Super Crit Power","1 Purple Potion"],
+["Royal Bear","D'avant que la démocratie ne révolutionne la montagne.","+1% Super Crit Power","1 Purple Potion"],
+["Mythic M","Le M veut dire « Most useful bee ».","+1% Mythic Bee Pollen","10 Tickets"],
+["Satisfying Nectar Icon","Du sucré qui fait exactement l'effet voulu.","+2% White Pollen","1 Satisfying Vial"],
+["Refreshing Nectar Icon","Le remède contre la soif.","+1% Unique Instant Conversion","1 Refreshing Vial"],
+["Motivating Nectar Icon","Un sirop psychoactif qui donne envie de travailler.","+0.25% Bee Ability Rate","1 Motivating Vial"],
+["Invigorating Nectar Icon","Un sirop épicé qui fait circuler le sang.","+2% Red Pollen","1 Invigorating Vial"],
+["Comforting Nectar Icon","Le sirop qui apaise.","+2% Blue Pollen","1 Comforting Vial"],
+["Small Tickseed","Bien plus jolie que son nom ne le laisse croire.","+5% Sunflower Field Pollen","10 Honeysuckles"],
+["Small White Daisy","Une vivace toute simple.","+1% White Pollen","10 Honeysuckles"],
+["Small Pink Tulip","Ses bulbes peuvent valoir très cher.","+5% Mushroom Field Pollen","10 Honeysuckles"],
+["Small Dandelion","Nom scientifique : Taraxacum.","+5% Dandelion Field Pollen","10 Honeysuckles"],
+["Purple 4-Point Flower","Une fleur indigo, haute et anguleuse.","+1% Super Crit Power","10 Tickets"],
+["Spore Covered Puffshroom","Le champignon préféré de Dapper Bear.","+2% Pollen From Tools","3 Soft Waxes"],
+["White Button Mushroom","Souvent tranché dans les salades.","+25% Common Bee Pollen","3 Soft Waxes"],
+["Fly Agaric Mushroom","L'iconique champignon à chapeau rouge.","+10% Rare Bee Pollen","3 Soft Waxes"],
+["Porcini Mushroom","Épais, court et trapu.","+5% Epic Bee Pollen","3 Soft Waxes"],
+["Oiler Mushroom","Pousse sur les souches et la mousse.","+5% Epic Bee Pollen","3 Soft Waxes"],
+["Morel Mushroom","Délicieuse, mais elle peut déclencher la trypophobie.","+10% Rare Bee Pollen","3 Soft Waxes"],
+["Chanterelle Mushroom","Un délice en forme de trompette.","+5% Epic Bee Pollen","3 Soft Waxes"],
+["Shiitake Mushroom","Une source d'umami incontournable en cuisine végane.","+1% Event Bee Pollen","1 Hard Wax"],
+["Black Truffle Mushroom","Un goût riche et terreux qui écrase tout le reste.","+5% Legendary Bee Pollen","1 Hard Wax"],
+["Prismatic Mushroom","Il peut nous montrer des couleurs jamais vues.","+1% Mythic Bee Pollen","1 Caustic Wax"],
+["Blowing Leaf","La réponse, mon ami…","+1% White Pollen","3 Cloud Vials"],
+["Cordate Leaf","Feuille en forme de cœur, la lettre d'amour de la nature.","+1% Capacité","5 Tickets"],
+["Cunate Leaf","Une feuille effilée comme un coucher de soleil.","+1% Capacité","5 Tickets"],
+["Elliptic Leaf","Élégance ovale dans chaque murmure vert.","+1% Capacité","5 Tickets"],
+["Hastate Leaf","Feuille en fer de lance, le chevalier de la nature.","+1% Capacité","5 Tickets"],
+["Lanceolate Leaf","Longue et fine comme une lance verte.","+1% Capacité","5 Tickets"],
+["Lyrate Leaf","Des courbes musicales dans une feuille en forme de lyre.","+1% Capacité","5 Tickets"],
+["Oblique Leaf","L'asymétrie à son sommet, joliment inclinée.","+1% Capacité","5 Tickets"],
+["Rhomboid Leaf","Un losange éblouissant aux teintes jaunes.","+1% Capacité","5 Tickets"],
+["Reniform Leaf","Feuille en forme de rein, l'organe sain de la nature.","+1% Capacité","5 Tickets"],
+["Spatulate Leaf","Feuille en cuillère, l'ustensile de cuisine de la nature.","+1% Capacité","5 Tickets"],
+["Scooper","Un outil venu de nos humbles débuts.","+2% Pollen From Tools","3 Tickets"],
+["Rake","Il gratte doucement le pollen sans abîmer les tiges.","+2% Pollen From Tools","3 Tickets"],
+["Clippers","On ne court pas avec ça.","+2% Pollen From Tools","3 Tickets"],
+["Magnet","Électromagnétisme exagéré.","+2% Pollen From Tools","3 Tickets"],
+["Vacuum","Il n'est pas nul pour aspirer.","+2% Pollen From Tools","3 Tickets"],
+["Super-Scooper","La peinture bleue et jaune le rend plus aérodynamique.","+2% Pollen From Tools","3 Tickets"],
+["Pulsar","Possiblement radioactif.","+2% Pollen From Tools","3 Neonberries"],
+["Electro-Magnet","Deux aimants en un, pour deux fois plus de pollen.","+2% Pollen From Tools","3 Tickets"],
+["Scissors","Ça coupe et ça claque.","+2% Pollen From Tools","3 Tickets"],
+["Honey Dipper","L'outil prototype de la fabrication de miel.","+2% Pollen From Tools","3 Tickets"],
+["Bubble Wand","Pour couvrir les fleurs d'eau savonneuse.","+2% Pollen From Tools","1 Blue Extract"],
+["Scythe","Ça tranche et ça brûle.","+2% Pollen From Tools","1 Red Extract"],
+["Golden Rake","Un équipement de jardinage totalement superflu.","+2% Pollen From Tools","3 Tickets"],
+["Spark Staff","Zap zap zap.","+2% Pollen From Tools","3 Micro-Converters"],
+["Porcelain Dipper","L'outil de ceux qui sont encore en soi-disant early-mid game.","+2% Pollen From Tools","3 Soft Waxes"],
+["Petal Wand","Le parasol de Spirit Bear.","+2% Pollen From Tools","10 Moon Charms"],
+["Tide Popper","Le secouer crée des vagues.","+2% Pollen From Tools","1 Blue Extract"],
+["Dark Scythe","Pour moissonner les flammes.","+2% Pollen From Tools","1 Red Extract"],
+["Gummyballer","L'arme préférée des Gummy Soldiers.","+2% Pollen From Tools","25 Gumdrops"],
+["Capricorn Star Sign","Discipliné, ambitieux, prudent, superstitieux.","+2% Capacité","1 Glitter"],
+["Aquarius Star Sign","Innovant, détaché, excentrique, superstitieux.","+2% Capacité","1 Glitter"],
+["Pisces Star Sign","Rêveur, empathique, artiste, superstitieux.","+2% Capacité","1 Glitter"],
+["Aries Star Sign","Audacieux, énergique, confiant, superstitieux.","+2% Capacité","1 Glitter"],
+["Taurus Star Sign","Têtu, sensuel, loyal, superstitieux.","+2% Capacité","1 Glitter"],
+["Gemini Star Sign","Bavard, curieux, intelligent, superstitieux.","+2% Capacité","1 Glitter"],
+["Cancer Star Sign","Émotif, protecteur, lunatique, superstitieux.","+2% Capacité","1 Glitter"],
+["Leo Star Sign","Théâtral, extraverti, vaniteux, superstitieux.","+2% Capacité","1 Glitter"],
+["Virgo Star Sign","Analytique, méticuleux, pragmatique, superstitieux.","+2% Capacité","1 Glitter"],
+["Libra Star Sign","Diplomate, élégant, sociable, superstitieux.","+2% Capacité","1 Glitter"],
+["Scorpio Star Sign","Intense, secret, passionné, superstitieux.","+2% Capacité","1 Glitter"],
+["Sagittarius Star Sign","Aventurier, optimiste, direct, superstitieux.","+2% Capacité","1 Glitter"],
+["Sunflower Field Stamp","Envoyé sur les lettres du Sunflower Field.","+10% Sunflower Field Pollen","10 Tickets"],
+["Dandelion Field Stamp","Envoyé sur les lettres du Dandelion Field.","+10% Dandelion Field Pollen","10 Tickets"],
+["Mushroom Field Stamp","Envoyé sur les lettres du Mushroom Field.","+10% Mushroom Field Pollen","10 Tickets"],
+["Blue Flower Field Stamp","Envoyé sur les lettres du Blue Flower Field.","+10% Blue Flower Field Pollen","10 Tickets"],
+["Clover Field Stamp","Envoyé sur les lettres du Clover Field.","+10% Clover Field Pollen","10 Tickets"],
+["Strawberry Field Stamp","Envoyé sur les lettres du Strawberry Field.","+10% Strawberry Field Pollen","10 Tickets"],
+["Spider Field Stamp","Envoyé sur les lettres du Spider Field.","+10% Spider Field Pollen","10 Tickets"],
+["Bamboo Field Stamp","Envoyé sur les lettres du Bamboo Field.","+10% Bamboo Field Pollen","10 Tickets"],
+["Pineapple Patch Stamp","Envoyé sur les lettres du Pineapple Patch.","+10% Pineapple Patch Pollen","10 Tickets"],
+["Stump Field Stamp","Envoyé sur les lettres du Stump Field.","+10% Stump Field Pollen","10 Tickets"],
+["Cactus Field Stamp","Envoyé sur les lettres du Cactus Field.","+10% Cactus Field Pollen","10 Tickets"],
+["Pumpkin Patch Stamp","Envoyé sur les lettres du Pumpkin Patch.","+10% Pumpkin Patch Pollen","10 Tickets"],
+["Pine Tree Forest Stamp","Envoyé sur les lettres de la Pine Tree Forest.","+10% Pine Tree Forest Pollen","10 Tickets"],
+["Rose Field Stamp","Envoyé sur les lettres du Rose Field.","+10% Rose Field Pollen","10 Tickets"],
+["Hub Field Stamp","Envoyé sur les lettres du Hub Field.","+10% Hub Field Pollen","10 Tickets"],
+["Mountain Top Field Stamp","Envoyé sur les lettres du Mountain Top Field.","+10% Mountain Top Field Pollen","10 Tickets"],
+["Pepper Patch Stamp","Envoyé sur les lettres du Pepper Patch.","+10% Pepper Patch Pollen","10 Tickets"],
+["Coconut Field Stamp","Envoyé sur les lettres du Coconut Field.","+10% Coconut Field Pollen","10 Tickets"],
+["Ant Field Stamp","Envoyé sur les lettres du Ant Field.","+0.5% Bee Attack","10 Tickets"],
+["Green Beesmas Light","Une LED magique qui dégage l'aura de Beesmas.","+1% Critical Power","3 Neonberries"],
+["Blue Beesmas Light","Une LED magique qui dégage l'aura de Beesmas.","+2% Blue Pollen","3 Neonberries"],
+["Red Beesmas Light","Une LED magique qui dégage l'aura de Beesmas.","+2% Red Pollen","3 Neonberries"],
+["Yellow Beesmas Light","Une LED magique qui dégage l'aura de Beesmas.","+10% Convert Rate","3 Neonberries"],
+["Critter In A Stocking","Il te pique tes friandises.","+2% Bee Gathering Pollen","1 Magic Bean"],
+["Flying Festive Bee","En route pour distribuer les cadeaux !","+10% Red Bee Convert Rate","1 Red Extract"],
+["Flying Bee Bear","Il vole à plus de 40 000 km/h.","+1% Event Bee Pollen","10 Tickets"],
+["Party Robo Bear","Fêtons notre date de fabrication !","+1% Duped Ability Pollen","1 Robo Pass"],
+["Festive Pufferfish","On l'appelle le vieux Saint Puff.","+2% Bomb Pollen","10 Tickets"],
+["Festive Pea","Le VIP discret de l'arsenal de Honeyday.","+1% Gifted Bee Attack","1 Magic Bean"],
+["BBM From Below","Regarde dans cet abîme, et… il te regardera aussi…","x1.01 Pollen","1 Box-O-Frogs"],
+["Play Button","Pour ta fidélité de spectateur.","+10 000 Capacité","10 Tickets"],
+["Gamer Chat Icon","Pour ta contribution positive aux discussions BSS.","+10 000 Capacité","10 Tickets"],
 ];
-const AMULETTES_CATS = ["Tous","Commun","Rare","Épique","Légendaire","Mythique"];
+
+/* Alias : nom utilisé sur le site  ->  nom exact du wiki */
+const STICKER_ALIAS = {
+  "peppermintcub":"peppermintrobocub",
+  "goldhive":"yellowhive",
+  "cubvoucher":"cubbuddyvoucher",
+  "sunbear":"strandedsun",
+  "jack0lantern":"jackolantern",
+};
+
+/* Normalisation : minuscules, on retire la ponctuation et les mots "décoratifs" */
+const STICKER_STOP = {basic:1, wavy:1, skin:1, bee:1, bear:1, x2:1, the:1};
+function normSticker(n){
+  return String(n).toLowerCase().split(/[^a-z0-9]+/).filter(t=>t && !STICKER_STOP[t]).join('');
+}
+const STICKER_MAP = {};
+STICKER_INFO.forEach(([nom,desc,boost,reward])=>{
+  STICKER_MAP[normSticker(nom)] = { nomWiki:nom, desc, boost, reward };
+});
+function stickerDetails(nom){
+  let k = normSticker(nom);
+  if(STICKER_ALIAS[k]) k = STICKER_ALIAS[k];
+  return STICKER_MAP[k] || null;
+}
+/* On enrichit directement la liste STICKERS */
+STICKERS.forEach(s=>{
+  const d = stickerDetails(s.nom);
+  if(d){ s.desc = s.desc || d.desc; s.boost = d.boost; s.reward = d.reward; }
+});
+
+/* ---------- DONNÉES · AMULETTES ---------- */
+/* 7 types d'amulettes dans le jeu. On peut en porter UNE de chaque type en même temps.
+   Source : wiki Bee Swarm Simulator (Amulet). */
+const AMULETTES = [
+  {
+    nom:"King Beetle Amulet", categorie:"Boss", rarete:"Sans palier",
+    desc:"Une des toutes premières amulettes accessibles. 1 chance sur 7 de tomber en battant le King Beetle (la Loot Luck ne change rien).",
+    effet:"3 à 4 bonus — pollen, capacité, et un bonus d'attaque aléatoire",
+    lieu:"King Beetle Lair", paliers:"Aucun palier — la qualité monte avec le nombre de victoires consécutives (jusqu'à 100)"
+  },
+  {
+    nom:"Star Amulet", categorie:"Défi", rarete:"5 paliers",
+    desc:"L'amulette la plus puissante et la plus complexe du jeu. Elle s'achète avec du miel aux machines du Star Hall, au-dessus du Noob Shop. Il faut avoir découvert les types d'abeilles Gifted correspondants.",
+    effet:"Gros bonus de capacité par palier + capacités passives uniques (Star Saw, Pop Star, Gummy Star, Scorching Star, Star Shower)",
+    lieu:"Star Hall (au-dessus du Noob Shop)", paliers:"Bronze → Argent → Or → Diamant → Suprême"
+  },
+  {
+    nom:"Supreme Star Amulet", categorie:"Suprême", rarete:"Palier maximum",
+    desc:"Le sommet des Star Amulets. Seule amulette du jeu capable de porter deux capacités passives à la fois. Sa couleur change légèrement, comme toutes les amulettes suprêmes.",
+    effet:"Statistiques maximales + jusqu'à 2 passifs",
+    lieu:"Générateur Supreme Star Amulet, Star Hall", paliers:"Palier 5/5 des Star Amulets"
+  },
+  {
+    nom:"Ant Amulet", categorie:"Défi", rarete:"5 paliers",
+    desc:"L'amulette de base obtenue via l'Ant Challenge. Ton score au défi détermine la qualité de l'amulette générée : plus tu marques, meilleures sont les stats.",
+    effet:"Bonus variés (pollen, capacité, conversion, attaque) selon le palier et le score",
+    lieu:"Ant Challenge (Ant Field, nécessite un Ant Pass)", paliers:"Bronze → Argent → Or → Diamant → Suprême"
+  },
+  {
+    nom:"Moon Amulet", categorie:"Génération", rarete:"Sans palier",
+    desc:"Se crée en dépensant 100 Moon Charms au Moon Amulet Generator, entre le Spider Field et le Bamboo Field. Elle permet aussi de marcher sur les plateformes en forme de lune.",
+    effet:"Capacité +25 000 par génération, jusqu'à +250 000 · 3 à 5 bonus au total (Honey Per Pollen jusqu'à +8 %)",
+    lieu:"Moon Amulet Generator (parcours entre Spider Field et Bamboo Field)", paliers:"Aucun palier — 10 générations suffisent pour la capacité max, 25 pour le reste"
+  },
+  {
+    nom:"Shell Amulet", categorie:"Boss", rarete:"5 paliers",
+    desc:"Obtenue en battant le Stump Snail. C'est la seule amulette qui donne des bonus de goo, de conversion du goo et de défense.",
+    effet:"Bonus de goo, conversion du goo, défense",
+    lieu:"Stump Snail (Stump Field)", paliers:"Bronze → Argent → Or → Diamant → Suprême"
+  },
+  {
+    nom:"Stick Bug Amulet", categorie:"Défi", rarete:"4 paliers",
+    desc:"S'obtient en terminant le Stick Bug Challenge. Attention : même avec un Stick Bug de haut niveau, une contribution trop faible au score ne donne aucune amulette.",
+    effet:"Bonus variés selon le score obtenu au défi",
+    lieu:"Stick Bug Challenge", paliers:"Seule amulette sans palier Suprême"
+  },
+  {
+    nom:"Cog Amulet", categorie:"Défi", rarete:"5 paliers",
+    desc:"L'amulette mécanique du Robo Bear Challenge. Il faut un Robo Pass pour lancer le défi.",
+    effet:"Bonus orientés attaque, conversion et pollen des abilities dupliquées",
+    lieu:"Robo Bear Challenge (Robo Pass)", paliers:"Bronze → Argent → Or → Diamant → Suprême"
+  },
+];
+const AMULETTES_CATS = ["Tous","Boss","Défi","Génération","Suprême"];
+
+/* Explications générales affichées en haut de l'onglet Amulettes */
+const AMULETTES_INFO = [
+  { t:"Une de chaque type", d:"Tu peux porter les 7 types d'amulettes en même temps : King Beetle, Star, Ant, Moon, Shell, Stick Bug et Cog. Mais une seule de chaque type." },
+  { t:"Le remplacement est définitif", d:"Quand tu en récupères une nouvelle, un tableau compare l'ancienne et la nouvelle. « Keep Old » garde l'ancienne, « Replace » la remplace — et c'est irréversible. Les autres récompenses sont données quoi qu'il arrive." },
+  { t:"Qualité = performance", d:"Chaque amulette est générée avec une « qualité » qui dépend de ta performance (score au défi, victoires consécutives…). Une qualité élevée augmente fortement les chances d'avoir de bonnes stats, sans jamais garantir le résultat." },
+  { t:"Stats tirées au sort", d:"Les stats sont piochées par groupes, certains n'apparaissant qu'avec une certaine probabilité : c'est pourquoi deux amulettes du même type peuvent avoir un nombre de lignes différent." },
+];
+
 
 /* ---------- DONNÉES · BEEQUIP ---------- */
-/* categorie : "Non-Event" | "Beesmas". Ajoute effet:"..." et img:"lien" quand tu veux. */
+/* categorie : "Non-Event" | "Beesmas".
+   Les stats d'un beequip sont ALÉATOIRES : elles dépendent d'un potentiel de 0 à 5 ★
+   et se renforcent avec les cires. Les champs ci-dessous décrivent l'objet, pas ses stats.
+   Source : wiki Bee Swarm Simulator (Beequip). */
 const BEEQUIP = [
-  { nom:"Thimble", categorie:"Non-Event", img:"", effet:"" },
-  { nom:"Sweatband", categorie:"Non-Event", img:"", effet:"" },
-  { nom:"Bandage", categorie:"Non-Event", img:"", effet:"" },
-  { nom:"Thumbtack", categorie:"Non-Event", img:"", effet:"" },
-  { nom:"Camo Bandana", categorie:"Non-Event", img:"", effet:"" },
-  { nom:"Bottle Cap", categorie:"Non-Event", img:"", effet:"" },
-  { nom:"Kazoo", categorie:"Non-Event", img:"", effet:"" },
-  { nom:"Smiley Sticker", categorie:"Non-Event", img:"", effet:"" },
-  { nom:"Whistle", categorie:"Non-Event", img:"", effet:"" },
-  { nom:"Charm Bracelet", categorie:"Non-Event", img:"", effet:"" },
-  { nom:"Paperclip", categorie:"Non-Event", img:"", effet:"" },
-  { nom:"Beret", categorie:"Non-Event", img:"", effet:"" },
-  { nom:"Bang Snap", categorie:"Non-Event", img:"", effet:"" },
-  { nom:"Bead Lizard", categorie:"Non-Event", img:"", effet:"" },
-  { nom:"Pink Shades", categorie:"Non-Event", img:"", effet:"" },
-  { nom:"Lei", categorie:"Non-Event", img:"", effet:"" },
-  { nom:"Demon Talisman", categorie:"Non-Event", img:"", effet:"" },
-  { nom:"Camphor Lip Balm", categorie:"Non-Event", img:"", effet:"" },
-  { nom:"Autumn Sunhat", categorie:"Non-Event", img:"", effet:"" },
-  { nom:"Rose Headband", categorie:"Non-Event", img:"", effet:"" },
-  { nom:"Pink Eraser", categorie:"Non-Event", img:"", effet:"" },
-  { nom:"Candy Ring", categorie:"Non-Event", img:"", effet:"" },
-  { nom:"Elf Cap", categorie:"Beesmas", img:"", effet:"" },
-  { nom:"Single Mitten", categorie:"Beesmas", img:"", effet:"" },
-  { nom:"Warm Scarf", categorie:"Beesmas", img:"", effet:"" },
-  { nom:"Peppermint Antennas", categorie:"Beesmas", img:"", effet:"" },
-  { nom:"Beesmas Top", categorie:"Beesmas", img:"", effet:"" },
-  { nom:"Pinecone", categorie:"Beesmas", img:"", effet:"" },
-  { nom:"Icicles", categorie:"Beesmas", img:"", effet:"" },
-  { nom:"Beesmas Tree Hat", categorie:"Beesmas", img:"", effet:"" },
-  { nom:"Bubble Light", categorie:"Beesmas", img:"", effet:"" },
-  { nom:"Snow Tiara", categorie:"Beesmas", img:"", effet:"" },
-  { nom:"Snowglobe", categorie:"Beesmas", img:"", effet:"" },
-  { nom:"Reindeer Antlers", categorie:"Beesmas", img:"", effet:"" },
-  { nom:"Toy Horn", categorie:"Beesmas", img:"", effet:"" },
-  { nom:"Paper Angel", categorie:"Beesmas", img:"", effet:"" },
-  { nom:"Toy Drum", categorie:"Beesmas", img:"", effet:"" },
-  { nom:"Lump Of Coal", categorie:"Beesmas", img:"", effet:"" },
-  { nom:"Poinsettia", categorie:"Beesmas", img:"", effet:"" },
-  { nom:"Electric Candle", categorie:"Beesmas", img:"", effet:"" },
-  { nom:"Festive Wreath", categorie:"Beesmas", img:"", effet:"" },
+  { nom:"Thimble",             categorie:"Non-Event", img:"", desc:"Dé à coudre. Un des premiers beequips que l'on croise.",                    lieu:"Planteurs (Dandelion Field surtout)" },
+  { nom:"Sweatband",           categorie:"Non-Event", img:"", desc:"Bandeau éponge : pour les abeilles qui travaillent dur.",                   lieu:"Planteurs (Dandelion Field surtout)" },
+  { nom:"Bandage",             categorie:"Non-Event", img:"", desc:"Pansement. Ça tient, plus ou moins.",                                       lieu:"Planteurs (Dandelion Field surtout)" },
+  { nom:"Thumbtack",           categorie:"Non-Event", img:"", desc:"Punaise : petite mais piquante.",                                           lieu:"Planteurs (Dandelion Field surtout)" },
+  { nom:"Camo Bandana",        categorie:"Non-Event", img:"", desc:"Bandana camouflage pour abeille discrète.",                                 lieu:"Planteurs (Dandelion Field surtout)" },
+  { nom:"Bottle Cap",          categorie:"Non-Event", img:"", desc:"Capsule de bouteille recyclée en couvre-chef.",                             lieu:"Planteurs (Dandelion Field surtout)" },
+  { nom:"Kazoo",               categorie:"Non-Event", img:"", desc:"Kazoo : l'instrument le moins sérieux de la ruche.",                        lieu:"Planteurs (Dandelion Field surtout)" },
+  { nom:"Smiley Sticker",      categorie:"Non-Event", img:"", desc:"Autocollant souriant collé sur l'abeille.",                                 lieu:"Planteurs (Dandelion Field surtout)" },
+  { nom:"Whistle",             categorie:"Non-Event", img:"", desc:"Sifflet : pour rappeler l'essaim à l'ordre.",                               lieu:"Planteurs (Dandelion Field surtout)" },
+  { nom:"Charm Bracelet",      categorie:"Non-Event", img:"", desc:"Bracelet à breloques, discret et efficace.",                                lieu:"Planteurs (Dandelion Field surtout)" },
+  { nom:"Paperclip",           categorie:"Non-Event", img:"", desc:"Trombone. Oui, un trombone.",                                               lieu:"Planteurs (Dandelion Field surtout)" },
+  { nom:"Beret",               categorie:"Non-Event", img:"", desc:"Béret : l'abeille passe en mode artiste.",                                  lieu:"Planteurs (Dandelion Field surtout)" },
+  { nom:"Bang Snap",           categorie:"Non-Event", img:"", desc:"Pétard à claquer : un beequip explosif.",                                   lieu:"Planteurs (Dandelion Field surtout)" },
+  { nom:"Bead Lizard",         categorie:"Non-Event", img:"", desc:"Lézard en perles, souvenir de colonie de vacances.",                        lieu:"Planteurs (Dandelion Field surtout)" },
+  { nom:"Pink Shades",         categorie:"Non-Event", img:"", desc:"Lunettes roses : tout va bien quand on les porte.",                         lieu:"Planteurs (Dandelion Field surtout)" },
+  { nom:"Lei",                 categorie:"Non-Event", img:"", desc:"Collier de fleurs hawaïen.",                                                lieu:"Planteurs (Dandelion Field surtout)" },
+  { nom:"Demon Talisman",      categorie:"Non-Event", img:"", desc:"Talisman démoniaque, très recherché en fin de jeu.",                        lieu:"Planteurs (Dandelion Field surtout)" },
+  { nom:"Camphor Lip Balm",    categorie:"Non-Event", img:"", desc:"Baume à lèvres au camphre. Ça pique un peu.",                               lieu:"Planteurs (Dandelion Field surtout)" },
+  { nom:"Autumn Sunhat",       categorie:"Non-Event", img:"", desc:"Chapeau de soleil automnal.",                                               lieu:"Planteurs (Dandelion Field surtout)" },
+  { nom:"Rose Headband",       categorie:"Non-Event", img:"", desc:"Serre-tête à roses, très prisé pour les builds rouges.",                    lieu:"Planteurs (Dandelion Field surtout)" },
+  { nom:"Pink Eraser",         categorie:"Non-Event", img:"", desc:"Gomme rose d'écolier.",                                                     lieu:"Planteurs (Dandelion Field surtout)" },
+  { nom:"Candy Ring",          categorie:"Non-Event", img:"", desc:"Bague en bonbon : sucrée et brillante.",                                    lieu:"Planteurs (Dandelion Field surtout)" },
+
+  { nom:"Elf Cap",             categorie:"Beesmas", img:"", desc:"Bonnet de lutin de Beesmas.",                                                 lieu:"Événement Beesmas" },
+  { nom:"Single Mitten",       categorie:"Beesmas", img:"", desc:"Une seule moufle. L'autre est perdue quelque part.",                          lieu:"Événement Beesmas" },
+  { nom:"Warm Scarf",          categorie:"Beesmas", img:"", desc:"Écharpe chaude pour les abeilles frileuses.",                                 lieu:"Événement Beesmas" },
+  { nom:"Peppermint Antennas", categorie:"Beesmas", img:"", desc:"Antennes en sucre d'orge.",                                                   lieu:"Événement Beesmas" },
+  { nom:"Beesmas Top",         categorie:"Beesmas", img:"", desc:"Pull de Beesmas, obligatoire en décembre.",                                   lieu:"Événement Beesmas" },
+  { nom:"Pinecone",            categorie:"Beesmas", img:"", desc:"Pomme de pin : un classique de Beesmas.",                                     lieu:"Événement Beesmas" },
+  { nom:"Icicles",             categorie:"Beesmas", img:"", desc:"Stalactites de glace accrochées à l'abeille.",                                lieu:"Événement Beesmas" },
+  { nom:"Beesmas Tree Hat",    categorie:"Beesmas", img:"", desc:"Sapin miniature en guise de chapeau.",  requis:"L'abeille doit avoir une mutation (n'importe laquelle)", lieu:"Événement Beesmas" },
+  { nom:"Bubble Light",        categorie:"Beesmas", img:"", desc:"Guirlande à bulles lumineuse.",         requis:"L'abeille doit avoir une mutation d'Énergie",           lieu:"Événement Beesmas" },
+  { nom:"Snow Tiara",          categorie:"Beesmas", img:"", desc:"Diadème de neige.",                                                           lieu:"Événement Beesmas" },
+  { nom:"Snowglobe",           categorie:"Beesmas", img:"", desc:"Boule à neige portative.",                                                    lieu:"Événement Beesmas" },
+  { nom:"Reindeer Antlers",    categorie:"Beesmas", img:"", desc:"Bois de renne. Anciennement beequip permanent.",                              lieu:"Événement Beesmas" },
+  { nom:"Toy Horn",            categorie:"Beesmas", img:"", desc:"Trompette jouet, très bruyante.",                                             lieu:"Événement Beesmas" },
+  { nom:"Paper Angel",         categorie:"Beesmas", img:"", desc:"Ange en papier posé sur l'abeille.",                                          lieu:"Événement Beesmas" },
+  { nom:"Toy Drum",            categorie:"Beesmas", img:"", desc:"Petit tambour de Beesmas.",                                                   lieu:"Événement Beesmas" },
+  { nom:"Lump Of Coal",        categorie:"Beesmas", img:"", desc:"Morceau de charbon : pour les abeilles qui n'ont pas été sages.",             lieu:"Événement Beesmas" },
+  { nom:"Poinsettia",          categorie:"Beesmas", img:"", desc:"Étoile de Noël rouge.",                                                       lieu:"Événement Beesmas" },
+  { nom:"Electric Candle",     categorie:"Beesmas", img:"", desc:"Bougie électrique, sans risque d'incendie.",                                  lieu:"Événement Beesmas" },
+  { nom:"Festive Wreath",      categorie:"Beesmas", img:"", desc:"Couronne de Beesmas. Anciennement beequip permanent.",                        lieu:"Événement Beesmas" },
 ];
 const BEEQUIP_CATS = ["Tous","Non-Event","Beesmas"];
+
+/* Explications affichées en haut de l'onglet Beequip */
+const BEEQUIP_INFO = [
+  { t:"Potentiel 0 → 5 ★", d:"Chaque beequip naît avec un potentiel fixe, impossible à changer. Plus il est haut, meilleures sont les stats de base, plus les cires donnent de stats rares, et plus les améliorations sont généreuses." },
+  { t:"Niveau minimum", d:"Un beequip ne peut être posé que sur une abeille dont le niveau est supérieur ou égal à celui du beequip. Certains exigent en plus une abeille précise ou une mutation particulière." },
+  { t:"Les cires", d:"Soft Wax = 1 point, Hard Wax = 2 points, Caustic Wax (et Debug Wax) = 4 points. Chaque point améliore exactement une stat. Une stat qui atteint son maximum sort du tirage, ce qui améliore les chances des autres." },
+  { t:"Swirled Wax", d:"Elle ne donne aucun point, mais régénère les stats de base ET relance tous les points de cire déjà posés. C'est la seule vraie « reroll » d'un beequip." },
+  { t:"Rangement", d:"Beequip Case : 5 emplacements au départ, 15 au maximum (quêtes de Dapper Bear et Bee Bear). Beequip Storage : 10 emplacements, extensibles jusqu'à 100 pour 123 500 tickets au total — mais on ne peut pas équiper depuis le Storage." },
+  { t:"Inbox 48 h", d:"Si la Case et le Storage sont pleins, les beequips atterrissent dans l'Inbox (25 max). Ils y sont supprimés automatiquement au bout de 48 heures." },
+];
+
 
 /* ---------- DONNÉES · RECETTES (outil ingrédients) ---------- */
 /* Chaque recette = liste d'ingrédients { ing:"nom", qte:nombre }. */
@@ -1123,19 +1786,42 @@ function stickerValNum(v){
 }
 
 /* ---------- DONNÉES · MUTATIONS (couleurs du chiffre dans Build your Hive) ---------- */
+/* Source : wiki Bee Swarm Simulator (Mutation). Les plages indiquées valent pour les
+   abeilles de niveau 20 ou moins — au-delà, les valeurs peuvent monter plus haut. */
 const MUTATIONS = [
-  { nom:"% Convert Amount",     chance:"17.24 %", plage:"10 %–30 %", incr:"1 %", couleur:"#feca41", couleurNom:"Orange" },
-  { nom:"+ Convert Amount",     chance:"8.62 %",  plage:"20–80",     incr:"1",   couleur:"#feca41", couleurNom:"Orange" },
-  { nom:"% Attack",             chance:"17.24 %", plage:"5 %–20 %",  incr:"1 %", couleur:"#e83a36", couleurNom:"Rouge" },
-  { nom:"+ Attack",             chance:"4.31 %",  plage:"1–2",       incr:"1",   couleur:"#e83a36", couleurNom:"Rouge" },
-  { nom:"% Gather Amount",      chance:"17.24 %", plage:"10 %–30 %", incr:"1 %", couleur:"#ceff80", couleurNom:"Vert clair" },
-  { nom:"+ Gather Amount",      chance:"8.62 %",  plage:"2–10",      incr:"1",   couleur:"#ceff80", couleurNom:"Vert clair" },
-  { nom:"% Energy",             chance:"17.24 %", plage:"10 %–40 %", incr:"1 %", couleur:"#ac8c58", couleurNom:"Marron" },
-  { nom:"+ Instant Conversion", chance:"4.31 %",  plage:"8 %–20 %",  incr:"1 %", couleur:"#f3fe1e", couleurNom:"Jaune" },
-  { nom:"+ Movespeed",          chance:"1.72 %",  plage:"2–6",       incr:"1",   couleur:"#4fb8f0", couleurNom:"Cyan foncé" },
-  { nom:"+ Critical Chance",    chance:"1.72 %",  plage:"1 %–3 %",   incr:"1 %", couleur:"#47cf72", couleurNom:"Vert" },
-  { nom:"% Ability Rate",       chance:"1.72 %",  plage:"1 %–5 %",   incr:"1 %", couleur:"#b8a5ed", couleurNom:"Violet" },
+  { nom:"% Attack",             chance:"17.9 %", plage:"5 % – 20 %",  incr:"1 %", couleur:"#e83a36", couleurNom:"Rouge" },
+  { nom:"+ Attack",             chance:"3.87 %", plage:"1 – 2",       incr:"1",   couleur:"#e83a36", couleurNom:"Rouge" },
+  { nom:"% Convert Amount",     chance:"17.9 %", plage:"10 % – 30 %", incr:"1 %", couleur:"#feca41", couleurNom:"Orange" },
+  { nom:"+ Convert Amount",     chance:"8.55 %", plage:"20 – 80",     incr:"1",   couleur:"#feca41", couleurNom:"Orange" },
+  { nom:"% Gather Amount",      chance:"17.9 %", plage:"10 % – 30 %", incr:"1 %", couleur:"#ceff80", couleurNom:"Vert clair" },
+  { nom:"+ Gather Amount",      chance:"8.55 %", plage:"2 – 10",      incr:"1",   couleur:"#ceff80", couleurNom:"Vert clair" },
+  { nom:"% Energy",             chance:"17.9 %", plage:"10 % – 40 %", incr:"1 %", couleur:"#ac8c58", couleurNom:"Marron" },
+  { nom:"% Instant Conversion", chance:"4.57 %", plage:"8 % – 20 %",  incr:"1 %", couleur:"#f3fe1e", couleurNom:"Jaune" },
+  { nom:"% Bee Ability Rate",   chance:"1.87 %", plage:"1 % – 4 %",   incr:"1 %", couleur:"#b8a5ed", couleurNom:"Violet" },
+  { nom:"% Critical Chance",    chance:"1.87 %", plage:"1 % – 3 %",   incr:"1 %", couleur:"#47cf72", couleurNom:"Vert" },
+  { nom:"+ Movespeed",          chance:"1.87 %", plage:"2 – 6",       incr:"1",   couleur:"#4fb8f0", couleurNom:"Cyan foncé" },
 ];
+
+/* Comment obtenir une mutation (cartes affichées sur l'onglet Mutations) */
+const MUTATIONS_SOURCES = [
+  { ico:"🫐", t:"Bitterberry",     d:"1 chance sur 1 000 de déclencher une mutation aléatoire.", fort:"1 / 1 000" },
+  { ico:"☢️", t:"Abeille radioactive", d:"Une abeille déjà mutée devient parfois radioactive : la Bitterberry passe alors à 1 chance sur 100. La radioactivité se propage aux cases voisines.", fort:"1 / 100" },
+  { ico:"🍓", t:"Autres fruits",   d:"Toutes les autres friandises fruitées ont une chance très faible de mutter l'abeille.", fort:"1 / 25 000" },
+  { ico:"🧪", t:"Gelées & charmes", d:"Royal Jelly, Moon Charm, Star Jelly et friandises spéciales ont une chance de mutter l'abeille.", fort:"Chance variable" },
+  { ico:"⚛️", t:"Atomic Treat",    d:"Garantit une mutation, que l'abeille soit radioactive ou non.", fort:"100 %" },
+];
+
+/* Pièges et règles à connaître */
+const MUTATIONS_NOTES = [
+  "Une abeille mutée a son numéro de niveau coloré, sur la case de ruche <b>et</b> sur ses ailes — la couleur dépend de la stat mutée.",
+  "Utiliser une <b>Royal Jelly</b> ou un <b>œuf</b> sur une abeille mutée lui fait presque toujours perdre sa mutation (comme le statut Gifted).",
+  "Re-mutter une abeille peut redonner <b>la même stat en moins bien</b> : un +20 % Gather peut devenir +18 % Gather.",
+  "La valeur maximale dépend du niveau : par exemple, seules les abeilles de <b>niveau 21+</b> peuvent obtenir +5 % Bee Ability Rate.",
+  "Mutter une abeille <b>déséquipe automatiquement son beequip</b> : il faut le remettre à la main.",
+  "Le <b>Beesmas Tree Hat</b> exige une mutation quelconque, et la <b>Bubble Light</b> exige précisément une mutation d'Énergie.",
+  "Certaines mutations sont inutiles sur certaines abeilles : Attack sur Baby Bee, Ability Rate sur une Basic/Brave non-gifted sans beequip, Energy sur Photon ou Exhausted Bee.",
+];
+
 
 /* ---------- DONNÉES · OBJETS (menu de gauche du Build your Hive) ---------- */
 /* 3 catégories. Chaque objet : { nom, img }. img="" -> icône de secours.
@@ -1271,47 +1957,171 @@ const COULEUR_RARETE = {
   "Légendaire":"#F0B429","Mythique":"#F0736A"
 };
 
-/* ---------- Génération des cartes de contenu ---------- */
-function carteHTML(o, folder){
-  const rarite = o.rarete
-    ? `<span class="rarity" style="background:${COULEUR_RARETE[o.rarete]||'#888'}"></span>${o.rarete}`
-    : '';
+/* ---------- Couleur d'accent par catégorie ---------- */
+const ACCENTS = {
+  // items
+  "Outils":"#5AA9E6","Œufs":"#F4DD44","Gelées & Treats":"#F0736A","Fabrication":"#6BD08B",
+  "Monnaie":"#F0B429","Accessoires":"#B77BE0","Planteurs":"#8FD14F","Divers":"#93A7B0",
+  // stickers
+  "Cub Skins":"#F0B429","Hive Skins":"#5AA9E6","Vouchers":"#6BD08B","Bees":"#F4DD44",
+  "Bears":"#C08457","Mobs":"#F0736A","Art":"#B77BE0","Gems":"#7FE4E0","Nectar Icons":"#F49AC1",
+  "Flowers":"#FF8FB1","Mushrooms":"#E08A5A","Leaves":"#8FD14F","Tools":"#5AA9E6",
+  "Stamps":"#F0B429","Beesmas":"#6BD08B","Miscellaneous":"#93A7B0","Star Signs":"#B8A5ED",
+  // amulettes / beequip
+  "Boss":"#F0736A","Défi":"#5AA9E6","Génération":"#B8A5ED","Suprême":"#F4DD44",
+  "Non-Event":"#5AA9E6"
+};
+function accentOf(o){
+  return ACCENTS[o.categorie] || COULEUR_RARETE[o.rarete] || "#F4DD44";
+}
+function hexToGlow(hex,a){
+  const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if(!m) return `rgba(244,221,68,${a})`;
+  return `rgba(${parseInt(m[1],16)},${parseInt(m[2],16)},${parseInt(m[3],16)},${a})`;
+}
+function initiales(nom){
+  return nom.split(/[\s-]+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase();
+}
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ---------- Registre des jeux de données (pour la modale) ---------- */
+const DATASETS = {};
+
+/* ---------- Ligne « clé » affichée en bas de carte ---------- */
+function keylineOf(o){
+  if(o.valeur !== undefined) return { k:"Valeur", v: o.valeur==='TBD' ? 'TBD' : (o.valeur ? o.valeur+' signs' : '—') };
+  if(o.cout)    return { k:"Coût",    v:o.cout };
+  if(o.paliers) return { k:"Paliers", v:o.rarete||'—' };
+  if(o.requis)  return { k:"Requis",  v:"⚠︎ condition" };
+  if(o.lieu)    return { k:"Obtention", v:o.lieu };
+  return null;
+}
+
+/* ---------- Carte ---------- */
+function carteHTML(o, folder, key, idx){
+  const accent = accentOf(o);
   const tag = o.categorie || o.rarete || '';
-  let meta = '';
-  if(o.valeur) meta += `<div><span class="k">Valeur</span><span class="v">${o.valeur==='TBD'?'TBD':(o.valeur?o.valeur+' signs':'—')}</span></div>`;
-  if(o.cout)  meta += `<div><span class="k">Coût</span><span class="v">${o.cout}</span></div>`;
-  if(o.lieu)  meta += `<div><span class="k">Où l'obtenir</span><span class="v">${o.lieu}</span></div>`;
-  if(o.effet) meta += `<div><span class="k">Effet</span><span class="v">${o.effet}</span></div>`;
-  if(o.rarete && !o.cout) meta += `<div><span class="k">Rareté</span><span class="v">${rarite}</span></div>`;
-  const img = `<div class="card-img"><img src="${imgSrc(folder,o)}" alt="${o.nom}" onerror="this.parentNode.style.display='none'"></div>`;
-  return `<div class="card" data-name="${o.nom.toLowerCase()}" data-cat="${tag}">
-    <span class="tag">${tag}</span>
-    ${img}
-    <h3>${o.nom}</h3>
-    <div class="desc">${o.desc||''}</div>
-    <div class="meta">${meta}</div>
+  const kl  = keylineOf(o);
+  const img = `<div class="card-img"><img src="${imgSrc(folder,o)}" alt="${esc(o.nom)}"
+      onerror="this.remove();this.parentNode.insertAdjacentHTML('beforeend','<span class=&quot;ph&quot;>${esc(initiales(o.nom))}</span>')"></div>`;
+  return `<div class="card" data-name="${esc(o.nom.toLowerCase())}" data-cat="${esc(tag)}"
+      data-key="${key}" data-idx="${idx}"
+      style="--accent:${accent};--glow:${hexToGlow(accent,.18)}">
+    <span class="accent-bar"></span>
+    <div class="card-top">
+      ${tag?`<span class="tag">${esc(tag)}</span>`:''}
+      ${img}
+    </div>
+    <div class="card-body">
+      <h3>${esc(o.nom)}</h3>
+      <div class="desc">${o.desc?esc(o.desc):'<i style="opacity:.5">Pas encore de description.</i>'}</div>
+      ${kl?`<div class="keyline"><span class="k">${kl.k}</span><span class="v">${esc(kl.v)}</span></div>`:''}
+    </div>
   </div>`;
 }
-function renderCards(key,data,cats,folder){
-  const grid = document.getElementById(key+'-grid');
-  grid.innerHTML = data.map(o=>carteHTML(o,folder)).join('') || `<div class="empty">Rien à afficher pour le moment.</div>`;
-  const chips = document.getElementById(key+'-chips');
-  chips.innerHTML = cats.map((c,i)=>`<span class="chip ${i===0?'active':''}" data-cat="${c}">${c}</span>`).join('');
-  chips.addEventListener('click',e=>{
-    if(!e.target.dataset.cat) return;
-    chips.querySelectorAll('.chip').forEach(ch=>ch.classList.toggle('active',ch===e.target));
-    filterCards(key,document.querySelector(`#${key} .search input`).value, e.target.dataset.cat);
-  });
+
+/* ---------- Modale de détail ---------- */
+function ouvrirModale(key, idx){
+  const ds = DATASETS[key]; if(!ds) return;
+  const o = ds.data[idx]; if(!o) return;
+  const accent = accentOf(o);
+  const rows = [];
+  if(o.valeur !== undefined) rows.push(["Valeur estimée", o.valeur==='TBD'?'TBD':(o.valeur?o.valeur+' signs':'—'), true]);
+  if(o.boost)   rows.push(["Stack Boost", o.boost, true]);
+  if(o.reward)  rows.push(["Stack Reward", o.reward, false]);
+  if(o.cout)    rows.push(["Coût", o.cout, true]);
+  if(o.effet)   rows.push(["Effet", o.effet, false]);
+  if(o.paliers) rows.push(["Paliers", o.paliers, false]);
+  if(o.requis)  rows.push(["Condition", o.requis, false]);
+  if(o.lieu)    rows.push(["Où l'obtenir", o.lieu, false]);
+  if(o.rarete)  rows.push(["Rareté", o.rarete, false]);
+  if(o.categorie) rows.push(["Catégorie", o.categorie, false]);
+
+  const back = document.getElementById('modal-back');
+  back.style.setProperty('--accent', accent);
+  back.style.setProperty('--glow', hexToGlow(accent,.18));
+  back.querySelector('.m-img').innerHTML =
+    `<img src="${imgSrc(ds.folder,o)}" alt="${esc(o.nom)}"
+      onerror="this.remove();this.parentNode.insertAdjacentHTML('beforeend','<span class=&quot;ph&quot;>${esc(initiales(o.nom))}</span>')">`;
+  back.querySelector('.m-title').innerHTML =
+    `<h3>${esc(o.nom)}</h3>${o.categorie?`<span class="m-tag">${esc(o.categorie)}</span>`:''}`;
+  back.querySelector('.m-desc').innerHTML = o.desc ? esc(o.desc) : '<i style="opacity:.55">Aucune description pour le moment. Ajoute-la dans le bloc DONNÉES du fichier index.html.</i>';
+  back.querySelector('.m-rows').innerHTML = rows.map(([k,v,hl])=>
+    `<div class="m-row"><span class="k">${k}</span><span class="v${hl?' hl':''}">${esc(v)}</span></div>`).join('');
+  back.classList.add('open');
+  document.body.style.overflow='hidden';
 }
+function fermerModale(){
+  document.getElementById('modal-back').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+/* ---------- Rendu d'un onglet ---------- */
+function renderCards(key,data,cats,folder){
+  DATASETS[key] = { data, folder };
+  const grid = document.getElementById(key+'-grid');
+  grid.innerHTML = data.map((o,i)=>carteHTML(o,folder,key,i)).join('') || `<div class="empty">Rien à afficher pour le moment.</div>`;
+
+  /* puces de catégories, avec le nombre d'entrées */
+  const chips = document.getElementById(key+'-chips');
+  chips.innerHTML = cats.map((c,i)=>{
+    const n = c==='Tous' ? data.length : data.filter(o=>(o.categorie||o.rarete)===c).length;
+    return `<span class="chip ${i===0?'active':''}" data-cat="${c}">${c} <b style="opacity:.6">${n}</b></span>`;
+  }).join('');
+  chips.addEventListener('click',e=>{
+    const chip = e.target.closest('.chip'); if(!chip) return;
+    chips.querySelectorAll('.chip').forEach(ch=>ch.classList.toggle('active',ch===chip));
+    filterCards(key,document.querySelector(`#${key} .search input`).value, chip.dataset.cat);
+  });
+
+  /* menu de tri, injecté dans la barre d'outils */
+  const toolbar = document.querySelector(`#${key} .toolbar`);
+  if(toolbar && !toolbar.querySelector('.sortbox')){
+    const box = document.createElement('div');
+    box.className='sortbox';
+    const opts = ['A → Z','Z → A'];
+    if(data.some(o=>o.valeur!==undefined)) opts.push('Valeur ↓','Valeur ↑');
+    box.innerHTML = `<span>Trier</span><select>${opts.map(o=>`<option>${o}</option>`).join('')}</select>`;
+    box.querySelector('select').addEventListener('change',e=>trierCartes(key,e.target.value));
+    toolbar.appendChild(box);
+  }
+
+  /* compteur de résultats */
+  const head = document.querySelector(`#${key} .sec-head .count-pill`);
+  if(head) head.textContent = data.length + ' entrées';
+  majCompteur(key);
+}
+
+/* ---------- Tri ---------- */
+function trierCartes(key,mode){
+  const grid = document.getElementById(key+'-grid');
+  const ds = DATASETS[key];
+  const cards = Array.from(grid.querySelectorAll('.card'));
+  const val = c => stickerValNum(ds.data[+c.dataset.idx].valeur);
+  const nom = c => ds.data[+c.dataset.idx].nom.toLowerCase();
+  cards.sort((a,b)=>{
+    if(mode==='A → Z') return nom(a).localeCompare(nom(b));
+    if(mode==='Z → A') return nom(b).localeCompare(nom(a));
+    if(mode==='Valeur ↓') return val(b)-val(a);
+    if(mode==='Valeur ↑') return val(a)-val(b);
+    return 0;
+  });
+  cards.forEach(c=>grid.appendChild(c));
+}
+
+/* ---------- Filtrage ---------- */
 function filterCards(key,term='',cat=null){
-  term = term.toLowerCase();
+  term = term.toLowerCase().trim();
   if(cat===null){
     const active = document.querySelector(`#${key}-chips .chip.active`);
     cat = active ? active.dataset.cat : 'Tous';
   }
+  const ds = DATASETS[key];
   let visible = 0;
   document.querySelectorAll(`#${key}-grid .card`).forEach(c=>{
-    const okName = c.dataset.name.includes(term);
+    const o = ds ? ds.data[+c.dataset.idx] : null;
+    const hay = (c.dataset.name + ' ' + (o && o.desc ? o.desc.toLowerCase() : '') + ' ' + (o && o.boost ? o.boost.toLowerCase() : ''));
+    const okName = hay.includes(term);
     const okCat  = cat==='Tous' || c.dataset.cat===cat;
     const show = okName && okCat;
     c.style.display = show ? '' : 'none';
@@ -1321,11 +2131,56 @@ function filterCards(key,term='',cat=null){
   let e = grid.querySelector('.empty');
   if(visible===0){ if(!e){e=document.createElement('div');e.className='empty';e.textContent='Aucun résultat.';grid.appendChild(e);} }
   else if(e){ e.remove(); }
+  majCompteur(key, visible);
 }
+function majCompteur(key, n){
+  const el = document.querySelector(`#${key} .count-visible`);
+  if(!el) return;
+  const total = DATASETS[key] ? DATASETS[key].data.length : 0;
+  const v = (n===undefined) ? total : n;
+  el.textContent = (v===total) ? `${total} affichés` : `${v} / ${total} affichés`;
+}
+
+/* ---------- Ouverture de la modale au clic ---------- */
+document.addEventListener('click',e=>{
+  const card = e.target.closest('.card[data-key]');
+  if(card){ ouvrirModale(card.dataset.key, +card.dataset.idx); return; }
+  if(e.target.id==='modal-back' || e.target.closest('.m-close')) fermerModale();
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') fermerModale(); });
+
 renderCards('items',ITEMS,ITEMS_CATS,'item');
 renderCards('stickers',STICKERS,STICKERS_CATS,'stickers');
 renderCards('amulettes',AMULETTES,AMULETTES_CATS,'amulette');
 renderCards('beequip',BEEQUIP,BEEQUIP_CATS,'beequip');
+
+/* ---------- Blocs d'information ---------- */
+function renderInfoCards(elId, list){
+  const el = document.getElementById(elId); if(!el) return;
+  el.innerHTML = list.map(i=>`<div class="info-card">
+    ${i.ico?`<span class="ico">${i.ico}</span>`:''}
+    ${i.fort?`<span class="big">${i.fort}</span>`:''}
+    <h4>${i.t}</h4><p>${i.d}</p></div>`).join('');
+}
+renderInfoCards('amulettes-info', AMULETTES_INFO);
+renderInfoCards('beequip-info',   BEEQUIP_INFO);
+renderInfoCards('mut-sources',    MUTATIONS_SOURCES);
+const mutNotes = document.getElementById('mut-notes');
+if(mutNotes) mutNotes.innerHTML = MUTATIONS_NOTES.map(n=>`<li>${n}</li>`).join('');
+
+/* ---------- Statistiques de l'accueil ---------- */
+(function(){
+  const stats = [
+    [ITEMS.length,    'Items'],
+    [STICKERS.length, 'Stickers'],
+    [BEEQUIP.length,  'Beequips'],
+    [AMULETTES.length,'Amulettes'],
+    [MUTATIONS.length,'Mutations'],
+  ];
+  const el = document.getElementById('hero-stats');
+  if(el) el.innerHTML = stats.map(([n,l])=>`<div class="hero-stat"><b>${n}</b><span>${l}</span></div>`).join('');
+})();
+
 
 /* ---------- Navigation entre outils ---------- */
 document.querySelector('.tool-nav').addEventListener('click',e=>{
@@ -2032,14 +2887,19 @@ function updateModeHint(){
 
 function renderMutations(){
   const t=document.getElementById('mut-table'); if(!t) return;
-  const rows=MUTATIONS.map(m=>`<tr>
+  const maxCh = Math.max.apply(null, MUTATIONS.map(m=>parseFloat(m.chance)));
+  const rows=MUTATIONS.map(m=>{
+    const ch = parseFloat(m.chance);
+    return `<tr>
     <td><span class="mut-name" style="color:${m.couleur}">${m.nom}</span></td>
-    <td>${m.chance}</td>
-    <td>${m.plage} <span style="color:var(--muted)">(par ${m.incr})</span></td>
-    <td><span class="mut-swatch"><span class="sw" style="background:${m.couleur}"></span>${m.couleurNom} <span style="color:var(--muted)">${m.couleur}</span></span></td>
+    <td><span class="mut-chance">${m.chance}</span>
+        <span class="mut-bar"><i style="width:${(ch/maxCh*100).toFixed(1)}%;background:${m.couleur}"></i></span></td>
+    <td><span class="mut-plage">${m.plage}</span><br><span style="color:var(--muted);font-size:.82rem">par ${m.incr}</span></td>
+    <td><span class="mut-swatch"><span class="sw" style="background:${m.couleur}"></span>${m.couleurNom}<br>
+        <span style="color:var(--muted);font-size:.8rem">${m.couleur}</span></span></td>
     <td><span class="mut-num" style="color:${m.couleur}">25</span></td>
-  </tr>`).join('');
-  t.innerHTML=`<thead><tr><th>Mutation</th><th>Chance</th><th>Plage</th><th>Couleur</th><th>Aperçu</th></tr></thead><tbody>${rows}</tbody>`;
+  </tr>`;}).join('');
+  t.innerHTML=`<thead><tr><th>Mutation</th><th>Chance</th><th>Plage (niv. ≤ 20)</th><th>Couleur du niveau</th><th>Aperçu</th></tr></thead><tbody>${rows}</tbody>`;
 }
 
 /* ---------- Initialisation ---------- */
