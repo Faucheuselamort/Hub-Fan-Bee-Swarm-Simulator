@@ -416,7 +416,7 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
 .card:hover::before{opacity:1}
 .card .card-top{position:relative;display:flex;align-items:center;justify-content:center;
   padding:1.15rem .8rem .55rem;min-height:104px}
-.card .card-img{width:auto;min-width:74px;max-width:100%;height:78px;padding:7px;
+.card .card-img{width:104px;height:78px;padding:7px;
   border-radius:16px;background:rgba(0,0,0,.28);
   border:1px solid var(--line-soft);display:grid;place-items:center;margin:0;overflow:hidden;
   transition:transform .18s}
@@ -452,7 +452,7 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
 .m-head{display:flex;gap:1rem;align-items:center;padding:1.6rem 1.6rem 1.1rem;
   border-bottom:1px solid var(--line-soft);
   background:radial-gradient(500px 180px at 20% 0%,var(--glow,rgba(244,221,68,.14)),transparent 70%)}
-.m-img{width:auto;min-width:88px;max-width:150px;height:88px;padding:8px;flex:0 0 auto;
+.m-img{width:120px;height:92px;padding:8px;flex:0 0 auto;
   border-radius:18px;background:rgba(0,0,0,.3);
   border:1px solid var(--line-soft);display:grid;place-items:center;overflow:hidden}
 .m-img img{max-width:100%;max-height:100%;width:auto;height:auto;
@@ -502,7 +502,7 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
 @media(max-width:560px){
   .card-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.65rem}
   .card .card-top{min-height:88px;padding:.9rem .8rem .4rem}
-  .card .card-img{width:auto;min-width:58px;height:62px;padding:5px;border-radius:13px}
+  .card .card-img{width:82px;height:62px;padding:5px;border-radius:13px}
   .card .card-body{padding:0 .8rem .85rem}
   .card h3{font-size:.95rem}
   .card .desc{font-size:.78rem;-webkit-line-clamp:2}
@@ -1008,13 +1008,17 @@ const ITEMS = [
 
   /* ================= MASQUE ================= */
   { nom:"Helmet", categorie:"Masque", desc:"Casque de base : un peu de défense et de pollen.", lieu:"Noob Shop" },
+  { nom:"Strange Goggles", categorie:"Masque", desc:"Lunettes étranges : accessoire de tête à l'allure décalée.", lieu:"Quêtes et événements" },
   { nom:"Propeller Hat", categorie:"Masque", desc:"Chapeau à hélice : bonus de collecte et style garanti.", lieu:"Pro Shop" },
+  { nom:"Beekeeper's Mask", categorie:"Masque", desc:"Masque d'apiculteur : le premier vrai masque de progression.", lieu:"Fabrication" },
   { nom:"Bubble Mask", categorie:"Masque", desc:"Masque à bulles : orienté pollen bleu et bulles.", lieu:"Fabrication" },
   { nom:"Fire Mask", categorie:"Masque", desc:"Masque de feu : orienté pollen rouge et flammes.", lieu:"Fabrication" },
   { nom:"Honey Mask", categorie:"Masque", desc:"Masque de miel : bonus de conversion et de miel.", lieu:"Fabrication" },
   { nom:"Diamond Mask", categorie:"Masque", desc:"Masque de diamant, fabriqué dans la Diamond Room après le parcours des nuages. Il rend les plateformes de la salle solides de jour comme de nuit.", lieu:"Diamond Room (fabrication)" },
   { nom:"Demon Mask", categorie:"Masque", desc:"Masque démoniaque : gros bonus d'attaque et de flammes.", lieu:"Fabrication" },
   { nom:"Gummy Mask", categorie:"Masque", desc:"Masque gélifié : bonus de goo et de conversion du goo.", lieu:"Gummy Bear's Lair (fabrication)" },
+  { nom:"B.B.M. Mask", categorie:"Masque", desc:"Le masque du Bubble Bee Man : orienté bulles et pollen bleu.", lieu:"Bubble Bee Man (Mountain Top)" },
+  { nom:"Mondo B.B.M. Mask", categorie:"Masque", desc:"Version améliorée du masque du Bubble Bee Man, bien plus puissante.", lieu:"Bubble Bee Man (Mountain Top)" },
 
   /* ================= LEFT GUARD ================= */
   { nom:"Bomber Guard", categorie:"Left Guard", desc:"Protection liée à Bomber Bee : bonus de bombes.", lieu:"Fabrication" },
@@ -2555,8 +2559,10 @@ const IMG_STYLE_DEFAUT = 'espace';
 /* Exceptions : quand un fichier ne suit pas la règle de son dossier.
    Clé = "dossier/nom affiché", valeur = nom du fichier (sans extension). */
 const IMG_FICHIER = {
-  "item/Super-Scooper":      "Super_Scooper",
-  "item/Choose A Mythic Egg":"Choose-A-Mythic_Egg",
+  "item/Super-Scooper":       "Super_Scooper",
+  "item/Choose A Mythic Egg": "Choose-A-Mythic_Egg",
+  "item/Mondo B.B.M. Mask":   "MONDOB.B.M.M",
+  "item/Beekeeper's Mask":    "Beekeeper's_Mask",
 };
 
 function imgNom(folder, nom){
