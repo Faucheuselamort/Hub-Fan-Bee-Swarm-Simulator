@@ -415,12 +415,14 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
   box-shadow:0 16px 34px rgba(0,0,0,.42)}
 .card:hover::before{opacity:1}
 .card .card-top{position:relative;display:flex;align-items:center;justify-content:center;
-  padding:1.15rem 1rem .55rem;min-height:104px}
-.card .card-img{width:74px;height:74px;border-radius:16px;background:rgba(0,0,0,.28);
+  padding:1.15rem .8rem .55rem;min-height:104px}
+.card .card-img{width:auto;min-width:74px;max-width:100%;height:78px;padding:7px;
+  border-radius:16px;background:rgba(0,0,0,.28);
   border:1px solid var(--line-soft);display:grid;place-items:center;margin:0;overflow:hidden;
   transition:transform .18s}
 .card:hover .card-img{transform:scale(1.06)}
-.card .card-img img{width:100%;height:100%;object-fit:contain;image-rendering:pixelated}
+.card .card-img img{max-width:100%;max-height:100%;width:auto;height:auto;
+  object-fit:contain;image-rendering:pixelated}
 .card .card-img .ph{font-family:'Fredoka';font-weight:700;font-size:1.5rem;color:var(--accent,var(--honey));opacity:.75}
 .card .tag{position:absolute;top:.7rem;right:.7rem;font-family:'Fredoka';font-weight:600;font-size:.66rem;
   text-transform:uppercase;letter-spacing:.6px;padding:.22rem .55rem;border-radius:20px;
@@ -450,9 +452,11 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
 .m-head{display:flex;gap:1rem;align-items:center;padding:1.6rem 1.6rem 1.1rem;
   border-bottom:1px solid var(--line-soft);
   background:radial-gradient(500px 180px at 20% 0%,var(--glow,rgba(244,221,68,.14)),transparent 70%)}
-.m-img{width:82px;height:82px;flex:0 0 auto;border-radius:18px;background:rgba(0,0,0,.3);
+.m-img{width:auto;min-width:88px;max-width:150px;height:88px;padding:8px;flex:0 0 auto;
+  border-radius:18px;background:rgba(0,0,0,.3);
   border:1px solid var(--line-soft);display:grid;place-items:center;overflow:hidden}
-.m-img img{width:100%;height:100%;object-fit:contain;image-rendering:pixelated}
+.m-img img{max-width:100%;max-height:100%;width:auto;height:auto;
+  object-fit:contain;image-rendering:pixelated}
 .m-img .ph{font-family:'Fredoka';font-weight:700;font-size:1.8rem;color:var(--accent,var(--honey));opacity:.8}
 .m-title h3{font-size:1.5rem;margin-bottom:.3rem}
 .m-title .m-tag{display:inline-block;font-family:'Fredoka';font-weight:600;font-size:.7rem;
@@ -498,7 +502,7 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
 @media(max-width:560px){
   .card-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.65rem}
   .card .card-top{min-height:88px;padding:.9rem .8rem .4rem}
-  .card .card-img{width:58px;height:58px;border-radius:13px}
+  .card .card-img{width:auto;min-width:58px;height:62px;padding:5px;border-radius:13px}
   .card .card-body{padding:0 .8rem .85rem}
   .card h3{font-size:.95rem}
   .card .desc{font-size:.78rem;-webkit-line-clamp:2}
@@ -658,7 +662,7 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
   <div class="eyebrow">Base de données</div>
   <div class="sec-head"><h2 class="section-title">Items du jeu</h2><span class="count-pill count-visible"></span></div>
   <p class="lead">Tous les objets du jeu, classés par famille : à quoi ils servent, combien ils coûtent et où les trouver.</p>
-  <div class="note"><span class="i">🍯</span><div>20 catégories, du Scooper au Planter Of Plenty. <b>Clique sur une carte</b> pour ouvrir sa fiche. Les prix seront ajoutés plus tard — pour l'instant chaque item indique où le trouver. Les images se placent dans <b>images/item/</b>. Le nom du fichier reprend le nom de l'item avec les <b>espaces remplacés par des underscores</b>, et les <b>tirets conservés</b> quand le nom en contient déjà : « Basic Egg » → <code>Basic_Egg.webp</code>, « Box-O-Frogs » → <code>Box-O-Frogs.webp</code>, « Beekeeper's Boots » → <code>Beekeepers_Boots.webp</code> (les apostrophes sont supprimées). Ce dossier attend des fichiers <b>.webp</b> ; les autres dossiers (stickers, beequip, amulette, bees) attendent des <b>.png</b>. Le format de chaque dossier se règle dans le bloc <b>FORMAT DES IMAGES</b> en haut du script. Deux exceptions gérées automatiquement : tous les œufs portant un nom d'abeille réutilisent l'image de <b>Basic Egg</b> (le Nectar Tester aussi), et toutes les gelées portant un nom d'abeille réutilisent celle de <b>Royal Jelly</b> — c'est ainsi dans le jeu, y compris pour les versions Gifted. Tu n'as donc que deux fichiers à fournir pour ces 50 entrées.</div></div>
+  <div class="note"><span class="i">🍯</span><div>20 catégories, du Scooper au Planter Of Plenty. <b>Clique sur une carte</b> pour ouvrir sa fiche. Les prix seront ajoutés plus tard — pour l'instant chaque item indique où le trouver. Les images se placent dans <b>images/item/</b>. Le nom du fichier reprend le nom de l'item avec les <b>espaces remplacés par des underscores</b>, et les <b>tirets conservés</b> quand le nom en contient déjà : « Basic Egg » → <code>Basic_Egg.webp</code>, « Box-O-Frogs » → <code>Box-O-Frogs.webp</code>, « Beekeeper's Boots » → <code>Beekeepers_Boots.webp</code>. Cette règle ne vaut que pour ce dossier : stickers, beequip, amulette et bees gardent les <b>espaces</b> dans leurs noms de fichiers. Tout se règle dans le bloc <b>FORMAT DES IMAGES</b> en haut du script. Ce dossier attend des fichiers <b>.webp</b> ; les autres dossiers (stickers, beequip, amulette, bees) attendent des <b>.png</b>. Le format de chaque dossier se règle dans le bloc <b>FORMAT DES IMAGES</b> en haut du script. Deux exceptions gérées automatiquement : tous les œufs portant un nom d'abeille réutilisent l'image de <b>Basic Egg</b> (le Nectar Tester aussi), et toutes les gelées portant un nom d'abeille réutilisent celle de <b>Royal Jelly</b> — c'est ainsi dans le jeu, y compris pour les versions Gifted. Tu n'as donc que deux fichiers à fournir pour ces 50 entrées.</div></div>
   <div class="toolbar">
     <div class="search"><span>🔍</span><input type="text" placeholder="Rechercher un item…" oninput="filterCards('items',this.value)"></div>
     <div class="chips" id="items-chips"></div>
@@ -2533,27 +2537,41 @@ const IMG_EXT = {
 };
 const IMG_EXT_DEFAUT = 'png';
 
-/* Nom affiché -> nom de fichier.
-   Les espaces deviennent des underscores : "Basic Egg" -> Basic_Egg.webp
-   Les apostrophes sont retirées :          "Beekeeper's Boots" -> Beekeepers_Boots.png */
-/* Exceptions : quand le nom du fichier ne suit pas la règle ci-dessus.
-   Clé = nom affiché sur le site, valeur = nom du fichier (sans extension).
-   Ajoute simplement une ligne ici si un fichier a un nom différent. */
+/* Style de nommage des fichiers, dossier par dossier.
+   'underscore' : les espaces deviennent des _ et les apostrophes disparaissent
+                  "Basic Egg" -> Basic_Egg.webp   "Beekeeper's Boots" -> Beekeepers_Boots.webp
+   'espace'     : le nom du fichier est identique au nom affiché
+                  "Camo Bandana" -> Camo Bandana.png
+   Les tirets déjà présents dans un nom sont toujours conservés. */
+const IMG_STYLE = {
+  item:     'underscore',
+  stickers: 'espace',
+  amulette: 'espace',
+  beequip:  'espace',
+  bees:     'espace',
+};
+const IMG_STYLE_DEFAUT = 'espace';
+
+/* Exceptions : quand un fichier ne suit pas la règle de son dossier.
+   Clé = "dossier/nom affiché", valeur = nom du fichier (sans extension). */
 const IMG_FICHIER = {
-  "Super-Scooper": "Super_Scooper",
+  "item/Super-Scooper":      "Super_Scooper",
+  "item/Choose A Mythic Egg":"Choose-A-Mythic_Egg",
 };
 
-function imgNom(nom){
-  if(IMG_FICHIER[nom]) return encodeURIComponent(IMG_FICHIER[nom]);
-  return encodeURIComponent(
-    String(nom).replace(/[''`]/g, '').replace(/\s+/g, '_')
-  );
+function imgNom(folder, nom){
+  const cle = folder + '/' + nom;
+  if(IMG_FICHIER[cle]) return encodeURIComponent(IMG_FICHIER[cle]);
+  if((IMG_STYLE[folder] || IMG_STYLE_DEFAUT) === 'underscore'){
+    return encodeURIComponent(String(nom).replace(/['’`]/g, '').replace(/\s+/g, '_'));
+  }
+  return encodeURIComponent(nom);
 }
 
 function imgSrc(folder, o){
   if(o && o.img) return o.img;                 // chemin explicite prioritaire
   const ext = IMG_EXT[folder] || IMG_EXT_DEFAUT;
-  return `images/${folder}/${imgNom(o.nom)}.${ext}`;
+  return `images/${folder}/${imgNom(folder, o.nom)}.${ext}`;
 }
 
 /* Image absente : on affiche un contenu de secours.
