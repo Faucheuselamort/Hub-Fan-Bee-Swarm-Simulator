@@ -655,7 +655,7 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
   <div class="eyebrow">Base de données</div>
   <div class="sec-head"><h2 class="section-title">Items du jeu</h2><span class="count-pill count-visible"></span></div>
   <p class="lead">Tous les objets du jeu, classés par famille : à quoi ils servent, combien ils coûtent et où les trouver.</p>
-  <div class="note"><span class="i">🍯</span><div>Outils, œufs, gelées, matériaux de fabrication, monnaies, accessoires, planteurs… <b>Clique sur une carte</b> pour ouvrir sa fiche détaillée. Les images se placent dans <b>images/item/</b> (nom exact du fichier = nom de l'item).</div></div>
+  <div class="note"><span class="i">🍯</span><div>20 catégories, du Scooper au Planter Of Plenty. <b>Clique sur une carte</b> pour ouvrir sa fiche. Les prix seront ajoutés plus tard — pour l'instant chaque item indique où le trouver. Les images se placent dans <b>images/item/</b>, le nom du fichier devant reprendre exactement le nom de l'item.</div></div>
   <div class="toolbar">
     <div class="search"><span>🔍</span><input type="text" placeholder="Rechercher un item…" oninput="filterCards('items',this.value)"></div>
     <div class="chips" id="items-chips"></div>
@@ -960,121 +960,251 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
    ============================================================================ */
 
 /* ---------- DONNÉES · ITEMS ---------- */
-/* categorie sert aux filtres. cout / lieu / desc s'affichent sur la carte.
-   Source : wiki Bee Swarm Simulator (Items, Tools, Inventory). */
+/* Catégories définies pour le site. Les prix seront ajoutés plus tard.
+   Les images vont dans images/item/<nom exact>.png */
 const ITEMS = [
-  /* ===== OUTILS (20 dans le jeu) ===== */
-  { nom:"Scooper", categorie:"Outils", desc:"L'outil de départ de tout joueur. Petite portée, mais il fait le travail au tout début.", cout:"Gratuit", lieu:"Donné au début du jeu" },
-  { nom:"Rake", categorie:"Outils", desc:"Râteau qui gratte le pollen des fleurs sans abîmer leur tige. Meilleure portée que le Scooper.", cout:"Bon marché", lieu:"Noob Shop (0 – 14 K miel)" },
-  { nom:"Clippers", categorie:"Outils", desc:"Sécateur rapide. Ne cours pas avec ça.", cout:"Bon marché", lieu:"Noob Shop (0 – 14 K miel)" },
-  { nom:"Magnet", categorie:"Outils", desc:"Aimant qui attire le pollen des fleurs alentour.", cout:"Bon marché", lieu:"Noob Shop (0 – 14 K miel)" },
-  { nom:"Vacuum", categorie:"Outils", desc:"Aspirateur à pollen : large zone de collecte.", cout:"Bon marché", lieu:"Noob Shop (0 – 14 K miel)" },
-  { nom:"Super-Scooper", categorie:"Outils", desc:"Version améliorée du Scooper, peinture bleu et jaune plus aérodynamique.", cout:"Moyen", lieu:"Pro Shop (40 K – 1,5 M miel)" },
-  { nom:"Pulsar", categorie:"Outils", desc:"Outil à impulsions. Possiblement radioactif.", cout:"Moyen", lieu:"Pro Shop (40 K – 1,5 M miel)" },
-  { nom:"Electro-Magnet", categorie:"Outils", desc:"Deux aimants en un, pour deux fois plus de pollen.", cout:"Moyen", lieu:"Pro Shop (40 K – 1,5 M miel)" },
-  { nom:"Scissors", categorie:"Outils", desc:"Ciseaux à grande portée. Ça coupe et ça claque.", cout:"Moyen", lieu:"Pro Shop (40 K – 1,5 M miel)" },
-  { nom:"Honey Dipper", categorie:"Outils", desc:"L'outil de fabrication de miel par excellence. Bonus de conversion.", cout:"Moyen", lieu:"Pro Shop (40 K – 1,5 M miel)" },
-  { nom:"Bubble Wand", categorie:"Outils", desc:"Recouvre les fleurs d'eau savonneuse. Favorise le pollen bleu.", cout:"Élevé", lieu:"Blue HQ (3,5 M – 2,5 T miel)" },
-  { nom:"Scythe", categorie:"Outils", desc:"Faux enflammée : tranche et brûle. Favorise le pollen rouge.", cout:"Élevé", lieu:"Red HQ (3,5 M – 2,5 T miel)" },
-  { nom:"Golden Rake", categorie:"Outils", desc:"Un râteau de jardinage totalement superflu… mais très efficace.", cout:"20 M – 150 M miel", lieu:"Mountain Top Shop" },
-  { nom:"Spark Staff", categorie:"Outils", desc:"Bâton électrique. Zap zap zap.", cout:"20 M – 150 M miel", lieu:"Mountain Top Shop" },
-  { nom:"Porcelain Dipper", categorie:"Outils", desc:"Le cuiller de ceux qui sont encore en « early-mid game ».", cout:"20 M – 150 M miel", lieu:"Mountain Top Shop" },
-  { nom:"Petal Wand", categorie:"Outils", desc:"Le parasol de Spirit Bear. Très gros bonus de collecte.", cout:"~1,5 Md miel", lieu:"Petal Shop" },
-  { nom:"Tide Popper", categorie:"Outils", desc:"Le secouer crée des vagues. Outil bleu haut de gamme, à fabriquer.", cout:"Fabrication", lieu:"Blue HQ" },
-  { nom:"Dark Scythe", categorie:"Outils", desc:"Pour moissonner les flammes. Outil rouge haut de gamme, à fabriquer.", cout:"Fabrication", lieu:"Red HQ" },
-  { nom:"Gummyballer", categorie:"Outils", desc:"L'arme préférée des Gummy Soldiers. Seul outil capable de retirer directement le goo d'un champ. Outil le plus cher du jeu.", cout:"10 000 Md miel + matériaux", lieu:"Gummy Bear's Lair" },
-  { nom:"Sticker-Seeker", categorie:"Outils", desc:"Le plus récent outil. Rend visibles les Seeker Stickers cachés sur la carte.", cout:"—", lieu:"Ajouté avec la mise à jour Stickers" },
+  /* ================= OUTILS ================= */
+  { nom:"Scooper", categorie:"Outils", desc:"L'outil de départ de tout joueur. Petite portée, mais il fait le travail au tout début.", lieu:"Donné au début du jeu" },
+  { nom:"Rake", categorie:"Outils", desc:"Râteau qui gratte le pollen des fleurs sans abîmer leur tige.", lieu:"Noob Shop" },
+  { nom:"Clippers", categorie:"Outils", desc:"Sécateur rapide. Ne cours pas avec ça.", lieu:"Noob Shop" },
+  { nom:"Magnet", categorie:"Outils", desc:"Aimant qui attire le pollen des fleurs alentour.", lieu:"Noob Shop" },
+  { nom:"Vacuum", categorie:"Outils", desc:"Aspirateur à pollen : large zone de collecte.", lieu:"Noob Shop" },
+  { nom:"Super-Scooper", categorie:"Outils", desc:"Version améliorée du Scooper, peinture bleu et jaune plus aérodynamique.", lieu:"Pro Shop" },
+  { nom:"Pulsar", categorie:"Outils", desc:"Outil à impulsions. Possiblement radioactif.", lieu:"Pro Shop" },
+  { nom:"Electro-Magnet", categorie:"Outils", desc:"Deux aimants en un, pour deux fois plus de pollen.", lieu:"Pro Shop" },
+  { nom:"Scissors", categorie:"Outils", desc:"Ciseaux à grande portée. Ça coupe et ça claque.", lieu:"Pro Shop" },
+  { nom:"Honey Dipper", categorie:"Outils", desc:"L'outil de fabrication de miel par excellence. Bonus de conversion.", lieu:"Pro Shop" },
+  { nom:"Bubble Wand", categorie:"Outils", desc:"Recouvre les fleurs d'eau savonneuse. Favorise le pollen bleu.", lieu:"Blue HQ" },
+  { nom:"Scythe", categorie:"Outils", desc:"Faux enflammée : tranche et brûle. Favorise le pollen rouge.", lieu:"Red HQ" },
+  { nom:"Sticker-Seeker", categorie:"Outils", desc:"Le plus récent outil du jeu. Rend visibles les Seeker Stickers cachés sur la carte.", lieu:"Mountain Top" },
+  { nom:"Golden Rake", categorie:"Outils", desc:"Un râteau de jardinage totalement superflu… mais très efficace.", lieu:"Mountain Top Shop" },
+  { nom:"Spark Staff", categorie:"Outils", desc:"Bâton électrique. Zap zap zap.", lieu:"Mountain Top Shop" },
+  { nom:"Porcelain Dipper", categorie:"Outils", desc:"Le cuiller de ceux qui sont encore en « early-mid game ».", lieu:"Mountain Top Shop" },
+  { nom:"Petal Wand", categorie:"Outils", desc:"Le parasol de Spirit Bear. Très gros bonus de collecte.", lieu:"Petal Shop" },
+  { nom:"Dark Scythe", categorie:"Outils", desc:"Pour moissonner les flammes. Outil rouge haut de gamme, à fabriquer.", lieu:"Red HQ" },
+  { nom:"Tide Popper", categorie:"Outils", desc:"Le secouer crée des vagues. Outil bleu haut de gamme, à fabriquer.", lieu:"Blue HQ" },
+  { nom:"Gummyballer", categorie:"Outils", desc:"L'arme préférée des Gummy Soldiers. Seul outil capable de retirer directement le goo d'un champ. Outil le plus cher du jeu.", lieu:"Gummy Bear's Lair" },
 
-  /* ===== ŒUFS ===== */
-  { nom:"Basic Egg", categorie:"Œufs", desc:"Fait éclore une abeille Commune ou Rare. Le premier œuf du jeu.", cout:"295 miel", lieu:"Noob Shop, quêtes, tokens" },
-  { nom:"Silver Egg", categorie:"Œufs", desc:"Fait éclore une abeille Rare ou Épique.", cout:"Miel / Robux", lieu:"Boutiques, quêtes, cadeaux" },
-  { nom:"Gold Egg", categorie:"Œufs", desc:"Fait éclore une abeille Épique, Légendaire ou Mythique.", cout:"Miel / Robux", lieu:"Boutiques, quêtes, événements" },
-  { nom:"Diamond Egg", categorie:"Œufs", desc:"Fait éclore une abeille Légendaire ou Mythique.", cout:"Robux / événements", lieu:"Quêtes, événements, Robux" },
-  { nom:"Mythic Egg", categorie:"Œufs", desc:"Garantit une abeille Mythique.", cout:"Rare", lieu:"Quêtes avancées, événements" },
-  { nom:"Star Egg", categorie:"Œufs", desc:"Permet de choisir précisément l'abeille que l'on veut obtenir.", cout:"Très rare", lieu:"Événements, codes, Robux" },
-  { nom:"Gifted Egg", categorie:"Œufs", desc:"Variante « gifted » des œufs Silver / Gold / Diamond / Mythic : l'abeille éclose est directement Gifted.", cout:"Robux / événements", lieu:"Boutique Robux, événements" },
-  { nom:"Œuf d'abeille spécifique", categorie:"Œufs", desc:"Œuf lié à une abeille précise (Bear Bee, Vicious Bee, Tabby Bee…). Donne toujours cette abeille.", cout:"Variable", lieu:"Quêtes, événements, vouchers" },
+  /* ================= BACKPACK ================= */
+  { nom:"Pouch", categorie:"Backpack", desc:"Le sac de départ. Capacité minuscule, mais c'est un début.", lieu:"Donné au début du jeu" },
+  { nom:"Jar", categorie:"Backpack", desc:"Bocal : le premier vrai gain de capacité.", lieu:"Noob Shop" },
+  { nom:"Backpack", categorie:"Backpack", desc:"Sac à dos classique.", lieu:"Noob Shop" },
+  { nom:"Canister", categorie:"Backpack", desc:"Bidon métallique à bonne capacité.", lieu:"Pro Shop" },
+  { nom:"Mega-Jug", categorie:"Backpack", desc:"Jerrycan géant.", lieu:"Pro Shop" },
+  { nom:"Compressor", categorie:"Backpack", desc:"Compresse le pollen pour en stocker davantage.", lieu:"Pro Shop" },
+  { nom:"Elite Barrel", categorie:"Backpack", desc:"Tonneau d'élite. Grosse capacité de milieu de jeu.", lieu:"Mountain Top Shop" },
+  { nom:"Port-O-Hive", categorie:"Backpack", desc:"Ruche portative : capacité énorme et bonus de conversion.", lieu:"Mountain Top Shop" },
+  { nom:"Blue Port-O-Hive", categorie:"Backpack", desc:"Version bleue de la ruche portative : bonus orientés pollen bleu.", lieu:"Blue HQ (fabrication)" },
+  { nom:"Red Port-O-Hive", categorie:"Backpack", desc:"Version rouge de la ruche portative : bonus orientés pollen rouge.", lieu:"Red HQ (fabrication)" },
+  { nom:"Porcelain Port-O-Hive", categorie:"Backpack", desc:"Ruche portative en porcelaine : sac blanc haut de gamme.", lieu:"Fabrication" },
+  { nom:"Coconut Canister", categorie:"Backpack", desc:"Bidon en noix de coco : un des meilleurs sacs de fin de jeu.", lieu:"Coconut Cave (fabrication)" },
 
-  /* ===== GELÉES & TREATS ===== */
-  { nom:"Royal Jelly", categorie:"Gelées & Treats", desc:"Transforme une abeille en une autre abeille aléatoire de rareté supérieure ou égale. Fait perdre mutation et statut Gifted.", cout:"—", lieu:"Distributeur, quêtes, planteurs, mobs" },
-  { nom:"Star Jelly", categorie:"Gelées & Treats", desc:"Gelée étoilée : transforme une abeille en l'abeille exacte de ton choix.", cout:"Très rare", lieu:"Événements, codes, Robux" },
-  { nom:"Treat", categorie:"Gelées & Treats", desc:"Friandise de base : donne de l'XP et du bond à une abeille.", cout:"—", lieu:"Treat Shop, quêtes, tokens" },
-  { nom:"Blueberry", categorie:"Gelées & Treats", desc:"Friandise préférée des abeilles bleues : bond bonus pour elles.", cout:"—", lieu:"Distributeur Blue HQ" },
-  { nom:"Strawberry", categorie:"Gelées & Treats", desc:"Friandise préférée des abeilles rouges : bond bonus pour elles.", cout:"—", lieu:"Distributeur Strawberry Field" },
-  { nom:"Pineapple", categorie:"Gelées & Treats", desc:"Friandise préférée de plusieurs abeilles incolores.", cout:"—", lieu:"Pineapple Patch" },
-  { nom:"Sunflower Seed", categorie:"Gelées & Treats", desc:"Graine de tournesol, friandise préférée de certaines abeilles.", cout:"—", lieu:"Sunflower Field" },
-  { nom:"Bitterberry", categorie:"Gelées & Treats", desc:"Baie amère : 1 chance sur 1 000 de donner une mutation à l'abeille nourrie (1 sur 100 si elle est radioactive).", cout:"—", lieu:"Quêtes, planteurs, mobs" },
-  { nom:"Neonberry", categorie:"Gelées & Treats", desc:"Baie néon : friandise rare qui donne beaucoup de bond.", cout:"—", lieu:"Quêtes, planteurs" },
-  { nom:"Moon Charm", categorie:"Gelées & Treats", desc:"Charme lunaire : gros bond, peut mutter une abeille. Sert aussi à fabriquer.", cout:"—", lieu:"Mother Bear, Wind Shrine, nuit" },
-  { nom:"Atomic Treat", categorie:"Gelées & Treats", desc:"Friandise atomique : garantit une mutation sur l'abeille nourrie, radioactive ou non.", cout:"Très rare", lieu:"Quêtes de haut niveau, événements" },
-  { nom:"Gumdrops", categorie:"Gelées & Treats", desc:"Bonbons gélifiés, monnaie et ingrédient lié au Gummy Bear.", cout:"—", lieu:"Gummy Bear, planteurs, mobs" },
-  { nom:"Jelly Beans", categorie:"Gelées & Treats", desc:"Friandise donnée par plusieurs quêtes, bon rapport bond/quantité.", cout:"—", lieu:"Quêtes, cadeaux" },
+  /* ================= MASQUE ================= */
+  { nom:"Helmet", categorie:"Masque", desc:"Casque de base : un peu de défense et de pollen.", lieu:"Noob Shop" },
+  { nom:"Propeller Hat", categorie:"Masque", desc:"Chapeau à hélice : bonus de collecte et style garanti.", lieu:"Pro Shop" },
+  { nom:"Bubble Mask", categorie:"Masque", desc:"Masque à bulles : orienté pollen bleu et bulles.", lieu:"Fabrication" },
+  { nom:"Fire Mask", categorie:"Masque", desc:"Masque de feu : orienté pollen rouge et flammes.", lieu:"Fabrication" },
+  { nom:"Honey Mask", categorie:"Masque", desc:"Masque de miel : bonus de conversion et de miel.", lieu:"Fabrication" },
+  { nom:"Diamond Mask", categorie:"Masque", desc:"Masque de diamant, fabriqué dans la Diamond Room après le parcours des nuages. Il rend les plateformes de la salle solides de jour comme de nuit.", lieu:"Diamond Room (fabrication)" },
+  { nom:"Demon Mask", categorie:"Masque", desc:"Masque démoniaque : gros bonus d'attaque et de flammes.", lieu:"Fabrication" },
+  { nom:"Gummy Mask", categorie:"Masque", desc:"Masque gélifié : bonus de goo et de conversion du goo.", lieu:"Gummy Bear's Lair (fabrication)" },
 
-  /* ===== FABRICATION ===== */
-  { nom:"Glue", categorie:"Fabrication", desc:"Colle : x1,25 pollen des outils et des abeilles pendant 10 minutes. Aussi utilisée en fabrication.", cout:"—", lieu:"Quêtes, planteurs, sticker stack" },
-  { nom:"Enzymes", categorie:"Fabrication", desc:"Boost de conversion en miel. Ingrédient de nombreuses recettes.", cout:"—", lieu:"Quêtes, planteurs, mobs" },
-  { nom:"Oil", categorie:"Fabrication", desc:"Huile : accélère les abeilles et sert à beaucoup de fabrications.", cout:"—", lieu:"Quêtes, planteurs" },
-  { nom:"Glitter", categorie:"Fabrication", desc:"Paillettes : boost puissant et ingrédient rare.", cout:"—", lieu:"Quêtes, événements" },
-  { nom:"Stinger", categorie:"Fabrication", desc:"Dard : ingrédient de fabrication (guards, masques, outils).", cout:"—", lieu:"Mobs, quêtes, Stinger Shop" },
-  { nom:"Soft Wax", categorie:"Fabrication", desc:"Cire tendre : +1 point de cire sur un beequip.", cout:"—", lieu:"Planteurs, quêtes, sticker stack" },
-  { nom:"Hard Wax", categorie:"Fabrication", desc:"Cire dure : +2 points de cire sur un beequip.", cout:"—", lieu:"Planteurs, quêtes" },
-  { nom:"Caustic Wax", categorie:"Fabrication", desc:"Cire caustique : +4 points de cire, et débloque des stats rares.", cout:"—", lieu:"Quêtes avancées, boss" },
-  { nom:"Swirled Wax", categorie:"Fabrication", desc:"Cire marbrée : 0 point de cire, mais relance entièrement les stats de base et tous les points déjà posés.", cout:"—", lieu:"Quêtes avancées, événements" },
-  { nom:"Red Extract", categorie:"Fabrication", desc:"Extrait rouge : boost du pollen rouge, ingrédient de fabrication.", cout:"—", lieu:"Red HQ, quêtes" },
-  { nom:"Blue Extract", categorie:"Fabrication", desc:"Extrait bleu : boost du pollen bleu, ingrédient de fabrication.", cout:"—", lieu:"Blue HQ, quêtes" },
-  { nom:"Purple Potion", categorie:"Fabrication", desc:"Potion violette : x1,25 capacité, x1,5 pollen rouge et bleu, x1,3 pollen d'outils… pendant 15 min.", cout:"—", lieu:"Science Bear, quêtes" },
-  { nom:"Micro-Converter", categorie:"Fabrication", desc:"Micro-convertisseur : convertit instantanément une part du pollen en miel.", cout:"—", lieu:"Quêtes, sticker stack" },
-  { nom:"Magic Bean", categorie:"Fabrication", desc:"Haricot magique : fait pousser un Sprout géant.", cout:"—", lieu:"Magic Bean Shop, quêtes" },
-  { nom:"Cloud Vial", categorie:"Fabrication", desc:"Fiole de nuage : invoque un nuage qui fait pleuvoir des tokens sur un champ.", cout:"—", lieu:"Wind Shrine, quêtes" },
-  { nom:"Field Dice", categorie:"Fabrication", desc:"Dé de champ : relance le multiplicateur de boost d'un champ.", cout:"—", lieu:"Quêtes, cadeaux" },
-  { nom:"Loaded Dice", categorie:"Fabrication", desc:"Dé pipé : garantit un bon résultat sur un boost de champ.", cout:"—", lieu:"Quêtes, événements" },
-  { nom:"Smooth Dice", categorie:"Fabrication", desc:"Dé lisse : version intermédiaire du dé de champ.", cout:"—", lieu:"Sticker stack, quêtes" },
-  { nom:"Whirligig", categorie:"Fabrication", desc:"Hélice : téléporte instantanément le joueur à la ruche.", cout:"—", lieu:"Quêtes, planteurs" },
+  /* ================= LEFT GUARD ================= */
+  { nom:"Bomber Guard", categorie:"Left Guard", desc:"Protection liée à Bomber Bee : bonus de bombes.", lieu:"Fabrication" },
+  { nom:"Looker Guard", categorie:"Left Guard", desc:"Protection liée à Looker Bee : bonus de critique.", lieu:"Fabrication" },
+  { nom:"Red Guard", categorie:"Left Guard", desc:"Protection rouge : pollen et attaque rouges.", lieu:"Red HQ (fabrication)" },
+  { nom:"Elite Red Guard", categorie:"Left Guard", desc:"Version élite de la protection rouge.", lieu:"Red HQ (fabrication)" },
+  { nom:"Riley Guard", categorie:"Left Guard", desc:"Protection liée à Riley Bee.", lieu:"Fabrication" },
+  { nom:"Crimson Guard", categorie:"Left Guard", desc:"Protection liée à Crimson Bee : haut de gamme rouge.", lieu:"Fabrication" },
 
-  /* ===== MONNAIE ===== */
-  { nom:"Honey", categorie:"Monnaie", desc:"La monnaie principale du jeu : sert à acheter outils, sacs, accessoires et emplacements de ruche.", cout:"—", lieu:"Conversion du pollen à la ruche" },
-  { nom:"Ticket", categorie:"Monnaie", desc:"Monnaie secondaire : emplacements de stickers et de beequips, Ticket Tent, boutiques spéciales.", cout:"—", lieu:"Mobs, quêtes, cadeaux quotidiens" },
-  { nom:"Goo", categorie:"Monnaie", desc:"Substance gluante laissée sur les champs, convertie en miel par certaines abeilles et outils.", cout:"—", lieu:"Champs, Gummy Bear" },
-  { nom:"Bond", categorie:"Monnaie", desc:"Lien d'une abeille : monte avec les friandises et débloque des niveaux.", cout:"—", lieu:"Nourrir les abeilles" },
+  /* ================= RIGHT GUARD ================= */
+  { nom:"Brave Guard", categorie:"Right Guard", desc:"Protection liée à Brave Bee : bonus d'attaque.", lieu:"Fabrication" },
+  { nom:"Hasty Guard", categorie:"Right Guard", desc:"Protection liée à Hasty Bee : bonus de vitesse.", lieu:"Fabrication" },
+  { nom:"Blue Guard", categorie:"Right Guard", desc:"Protection bleue : pollen et attaque bleus.", lieu:"Blue HQ (fabrication)" },
+  { nom:"Elite Blue Guard", categorie:"Right Guard", desc:"Version élite de la protection bleue.", lieu:"Blue HQ (fabrication)" },
+  { nom:"Bucko Guard", categorie:"Right Guard", desc:"Protection liée à Bucko Bee.", lieu:"Fabrication" },
+  { nom:"Cobalt Guard", categorie:"Right Guard", desc:"Protection liée à Cobalt Bee : haut de gamme bleu.", lieu:"Fabrication" },
 
-  /* ===== ACCESSOIRES ===== */
-  { nom:"Hive Slot", categorie:"Accessoires", desc:"Emplacement de ruche supplémentaire : passe de 25 à 50 abeilles maximum. Le prix augmente de façon exponentielle.", cout:"Miel (exponentiel)", lieu:"Mountain Top Shop" },
-  { nom:"Amulet", categorie:"Accessoires", desc:"Amulette : bonus permanents obtenus en réussissant des défis spéciaux. Voir l'onglet Amulettes.", cout:"Défis", lieu:"Boss et challenges" },
-  { nom:"Beequip", categorie:"Accessoires", desc:"Équipement à poser sur une abeille. Stats aléatoires selon un potentiel de 0 à 5 ★, améliorables aux cires.", cout:"—", lieu:"Planteurs (surtout Dandelion Field)" },
-  { nom:"Sticker", categorie:"Accessoires", desc:"Autocollant décoratif à poser sur sa ruche, à échanger, ou à empiler dans le Sticker Stack pour un bonus permanent.", cout:"—", lieu:"Murs cachés, Sticker Printer, quêtes" },
-  { nom:"Sac (Bag)", categorie:"Accessoires", desc:"Augmente la capacité de pollen transportable. Du Backpack de base au Port-O-Hive.", cout:"Miel", lieu:"Boutiques, fabrication" },
-  { nom:"Masque (Mask)", categorie:"Accessoires", desc:"Masques (Bubble, Gummy, Diamond, Beekeeper…) : bonus de pollen et effets spéciaux.", cout:"Miel + matériaux", lieu:"Badge Bearer's Guild, boutiques" },
-  { nom:"Guard", categorie:"Accessoires", desc:"Protections liées à une abeille (Blue Guard, Bomber Guard…) : bonus d'attaque et de pollen ciblés.", cout:"Miel + matériaux", lieu:"Fabrication" },
-  { nom:"Bottes (Boots)", categorie:"Accessoires", desc:"Bottes : vitesse de déplacement et bonus de collecte en marchant.", cout:"Miel + matériaux", lieu:"Boutiques, fabrication" },
-  { nom:"Ceinture (Belt)", categorie:"Accessoires", desc:"Ceintures : capacité et bonus divers.", cout:"Miel + matériaux", lieu:"Boutiques, fabrication" },
-  { nom:"Parachute / Glider", categorie:"Accessoires", desc:"Outils de vol plané pour traverser la carte rapidement.", cout:"Miel", lieu:"Boutiques" },
+  /* ================= BELT ================= */
+  { nom:"Belt Pocket", categorie:"Belt", desc:"Petite poche de ceinture : la première capacité en plus.", lieu:"Noob Shop" },
+  { nom:"Belt Bag", categorie:"Belt", desc:"Sacoche de ceinture.", lieu:"Pro Shop" },
+  { nom:"Mondo Belt Bag", categorie:"Belt", desc:"Sacoche géante.", lieu:"Mountain Top Shop" },
+  { nom:"Honeycomb Belt", categorie:"Belt", desc:"Ceinture en rayons de miel : bonus de conversion.", lieu:"Fabrication" },
+  { nom:"Petal Belt", categorie:"Belt", desc:"Ceinture de pétales : haut de gamme du Petal Shop.", lieu:"Petal Shop" },
+  { nom:"Coconut Belt", categorie:"Belt", desc:"Ceinture en noix de coco : une des meilleures de fin de jeu.", lieu:"Coconut Cave (fabrication)" },
 
-  /* ===== PLANTEURS ===== */
-  { nom:"Paper Planter", categorie:"Planteurs", desc:"Planteur en papier : le plus rapide, petites récompenses. Idéal pour débuter.", cout:"—", lieu:"Quêtes, Blender" },
-  { nom:"Ticket Planter", categorie:"Planteurs", desc:"Planteur à tickets : récompense principalement en tickets.", cout:"—", lieu:"Quêtes, sticker stack" },
-  { nom:"Plastic Planter", categorie:"Planteurs", desc:"Planteur en plastique : bon compromis temps / récompense.", cout:"—", lieu:"Quêtes, boutiques" },
-  { nom:"Candy Planter", categorie:"Planteurs", desc:"Planteur bonbon : orienté gumdrops et goo.", cout:"—", lieu:"Gummy Bear, fabrication" },
-  { nom:"Blue Clay Planter", categorie:"Planteurs", desc:"Planteur d'argile bleue : boosté sur les champs bleus.", cout:"Fabrication", lieu:"Blender" },
-  { nom:"Red Clay Planter", categorie:"Planteurs", desc:"Planteur d'argile rouge : boosté sur les champs rouges.", cout:"Fabrication", lieu:"Blender" },
-  { nom:"Tacky Planter", categorie:"Planteurs", desc:"Planteur collant : très bon rendement en cires et beequips.", cout:"Fabrication", lieu:"Blender" },
-  { nom:"Pesticide Planter", categorie:"Planteurs", desc:"Planteur pesticide : élimine les mobs et donne des matériaux.", cout:"Fabrication", lieu:"Blender" },
-  { nom:"Petal Planter", categorie:"Planteurs", desc:"Planteur pétale : orienté Petal Shop et objets lunaires.", cout:"Fabrication", lieu:"Blender" },
-  { nom:"Coconut Canister", categorie:"Planteurs", desc:"Planteur noix de coco : long, mais très rentable en fin de jeu.", cout:"Fabrication", lieu:"Blender" },
+  /* ================= BOTTES ================= */
+  { nom:"Basic Boots", categorie:"Bottes", desc:"Bottes de base : un peu de vitesse.", lieu:"Fabrication" },
+  { nom:"Hiking Boots", categorie:"Bottes", desc:"Chaussures de randonnée : vitesse et collecte en marchant.", lieu:"Fabrication" },
+  { nom:"Beekeeper's Boots", categorie:"Bottes", desc:"Bottes d'apiculteur. À porter avec un chapeau pour que Dapper Bear accepte de te vendre des beequips.", lieu:"Fabrication" },
+  { nom:"Coconut Clogs", categorie:"Bottes", desc:"Sabots en noix de coco : bottes de fin de jeu.", lieu:"Coconut Cave (fabrication)" },
+  { nom:"Gummy Boots", categorie:"Bottes", desc:"Bottes gélifiées : orientées goo.", lieu:"Gummy Bear's Lair (fabrication)" },
 
-  /* ===== PASSES & DIVERS ===== */
-  { nom:"Ant Pass", categorie:"Divers", desc:"Passe fourmi : donne accès à l'Ant Challenge dans le Ant Field.", cout:"—", lieu:"Quêtes, planteurs, mobs" },
-  { nom:"Robo Pass", categorie:"Divers", desc:"Passe robot : lance le Robo Bear Challenge.", cout:"—", lieu:"Robo Pass Dispenser, quêtes" },
-  { nom:"Box-O-Frogs", categorie:"Divers", desc:"Boîte de grenouilles : invoque des grenouilles qui produisent des tokens.", cout:"—", lieu:"Quêtes, sticker stack" },
-  { nom:"Balloon", categorie:"Divers", desc:"Ballon : fait pleuvoir des tokens sur un champ pendant un moment.", cout:"—", lieu:"Quêtes, cadeaux" },
-  { nom:"Black Balloon", categorie:"Divers", desc:"Ballon noir : version plus puissante du ballon classique.", cout:"—", lieu:"Quêtes avancées, sticker stack" },
-  { nom:"Honeysuckle", categorie:"Divers", desc:"Chèvrefeuille : attire des tokens sur un champ.", cout:"—", lieu:"Quêtes, sticker stack" },
-  { nom:"Coconut", categorie:"Divers", desc:"Noix de coco : ingrédient et friandise du Coconut Field.", cout:"—", lieu:"Coconut Field, Coconut Crab" },
-  { nom:"Drives", categorie:"Divers", desc:"Disques du Robo Bear : ingrédients de fabrication mécaniques.", cout:"—", lieu:"Robo Bear Challenge" },
-  { nom:"7-Pronged Cog", categorie:"Divers", desc:"Engrenage à 7 dents : ingrédient rare du Robo Bear Challenge.", cout:"—", lieu:"Golden Cogmower" },
-  { nom:"Sprout", categorie:"Divers", desc:"Pousse magique : produit du pollen et des tokens pendant plusieurs minutes sur un champ.", cout:"—", lieu:"Magic Bean, quêtes" },
+  /* ================= SPRINKLER ================= */
+  { nom:"Basic Sprinkler", categorie:"Sprinkler", desc:"Arroseur de base : fait pousser les fleurs autour de lui.", lieu:"Sprinkler Builder" },
+  { nom:"Silver Soakers", categorie:"Sprinkler", desc:"Arroseurs argentés : plus grande zone d'effet.", lieu:"Sprinkler Builder" },
+  { nom:"Golden Gushers", categorie:"Sprinkler", desc:"Arroseurs dorés : zone et rendement nettement supérieurs.", lieu:"Sprinkler Builder" },
+  { nom:"Diamond Drenchers", categorie:"Sprinkler", desc:"Arroseurs de diamant : haut de gamme.", lieu:"Sprinkler Builder" },
+  { nom:"The Supreme Saturator", categorie:"Sprinkler", desc:"L'arroseur ultime du jeu.", lieu:"Sprinkler Builder" },
+
+  /* ================= ACCESSOIRE ================= */
+  { nom:"Parachute", categorie:"Accessoire", desc:"Parachute : ralentit la chute pour traverser la carte en douceur.", lieu:"Boutique" },
+  { nom:"Glider", categorie:"Accessoire", desc:"Deltaplane : vol plané sur de longues distances.", lieu:"Boutique" },
+  { nom:"Hive Slot", categorie:"Accessoire", desc:"Emplacement de ruche supplémentaire : de 25 à 50 abeilles maximum. Le prix augmente de façon exponentielle.", lieu:"Mountain Top Shop" },
+  { nom:"Amulet", categorie:"Accessoire", desc:"Amulette : bonus permanents obtenus via les défis et les générateurs. Voir l'onglet Amulettes.", lieu:"Défis et générateurs" },
+  { nom:"Beequip", categorie:"Accessoire", desc:"Équipement à poser sur une abeille. Stats aléatoires selon un potentiel de 0 à 5 ★. Voir l'onglet Beequip.", lieu:"Planteurs, Dapper Bear" },
+  { nom:"Sticker", categorie:"Accessoire", desc:"Autocollant à poser sur sa ruche, à échanger ou à empiler dans le Sticker Stack. Voir l'onglet Stickers.", lieu:"Murs cachés, Sticker Printer, quêtes" },
+
+  /* ================= PLANTER ================= */
+  { nom:"Paper Planter", categorie:"Planter", desc:"Planteur en papier : usage unique, très rapide, petites récompenses. Idéal pour débuter.", lieu:"Quêtes, Blender" },
+  { nom:"Ticket Planter", categorie:"Planter", desc:"Planteur à tickets : usage unique, récompense surtout en tickets.", lieu:"Quêtes, Sticker Stack" },
+  { nom:"Sticker Planter", categorie:"Planter", desc:"Planteur à stickers : usage unique, orienté stickers.", lieu:"Quêtes, événements" },
+  { nom:"Festive Planter", categorie:"Planter", desc:"Planteur de Beesmas : usage unique, récompenses de l'événement.", lieu:"Événement Beesmas" },
+  { nom:"Basic Planter", categorie:"Planter", desc:"Le premier planteur permanent. Rapide et polyvalent.", lieu:"Boutique" },
+  { nom:"Candy Planter", categorie:"Planter", desc:"Planteur bonbon : orienté gumdrops et goo.", lieu:"Gummy Bear (fabrication)" },
+  { nom:"Red Clay Planter", categorie:"Planter", desc:"Planteur d'argile rouge : boosté sur les champs rouges. Peut lâcher un Thumbtack.", lieu:"Blender" },
+  { nom:"Blue Clay Planter", categorie:"Planter", desc:"Planteur d'argile bleue : boosté sur les champs bleus.", lieu:"Blender" },
+  { nom:"Tacky Planter", categorie:"Planter", desc:"Planteur collant : très bon rendement en cires et beequips.", lieu:"Blender" },
+  { nom:"Pesticide Planter", categorie:"Planter", desc:"Planteur pesticide : élimine les mobs. Meilleure chance de Bang Snap et Bead Lizard.", lieu:"Blender" },
+  { nom:"Hydroponic Planter", categorie:"Planter", desc:"Planteur hydroponique : gros rendement, temps de pousse long.", lieu:"Blender" },
+  { nom:"Heat-Treated Planter", categorie:"Planter", desc:"Planteur traité à la chaleur : orienté rouge. Peut lâcher un Thumbtack.", lieu:"Blender" },
+  { nom:"Petal Planter", categorie:"Planter", desc:"Planteur pétale : la seule voie réaliste pour le Lei et le Charm Bracelet.", lieu:"Blender" },
+  { nom:"The Planter Of Plenty", categorie:"Planter", desc:"Le planteur ultime du jeu : le plus long, mais le plus rentable.", lieu:"Blender" },
+
+  /* ================= ŒUFS ================= */
+  { nom:"Basic Egg", categorie:"Œufs", desc:"Fait éclore une abeille Commune ou Rare. Le premier œuf du jeu.", lieu:"Noob Shop, quêtes, tokens" },
+  { nom:"Silver Egg", categorie:"Œufs", desc:"Fait éclore une abeille Rare ou Épique.", lieu:"Boutiques, quêtes, cadeaux" },
+  { nom:"Gold Egg", categorie:"Œufs", desc:"Fait éclore une abeille Épique, Légendaire ou Mythique.", lieu:"Boutiques, quêtes, événements" },
+  { nom:"Diamond Egg", categorie:"Œufs", desc:"Fait éclore une abeille Légendaire ou Mythique.", lieu:"Quêtes, événements, Robux" },
+  { nom:"Mythic Egg", categorie:"Œufs", desc:"Garantit une abeille Mythique aléatoire.", lieu:"Quêtes avancées, événements" },
+  { nom:"Choose A Mythic Egg", categorie:"Œufs", desc:"Permet de choisir soi-même quelle abeille Mythique obtenir.", lieu:"Quêtes de haut niveau, événements" },
+  { nom:"Star Egg", categorie:"Œufs", desc:"Permet de choisir précisément n'importe quelle abeille du jeu.", lieu:"Événements, codes, Robux" },
+  { nom:"Silver Gift Egg", categorie:"Œufs", desc:"Version « gifted » de l'œuf argent : l'abeille éclose est directement Gifted.", lieu:"Boutique Robux, événements" },
+  { nom:"Gold Gift Egg", categorie:"Œufs", desc:"Version « gifted » de l'œuf or.", lieu:"Boutique Robux, événements" },
+  { nom:"Diamond Gift Egg", categorie:"Œufs", desc:"Version « gifted » de l'œuf diamant.", lieu:"Boutique Robux, événements" },
+  { nom:"Mythic Gift Egg", categorie:"Œufs", desc:"Version « gifted » de l'œuf mythique.", lieu:"Boutique Robux, événements" },
+  { nom:"Bumble Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne directement une Bumble Bee.", lieu:"Quêtes, événements (très rare)" },
+  { nom:"Rascal Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne directement une Rascal Bee.", lieu:"Quêtes, événements (très rare)" },
+  { nom:"Bubble Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne directement une Bubble Bee.", lieu:"Quêtes, événements (très rare)" },
+  { nom:"Honey Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne directement une Honey Bee.", lieu:"Quêtes, événements (très rare)" },
+  { nom:"Music Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne directement une Music Bee.", lieu:"Quêtes, événements (très rare)" },
+  { nom:"Gifted Exhausted Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne une Exhausted Bee déjà Gifted.", lieu:"Quêtes, événements (très rare)" },
+  { nom:"Gifted Frosty Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne une Frosty Bee déjà Gifted.", lieu:"Quêtes, événements (très rare)" },
+  { nom:"Gifted Carpenter Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne une Carpenter Bee déjà Gifted.", lieu:"Quêtes, événements (très rare)" },
+  { nom:"Gifted Diamond Bee Egg", categorie:"Œufs", desc:"Œuf super rare : donne une Diamond Bee déjà Gifted.", lieu:"Quêtes, événements (très rare)" },
+  { nom:"Bear Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Bear Bee.", lieu:"Bear Bee Voucher, événements" },
+  { nom:"Vicious Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Vicious Bee.", lieu:"Plateforme de réclamation, événements" },
+  { nom:"Tabby Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Tabby Bee.", lieu:"Événements" },
+  { nom:"Puppy Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Puppy Bee.", lieu:"Événements" },
+  { nom:"Photon Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Photon Bee.", lieu:"Événements" },
+  { nom:"Festive Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Festive Bee.", lieu:"Événement Beesmas" },
+  { nom:"Gummy Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Gummy Bee.", lieu:"Événements" },
+  { nom:"Windy Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Windy Bee.", lieu:"Événements" },
+  { nom:"Cobalt Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Cobalt Bee.", lieu:"Événements" },
+  { nom:"Crimson Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Crimson Bee.", lieu:"Événements" },
+  { nom:"Digital Bee Egg", categorie:"Œufs", desc:"Œuf d'événement : donne directement une Digital Bee.", lieu:"Événements, codes" },
+
+  /* ================= GELÉES ================= */
+  { nom:"Royal Jelly", categorie:"Gelées", desc:"Transforme une abeille en une autre abeille aléatoire. Fait perdre mutation et statut Gifted.", lieu:"Distributeur, quêtes, planteurs, mobs" },
+  { nom:"Star Jelly", categorie:"Gelées", desc:"Gelée étoilée : transforme une abeille en l'abeille exacte de ton choix.", lieu:"Événements, codes, Robux" },
+  { nom:"Bumble Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Bumble Bee.", lieu:"Quêtes, événements" },
+  { nom:"Rascal Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Rascal Bee.", lieu:"Quêtes, événements" },
+  { nom:"Bubble Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Bubble Bee.", lieu:"Quêtes, événements" },
+  { nom:"Exhausted Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Exhausted Bee.", lieu:"Quêtes, événements" },
+  { nom:"Honey Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Honey Bee.", lieu:"Quêtes, événements" },
+  { nom:"Shocked Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Shocked Bee.", lieu:"Quêtes, codes, événements" },
+  { nom:"Diamond Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Diamond Bee.", lieu:"Quêtes, événements" },
+  { nom:"Music Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Music Bee.", lieu:"Quêtes, événements" },
+  { nom:"Buoyant Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Buoyant Bee.", lieu:"Quêtes, événements" },
+  { nom:"Bear Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Bear Bee.", lieu:"Événements" },
+  { nom:"Vicious Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Vicious Bee.", lieu:"Événements" },
+  { nom:"Tabby Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Tabby Bee.", lieu:"Événements" },
+  { nom:"Puppy Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Puppy Bee.", lieu:"Événements" },
+  { nom:"Photon Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Photon Bee.", lieu:"Événements" },
+  { nom:"Festive Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Festive Bee.", lieu:"Événement Beesmas" },
+  { nom:"Gummy Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Gummy Bee.", lieu:"Événements" },
+  { nom:"Windy Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Windy Bee.", lieu:"Événements" },
+  { nom:"Cobalt Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Cobalt Bee.", lieu:"Événements" },
+  { nom:"Crimson Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Crimson Bee.", lieu:"Événements" },
+  { nom:"Digital Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Digital Bee.", lieu:"Événements, codes" },
+
+  /* ================= TREATS ================= */
+  { nom:"Coconut", categorie:"Treats", desc:"Noix de coco : friandise du Coconut Field, aussi utilisée en fabrication.", lieu:"Coconut Field, Coconut Crab" },
+  { nom:"Treat", categorie:"Treats", desc:"Friandise de base : donne de l'XP et du bond à une abeille.", lieu:"Treat Shop, quêtes, tokens" },
+  { nom:"Atomic Treat", categorie:"Treats", desc:"Friandise atomique : garantit une mutation sur l'abeille nourrie, radioactive ou non.", lieu:"Quêtes de haut niveau, événements" },
+  { nom:"Sunflower Seed", categorie:"Treats", desc:"Graine de tournesol : friandise préférée de plusieurs abeilles.", lieu:"Sunflower Field" },
+  { nom:"Strawberry", categorie:"Treats", desc:"Fraise : friandise préférée des abeilles rouges.", lieu:"Strawberry Field" },
+  { nom:"Pineapple", categorie:"Treats", desc:"Ananas : friandise préférée de plusieurs abeilles incolores.", lieu:"Pineapple Patch" },
+  { nom:"Blueberry", categorie:"Treats", desc:"Myrtille : friandise préférée des abeilles bleues.", lieu:"Distributeur Blue HQ" },
+  { nom:"Bitterberry", categorie:"Treats", desc:"Baie amère : 1 chance sur 1 000 de donner une mutation (1 sur 100 si l'abeille est radioactive).", lieu:"Quêtes, planteurs, mobs" },
+  { nom:"Neonberry", categorie:"Treats", desc:"Baie néon : friandise rare qui donne beaucoup de bond.", lieu:"Quêtes, planteurs" },
+  { nom:"Moon Charm", categorie:"Treats", desc:"Charme lunaire : gros bond, peut mutter une abeille. Sert aussi à fabriquer et à générer le Moon Amulet.", lieu:"Mother Bear, nuit, quêtes" },
+
+  /* ================= FABRICATION ================= */
+  { nom:"Red Extract", categorie:"Fabrication", desc:"Extrait rouge : boost du pollen rouge, ingrédient de fabrication.", lieu:"Blender, quêtes" },
+  { nom:"Blue Extract", categorie:"Fabrication", desc:"Extrait bleu : boost du pollen bleu, ingrédient de fabrication. Se fabrique avec 50 Blueberries et 10 Royal Jellies.", lieu:"Blender, quêtes" },
+  { nom:"Enzymes", categorie:"Fabrication", desc:"Boost de conversion en miel. Ingrédient de très nombreuses recettes.", lieu:"Blender, quêtes, mobs" },
+  { nom:"Oil", categorie:"Fabrication", desc:"Huile : accélère les abeilles. Se fabrique avec 50 Sunflower Seeds et 10 Royal Jellies.", lieu:"Blender, quêtes" },
+  { nom:"Glue", categorie:"Fabrication", desc:"Colle : ×1,25 pollen des outils et des abeilles pendant 10 minutes.", lieu:"Quêtes, planteurs, Sticker Stack" },
+  { nom:"Tropical Drink", categorie:"Fabrication", desc:"Boisson tropicale : boost lié aux champs de fin de jeu.", lieu:"Fabrication, quêtes" },
+  { nom:"Glitter", categorie:"Fabrication", desc:"Paillettes : boost puissant et ingrédient rare. Se fabrique avec 25 Moon Charms et 1 Magic Bean.", lieu:"Blender, quêtes" },
+  { nom:"Purple Potion", categorie:"Fabrication", desc:"×1,25 capacité et convert rate à la ruche, ×1,5 pollen rouge et bleu, ×1,3 bee gather et pollen d'outils, pendant 15 minutes.", lieu:"Science Bear, quêtes" },
+  { nom:"Super Smoothie", categorie:"Fabrication", desc:"Smoothie : gros boost combiné de fin de jeu.", lieu:"Fabrication, quêtes" },
+  { nom:"Turpentine", categorie:"Fabrication", desc:"Térébenthine : ingrédient obtenu par certaines quêtes seulement.", lieu:"Quêtes exclusives" },
+  { nom:"Field Dice", categorie:"Fabrication", desc:"Dé de champ : relance le multiplicateur de boost d'un champ.", lieu:"Quêtes, cadeaux" },
+  { nom:"Smooth Dice", categorie:"Fabrication", desc:"Dé lisse : version intermédiaire, meilleur résultat moyen.", lieu:"Sticker Stack, quêtes" },
+  { nom:"Loaded Dice", categorie:"Fabrication", desc:"Dé pipé : garantit un bon résultat sur un boost de champ.", lieu:"Quêtes, événements" },
+
+  /* ================= WAX ================= */
+  { nom:"Soft Wax", categorie:"Wax", desc:"Cire tendre : +1 point de cire sur un beequip.", lieu:"Planteurs, quêtes, Sticker Stack" },
+  { nom:"Hard Wax", categorie:"Wax", desc:"Cire dure : +2 points de cire sur un beequip.", lieu:"Planteurs, quêtes" },
+  { nom:"Swirled Wax", categorie:"Wax", desc:"Cire marbrée : 0 point, mais elle régénère les stats de base et relance tous les points déjà posés. La seule vraie reroll.", lieu:"Quêtes avancées, événements" },
+  { nom:"Caustic Wax", categorie:"Wax", desc:"Cire caustique : +4 points de cire, et débloque les stats rares.", lieu:"Quêtes avancées, boss" },
+  { nom:"Debug Wax", categorie:"Wax", desc:"Cire de débogage : +4 points comme la caustique. Obtenable uniquement par certaines quêtes.", lieu:"Quêtes exclusives" },
+
+  /* ================= ACHETABLE ================= */
+  { nom:"Ticket", categorie:"Achetable", desc:"Monnaie secondaire : emplacements de stickers et de beequips, Ticket Tent, boutiques spéciales.", lieu:"Mobs, quêtes, cadeaux quotidiens" },
+  { nom:"Stinger", categorie:"Achetable", desc:"Dard : ingrédient de fabrication, et il déclenche la Star Saw du Supreme Star Amulet.", lieu:"Stinger Shop, mobs, quêtes" },
+  { nom:"Gumdrops", categorie:"Achetable", desc:"Bonbons gélifiés : monnaie et ingrédient liés au Gummy Bear.", lieu:"Gummy Bear, planteurs, mobs" },
+  { nom:"Ant Pass", categorie:"Achetable", desc:"Passe fourmi : donne accès à l'Ant Challenge dans le Ant Field.", lieu:"Quêtes, planteurs, mobs" },
+  { nom:"Robo Pass", categorie:"Achetable", desc:"Passe robot : lance le Robo Bear Challenge.", lieu:"Robo Pass Dispenser, quêtes" },
+
+  /* ================= BALLOON ================= */
+  { nom:"Pink Balloon", categorie:"Balloon", desc:"Ballon rose : fait pleuvoir des tokens sur un champ.", lieu:"Quêtes, cadeaux" },
+  { nom:"Red Balloon", categorie:"Balloon", desc:"Ballon rouge : version orientée pollen rouge.", lieu:"Quêtes, cadeaux" },
+  { nom:"White Balloon", categorie:"Balloon", desc:"Ballon blanc : version orientée pollen blanc.", lieu:"Quêtes, cadeaux" },
+  { nom:"Black Balloon", categorie:"Balloon", desc:"Ballon noir : le plus puissant des ballons.", lieu:"Quêtes avancées, Sticker Stack" },
+
+  /* ================= NECTAR ================= */
+  { nom:"Nectar Tester", categorie:"Nectar", desc:"Testeur de nectar : objet de quête pour analyser le nectar.", lieu:"Quêtes exclusives" },
+  { nom:"Comforting Vial", categorie:"Nectar", desc:"Fiole de nectar apaisant : applique le buff Comforting, orienté pollen bleu.", lieu:"Nectar Pot, Sticker Stack" },
+  { nom:"Invigorating Vial", categorie:"Nectar", desc:"Fiole de nectar revigorant : buff orienté pollen rouge.", lieu:"Nectar Pot, Sticker Stack" },
+  { nom:"Motivating Vial", categorie:"Nectar", desc:"Fiole de nectar motivant : buff orienté bee ability rate.", lieu:"Nectar Pot, Sticker Stack" },
+  { nom:"Refreshing Vial", categorie:"Nectar", desc:"Fiole de nectar rafraîchissant : buff orienté conversion instantanée.", lieu:"Nectar Pot, Sticker Stack" },
+  { nom:"Satisfying Vial", categorie:"Nectar", desc:"Fiole de nectar satisfaisant : buff orienté pollen blanc.", lieu:"Nectar Pot, Sticker Stack" },
+  { nom:"Nectar Shower Vial", categorie:"Nectar", desc:"Fiole de pluie de nectar : applique plusieurs buffs de nectar d'un coup.", lieu:"Nectar Condenser, quêtes" },
+
+  /* ================= DRIVE / COG ================= */
+  { nom:"Cog", categorie:"Drive / Cog", desc:"Engrenage : monnaie du Robo Bear Challenge.", lieu:"Robo Bear Challenge" },
+  { nom:"White Drive", categorie:"Drive / Cog", desc:"Disque blanc : ingrédient mécanique du Robo Bear.", lieu:"Robo Bear Challenge" },
+  { nom:"Red Drive", categorie:"Drive / Cog", desc:"Disque rouge : ingrédient mécanique orienté rouge.", lieu:"Robo Bear Challenge" },
+  { nom:"Blue Drive", categorie:"Drive / Cog", desc:"Disque bleu : ingrédient mécanique orienté bleu.", lieu:"Robo Bear Challenge" },
+  { nom:"Glitched Drive", categorie:"Drive / Cog", desc:"Disque corrompu : le plus rare des disques.", lieu:"Robo Bear Challenge (rare)" },
+
+  /* ================= MISC ================= */
+  { nom:"Micro-Converter", categorie:"Misc", desc:"Convertit instantanément une part du pollen en miel.", lieu:"Quêtes, Sticker Stack" },
+  { nom:"Honeysuckle", categorie:"Misc", desc:"Chèvrefeuille : attire des tokens sur un champ.", lieu:"Quêtes, Sticker Stack" },
+  { nom:"Whirligig", categorie:"Misc", desc:"Hélice : téléporte instantanément le joueur à la ruche.", lieu:"Quêtes, planteurs" },
+  { nom:"Jelly Beans", categorie:"Misc", desc:"Bonbons haricots : friandise donnée par de nombreuses quêtes.", lieu:"Quêtes, cadeaux" },
+  { nom:"Marshmallow Bee", categorie:"Misc", desc:"Abeille en guimauve : objet spécial, hors des catégories habituelles.", lieu:"Événements" },
+  { nom:"Magic Bean", categorie:"Misc", desc:"Haricot magique : fait pousser un Sprout géant.", lieu:"Magic Bean Shop, quêtes" },
+  { nom:"Festive Bean", categorie:"Misc", desc:"Haricot festif : version Beesmas du haricot magique.", lieu:"Événement Beesmas" },
+  { nom:"Cloud Vial", categorie:"Misc", desc:"Fiole de nuage : invoque un nuage qui fait pleuvoir des tokens sur un champ.", lieu:"Wind Shrine, quêtes" },
+  { nom:"Bloom Shaker", categorie:"Misc", desc:"Secoueur de floraison : fait fleurir un champ pour booster la récolte.", lieu:"Quêtes, événements" },
+  { nom:"Night Bell", categorie:"Misc", desc:"Cloche de nuit : fait tomber la nuit, utile pour les Moon Charms et le Diamond Mask.", lieu:"Quêtes, événements" },
+  { nom:"Box-O-Frogs", categorie:"Misc", desc:"Boîte de grenouilles : invoque des grenouilles qui produisent des tokens.", lieu:"Quêtes, Sticker Stack" },
 ];
-const ITEMS_CATS = ["Tous","Outils","Œufs","Gelées & Treats","Fabrication","Monnaie","Accessoires","Planteurs","Divers"];
-
+const ITEMS_CATS = ["Tous","Outils","Backpack","Masque","Left Guard","Right Guard","Belt","Bottes","Sprinkler","Accessoire","Planter","Œufs","Gelées","Treats","Fabrication","Wax","Achetable","Balloon","Nectar","Drive / Cog","Misc"];
 
 /* ---------- DONNÉES · STICKERS (valeurs en signs) ---------- */
 /* categorie = onglet de filtre. valeur = en signs. img auto depuis images/stickers/<nom>.png */
@@ -1386,7 +1516,15 @@ const STICKERS = [
   { nom:"Taurus Star Sign", valeur:"1", categorie:"Star Signs" },
   { nom:"Virgo Star Sign", valeur:"1", categorie:"Star Signs" },
 ];
-const STICKERS_CATS = ["Tous","Cub Skins","Hive Skins","Vouchers","Bees","Bears","Mobs","Art","Gems","Nectar Icons","Flowers","Mushrooms","Leaves","Tools","Stamps","Beesmas","Miscellaneous","Star Signs"];
+const STICKERS_CATS = ["Tous","Secrets","Cub Skins","Hive Skins","Vouchers","Bees","Bears","Mobs","Art","Gems","Nectar Icons","Flowers","Mushrooms","Leaves","Tools","Stamps","Beesmas","Miscellaneous","Star Signs"];
+
+/* --- Stickers secrets : récompenses YouTube / Discord, hors index classique --- */
+STICKERS.push(
+  { nom:"Play Button",     valeur:"TBD", categorie:"Secrets",
+    desc:"Sticker secret : la récompense des spectateurs fidèles de la chaîne officielle. Il ne figure pas dans l'index normal et ne se trouve pas sur la carte." },
+  { nom:"Gamer Chat Icon", valeur:"TBD", categorie:"Secrets",
+    desc:"Sticker secret : récompense pour une contribution positive aux discussions de la communauté, sur le Discord officiel. Introuvable en jeu." }
+);
 
 /* ---------- DONNÉES · DÉTAIL DES STICKERS ---------- */
 /* Format : [ nom (wiki), description (traduite), Stack Boost, Stack Reward ]
@@ -1846,10 +1984,10 @@ STICKERS.forEach(s=>{
    Source : wiki Bee Swarm Simulator (Amulet, Star Amulet, Moon Amulet…). */
 const AMULETTES = [
   {
-    nom:"Star Amulet", categorie:"Défi", rarete:"5 paliers", tiersId:"star",
+    nom:"Star Amulet", categorie:"Génération", rarete:"5 paliers", tiersId:"star",
     desc:"L'amulette la plus puissante et la plus complexe du jeu. Elle s'achète avec du miel aux machines du Star Hall, au-dessus du Noob Shop. Chaque palier exige un nombre minimum de types d'abeilles Gifted découverts. Plus tu en as découvert, plus les stats ont de chances de sortir au maximum. Les paliers Diamant et Suprême ajoutent des capacités passives — c'est le fameux « SSA ».",
     effet:"Capacité qui grimpe à chaque palier + capacités passives (Diamant et Suprême)",
-    lieu:"Star Hall, au-dessus du Noob Shop",
+    lieu:"Générateurs du Star Hall, au-dessus du Noob Shop — elle s'achète, elle ne se gagne pas en défi",
     paliers:"Bronze → Argent → Or → Diamant → Suprême",
     notes:"1 seconde d'attente entre deux générations. Le Diamond Star Amulet a 1 chance sur 1 000 000 de donner un Star Cub Skin."
   },
@@ -2402,13 +2540,17 @@ const COULEUR_RARETE = {
 /* ---------- Couleur d'accent par catégorie ---------- */
 const ACCENTS = {
   // items
-  "Outils":"#5AA9E6","Œufs":"#F4DD44","Gelées & Treats":"#F0736A","Fabrication":"#6BD08B",
-  "Monnaie":"#F0B429","Accessoires":"#B77BE0","Planteurs":"#8FD14F","Divers":"#93A7B0",
+  "Outils":"#5AA9E6","Backpack":"#8FD14F","Masque":"#B77BE0",
+  "Left Guard":"#F0736A","Right Guard":"#4F97D6","Belt":"#E0A55A","Bottes":"#C08457",
+  "Sprinkler":"#7FE4E0","Accessoire":"#B8A5ED","Planter":"#8FD14F",
+  "Œufs":"#F4DD44","Gelées":"#F49AC1","Treats":"#FF8FB1","Fabrication":"#6BD08B",
+  "Wax":"#E0C46A","Achetable":"#F0B429","Balloon":"#F0736A","Nectar":"#7FE4E0",
+  "Drive / Cog":"#93A7B0","Misc":"#A9B7BE",
   // stickers
   "Cub Skins":"#F0B429","Hive Skins":"#5AA9E6","Vouchers":"#6BD08B","Bees":"#F4DD44",
   "Bears":"#C08457","Mobs":"#F0736A","Art":"#B77BE0","Gems":"#7FE4E0","Nectar Icons":"#F49AC1",
   "Flowers":"#FF8FB1","Mushrooms":"#E08A5A","Leaves":"#8FD14F","Tools":"#5AA9E6",
-  "Stamps":"#F0B429","Beesmas":"#6BD08B","Miscellaneous":"#93A7B0","Star Signs":"#B8A5ED",
+  "Stamps":"#F0B429","Beesmas":"#6BD08B","Miscellaneous":"#93A7B0","Star Signs":"#B8A5ED","Secrets":"#F4DD44",
   // amulettes / beequip
   "Boss":"#F0736A","Défi":"#5AA9E6","Génération":"#B8A5ED","Suprême":"#F4DD44",
   "Non-Event":"#5AA9E6"
