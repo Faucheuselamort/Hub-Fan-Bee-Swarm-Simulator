@@ -662,7 +662,7 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
   <div class="eyebrow">Base de données</div>
   <div class="sec-head"><h2 class="section-title">Items du jeu</h2><span class="count-pill count-visible"></span></div>
   <p class="lead">Tous les objets du jeu, classés par famille : à quoi ils servent, combien ils coûtent et où les trouver.</p>
-  <div class="note"><span class="i">🍯</span><div>20 catégories, du Scooper au Planter Of Plenty. <b>Clique sur une carte</b> pour ouvrir sa fiche. Les prix seront ajoutés plus tard — pour l'instant chaque item indique où le trouver. Les images se placent dans <b>images/item/</b>. Le nom du fichier reprend le nom de l'item avec les <b>espaces remplacés par des underscores</b>, et les <b>tirets conservés</b> quand le nom en contient déjà : « Basic Egg » → <code>Basic_Egg.webp</code>, « Box-O-Frogs » → <code>Box-O-Frogs.webp</code>, « Beekeeper's Boots » → <code>Beekeepers_Boots.webp</code>. Cette règle ne vaut que pour ce dossier : stickers, beequip, amulette et bees gardent les <b>espaces</b> dans leurs noms de fichiers. Tout se règle dans le bloc <b>FORMAT DES IMAGES</b> en haut du script. Ce dossier attend des fichiers <b>.webp</b> ; les autres dossiers (stickers, beequip, amulette, bees) attendent des <b>.png</b>. Le format de chaque dossier se règle dans le bloc <b>FORMAT DES IMAGES</b> en haut du script. Deux exceptions gérées automatiquement : tous les œufs portant un nom d'abeille réutilisent l'image de <b>Basic Egg</b> (le Nectar Tester aussi), et toutes les gelées portant un nom d'abeille réutilisent celle de <b>Royal Jelly</b> — c'est ainsi dans le jeu, y compris pour les versions Gifted. Tu n'as donc que deux fichiers à fournir pour ces 50 entrées.</div></div>
+  <div class="note"><span class="i">🍯</span><div><b>26 catégories</b>, calquées sur l'inventaire du wiki. <b>Clique sur une carte</b> pour ouvrir sa fiche ; les prix seront ajoutés plus tard, chaque item indique pour l'instant où le trouver.<br>Images dans <b>images/item/</b>, au format <b>.webp</b>. Le nom du fichier reprend celui de l'item avec les <b>espaces remplacés par des underscores</b>, les tirets et les apostrophes étant conservés : « Basic Egg » → <code>Basic_Egg.webp</code>, « Box-O-Frogs » → <code>Box-O-Frogs.webp</code>, « Beekeeper's Boots » → <code>Beekeeper's_Boots.webp</code>. Les autres dossiers (stickers, beequip, amulette, bees) gardent les <b>espaces</b> et le <b>.png</b> — tout se règle dans le bloc <b>FORMAT DES IMAGES</b> en haut du script.<br>Deux images sont mutualisées : tous les œufs portant un nom d'abeille réutilisent <b>Basic_Egg.webp</b> (le Nectar Tester aussi), et toutes les gelées portant un nom d'abeille réutilisent <b>Royal_Jelly.webp</b>.</div></div>
   <div class="toolbar">
     <div class="search"><span>🔍</span><input type="text" placeholder="Rechercher un item…" oninput="filterCards('items',this.value)"></div>
     <div class="chips" id="items-chips"></div>
@@ -1142,6 +1142,7 @@ const ITEMS = [
   /* ================= TREATS ================= */
   { nom:"Coconut", categorie:"Treats", desc:"Noix de coco : friandise du Coconut Field, aussi utilisée en fabrication.", lieu:"Coconut Field, Coconut Crab" },
   { nom:"Treat", categorie:"Treats", desc:"Friandise de base : donne de l'XP et du bond à une abeille.", lieu:"Treat Shop, quêtes, tokens" },
+  { nom:"Star Treat", categorie:"Treats", desc:"Friandise étoilée : donne énormément de bond, et peut mutter l'abeille nourrie.", lieu:"Événements, quêtes de haut niveau" },
   { nom:"Atomic Treat", categorie:"Treats", desc:"Friandise atomique : garantit une mutation sur l'abeille nourrie, radioactive ou non.", lieu:"Quêtes de haut niveau, événements" },
   { nom:"Sunflower Seed", categorie:"Treats", desc:"Graine de tournesol : friandise préférée de plusieurs abeilles.", lieu:"Sunflower Field" },
   { nom:"Strawberry", categorie:"Treats", desc:"Fraise : friandise préférée des abeilles rouges.", lieu:"Strawberry Field" },
@@ -1161,24 +1162,25 @@ const ITEMS = [
   { nom:"Glitter", categorie:"Fabrication", desc:"Paillettes : boost puissant et ingrédient rare. Se fabrique avec 25 Moon Charms et 1 Magic Bean.", lieu:"Blender, quêtes" },
   { nom:"Purple Potion", categorie:"Fabrication", desc:"×1,25 capacité et convert rate à la ruche, ×1,5 pollen rouge et bleu, ×1,3 bee gather et pollen d'outils, pendant 15 minutes.", lieu:"Science Bear, quêtes" },
   { nom:"Super Smoothie", categorie:"Fabrication", desc:"Smoothie : gros boost combiné de fin de jeu.", lieu:"Fabrication, quêtes" },
-  { nom:"Turpentine", categorie:"Fabrication", desc:"Térébenthine : ingrédient obtenu par certaines quêtes seulement.", lieu:"Quêtes exclusives" },
-  { nom:"Field Dice", categorie:"Fabrication", desc:"Dé de champ : relance le multiplicateur de boost d'un champ.", lieu:"Quêtes, cadeaux" },
-  { nom:"Smooth Dice", categorie:"Fabrication", desc:"Dé lisse : version intermédiaire, meilleur résultat moyen.", lieu:"Sticker Stack, quêtes" },
-  { nom:"Loaded Dice", categorie:"Fabrication", desc:"Dé pipé : garantit un bon résultat sur un boost de champ.", lieu:"Quêtes, événements" },
+  { nom:"Turpentine", categorie:"Divers", desc:"Térébenthine : ingrédient obtenu par certaines quêtes seulement.", lieu:"Quêtes exclusives" },
+  { nom:"Field Dice", categorie:"Dés", desc:"Dé de champ : relance le multiplicateur de boost d'un champ.", lieu:"Quêtes, cadeaux" },
+  { nom:"Smooth Dice", categorie:"Dés", desc:"Dé lisse : version intermédiaire, meilleur résultat moyen.", lieu:"Sticker Stack, quêtes" },
+  { nom:"Loaded Dice", categorie:"Dés", desc:"Dé pipé : garantit un bon résultat sur un boost de champ.", lieu:"Quêtes, événements" },
 
   /* ================= WAX ================= */
   { nom:"Soft Wax", categorie:"Wax", desc:"Cire tendre : +1 point de cire sur un beequip.", lieu:"Planteurs, quêtes, Sticker Stack" },
   { nom:"Hard Wax", categorie:"Wax", desc:"Cire dure : +2 points de cire sur un beequip.", lieu:"Planteurs, quêtes" },
   { nom:"Swirled Wax", categorie:"Wax", desc:"Cire marbrée : 0 point, mais elle régénère les stats de base et relance tous les points déjà posés. La seule vraie reroll.", lieu:"Quêtes avancées, événements" },
   { nom:"Caustic Wax", categorie:"Wax", desc:"Cire caustique : +4 points de cire, et débloque les stats rares.", lieu:"Quêtes avancées, boss" },
-  { nom:"Debug Wax", categorie:"Wax", desc:"Cire de débogage : +4 points comme la caustique. Obtenable uniquement par certaines quêtes.", lieu:"Quêtes exclusives" },
+  { nom:"Debug Wax", categorie:"Quêtes exclusives", desc:"Cire de débogage : +4 points comme la caustique. Obtenable uniquement par certaines quêtes.", lieu:"Quêtes exclusives" },
 
   /* ================= ACHETABLE ================= */
-  { nom:"Ticket", categorie:"Achetable", desc:"Monnaie secondaire : emplacements de stickers et de beequips, Ticket Tent, boutiques spéciales.", lieu:"Mobs, quêtes, cadeaux quotidiens" },
-  { nom:"Stinger", categorie:"Achetable", desc:"Dard : ingrédient de fabrication, et il déclenche la Star Saw du Supreme Star Amulet.", lieu:"Stinger Shop, mobs, quêtes" },
-  { nom:"Gumdrops", categorie:"Achetable", desc:"Bonbons gélifiés : monnaie et ingrédient liés au Gummy Bear.", lieu:"Gummy Bear, planteurs, mobs" },
-  { nom:"Ant Pass", categorie:"Achetable", desc:"Passe fourmi : donne accès à l'Ant Challenge dans le Ant Field.", lieu:"Quêtes, planteurs, mobs" },
-  { nom:"Robo Pass", categorie:"Achetable", desc:"Passe robot : lance le Robo Bear Challenge.", lieu:"Robo Pass Dispenser, quêtes" },
+  { nom:"Ticket", categorie:"Monnaie", desc:"Monnaie secondaire : emplacements de stickers et de beequips, Ticket Tent, boutiques spéciales.", lieu:"Mobs, quêtes, cadeaux quotidiens" },
+  { nom:"Brick", categorie:"Monnaie", desc:"Brique : monnaie d'échange utilisée par certains marchands.", lieu:"Quêtes, événements" },
+  { nom:"Stinger", categorie:"Divers", desc:"Dard : ingrédient de fabrication, et il déclenche la Star Saw du Supreme Star Amulet.", lieu:"Stinger Shop, mobs, quêtes" },
+  { nom:"Gumdrops", categorie:"Divers", desc:"Bonbons gélifiés : monnaie et ingrédient liés au Gummy Bear.", lieu:"Gummy Bear, planteurs, mobs" },
+  { nom:"Ant Pass", categorie:"Divers", desc:"Passe fourmi : donne accès à l'Ant Challenge dans le Ant Field.", lieu:"Quêtes, planteurs, mobs" },
+  { nom:"Robo Pass", categorie:"Divers", desc:"Passe robot : lance le Robo Bear Challenge.", lieu:"Robo Pass Dispenser, quêtes" },
 
   /* ================= BALLOON ================= */
   { nom:"Pink Balloon", categorie:"Balloon", desc:"Ballon rose : fait pleuvoir des tokens sur un champ.", lieu:"Quêtes, cadeaux" },
@@ -1187,7 +1189,7 @@ const ITEMS = [
   { nom:"Black Balloon", categorie:"Balloon", desc:"Ballon noir : le plus puissant des ballons.", lieu:"Quêtes avancées, Sticker Stack" },
 
   /* ================= NECTAR ================= */
-  { img:"images/item/Basic_Egg.webp", nom:"Nectar Tester", categorie:"Nectar", desc:"Testeur de nectar : objet de quête pour analyser le nectar.", lieu:"Quêtes exclusives" },
+  { img:"images/item/Basic_Egg.webp", nom:"Nectar Tester", categorie:"Quêtes exclusives", desc:"Testeur de nectar : objet de quête pour analyser le nectar.", lieu:"Quêtes exclusives" },
   { nom:"Comforting Vial", categorie:"Nectar", desc:"Fiole de nectar apaisant : applique le buff Comforting, orienté pollen bleu.", lieu:"Nectar Pot, Sticker Stack" },
   { nom:"Invigorating Vial", categorie:"Nectar", desc:"Fiole de nectar revigorant : buff orienté pollen rouge.", lieu:"Nectar Pot, Sticker Stack" },
   { nom:"Motivating Vial", categorie:"Nectar", desc:"Fiole de nectar motivant : buff orienté bee ability rate.", lieu:"Nectar Pot, Sticker Stack" },
@@ -1196,26 +1198,37 @@ const ITEMS = [
   { nom:"Nectar Shower Vial", categorie:"Nectar", desc:"Fiole de pluie de nectar : applique plusieurs buffs de nectar d'un coup.", lieu:"Nectar Condenser, quêtes" },
 
   /* ================= DRIVE / COG ================= */
-  { nom:"Cog", categorie:"Drive / Cog", desc:"Engrenage : monnaie du Robo Bear Challenge.", lieu:"Robo Bear Challenge" },
-  { nom:"White Drive", categorie:"Drive / Cog", desc:"Disque blanc : ingrédient mécanique du Robo Bear.", lieu:"Robo Bear Challenge" },
-  { nom:"Red Drive", categorie:"Drive / Cog", desc:"Disque rouge : ingrédient mécanique orienté rouge.", lieu:"Robo Bear Challenge" },
-  { nom:"Blue Drive", categorie:"Drive / Cog", desc:"Disque bleu : ingrédient mécanique orienté bleu.", lieu:"Robo Bear Challenge" },
-  { nom:"Glitched Drive", categorie:"Drive / Cog", desc:"Disque corrompu : le plus rare des disques.", lieu:"Robo Bear Challenge (rare)" },
+  { nom:"Cog", categorie:"Monnaie", desc:"Engrenage : monnaie du Robo Bear Challenge.", lieu:"Robo Bear Challenge" },
+  { nom:"White Drive", categorie:"Drive", desc:"Disque blanc : ingrédient mécanique du Robo Bear.", lieu:"Robo Bear Challenge" },
+  { nom:"Red Drive", categorie:"Drive", desc:"Disque rouge : ingrédient mécanique orienté rouge.", lieu:"Robo Bear Challenge" },
+  { nom:"Blue Drive", categorie:"Drive", desc:"Disque bleu : ingrédient mécanique orienté bleu.", lieu:"Robo Bear Challenge" },
+  { nom:"Glitched Drive", categorie:"Drive", desc:"Disque corrompu : le plus rare des disques.", lieu:"Robo Bear Challenge (rare)" },
+  { nom:"Broken Drive", categorie:"Drive", desc:"Disque cassé : version endommagée, à réparer ou à recycler.", lieu:"Robo Bear Challenge" },
+  { nom:"7-Pronged Cog", categorie:"Inobtenable", desc:"Engrenage à 7 dents. Devenu inobtenable : il ne se trouve plus dans le jeu.", lieu:"Inobtenable aujourd'hui" },
 
   /* ================= MISC ================= */
-  { nom:"Micro-Converter", categorie:"Misc", desc:"Convertit instantanément une part du pollen en miel.", lieu:"Quêtes, Sticker Stack" },
-  { nom:"Honeysuckle", categorie:"Misc", desc:"Chèvrefeuille : attire des tokens sur un champ.", lieu:"Quêtes, Sticker Stack" },
-  { nom:"Whirligig", categorie:"Misc", desc:"Hélice : téléporte instantanément le joueur à la ruche.", lieu:"Quêtes, planteurs" },
-  { nom:"Jelly Beans", categorie:"Misc", desc:"Bonbons haricots : friandise donnée par de nombreuses quêtes.", lieu:"Quêtes, cadeaux" },
-  { nom:"Marshmallow Bee", categorie:"Misc", desc:"Abeille en guimauve : objet spécial, hors des catégories habituelles.", lieu:"Événements" },
-  { nom:"Magic Bean", categorie:"Misc", desc:"Haricot magique : fait pousser un Sprout géant.", lieu:"Magic Bean Shop, quêtes" },
-  { nom:"Festive Bean", categorie:"Misc", desc:"Haricot festif : version Beesmas du haricot magique.", lieu:"Événement Beesmas" },
-  { nom:"Cloud Vial", categorie:"Misc", desc:"Fiole de nuage : invoque un nuage qui fait pleuvoir des tokens sur un champ.", lieu:"Wind Shrine, quêtes" },
-  { nom:"Bloom Shaker", categorie:"Misc", desc:"Secoueur de floraison : fait fleurir un champ pour booster la récolte.", lieu:"Quêtes, événements" },
-  { nom:"Night Bell", categorie:"Misc", desc:"Cloche de nuit : fait tomber la nuit, utile pour les Moon Charms et le Diamond Mask.", lieu:"Quêtes, événements" },
-  { nom:"Box-O-Frogs", categorie:"Misc", desc:"Boîte de grenouilles : invoque des grenouilles qui produisent des tokens.", lieu:"Quêtes, Sticker Stack" },
+  { nom:"Micro-Converter", categorie:"Divers", desc:"Convertit instantanément une part du pollen en miel.", lieu:"Quêtes, Sticker Stack" },
+  { nom:"Honeysuckle", categorie:"Divers", desc:"Chèvrefeuille : attire des tokens sur un champ.", lieu:"Quêtes, Sticker Stack" },
+  { nom:"Whirligig", categorie:"Divers", desc:"Hélice : téléporte instantanément le joueur à la ruche.", lieu:"Quêtes, planteurs" },
+  { nom:"Jelly Beans", categorie:"Divers", desc:"Bonbons haricots : friandise donnée par de nombreuses quêtes.", lieu:"Quêtes, cadeaux" },
+  { nom:"Marshmallow Bee", categorie:"Autre", desc:"Abeille en guimauve : objet spécial, hors des catégories habituelles.", lieu:"Événements" },
+  { nom:"Magic Bean", categorie:"Divers", desc:"Haricot magique : fait pousser un Sprout géant.", lieu:"Magic Bean Shop, quêtes" },
+  { nom:"Festive Bean", categorie:"Beesmas", desc:"Haricot festif : version Beesmas du haricot magique.", lieu:"Événement Beesmas" },
+  { nom:"Cloud Vial", categorie:"Divers", desc:"Fiole de nuage : invoque un nuage qui fait pleuvoir des tokens sur un champ.", lieu:"Wind Shrine, quêtes" },
+  { nom:"Bloom Shaker", categorie:"Divers", desc:"Secoueur de floraison : fait fleurir un champ pour booster la récolte.", lieu:"Quêtes, événements" },
+  { nom:"Night Bell", categorie:"Divers", desc:"Cloche de nuit : fait tomber la nuit, utile pour les Moon Charms et le Diamond Mask.", lieu:"Quêtes, événements" },
+  { nom:"Box-O-Frogs", categorie:"Divers", desc:"Boîte de grenouilles : invoque des grenouilles qui produisent des tokens.", lieu:"Quêtes, Sticker Stack" },
+  { nom:"Translator", categorie:"Quêtes exclusives", desc:"Traducteur : objet de quête exclusif, sert à comprendre certains personnages.", lieu:"Quête exclusive" },
+  { nom:"Spirit Petal", categorie:"Quêtes exclusives", desc:"Pétale spirituel : objet de quête exclusif lié à Spirit Bear.", lieu:"Quête exclusive" },
+  { nom:"BBM's Apology", categorie:"Quêtes exclusives", desc:"Les excuses du Bubble Bee Man : objet de quête exclusif.", lieu:"Quête exclusive" },
+  { nom:"Present", categorie:"Beesmas", desc:"Cadeau de Beesmas : à ouvrir pour recevoir une récompense aléatoire.", lieu:"Événement Beesmas" },
+  { nom:"Snowflake", categorie:"Beesmas", desc:"Flocon de neige : matériau de l'événement Beesmas.", lieu:"Événement Beesmas" },
+  { nom:"Gingerbread Bear", categorie:"Beesmas", desc:"Ours en pain d'épices : objet de Beesmas, donné notamment par les Reindeer Antlers.", lieu:"Événement Beesmas" },
+  { nom:"Aged Gingerbread Bear", categorie:"Beesmas", desc:"Ours en pain d'épices rassis : version vieillie, plus rare.", lieu:"Événement Beesmas" },
+  { nom:"Eviction", categorie:"Retiré", desc:"Avis d'expulsion : servait à retirer une abeille de la ruche. Retiré du jeu.", lieu:"Retiré du jeu" },
+  { nom:"Plastic Egg", categorie:"Retiré", desc:"Œuf en plastique : objet d'un ancien événement. Retiré du jeu.", lieu:"Retiré du jeu" },
 ];
-const ITEMS_CATS = ["Tous","Outils","Backpack","Masque","Left Guard","Right Guard","Belt","Bottes","Sprinkler","Accessoire","Planter","Œufs","Gelées","Treats","Fabrication","Wax","Achetable","Balloon","Nectar","Drive / Cog","Misc"];
+const ITEMS_CATS = ["Tous","Outils","Backpack","Masque","Left Guard","Right Guard","Belt","Bottes","Sprinkler","Accessoire","Planter","Œufs","Gelées","Treats","Fabrication","Dés","Wax","Balloon","Nectar","Drive","Divers","Monnaie","Quêtes exclusives","Beesmas","Retiré","Inobtenable","Autre"];
 
 /* ---------- DONNÉES · STICKERS (valeurs en signs) ---------- */
 /* categorie = onglet de filtre. valeur = en signs. img auto depuis images/stickers/<nom>.png */
@@ -1509,7 +1522,7 @@ const STICKERS = [
   { nom:"Robot Head", valeur:"0.33 - 0.5", categorie:"Miscellaneous" },
   { nom:"Dark Flame", valeur:"0.5 - 1", categorie:"Miscellaneous" },
   { nom:"Tornado", valeur:"0.75 - 1", categorie:"Miscellaneous" },
-  { nom:"Eviction", valeur:"1 - 1.5", categorie:"Miscellaneous" },
+  { nom:"Eviction", valeur:"1 - 1.5", categorie:"Retiré" },
   { nom:"Auryn", valeur:"1 - 2", categorie:"Miscellaneous" },
   { nom:"Wall Crack", valeur:"4 - 5", categorie:"Miscellaneous" },
   { nom:"Cyan Hilted Sword", valeur:"10 - 11", categorie:"Miscellaneous" },
@@ -2542,8 +2555,8 @@ const IMG_EXT = {
 const IMG_EXT_DEFAUT = 'png';
 
 /* Style de nommage des fichiers, dossier par dossier.
-   'underscore' : les espaces deviennent des _ et les apostrophes disparaissent
-                  "Basic Egg" -> Basic_Egg.webp   "Beekeeper's Boots" -> Beekeepers_Boots.webp
+   'underscore' : les espaces deviennent des _ , les apostrophes sont conservées
+                  "Basic Egg" -> Basic_Egg.webp   "Beekeeper's Boots" -> Beekeeper's_Boots.webp
    'espace'     : le nom du fichier est identique au nom affiché
                   "Camo Bandana" -> Camo Bandana.png
    Les tirets déjà présents dans un nom sont toujours conservés. */
@@ -2562,15 +2575,17 @@ const IMG_FICHIER = {
   "item/Super-Scooper":       "Super_Scooper",
   "item/Choose A Mythic Egg": "Choose-A-Mythic_Egg",
   "item/Mondo B.B.M. Mask":   "MONDOB.B.M.M",
-  "item/Beekeeper's Mask":    "Beekeeper's_Mask",
   "item/Propeller Hat":       "Propeller",
+  "item/Amulet":              "Supreme_Star_Amulet",
+  "item/Beequip":             "Festive_Wreath",
+  "item/Sticker":             "Smile_sticker_icon",
 };
 
 function imgNom(folder, nom){
   const cle = folder + '/' + nom;
   if(IMG_FICHIER[cle]) return encodeURIComponent(IMG_FICHIER[cle]);
   if((IMG_STYLE[folder] || IMG_STYLE_DEFAUT) === 'underscore'){
-    return encodeURIComponent(String(nom).replace(/['’`]/g, '').replace(/\s+/g, '_'));
+    return encodeURIComponent(String(nom).replace(/[’`]/g, "'").replace(/\s+/g, '_'));
   }
   return encodeURIComponent(nom);
 }
@@ -2615,8 +2630,9 @@ const ACCENTS = {
   "Left Guard":"#F0736A","Right Guard":"#4F97D6","Belt":"#E0A55A","Bottes":"#C08457",
   "Sprinkler":"#7FE4E0","Accessoire":"#B8A5ED","Planter":"#8FD14F",
   "Œufs":"#F4DD44","Gelées":"#F49AC1","Treats":"#FF8FB1","Fabrication":"#6BD08B",
-  "Wax":"#E0C46A","Achetable":"#F0B429","Balloon":"#F0736A","Nectar":"#7FE4E0",
-  "Drive / Cog":"#93A7B0","Misc":"#A9B7BE",
+  "Dés":"#C9D1D9","Wax":"#E0C46A","Balloon":"#F0736A","Nectar":"#7FE4E0","Drive":"#93A7B0",
+  "Divers":"#A9B7BE","Monnaie":"#F0B429","Quêtes exclusives":"#B8A5ED",
+  "Beesmas":"#6BD08B","Retiré":"#7A8A92","Inobtenable":"#7A8A92","Autre":"#A9B7BE",
   // stickers
   "Cub Skins":"#F0B429","Hive Skins":"#5AA9E6","Vouchers":"#6BD08B","Bees":"#F4DD44",
   "Bears":"#C08457","Mobs":"#F0736A","Art":"#B77BE0","Gems":"#7FE4E0","Nectar Icons":"#F49AC1",
