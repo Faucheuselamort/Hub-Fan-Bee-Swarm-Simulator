@@ -599,6 +599,39 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 .inter-l span{font-size:.8rem;background:var(--ink-900);border:1px solid var(--line-soft);
   border-radius:20px;padding:.2rem .6rem;color:var(--cream)}
 
+/* arbre de fabrication */
+.tree{border:1px solid var(--line-soft);border-radius:14px;background:var(--ink-950);
+  margin-bottom:1.2rem;overflow:hidden}
+.tree-t{font-family:'Fredoka';font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:1px;
+  color:var(--muted);padding:.6rem .9rem;border-bottom:1px solid var(--line-soft);background:rgba(255,255,255,.03)}
+.tree-h{font-size:.74rem;color:var(--muted);padding:.15rem .9rem .7rem}
+.tree ul{list-style:none;margin:0;padding:0}
+.tree ul ul{margin-left:.85rem;padding-left:.7rem;border-left:1px dashed var(--line-soft)}
+.tr-root{padding:.7rem .9rem .2rem}
+.tree li{margin:.1rem 0}
+.tree details>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:.35rem;
+  border-radius:8px;padding:.12rem .2rem}
+.tree details>summary::-webkit-details-marker{display:none}
+.tree details>summary::before{content:"▸";color:var(--honey);font-size:.72rem;
+  transition:transform .15s;display:inline-block;width:.8em;flex:0 0 auto}
+.tree details[open]>summary::before{transform:rotate(90deg)}
+.tree details>summary:hover{background:rgba(255,255,255,.04)}
+.tr-leaf{padding:.12rem .2rem .12rem 1.2rem}
+.tr-n{display:inline-flex;align-items:center;gap:.4rem;font-size:.85rem;color:var(--cream)}
+.tr-n b{font-family:'Fredoka';font-weight:700;color:var(--honey)}
+.tr-leaf .tr-n{color:var(--muted)}
+.tr-leaf .tr-n b{color:#8FD14F}
+.ing-img.xs{width:20px;height:20px;flex:0 0 auto}
+.ing-img.xs .ph{font-size:.6rem}
+.tot-t{font-family:'Fredoka';font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:1px;
+  color:var(--muted);margin:0 0 .45rem}
+
+.tr-has{font-size:.72rem;color:#8FD14F;background:rgba(143,209,79,.12);
+  border-radius:20px;padding:.05rem .45rem;margin-left:.2rem}
+.tr-done{font-size:.72rem;color:#6BD08B;margin-left:.3rem;font-weight:600}
+.tr-n.tr-ok{opacity:.65}
+.tr-n.tr-ok b{color:#6BD08B}
+
 /* recette de fabrication illustrée */
 .craft{margin-top:1.3rem;border:1px solid var(--line-soft);border-radius:14px;overflow:hidden;background:var(--ink-950)}
 .craft-t{font-family:'Fredoka';font-weight:600;font-size:.74rem;text-transform:uppercase;letter-spacing:1px;
@@ -848,14 +881,7 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 
         <div id="ing-panier" class="panier"></div>
 
-        <div class="field" style="margin-top:1.2rem">
-          <label>Matériaux fabricables</label>
-          <div class="toggle" id="ing-decomposer">
-            <button data-v="0" class="active">Les acheter tels quels</button>
-            <button data-v="1">Les fabriquer aussi</button>
-          </div>
-        </div>
-        <p class="hint">« Les fabriquer aussi » remonte la chaîne : si un ingrédient a lui-même une recette, l'outil la remplace par ses propres composants.</p>
+
 
         <div class="ing-btns">
           <button class="btn btn-ghost" id="ing-reset">Tout vider</button>
@@ -1211,7 +1237,7 @@ const ITEMS = [
 
   /* ================= GELÉES ================= */
   { nom:"Royal Jelly", categorie:"Gelées", desc:"Transforme une abeille en une autre abeille aléatoire. Fait perdre mutation et statut Gifted.", lieu:"Distributeur, quêtes, planteurs, mobs" },
-  { nom:"Star Jelly", categorie:"Gelées", desc:"Gelée étoilée : transforme une abeille en l'abeille exacte de ton choix.", lieu:"Événements, codes, Robux" },
+  { nom:"Star Jelly", mats:[[100,"Royal Jelly"],[3,"Glitter"]], categorie:"Gelées", desc:"Gelée étoilée : transforme une abeille en l'abeille exacte de ton choix.", lieu:"Événements, codes, Robux" },
   { img:"images/item/Royal_Jelly.webp", nom:"Bumble Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Bumble Bee.", lieu:"Quêtes, événements" },
   { img:"images/item/Royal_Jelly.webp", nom:"Rascal Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Rascal Bee.", lieu:"Quêtes, événements" },
   { img:"images/item/Royal_Jelly.webp", nom:"Bubble Bee Jelly", categorie:"Gelées", desc:"Transforme l'abeille visée en Bubble Bee.", lieu:"Quêtes, événements" },
@@ -1244,35 +1270,35 @@ const ITEMS = [
   { nom:"Blueberry", categorie:"Treats", desc:"Myrtille : friandise préférée des abeilles bleues.", lieu:"Distributeur Blue HQ" },
   { nom:"Bitterberry", categorie:"Treats", desc:"Baie amère : 1 chance sur 1 000 de donner une mutation (1 sur 100 si l'abeille est radioactive).", lieu:"Quêtes, planteurs, mobs" },
   { nom:"Neonberry", categorie:"Treats", desc:"Baie néon : friandise rare qui donne beaucoup de bond.", lieu:"Quêtes, planteurs" },
-  { nom:"Moon Charm", categorie:"Treats", desc:"Charme lunaire : gros bond, peut mutter une abeille. Sert aussi à fabriquer et à générer le Moon Amulet.", lieu:"Mother Bear, nuit, quêtes" },
+  { nom:"Moon Charm", mats:[[5,"Pineapple"],[5,"Gumdrops"],[1,"Royal Jelly"]], categorie:"Treats", desc:"Charme lunaire : gros bond, peut mutter une abeille. Sert aussi à fabriquer et à générer le Moon Amulet.", lieu:"Mother Bear, nuit, quêtes" },
 
   /* ================= FABRICATION ================= */
-  { nom:"Red Extract", categorie:"Fabrication", desc:"Extrait rouge : boost du pollen rouge, ingrédient de fabrication.", lieu:"Blender, quêtes" },
-  { nom:"Blue Extract", categorie:"Fabrication", desc:"Extrait bleu : boost du pollen bleu, ingrédient de fabrication. Se fabrique avec 50 Blueberries et 10 Royal Jellies.", lieu:"Blender, quêtes" },
-  { nom:"Enzymes", categorie:"Fabrication", desc:"Boost de conversion en miel. Ingrédient de très nombreuses recettes.", lieu:"Blender, quêtes, mobs" },
-  { nom:"Oil", categorie:"Fabrication", desc:"Huile : accélère les abeilles. Se fabrique avec 50 Sunflower Seeds et 10 Royal Jellies.", lieu:"Blender, quêtes" },
-  { nom:"Glue", categorie:"Fabrication", desc:"Colle : ×1,25 pollen des outils et des abeilles pendant 10 minutes.", lieu:"Quêtes, planteurs, Sticker Stack" },
-  { nom:"Tropical Drink", categorie:"Fabrication", desc:"Boisson tropicale : boost lié aux champs de fin de jeu.", lieu:"Fabrication, quêtes" },
-  { nom:"Glitter", categorie:"Fabrication", desc:"Paillettes : boost puissant et ingrédient rare. Se fabrique avec 25 Moon Charms et 1 Magic Bean.", lieu:"Blender, quêtes" },
-  { nom:"Purple Potion", categorie:"Fabrication", desc:"×1,25 capacité et convert rate à la ruche, ×1,5 pollen rouge et bleu, ×1,3 bee gather et pollen d'outils, pendant 15 minutes.", lieu:"Science Bear, quêtes" },
-  { nom:"Super Smoothie", categorie:"Fabrication", desc:"Smoothie : gros boost combiné de fin de jeu.", lieu:"Fabrication, quêtes" },
-  { nom:"Turpentine", categorie:"Divers", desc:"Térébenthine : ingrédient obtenu par certaines quêtes seulement.", lieu:"Quêtes exclusives" },
-  { nom:"Field Dice", categorie:"Dés", desc:"Dé de champ : relance le multiplicateur de boost d'un champ.", lieu:"Quêtes, cadeaux" },
-  { nom:"Smooth Dice", categorie:"Dés", desc:"Dé lisse : version intermédiaire, meilleur résultat moyen.", lieu:"Sticker Stack, quêtes" },
-  { nom:"Loaded Dice", categorie:"Dés", desc:"Dé pipé : garantit un bon résultat sur un boost de champ.", lieu:"Quêtes, événements" },
+  { nom:"Red Extract", mats:[[50,"Strawberry"],[10,"Royal Jelly"]], categorie:"Fabrication", desc:"Extrait rouge : boost du pollen rouge, ingrédient de fabrication.", lieu:"Blender, quêtes" },
+  { nom:"Blue Extract", mats:[[50,"Blueberry"],[10,"Royal Jelly"]], categorie:"Fabrication", desc:"Extrait bleu : boost du pollen bleu, ingrédient de fabrication. Se fabrique avec 50 Blueberries et 10 Royal Jellies.", lieu:"Blender, quêtes" },
+  { nom:"Enzymes", mats:[[50,"Pineapple"],[10,"Royal Jelly"]], categorie:"Fabrication", desc:"Boost de conversion en miel. Ingrédient de très nombreuses recettes.", lieu:"Blender, quêtes, mobs" },
+  { nom:"Oil", mats:[[50,"Sunflower Seed"],[10,"Royal Jelly"]], categorie:"Fabrication", desc:"Huile : accélère les abeilles. Se fabrique avec 50 Sunflower Seeds et 10 Royal Jellies.", lieu:"Blender, quêtes" },
+  { nom:"Glue", mats:[[50,"Gumdrops"],[10,"Royal Jelly"]], categorie:"Fabrication", desc:"Colle : ×1,25 pollen des outils et des abeilles pendant 10 minutes.", lieu:"Quêtes, planteurs, Sticker Stack" },
+  { nom:"Tropical Drink", mats:[[10,"Coconut"],[2,"Enzymes"],[2,"Oil"]], categorie:"Fabrication", desc:"Boisson tropicale : boost lié aux champs de fin de jeu.", lieu:"Fabrication, quêtes" },
+  { nom:"Glitter", mats:[[25,"Moon Charm"],[1,"Sprout"]], categorie:"Fabrication", desc:"Paillettes : boost puissant et ingrédient rare. Se fabrique avec 25 Moon Charms et 1 Magic Bean.", lieu:"Blender, quêtes" },
+  { nom:"Purple Potion", mats:[[3,"Neonberry"],[3,"Blue Extract"],[3,"Red Extract"],[3,"Glue"]], categorie:"Fabrication", desc:"×1,25 capacité et convert rate à la ruche, ×1,5 pollen rouge et bleu, ×1,3 bee gather et pollen d'outils, pendant 15 minutes.", lieu:"Science Bear, quêtes" },
+  { nom:"Super Smoothie", mats:[[3,"Neonberry"],[3,"Star Jelly"],[3,"Purple Potion"],[6,"Tropical Drink"]], categorie:"Fabrication", desc:"Smoothie : gros boost combiné de fin de jeu.", lieu:"Fabrication, quêtes" },
+  { nom:"Turpentine", mats:[[10,"Super Smoothie"],[10,"Caustic Wax"],[100,"Star Jelly"],[1000,"Honeysuckle"]], categorie:"Divers", desc:"Térébenthine : ingrédient obtenu par certaines quêtes seulement.", lieu:"Quêtes exclusives" },
+  { nom:"Field Dice", mats:[[1,"Soft Wax"],[1,"Whirligig"],[1,"Red Extract"],[1,"Blue Extract"]], categorie:"Dés", desc:"Dé de champ : relance le multiplicateur de boost d'un champ.", lieu:"Quêtes, cadeaux" },
+  { nom:"Smooth Dice", mats:[[3,"Field Dice"],[3,"Soft Wax"],[3,"Whirligig"],[3,"Oil"]], categorie:"Dés", desc:"Dé lisse : version intermédiaire, meilleur résultat moyen.", lieu:"Sticker Stack, quêtes" },
+  { nom:"Loaded Dice", mats:[[3,"Smooth Dice"],[3,"Hard Wax"],[3,"Oil"],[1,"Glue"]], categorie:"Dés", desc:"Dé pipé : garantit un bon résultat sur un boost de champ.", lieu:"Quêtes, événements" },
 
   /* ================= WAX ================= */
-  { nom:"Soft Wax", categorie:"Wax", desc:"Cire tendre : +1 point de cire sur un beequip.", lieu:"Planteurs, quêtes, Sticker Stack" },
-  { nom:"Hard Wax", categorie:"Wax", desc:"Cire dure : +2 points de cire sur un beequip.", lieu:"Planteurs, quêtes" },
-  { nom:"Swirled Wax", categorie:"Wax", desc:"Cire marbrée : 0 point, mais elle régénère les stats de base et relance tous les points déjà posés. La seule vraie reroll.", lieu:"Quêtes avancées, événements" },
-  { nom:"Caustic Wax", categorie:"Wax", desc:"Cire caustique : +4 points de cire, et débloque les stats rares.", lieu:"Quêtes avancées, boss" },
+  { nom:"Soft Wax", mats:[[5,"Honeysuckle"],[1,"Oil"],[1,"Enzymes"],[10,"Royal Jelly"]], categorie:"Wax", desc:"Cire tendre : +1 point de cire sur un beequip.", lieu:"Planteurs, quêtes, Sticker Stack" },
+  { nom:"Hard Wax", mats:[[3,"Soft Wax"],[3,"Enzymes"],[33,"Bitterberry"],[33,"Royal Jelly"]], categorie:"Wax", desc:"Cire dure : +2 points de cire sur un beequip.", lieu:"Planteurs, quêtes" },
+  { nom:"Swirled Wax", mats:[[3,"Hard Wax"],[9,"Soft Wax"],[6,"Purple Potion"],[3333,"Royal Jelly"]], categorie:"Wax", desc:"Cire marbrée : 0 point, mais elle régénère les stats de base et relance tous les points déjà posés. La seule vraie reroll.", lieu:"Quêtes avancées, événements" },
+  { nom:"Caustic Wax", mats:[[5,"Hard Wax"],[5,"Enzymes"],[25,"Neonberry"],[5252,"Royal Jelly"]], categorie:"Wax", desc:"Cire caustique : +4 points de cire, et débloque les stats rares.", lieu:"Quêtes avancées, boss" },
   { nom:"Debug Wax", categorie:"Quêtes exclusives", desc:"Cire de débogage : +4 points comme la caustique. Obtenable uniquement par certaines quêtes.", lieu:"Quêtes exclusives" },
 
   /* ================= ACHETABLE ================= */
   { nom:"Ticket", categorie:"Monnaie", desc:"Monnaie secondaire : emplacements de stickers et de beequips, Ticket Tent, boutiques spéciales.", lieu:"Mobs, quêtes, cadeaux quotidiens" },
   { nom:"Brick", categorie:"Monnaie", desc:"Brique : monnaie d'échange utilisée par certains marchands.", lieu:"Quêtes, événements" },
   { nom:"Stinger", categorie:"Divers", desc:"Dard : ingrédient de fabrication, et il déclenche la Star Saw du Supreme Star Amulet.", lieu:"Stinger Shop, mobs, quêtes" },
-  { nom:"Gumdrops", categorie:"Divers", desc:"Bonbons gélifiés : monnaie et ingrédient liés au Gummy Bear.", lieu:"Gummy Bear, planteurs, mobs" },
+  { nom:"Gumdrops", mats:[[3,"Blueberry"],[3,"Strawberry"],[3,"Pineapple"]], categorie:"Divers", desc:"Bonbons gélifiés : monnaie et ingrédient liés au Gummy Bear.", lieu:"Gummy Bear, planteurs, mobs" },
   { nom:"Ant Pass", categorie:"Divers", desc:"Passe fourmi : donne accès à l'Ant Challenge dans le Ant Field.", lieu:"Quêtes, planteurs, mobs" },
   { nom:"Robo Pass", categorie:"Divers", desc:"Passe robot : lance le Robo Bear Challenge.", lieu:"Robo Pass Dispenser, quêtes" },
 
@@ -1306,6 +1332,7 @@ const ITEMS = [
   { nom:"Whirligig", categorie:"Divers", desc:"Hélice : téléporte instantanément le joueur à la ruche.", lieu:"Quêtes, planteurs" },
   { nom:"Jelly Beans", categorie:"Divers", desc:"Bonbons haricots : friandise donnée par de nombreuses quêtes.", lieu:"Quêtes, cadeaux" },
   { nom:"Marshmallow Bee", categorie:"Autre", desc:"Abeille en guimauve : objet spécial, hors des catégories habituelles.", lieu:"Événements" },
+  { nom:"Sprout", categorie:"Divers", desc:"Pousse magique : elle produit du pollen et des tokens sur un champ pendant plusieurs minutes. Sert aussi à fabriquer le Glitter.", lieu:"Magic Bean, quêtes" },
   { nom:"Magic Bean", categorie:"Divers", desc:"Haricot magique : fait pousser un Sprout géant.", lieu:"Magic Bean Shop, quêtes" },
   { nom:"Festive Bean", categorie:"Beesmas", desc:"Haricot festif : version Beesmas du haricot magique.", lieu:"Événement Beesmas" },
   { nom:"Cloud Vial", categorie:"Divers", desc:"Fiole de nuage : invoque un nuage qui fait pleuvoir des tokens sur un champ.", lieu:"Wind Shrine, quêtes" },
@@ -3055,12 +3082,9 @@ function fmtSigns(n){ return (+Number(n).toFixed(3)).toString(); }
 /* ---------- OUTIL 1 : Calcul d'ingrédients ---------- */
 /* Le catalogue de recettes se construit tout seul :
    - chaque item de la liste ITEMS qui possède un champ "mats" devient une recette
-   - RECETTES_CRAFT permet d'ajouter à la main les recettes des matériaux
-     (Glue, Enzymes, Oil…) pour que l'outil puisse les décomposer.        */
+   - RECETTES_CRAFT permet d'en ajouter à la main si besoin.              */
 const RECETTES_CRAFT = {
-  /* Exemple de format, à remplir :
-  "Glue": { miel:0, mats:[[5,"Enzymes"],[3,"Oil"]] },
-  */
+  /* Format : "Nom": { miel:0, mats:[[5,"Enzymes"],[3,"Oil"]] }, */
 };
 
 let CATALOGUE = {};
@@ -3076,41 +3100,61 @@ function construireCatalogue(){
 }
 
 let PANIER = [];   // [{nom, qte}]
-let STOCK  = {};   // { "Glue": 12, ... }
-let DECOMPOSER = false;
+let STOCK  = {};   // { "Glue": 500, "Strawberry": 20000, ... }
+const DECOMPOSER = true;   /* la chaîne est toujours décomposée */
 
-/* Additionne récursivement ce qu'il faut pour fabriquer qte × nom */
-function accumuler(nom, qte, total, prealables, profondeur){
-  const rec = CATALOGUE[nom];
-  if(!rec) return;
-  total.miel += (rec.miel||0) * qte;
-  if(rec.prealable && prealables.indexOf(rec.prealable) === -1) prealables.push(rec.prealable);
-  (rec.mats||[]).forEach(([q, ing])=>{
-    const besoin = q * qte;
-    if(DECOMPOSER && CATALOGUE[ing] && profondeur < 6){
-      accumuler(ing, besoin, total, prealables, profondeur+1);
-      total.intermediaires[ing] = (total.intermediaires[ing]||0) + besoin;
-    } else {
-      total.mats[ing] = (total.mats[ing]||0) + besoin;
-    }
-  });
-}
-
-function calculerPanier(){
-  const total = { miel:0, mats:{}, intermediaires:{} };
+/* ---------------------------------------------------------------
+   Planification.
+   On descend la chaîne de fabrication en déduisant le stock du
+   joueur À CHAQUE ÉTAGE : s'il possède déjà 500 Glue, on ne
+   décompose que les 1000 Glue restantes en Gumdrops et Royal Jelly.
+   --------------------------------------------------------------- */
+function planifier(){
+  const reste = Object.assign({}, STOCK);   // stock encore disponible
+  const total = { miel:0, tous:{}, directs:{} };
   const prealables = [];
-  PANIER.forEach(l=> accumuler(l.nom, l.qte, total, prealables, 0));
-  return { total, prealables };
+
+  /* brut  = quantité totale demandée, avant déduction du stock
+     net   = ce qu'il reste réellement à obtenir après déduction  */
+  function ajouter(nom, brut, net, craftable){
+    const e = total.tous[nom] || (total.tous[nom] = { brut:0, net:0, craftable:craftable });
+    e.brut += brut; e.net += net;
+  }
+
+  function noeud(nom, qte, prof, racine){
+    const rec = CATALOGUE[nom];
+    const dispo = racine ? 0 : Math.min(reste[nom] || 0, qte);
+    if(dispo) reste[nom] -= dispo;
+    const aFaire = qte - dispo;
+    const n = { nom, qte, dispo, aFaire, enfants:[], craftable: !!rec };
+
+    const developpable = !!(rec && rec.mats && rec.mats.length && prof < 14);
+    if(!racine){
+      ajouter(nom, qte, aFaire, developpable);
+      if(prof === 1) total.directs[nom] = true;
+    }
+
+    if(aFaire <= 0) return n;
+    if(rec){
+      total.miel += (rec.miel || 0) * aFaire;
+      if(rec.prealable && prealables.indexOf(rec.prealable) === -1) prealables.push(rec.prealable);
+    }
+    if(developpable || racine){
+      (rec && rec.mats ? rec.mats : []).forEach(([q, ing]) =>
+        n.enfants.push(noeud(ing, q * aFaire, prof + 1, false)));
+    }
+    return n;
+  }
+
+  const arbre = PANIER.map(l => noeud(l.nom, l.qte, 0, true));
+  return { total, prealables, arbre };
 }
 
 function initIngredients(){
   construireCatalogue();
-  const sel  = document.getElementById('ing-recipe');
-  const qty  = document.getElementById('ing-qty');
-  const add  = document.getElementById('ing-add');
-  const dec  = document.getElementById('ing-decomposer');
+  const sel = document.getElementById('ing-recipe');
+  const qty = document.getElementById('ing-qty');
 
-  /* liste déroulante groupée par catégorie */
   const parCat = {};
   Object.keys(CATALOGUE).forEach(n=>{
     const c = CATALOGUE[n].cat || 'Autre';
@@ -3120,22 +3164,13 @@ function initIngredients(){
     `<optgroup label="${c}">${parCat[c].sort().map(n=>`<option>${esc(n)}</option>`).join('')}</optgroup>`
   ).join('') || '<option disabled>Aucune recette disponible</option>';
 
-  add.addEventListener('click', ()=>{
-    const nom = sel.value;
-    const q = Math.max(1, parseInt(qty.value)||1);
-    if(!nom || !CATALOGUE[nom]) return;
-    const dejaLa = PANIER.find(l=>l.nom===nom);
-    if(dejaLa) dejaLa.qte += q; else PANIER.push({nom, qte:q});
+  document.getElementById('ing-add').addEventListener('click', ()=>{
+    const nom = sel.value, q = Math.max(1, parseInt(qty.value)||1);
+    if(!CATALOGUE[nom]) return;
+    const l = PANIER.find(x=>x.nom===nom);
+    if(l) l.qte += q; else PANIER.push({nom, qte:q});
     renderPanier(); renderCourses();
   });
-
-  dec.addEventListener('click', e=>{
-    const b = e.target.closest('button'); if(!b) return;
-    dec.querySelectorAll('button').forEach(x=>x.classList.toggle('active', x===b));
-    DECOMPOSER = b.dataset.v === '1';
-    renderCourses();
-  });
-
   document.getElementById('ing-reset').addEventListener('click', ()=>{
     PANIER = []; STOCK = {}; renderPanier(); renderCourses();
   });
@@ -3146,7 +3181,7 @@ function initIngredients(){
   renderPanier(); renderCourses();
 }
 
-/* ---- la liste des objets à fabriquer ---- */
+/* ---- ce que tu veux fabriquer ---- */
 function renderPanier(){
   const el = document.getElementById('ing-panier');
   if(!PANIER.length){
@@ -3169,6 +3204,43 @@ function renderPanier(){
   }));
 }
 
+/* ---- une branche de l'arbre ---- */
+function brancheHTML(n, prof){
+  const badge = n.dispo > 0
+    ? `<span class="tr-has">− ${fmtEntier(n.dispo)} en stock</span>` : '';
+  const fini = n.aFaire <= 0;
+  const noeud = `<span class="tr-n${fini?' tr-ok':''}">
+      <span class="ing-img xs"><img src="${imgSrc('item',{nom:n.nom})}" alt="" loading="lazy"
+        onerror="imgFallback(this,'ph','${esc(initiales(n.nom))}')"></span>
+      <b>${fmtEntier(n.qte)}</b> × ${esc(n.nom)}${badge}${fini?'<span class="tr-done">✓ couvert</span>':''}</span>`;
+  if(!n.enfants.length) return `<li class="tr-leaf">${noeud}</li>`;
+  return `<li><details ${prof < 1 ? 'open' : ''}><summary>${noeud}</summary>
+    <ul>${n.enfants.map(e=>brancheHTML(e, prof+1)).join('')}</ul></details></li>`;
+}
+
+/* ---- tableau avec saisie du stock ---- */
+function tableStock(titre, dico, note){
+  const noms = Object.keys(dico).sort();
+  if(!noms.length) return '';
+  const lignes = noms.map(nom=>{
+    const brut = dico[nom].brut, manque = dico[nom].net;
+    const possede = STOCK[nom] || 0;
+    return `<tr class="${manque===0?'ok':''}">
+      <td class="ing-c"><span class="ing-img sm"><img src="${imgSrc('item',{nom})}" alt="" loading="lazy"
+        onerror="imgFallback(this,'ph','${esc(initiales(nom))}')"></span>${esc(nom)}</td>
+      <td class="n">${fmtEntier(brut)}</td>
+      <td class="n"><input type="number" min="0" class="stk" data-n="${esc(nom)}" value="${possede||''}" placeholder="0"></td>
+      <td class="n manque">${manque===0?'<span class="done">✓</span>':fmtEntier(manque)}</td>
+    </tr>`;
+  }).join('');
+  return `<div class="tot-t">${titre}</div>
+    ${note?`<p class="hint" style="margin:-.2rem 0 .6rem">${note}</p>`:''}
+    <table class="calc ing-table"><thead><tr>
+      <th>Ingrédient</th><th style="text-align:right">Requis</th>
+      <th style="text-align:right">Tu as</th><th style="text-align:right">Manque</th>
+    </tr></thead><tbody>${lignes}</tbody></table>`;
+}
+
 /* ---- la liste de courses ---- */
 function renderCourses(){
   const el = document.getElementById('ing-result');
@@ -3176,46 +3248,49 @@ function renderCourses(){
     el.innerHTML = `<p class="hint" style="margin:0">La liste apparaîtra ici.</p>`;
     return;
   }
-  const { total, prealables } = calculerPanier();
-  const noms = Object.keys(total.mats).sort();
+  /* on mémorise le champ en cours de saisie pour le retrouver après le redessin */
+  const actif = document.activeElement;
+  const focusNom = (actif && actif.classList && actif.classList.contains('stk')) ? actif.dataset.n : null;
 
-  const ligne = (nom, requis) => {
-    const possede  = STOCK[nom] || 0;
-    const manquant = Math.max(0, requis - possede);
-    return `<tr class="${manquant===0?'ok':''}">
-      <td class="ing-c">
-        <span class="ing-img sm"><img src="${imgSrc('item',{nom})}" alt="" loading="lazy"
-          onerror="imgFallback(this,'ph','${esc(initiales(nom))}')"></span>${esc(nom)}</td>
-      <td class="n">${fmtEntier(requis)}</td>
-      <td class="n"><input type="number" min="0" class="stk" data-n="${esc(nom)}" value="${possede||''}" placeholder="0"></td>
-      <td class="n manque">${manquant===0?'<span class="done">✓</span>':fmtEntier(manquant)}</td>
-    </tr>`;
-  };
-
+  const { total, prealables, arbre } = planifier();
   let html = '';
+
   if(total.miel > 0){
-    const possede  = STOCK['Honey'] || 0;
-    const manquant = Math.max(0, total.miel - possede);
+    const possede = STOCK['Honey'] || 0;
+    const manque = Math.max(0, total.miel - possede);
     html += `<div class="miel-box">
       <span class="ing-img sm"><img src="${imgSrc('item',{nom:'Honey'})}" alt="" loading="lazy"
         onerror="imgFallback(this,'ph','M')"></span>
       <div class="miel-t"><b>${fmtMiel(total.miel)}</b><span>${mielExact(total.miel)}</span></div>
       <div class="miel-in"><label>Ton miel</label>
         <input type="number" min="0" class="stk" data-n="Honey" value="${possede||''}" placeholder="0"></div>
-      <div class="miel-m ${manquant===0?'done':''}">${manquant===0?'✓ tu as le miel':'manque '+fmtMiel(manquant)}</div>
+      <div class="miel-m ${manque===0?'done':''}">${manque===0?'✓ tu as le miel':'manque '+fmtMiel(manque)}</div>
     </div>`;
   }
 
-  html += `<table class="calc ing-table"><thead><tr>
-      <th>Ingrédient</th><th style="text-align:right">Requis</th>
-      <th style="text-align:right">Tu as</th><th style="text-align:right">Manque</th>
-    </tr></thead><tbody>${noms.map(n=>ligne(n, total.mats[n])).join('')}</tbody></table>`;
+  html += `<div class="tree">
+    <div class="tree-t">Détail de la fabrication</div>
+    <ul class="tr-root">${arbre.map(n=>brancheHTML(n,0)).join('')}</ul>
+    <div class="tree-h">Clique une ligne pour la déplier. Les lignes vertes sont déjà couvertes par ton stock, les branches correspondantes ne sont plus décomposées.</div>
+  </div>`;
 
-  const inter = Object.keys(total.intermediaires).sort();
-  if(DECOMPOSER && inter.length){
-    html += `<div class="inter-box"><div class="inter-t">Étapes intermédiaires à fabriquer</div>
-      <div class="inter-l">${inter.map(n=>`<span>${fmtEntier(total.intermediaires[n])} × ${esc(n)}</span>`).join('')}</div></div>`;
-  }
+  const directs = {}, inter = {}, base = {};
+  Object.keys(total.tous).forEach(nom=>{
+    const e = total.tous[nom];
+    if(total.directs[nom])   directs[nom] = e;
+    else if(e.craftable)     inter[nom]   = e;
+    else                     base[nom]    = e;
+  });
+
+  html += tableStock('1 · Ingrédients directs', directs,
+    "Ce que la recette réclame directement. Les quantités incluent tout ce qui en est aussi redemandé plus bas dans la chaîne.");
+
+  html += tableStock('2 · Matériaux secondaires', inter,
+    "Les matériaux fabricables rencontrés plus bas. Indique ceux que tu possèdes déjà : ils ne seront plus décomposés.");
+
+  html += tableStock('3 · Ingrédients de base', base,
+    "Ce qui ne se fabrique pas : le coût réel une fois toute la chaîne décomposée.");
+
   if(prealables.length){
     html += `<div class="craft-pre" style="border:1px solid var(--line-soft);border-radius:12px;margin-top:.8rem">
       <span>⚑</span><div>${prealables.map(esc).join('<br>')}</div></div>`;
@@ -3224,26 +3299,12 @@ function renderCourses(){
   el.innerHTML = html;
   el.querySelectorAll('.stk').forEach(inp=>inp.addEventListener('input', e=>{
     const v = parseInt(e.target.value);
-    if(!v || v<0) delete STOCK[e.target.dataset.n]; else STOCK[e.target.dataset.n] = v;
-    majManquants();
+    if(!v || v < 0) delete STOCK[e.target.dataset.n]; else STOCK[e.target.dataset.n] = v;
+    renderCourses();
   }));
-}
-
-/* met à jour la colonne « manque » sans reconstruire la table (on garde le focus) */
-function majManquants(){
-  const { total } = calculerPanier();
-  document.querySelectorAll('#ing-result .ing-table tbody tr').forEach(tr=>{
-    const nom = tr.querySelector('.stk').dataset.n;
-    const requis = total.mats[nom] || 0;
-    const manquant = Math.max(0, requis - (STOCK[nom]||0));
-    tr.querySelector('.manque').innerHTML = manquant===0 ? '<span class="done">✓</span>' : fmtEntier(manquant);
-    tr.classList.toggle('ok', manquant===0);
-  });
-  const box = document.querySelector('#ing-result .miel-m');
-  if(box){
-    const manquant = Math.max(0, total.miel - (STOCK['Honey']||0));
-    box.textContent = manquant===0 ? '✓ tu as le miel' : 'manque '+fmtMiel(manquant);
-    box.classList.toggle('done', manquant===0);
+  if(focusNom){
+    const cible = el.querySelector(`.stk[data-n="${CSS.escape(focusNom)}"]`);
+    if(cible){ cible.focus(); const v = cible.value; cible.value = ''; cible.value = v; }
   }
 }
 
