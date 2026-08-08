@@ -553,6 +553,52 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 .passif .p-meta{font-size:.74rem;color:var(--muted);font-family:'Fredoka';text-transform:uppercase;letter-spacing:.5px}
 .passif p{font-size:.88rem;color:var(--cream);line-height:1.6;opacity:.92}
 
+/* calculateur d'ingrédients */
+.ing-addrow{display:flex;gap:.7rem;align-items:flex-end;margin-bottom:1.1rem}
+.ing-addrow .field{flex:1}
+.ing-addrow .btn{white-space:nowrap}
+.ing-btns{display:flex;gap:.6rem;margin-top:1rem;flex-wrap:wrap}
+.panier{display:grid;gap:.45rem}
+.pan-l{display:flex;align-items:center;gap:.6rem;background:var(--ink-900);
+  border:1px solid var(--line-soft);border-radius:12px;padding:.45rem .6rem}
+.pan-img{width:30px;height:30px;flex:0 0 auto;display:grid;place-items:center;overflow:hidden}
+.pan-img img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;image-rendering:pixelated}
+.pan-img .ph{font-family:'Fredoka';font-weight:700;font-size:.75rem;color:var(--honey);opacity:.7}
+.pan-n{flex:1;font-size:.9rem;color:var(--cream)}
+.pan-q{width:66px;text-align:right;background:var(--ink-950);border:1px solid var(--line-soft);
+  border-radius:8px;color:var(--cream);padding:.3rem .45rem;font-family:'Fredoka'}
+.pan-x{background:transparent;border:0;color:var(--muted);cursor:pointer;font-size:1rem;padding:.2rem .35rem}
+.pan-x:hover{color:var(--rouge,#F0736A)}
+
+.ing-table td.ing-c{display:flex;align-items:center;gap:.5rem}
+.ing-img.sm{width:26px;height:26px;flex:0 0 auto}
+.ing-table tr.ok td{opacity:.55}
+.ing-table .done{color:#6BD08B;font-weight:700}
+.ing-table input.stk{width:82px;text-align:right;background:var(--ink-950);
+  border:1px solid var(--line-soft);border-radius:8px;color:var(--cream);
+  padding:.25rem .4rem;font-family:'Fredoka'}
+.ing-table td.manque{font-family:'Fredoka';font-weight:700;color:var(--honey)}
+
+.miel-box{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;
+  background:linear-gradient(120deg,rgba(244,221,68,.12),transparent);
+  border:1px solid rgba(244,221,68,.28);border-radius:14px;padding:.8rem 1rem;margin-bottom:1rem}
+.miel-t{display:flex;flex-direction:column;line-height:1.2}
+.miel-t b{font-family:'Fredoka';font-weight:700;font-size:1.3rem;color:var(--honey)}
+.miel-t span{font-size:.74rem;color:var(--muted)}
+.miel-in{display:flex;flex-direction:column;gap:.2rem;margin-left:auto}
+.miel-in label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.miel-in input{width:130px;text-align:right;background:var(--ink-950);border:1px solid var(--line-soft);
+  border-radius:8px;color:var(--cream);padding:.3rem .45rem;font-family:'Fredoka'}
+.miel-m{width:100%;font-size:.84rem;color:var(--honey);font-family:'Fredoka';font-weight:600}
+.miel-m.done{color:#6BD08B}
+
+.inter-box{margin-top:.9rem;border:1px solid var(--line-soft);border-radius:12px;overflow:hidden}
+.inter-t{font-family:'Fredoka';font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:1px;
+  color:var(--muted);padding:.5rem .8rem;background:rgba(255,255,255,.03);border-bottom:1px solid var(--line-soft)}
+.inter-l{display:flex;flex-wrap:wrap;gap:.4rem;padding:.7rem .8rem}
+.inter-l span{font-size:.8rem;background:var(--ink-900);border:1px solid var(--line-soft);
+  border-radius:20px;padding:.2rem .6rem;color:var(--cream)}
+
 /* recette de fabrication illustrée */
 .craft{margin-top:1.3rem;border:1px solid var(--line-soft);border-radius:14px;overflow:hidden;background:var(--ink-950)}
 .craft-t{font-family:'Fredoka';font-weight:600;font-size:.74rem;text-transform:uppercase;letter-spacing:1px;
@@ -787,19 +833,39 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
   <div class="tool-panel active" id="tool-ingredients">
     <div class="grid-2">
       <div class="panel">
-        <h3 style="font-size:1.3rem;margin-bottom:1rem">Combien d'ingrédients ?</h3>
+        <h3 style="font-size:1.3rem;margin-bottom:1rem">Ce que tu veux fabriquer</h3>
         <div class="field">
-          <label>Recette</label>
+          <label>Objet</label>
           <select id="ing-recipe"></select>
         </div>
-        <div class="field">
-          <label>Quantité à fabriquer</label>
-          <input type="number" id="ing-qty" value="1" min="1">
+        <div class="ing-addrow">
+          <div class="field" style="margin:0">
+            <label>Quantité</label>
+            <input type="number" id="ing-qty" value="1" min="1">
+          </div>
+          <button class="btn btn-primary" id="ing-add">Ajouter à la liste</button>
         </div>
-        <p class="hint">Choisis une recette et le nombre d'exemplaires : l'outil additionne tout ce qu'il te faut. <b>Modifie les recettes</b> dans le bloc <b>DONNÉES · RECETTES</b>.</p>
+
+        <div id="ing-panier" class="panier"></div>
+
+        <div class="field" style="margin-top:1.2rem">
+          <label>Matériaux fabricables</label>
+          <div class="toggle" id="ing-decomposer">
+            <button data-v="0" class="active">Les acheter tels quels</button>
+            <button data-v="1">Les fabriquer aussi</button>
+          </div>
+        </div>
+        <p class="hint">« Les fabriquer aussi » remonte la chaîne : si un ingrédient a lui-même une recette, l'outil la remplace par ses propres composants.</p>
+
+        <div class="ing-btns">
+          <button class="btn btn-ghost" id="ing-reset">Tout vider</button>
+          <button class="btn btn-ghost" id="ing-clear-stock">Vider mon stock</button>
+        </div>
       </div>
+
       <div class="panel">
         <h3 style="font-size:1.3rem;margin-bottom:.4rem">Liste de courses</h3>
+        <p class="hint" style="margin-bottom:1rem">Renseigne ce que tu possèdes déjà dans la colonne <b>Tu as</b> : la colonne <b>Manque</b> se met à jour toute seule.</p>
         <div id="ing-result"></div>
       </div>
     </div>
@@ -2103,8 +2169,8 @@ const AMULETTES_TIERS = {
       ["Bronze",  "5 types",  "25 M miel",  "Aucune"],
       ["Argent",  "10 types", "50 M miel",  "Aucune"],
       ["Or",      "20 types", "250 M miel", "Aucune"],
-      ["Diamant", "30 types", "1 Md miel",  "1 chance sur 100 d'avoir Guiding Star ou Star Shower"],
-      ["Suprême", "40 types", "10 Md miel", "1 passif garanti sur 6 · 1 chance sur 50 d'en avoir deux · option 500 Md miel pour garantir le double"],
+      ["Diamant", "30 types", "1 B miel",  "1 chance sur 100 d'avoir Guiding Star ou Star Shower"],
+      ["Suprême", "40 types", "10 B miel", "1 passif garanti sur 6 · 1 chance sur 50 d'en avoir deux · option 500 B miel pour garantir le double"],
     ],
     couleurs:["#C08457","#C9D1D9","#F0B429","#7FE4E0","#F4DD44"]
   },
@@ -2382,21 +2448,6 @@ const BEEQUIP_INFO = [
 
 
 
-/* ---------- DONNÉES · RECETTES (outil ingrédients) ---------- */
-/* Chaque recette = liste d'ingrédients { ing:"nom", qte:nombre }. */
-const RECETTES = {
-  "Amulette étoilée (exemple)": [
-    { ing:"Gelée royale", qte:5 },
-    { ing:"Ticket",       qte:20 },
-    { ing:"Glue",         qte:10 },
-  ],
-  "Potion violette (exemple)": [
-    { ing:"Enzymes",      qte:8 },
-    { ing:"Glue",         qte:4 },
-    { ing:"Œuf de base",  qte:2 },
-  ],
-};
-
 /* ---------- OUTIL TRADE : valeurs = stickers (en signs) ---------- */
 /* Rempli automatiquement depuis STICKERS. Valeur = moyenne de la fourchette. */
 let VALEURS_TRADE = {};
@@ -2649,7 +2700,7 @@ document.getElementById('tabs').addEventListener('click',e=>{
 /* ---------- Affichage des prix en miel ---------- */
 function fmtMiel(n){
   if(n === 0) return 'Gratuit';
-  const paliers = [[1e12,'T'],[1e9,'Md'],[1e6,'M'],[1e3,'K']];
+  const paliers = [[1e12,'T'],[1e9,'B'],[1e6,'M'],[1e3,'K']];
   for(const [seuil, suf] of paliers){
     if(n >= seuil){
       const v = n / seuil;
@@ -2658,6 +2709,9 @@ function fmtMiel(n){
     }
   }
   return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+function fmtEntier(n){
+  return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
 function mielExact(n){
   return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' miel';
@@ -2999,19 +3053,198 @@ function fmt(n){
 function fmtSigns(n){ return (+Number(n).toFixed(3)).toString(); }
 
 /* ---------- OUTIL 1 : Calcul d'ingrédients ---------- */
+/* Le catalogue de recettes se construit tout seul :
+   - chaque item de la liste ITEMS qui possède un champ "mats" devient une recette
+   - RECETTES_CRAFT permet d'ajouter à la main les recettes des matériaux
+     (Glue, Enzymes, Oil…) pour que l'outil puisse les décomposer.        */
+const RECETTES_CRAFT = {
+  /* Exemple de format, à remplir :
+  "Glue": { miel:0, mats:[[5,"Enzymes"],[3,"Oil"]] },
+  */
+};
+
+let CATALOGUE = {};
+function construireCatalogue(){
+  CATALOGUE = {};
+  ITEMS.forEach(o=>{
+    if(o.mats) CATALOGUE[o.nom] = { miel:o.miel||0, mats:o.mats, prealable:o.prealable, cat:o.categorie };
+  });
+  Object.keys(RECETTES_CRAFT).forEach(n=>{
+    const r = RECETTES_CRAFT[n];
+    CATALOGUE[n] = { miel:r.miel||0, mats:r.mats||[], prealable:r.prealable, cat:'Fabrication' };
+  });
+}
+
+let PANIER = [];   // [{nom, qte}]
+let STOCK  = {};   // { "Glue": 12, ... }
+let DECOMPOSER = false;
+
+/* Additionne récursivement ce qu'il faut pour fabriquer qte × nom */
+function accumuler(nom, qte, total, prealables, profondeur){
+  const rec = CATALOGUE[nom];
+  if(!rec) return;
+  total.miel += (rec.miel||0) * qte;
+  if(rec.prealable && prealables.indexOf(rec.prealable) === -1) prealables.push(rec.prealable);
+  (rec.mats||[]).forEach(([q, ing])=>{
+    const besoin = q * qte;
+    if(DECOMPOSER && CATALOGUE[ing] && profondeur < 6){
+      accumuler(ing, besoin, total, prealables, profondeur+1);
+      total.intermediaires[ing] = (total.intermediaires[ing]||0) + besoin;
+    } else {
+      total.mats[ing] = (total.mats[ing]||0) + besoin;
+    }
+  });
+}
+
+function calculerPanier(){
+  const total = { miel:0, mats:{}, intermediaires:{} };
+  const prealables = [];
+  PANIER.forEach(l=> accumuler(l.nom, l.qte, total, prealables, 0));
+  return { total, prealables };
+}
+
 function initIngredients(){
-  const sel = document.getElementById('ing-recipe');
-  sel.innerHTML = Object.keys(RECETTES).map(r=>`<option>${r}</option>`).join('');
-  const compute = ()=>{
-    const rec = RECETTES[sel.value] || [];
-    const q = Math.max(1, parseInt(document.getElementById('ing-qty').value)||1);
-    const rows = rec.map(x=>`<tr><td>${x.ing}</td><td class="n">${fmt(x.qte*q)}</td></tr>`).join('');
-    document.getElementById('ing-result').innerHTML =
-      `<table class="calc"><thead><tr><th>Ingrédient</th><th style="text-align:right">Total</th></tr></thead><tbody>${rows}</tbody></table>`;
+  construireCatalogue();
+  const sel  = document.getElementById('ing-recipe');
+  const qty  = document.getElementById('ing-qty');
+  const add  = document.getElementById('ing-add');
+  const dec  = document.getElementById('ing-decomposer');
+
+  /* liste déroulante groupée par catégorie */
+  const parCat = {};
+  Object.keys(CATALOGUE).forEach(n=>{
+    const c = CATALOGUE[n].cat || 'Autre';
+    (parCat[c] = parCat[c] || []).push(n);
+  });
+  sel.innerHTML = Object.keys(parCat).sort().map(c=>
+    `<optgroup label="${c}">${parCat[c].sort().map(n=>`<option>${esc(n)}</option>`).join('')}</optgroup>`
+  ).join('') || '<option disabled>Aucune recette disponible</option>';
+
+  add.addEventListener('click', ()=>{
+    const nom = sel.value;
+    const q = Math.max(1, parseInt(qty.value)||1);
+    if(!nom || !CATALOGUE[nom]) return;
+    const dejaLa = PANIER.find(l=>l.nom===nom);
+    if(dejaLa) dejaLa.qte += q; else PANIER.push({nom, qte:q});
+    renderPanier(); renderCourses();
+  });
+
+  dec.addEventListener('click', e=>{
+    const b = e.target.closest('button'); if(!b) return;
+    dec.querySelectorAll('button').forEach(x=>x.classList.toggle('active', x===b));
+    DECOMPOSER = b.dataset.v === '1';
+    renderCourses();
+  });
+
+  document.getElementById('ing-reset').addEventListener('click', ()=>{
+    PANIER = []; STOCK = {}; renderPanier(); renderCourses();
+  });
+  document.getElementById('ing-clear-stock').addEventListener('click', ()=>{
+    STOCK = {}; renderCourses();
+  });
+
+  renderPanier(); renderCourses();
+}
+
+/* ---- la liste des objets à fabriquer ---- */
+function renderPanier(){
+  const el = document.getElementById('ing-panier');
+  if(!PANIER.length){
+    el.innerHTML = `<p class="hint" style="margin:0">Rien pour l'instant. Choisis un objet ci-dessus et clique sur <b>Ajouter</b> — tu peux en empiler autant que tu veux.</p>`;
+    return;
+  }
+  el.innerHTML = PANIER.map((l,i)=>`<div class="pan-l">
+    <span class="pan-img"><img src="${imgSrc('item',{nom:l.nom})}" alt="" loading="lazy"
+      onerror="imgFallback(this,'ph','${esc(initiales(l.nom))}')"></span>
+    <span class="pan-n">${esc(l.nom)}</span>
+    <input type="number" min="1" value="${l.qte}" data-i="${i}" class="pan-q">
+    <button class="pan-x" data-i="${i}" title="Retirer">✕</button>
+  </div>`).join('');
+  el.querySelectorAll('.pan-q').forEach(inp=>inp.addEventListener('input', e=>{
+    PANIER[+e.target.dataset.i].qte = Math.max(1, parseInt(e.target.value)||1);
+    renderCourses();
+  }));
+  el.querySelectorAll('.pan-x').forEach(b=>b.addEventListener('click', e=>{
+    PANIER.splice(+e.currentTarget.dataset.i, 1); renderPanier(); renderCourses();
+  }));
+}
+
+/* ---- la liste de courses ---- */
+function renderCourses(){
+  const el = document.getElementById('ing-result');
+  if(!PANIER.length){
+    el.innerHTML = `<p class="hint" style="margin:0">La liste apparaîtra ici.</p>`;
+    return;
+  }
+  const { total, prealables } = calculerPanier();
+  const noms = Object.keys(total.mats).sort();
+
+  const ligne = (nom, requis) => {
+    const possede  = STOCK[nom] || 0;
+    const manquant = Math.max(0, requis - possede);
+    return `<tr class="${manquant===0?'ok':''}">
+      <td class="ing-c">
+        <span class="ing-img sm"><img src="${imgSrc('item',{nom})}" alt="" loading="lazy"
+          onerror="imgFallback(this,'ph','${esc(initiales(nom))}')"></span>${esc(nom)}</td>
+      <td class="n">${fmtEntier(requis)}</td>
+      <td class="n"><input type="number" min="0" class="stk" data-n="${esc(nom)}" value="${possede||''}" placeholder="0"></td>
+      <td class="n manque">${manquant===0?'<span class="done">✓</span>':fmtEntier(manquant)}</td>
+    </tr>`;
   };
-  sel.addEventListener('change',compute);
-  document.getElementById('ing-qty').addEventListener('input',compute);
-  compute();
+
+  let html = '';
+  if(total.miel > 0){
+    const possede  = STOCK['Honey'] || 0;
+    const manquant = Math.max(0, total.miel - possede);
+    html += `<div class="miel-box">
+      <span class="ing-img sm"><img src="${imgSrc('item',{nom:'Honey'})}" alt="" loading="lazy"
+        onerror="imgFallback(this,'ph','M')"></span>
+      <div class="miel-t"><b>${fmtMiel(total.miel)}</b><span>${mielExact(total.miel)}</span></div>
+      <div class="miel-in"><label>Ton miel</label>
+        <input type="number" min="0" class="stk" data-n="Honey" value="${possede||''}" placeholder="0"></div>
+      <div class="miel-m ${manquant===0?'done':''}">${manquant===0?'✓ tu as le miel':'manque '+fmtMiel(manquant)}</div>
+    </div>`;
+  }
+
+  html += `<table class="calc ing-table"><thead><tr>
+      <th>Ingrédient</th><th style="text-align:right">Requis</th>
+      <th style="text-align:right">Tu as</th><th style="text-align:right">Manque</th>
+    </tr></thead><tbody>${noms.map(n=>ligne(n, total.mats[n])).join('')}</tbody></table>`;
+
+  const inter = Object.keys(total.intermediaires).sort();
+  if(DECOMPOSER && inter.length){
+    html += `<div class="inter-box"><div class="inter-t">Étapes intermédiaires à fabriquer</div>
+      <div class="inter-l">${inter.map(n=>`<span>${fmtEntier(total.intermediaires[n])} × ${esc(n)}</span>`).join('')}</div></div>`;
+  }
+  if(prealables.length){
+    html += `<div class="craft-pre" style="border:1px solid var(--line-soft);border-radius:12px;margin-top:.8rem">
+      <span>⚑</span><div>${prealables.map(esc).join('<br>')}</div></div>`;
+  }
+
+  el.innerHTML = html;
+  el.querySelectorAll('.stk').forEach(inp=>inp.addEventListener('input', e=>{
+    const v = parseInt(e.target.value);
+    if(!v || v<0) delete STOCK[e.target.dataset.n]; else STOCK[e.target.dataset.n] = v;
+    majManquants();
+  }));
+}
+
+/* met à jour la colonne « manque » sans reconstruire la table (on garde le focus) */
+function majManquants(){
+  const { total } = calculerPanier();
+  document.querySelectorAll('#ing-result .ing-table tbody tr').forEach(tr=>{
+    const nom = tr.querySelector('.stk').dataset.n;
+    const requis = total.mats[nom] || 0;
+    const manquant = Math.max(0, requis - (STOCK[nom]||0));
+    tr.querySelector('.manque').innerHTML = manquant===0 ? '<span class="done">✓</span>' : fmtEntier(manquant);
+    tr.classList.toggle('ok', manquant===0);
+  });
+  const box = document.querySelector('#ing-result .miel-m');
+  if(box){
+    const manquant = Math.max(0, total.miel - (STOCK['Honey']||0));
+    box.textContent = manquant===0 ? '✓ tu as le miel' : 'manque '+fmtMiel(manquant);
+    box.classList.toggle('done', manquant===0);
+  }
 }
 
 /* ---------- OUTIL 2 : Niveau d'abeilles (répartition de la ruche) ---------- */
