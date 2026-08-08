@@ -658,7 +658,7 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
   <div class="eyebrow">Base de données</div>
   <div class="sec-head"><h2 class="section-title">Items du jeu</h2><span class="count-pill count-visible"></span></div>
   <p class="lead">Tous les objets du jeu, classés par famille : à quoi ils servent, combien ils coûtent et où les trouver.</p>
-  <div class="note"><span class="i">🍯</span><div>20 catégories, du Scooper au Planter Of Plenty. <b>Clique sur une carte</b> pour ouvrir sa fiche. Les prix seront ajoutés plus tard — pour l'instant chaque item indique où le trouver. Les images se placent dans <b>images/item/</b>. Le nom du fichier reprend le nom de l'item avec les <b>espaces remplacés par des underscores</b> : « Basic Egg » → <code>Basic_Egg.webp</code>, « Beekeeper's Boots » → <code>Beekeepers_Boots.png</code> (apostrophes supprimées). Ce dossier attend des fichiers <b>.webp</b> ; les autres dossiers (stickers, beequip, amulette, bees) attendent des <b>.png</b>. Le format de chaque dossier se règle dans le bloc <b>FORMAT DES IMAGES</b> en haut du script. Deux exceptions gérées automatiquement : tous les œufs portant un nom d'abeille réutilisent l'image de <b>Basic Egg</b> (le Nectar Tester aussi), et toutes les gelées portant un nom d'abeille réutilisent celle de <b>Royal Jelly</b> — c'est ainsi dans le jeu, y compris pour les versions Gifted. Tu n'as donc que deux fichiers à fournir pour ces 50 entrées.</div></div>
+  <div class="note"><span class="i">🍯</span><div>20 catégories, du Scooper au Planter Of Plenty. <b>Clique sur une carte</b> pour ouvrir sa fiche. Les prix seront ajoutés plus tard — pour l'instant chaque item indique où le trouver. Les images se placent dans <b>images/item/</b>. Le nom du fichier reprend le nom de l'item avec les <b>espaces remplacés par des underscores</b>, et les <b>tirets conservés</b> quand le nom en contient déjà : « Basic Egg » → <code>Basic_Egg.webp</code>, « Box-O-Frogs » → <code>Box-O-Frogs.webp</code>, « Beekeeper's Boots » → <code>Beekeepers_Boots.webp</code> (les apostrophes sont supprimées). Ce dossier attend des fichiers <b>.webp</b> ; les autres dossiers (stickers, beequip, amulette, bees) attendent des <b>.png</b>. Le format de chaque dossier se règle dans le bloc <b>FORMAT DES IMAGES</b> en haut du script. Deux exceptions gérées automatiquement : tous les œufs portant un nom d'abeille réutilisent l'image de <b>Basic Egg</b> (le Nectar Tester aussi), et toutes les gelées portant un nom d'abeille réutilisent celle de <b>Royal Jelly</b> — c'est ainsi dans le jeu, y compris pour les versions Gifted. Tu n'as donc que deux fichiers à fournir pour ces 50 entrées.</div></div>
   <div class="toolbar">
     <div class="search"><span>🔍</span><input type="text" placeholder="Rechercher un item…" oninput="filterCards('items',this.value)"></div>
     <div class="chips" id="items-chips"></div>
@@ -1080,7 +1080,7 @@ const ITEMS = [
   { nom:"Gold Egg", categorie:"Œufs", desc:"Fait éclore une abeille Épique, Légendaire ou Mythique.", lieu:"Boutiques, quêtes, événements" },
   { nom:"Diamond Egg", categorie:"Œufs", desc:"Fait éclore une abeille Légendaire ou Mythique.", lieu:"Quêtes, événements, Robux" },
   { nom:"Mythic Egg", categorie:"Œufs", desc:"Garantit une abeille Mythique aléatoire.", lieu:"Quêtes avancées, événements" },
-  { nom:"Choose A Mythic Egg", img:"images/item/Choose-A-Mythic_Egg.webp", categorie:"Œufs", desc:"Permet de choisir soi-même quelle abeille Mythique obtenir.", lieu:"Quêtes de haut niveau, événements" },
+  { nom:"Choose A Mythic Egg", categorie:"Œufs", desc:"Permet de choisir soi-même quelle abeille Mythique obtenir.", lieu:"Quêtes de haut niveau, événements" },
   { nom:"Star Egg", categorie:"Œufs", desc:"Permet de choisir précisément n'importe quelle abeille du jeu.", lieu:"Événements, codes, Robux" },
   { nom:"Gifted Silver Egg", categorie:"Œufs", desc:"Version « gifted » de l'œuf argent : l'abeille éclose est directement Gifted.", lieu:"Boutique Robux, événements" },
   { nom:"Gifted Gold Egg", categorie:"Œufs", desc:"Version « gifted » de l'œuf or.", lieu:"Boutique Robux, événements" },
@@ -2536,7 +2536,15 @@ const IMG_EXT_DEFAUT = 'png';
 /* Nom affiché -> nom de fichier.
    Les espaces deviennent des underscores : "Basic Egg" -> Basic_Egg.webp
    Les apostrophes sont retirées :          "Beekeeper's Boots" -> Beekeepers_Boots.png */
+/* Exceptions : quand le nom du fichier ne suit pas la règle ci-dessus.
+   Clé = nom affiché sur le site, valeur = nom du fichier (sans extension).
+   Ajoute simplement une ligne ici si un fichier a un nom différent. */
+const IMG_FICHIER = {
+  "Super-Scooper": "Super_Scooper",
+};
+
 function imgNom(nom){
+  if(IMG_FICHIER[nom]) return encodeURIComponent(IMG_FICHIER[nom]);
   return encodeURIComponent(
     String(nom).replace(/[''`]/g, '').replace(/\s+/g, '_')
   );
@@ -2626,6 +2634,7 @@ function carteHTML(o, folder, key, idx){
   const tag = o.categorie || o.rarete || '';
   const kl  = keylineOf(o);
   const img = `<div class="card-img"><img src="${imgSrc(folder,o)}" alt="${esc(o.nom)}"
+      loading="lazy" decoding="async"
       onerror="imgFallback(this,'ph','${esc(initiales(o.nom))}')"></div>`;
   return `<div class="card" data-name="${esc(o.nom.toLowerCase())}" data-cat="${esc(tag)}"
       data-key="${key}" data-idx="${idx}"
@@ -3019,7 +3028,7 @@ function renderTradeSearch(side){
   box.innerHTML = matches.length ? matches.map(s=>{
     const val = s.valeur==='TBD' ? 'TBD' : (s.valeur ? s.valeur+' signs' : '—');
     return `<div class="tr-item" onclick="addTradeItem('${side}',&quot;${s.nom.replace(/"/g,'&#34;')}&quot;)">
-      <span class="tr-ic"><img src="${imgSrc('stickers',s)}" alt="" onerror="imgFallback(this,'gone')"></span>
+      <span class="tr-ic"><img src="${imgSrc('stickers',s)}" alt="" loading="lazy" decoding="async" onerror="imgFallback(this,'gone')"></span>
       <span class="tr-nm">${s.nom}</span><span class="tr-val">${val}</span></div>`;
   }).join('') : '<div class="tr-empty">Aucun sticker</div>';
   box.classList.add('open');
@@ -3044,7 +3053,7 @@ function renderTrade(){
     ul.innerHTML = trade[side].map(x=>{
       const val = (VALEURS_TRADE[x.item]||0)*x.qty; total += val;
       const st = STICKERS.find(s=>s.nom===x.item) || {nom:x.item};
-      return `<li><span class="tl-info"><span class="tl-ic"><img src="${imgSrc('stickers',st)}" alt="" onerror="imgFallback(this,'gone')"></span>${x.qty}× ${x.item} <small style="color:var(--muted)">(${fmtSigns(val)})</small></span>
+      return `<li><span class="tl-info"><span class="tl-ic"><img src="${imgSrc('stickers',st)}" alt="" loading="lazy" decoding="async" onerror="imgFallback(this,'gone')"></span>${x.qty}× ${x.item} <small style="color:var(--muted)">(${fmtSigns(val)})</small></span>
         <span class="rm" onclick="removeTrade('${side}',&quot;${x.item.replace(/"/g,'&#34;')}&quot;)">✕</span></li>`;
     }).join('') || '<li style="background:transparent;color:var(--muted);justify-content:center">Vide</li>';
     document.getElementById('trade-total-'+side).textContent = fmtSigns(total)+' signs';
@@ -3075,7 +3084,7 @@ let selectedCell = null;   // case en cours d'édition
 let beeFilter = "Tous";
 
 function beeIconHTML(b, cls){
-  return `<span class="${cls}" style="background:${COULEUR_RARETE_BEE[b.rarete]||'#555'}"><span class="ic-fb">${b.nom.slice(0,3)}</span><img src="${imgSrc('bees',b)}" alt="" onload="this.previousElementSibling.style.display='none'" onerror="imgFallback(this,'gone')"></span>`;
+  return `<span class="${cls}" style="background:${COULEUR_RARETE_BEE[b.rarete]||'#555'}"><span class="ic-fb">${b.nom.slice(0,3)}</span><img src="${imgSrc('bees',b)}" alt="" loading="lazy" decoding="async" onload="this.previousElementSibling.style.display='none'" onerror="imgFallback(this,'gone')"></span>`;
 }
 
 function initBuilder(){
@@ -3532,7 +3541,7 @@ function renderObjets(){
   const list=OBJETS[objCat]||[];
   el.innerHTML = list.map((o,idx)=>{
     const ic = (objCat==='mutation') ? '🧬'
-             : `<img src="${imgSrc('beequip',o)}" alt="" onerror="imgFallback(this,'emoji','🎒')">`;
+             : `<img src="${imgSrc('beequip',o)}" alt="" loading="lazy" decoding="async" onerror="imgFallback(this,'emoji','🎒')">`;
     const dot = (objCat==='mutation'&&o.couleur)?`<span class="odot" style="background:${o.couleur}"></span>`:'';
     const active = (activeObject && activeObject.nom===o.nom) ? ' active':'';
     return `<div class="obj-opt${active}" data-idx="${idx}" title="${o.nom}">
