@@ -599,6 +599,17 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 .inter-l span{font-size:.8rem;background:var(--ink-900);border:1px solid var(--line-soft);
   border-radius:20px;padding:.2rem .6rem;color:var(--cream)}
 
+/* ce que le stock permet de fabriquer */
+.poss{margin-top:1.2rem;border:1px solid rgba(107,208,139,.3);border-radius:14px;
+  background:linear-gradient(140deg,rgba(107,208,139,.08),transparent);overflow:hidden}
+.poss-t{font-family:'Fredoka';font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:1px;
+  color:#6BD08B;padding:.6rem .9rem;border-bottom:1px solid rgba(107,208,139,.2)}
+.poss-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.45rem;padding:.8rem .9rem}
+.poss-i{display:flex;align-items:center;gap:.45rem;background:var(--ink-950);
+  border:1px solid var(--line-soft);border-radius:12px;padding:.4rem .6rem}
+.poss-n{flex:1;font-size:.84rem;color:var(--cream)}
+.poss-i b{font-family:'Fredoka';font-weight:700;color:#6BD08B;font-size:.95rem}
+
 /* arbre de fabrication */
 .tree{border:1px solid var(--line-soft);border-radius:14px;background:var(--ink-950);
   margin-bottom:1.2rem;overflow:hidden}
@@ -3241,6 +3252,45 @@ function tableStock(titre, dico, note){
     </tr></thead><tbody>${lignes}</tbody></table>`;
 }
 
+/* ---- Combien d'exemplaires ton stock permet-il de fabriquer ? ----
+   Calcul volontairement simple : chaque recette est évaluée seule, à partir
+   des ingrédients que tu possèdes, sans fabriquer les sous-composants et
+   sans partager le stock entre plusieurs recettes. */
+function faisable(nom){
+  const rec = CATALOGUE[nom];
+  if(!rec || !rec.mats || !rec.mats.length) return 0;
+  let n = Infinity;
+  rec.mats.forEach(([q, ing]) => { n = Math.min(n, Math.floor((STOCK[ing] || 0) / q)); });
+  if(rec.miel) n = Math.min(n, Math.floor((STOCK['Honey'] || 0) / rec.miel));
+  return isFinite(n) ? n : 0;
+}
+
+function possibleHTML(){
+  const stockVide = Object.keys(STOCK).length === 0;
+  if(stockVide){
+    return `<div class="poss"><div class="poss-t">Ce que ton stock permet de fabriquer</div>
+      <p class="hint" style="padding:.2rem .9rem .8rem;margin:0">Renseigne tes quantités dans les tableaux ci-dessus : cette section listera aussitôt tout ce que tu peux fabriquer immédiatement.</p></div>`;
+  }
+  const dispo = Object.keys(CATALOGUE)
+    .map(nom => ({ nom, n:faisable(nom) }))
+    .filter(x => x.n > 0)
+    .sort((a,b) => b.n - a.n || a.nom.localeCompare(b.nom));
+
+  if(!dispo.length){
+    return `<div class="poss"><div class="poss-t">Ce que ton stock permet de fabriquer</div>
+      <p class="hint" style="padding:.2rem .9rem .8rem;margin:0">Avec ce que tu as pour l'instant, aucune recette complète n'est réalisable. Il te manque encore au moins un ingrédient sur chacune.</p></div>`;
+  }
+  const tuiles = dispo.map(x => `<div class="poss-i">
+      <span class="ing-img sm"><img src="${imgSrc('item',{nom:x.nom})}" alt="" loading="lazy"
+        onerror="imgFallback(this,'ph','${esc(initiales(x.nom))}')"></span>
+      <span class="poss-n">${esc(x.nom)}</span><b>×${fmtEntier(x.n)}</b>
+    </div>`).join('');
+  return `<div class="poss"><div class="poss-t">Ce que ton stock permet de fabriquer</div>
+    <div class="poss-g">${tuiles}</div>
+    <p class="hint" style="padding:0 .9rem .8rem;margin:0">Chaque recette est calculée séparément, à partir des ingrédients que tu possèdes déjà — sans fabriquer les sous-composants. Le même stock peut donc servir à plusieurs lignes : tu ne pourras pas tout faire en même temps.</p>
+  </div>`;
+}
+
 /* ---- la liste de courses ---- */
 function renderCourses(){
   const el = document.getElementById('ing-result');
@@ -3290,6 +3340,8 @@ function renderCourses(){
 
   html += tableStock('3 · Ingrédients de base', base,
     "Ce qui ne se fabrique pas : le coût réel une fois toute la chaîne décomposée.");
+
+  html += possibleHTML();
 
   if(prealables.length){
     html += `<div class="craft-pre" style="border:1px solid var(--line-soft);border-radius:12px;margin-top:.8rem">
