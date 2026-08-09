@@ -621,9 +621,14 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 /* pages Guide et Map infos */
 .guide-sec{margin-bottom:1.6rem}
 .tagline{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0 .2rem}
-.tagx{font-size:.86rem;color:var(--cream);background:var(--panel);
-  border:1px solid var(--line-soft);border-radius:20px;padding:.3rem .75rem;
-  transition:border-color .15s,color .15s}
+.tagx{display:inline-flex;align-items:center;gap:.45rem;font-size:.86rem;color:var(--cream);
+  background:var(--panel);border:1px solid var(--line-soft);border-radius:22px;
+  padding:.28rem .8rem .28rem .35rem;transition:border-color .15s,color .15s,transform .15s}
+.tagx:hover{transform:translateY(-2px)}
+.tagx-i{width:30px;height:30px;flex:0 0 auto;display:grid;place-items:center;overflow:hidden;
+  background:rgba(0,0,0,.28);border-radius:50%}
+.tagx-i img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;image-rendering:pixelated}
+.tagx-i .ph{font-family:'Fredoka';font-weight:700;font-size:.62rem;color:var(--honey);opacity:.75}
 .tagx:hover{border-color:var(--honey);color:var(--honey)}
 .sousg{margin:.9rem 0 0;border-left:2px solid var(--line-soft);padding-left:.9rem}
 .sousg-t{display:flex;align-items:center;gap:.5rem;font-family:'Fredoka';font-weight:600;
@@ -2214,11 +2219,11 @@ const AMULETTES = [
     notes:"Position visuelle : au-dessus de la tête avec 1 amulette, épaule gauche avec 2, épaule droite avec 3 ou plus."
   },
   {
-    nom:"Ant Amulet", categorie:"Défi", rarete:"5 paliers", tiersId:"generic5",
+    nom:"Ant Amulet", categorie:"Défi", rarete:"5 paliers", tiersId:"ant",
     desc:"L'amulette de base obtenue via l'Ant Challenge, dans le Ant Field. Ton score au défi détermine directement la qualité de l'amulette générée : plus tu marques, plus les stats sortent hautes. Le score est affiché au-dessus des récompenses.",
     effet:"Bonus variés — pollen, capacité, conversion, attaque — selon le palier et le score",
     lieu:"Ant Challenge (Ant Field, nécessite un Ant Pass)",
-    paliers:"Bronze → Argent → Or → Diamant → Suprême",
+    paliers:"Bronze 0-24 pts → Argent 25-49 → Or 50-99 → Diamant 100-149 → Suprême 150+",
     notes:"Comme le Star Amulet, elle existe en version Suprême, dont la couleur change légèrement."
   },
   {
@@ -2230,11 +2235,11 @@ const AMULETTES = [
     notes:"Movement Collection et Ticket Chance sont deux bonus très rares : c'est en les décrochant qu'on atteint 5 lignes. Avec le King Beetle Amulet, c'est la seule amulette sans paliers."
   },
   {
-    nom:"Shell Amulet", categorie:"Boss", rarete:"5 paliers", tiersId:"generic5",
+    nom:"Shell Amulet", categorie:"Boss", rarete:"5 paliers", tiersId:"shell",
     desc:"Obtenue en battant le Stump Snail, dans le Stump Field. C'est la seule amulette du jeu qui donne des bonus de goo, de conversion du goo et de défense — un profil unique qu'aucune autre ne remplace.",
     effet:"Bonus de goo, de conversion du goo et de défense",
     lieu:"Stump Snail (Stump Field)",
-    paliers:"Bronze → Argent → Or → Diamant → Suprême",
+    paliers:"Bronze et Argent dès 1 victoire → Or à 5 → Diamant à 7 → Suprême à 15",
     notes:"Indispensable si tu joues autour du goo et du Gummyballer."
   },
   {
@@ -2242,16 +2247,16 @@ const AMULETTES = [
     desc:"S'obtient en terminant le Stick Bug Challenge. Attention au piège : même avec un Stick Bug de haut niveau, si ta contribution au score du défi est trop faible, tu ne reçois aucune amulette. Comme pour l'Ant Amulet, ton score s'affiche au-dessus des récompenses.",
     effet:"Bonus variés selon le score obtenu au défi",
     lieu:"Stick Bug Challenge",
-    paliers:"Bronze → Argent → Or → Diamant — c'est la seule amulette sans palier Suprême",
+    paliers:"Bronze 1 M / niv. 5 → Argent 8 M / niv. 8 → Or 20 M / niv. 11 → Diamant 50 M / niv. 13 — seule amulette sans palier Suprême",
     notes:"Contribution minimale obligatoire : farmer le défi en groupe sans participer ne donne rien."
   },
   {
-    nom:"Cog Amulet", categorie:"Défi", rarete:"5 paliers", tiersId:"generic5",
+    nom:"Cog Amulet", categorie:"Défi", rarete:"5 paliers", tiersId:"cog",
     desc:"L'amulette mécanique du Robo Bear Challenge, qui se lance avec un Robo Pass. Comme les autres amulettes de défi, sa qualité dépend de ta performance dans le challenge.",
     effet:"Bonus orientés attaque, conversion et pollen des abilities dupliquées",
     lieu:"Robo Bear Challenge (Robo Pass)",
-    paliers:"Bronze → Argent → Or → Diamant → Suprême",
-    notes:"Le Robo Pass s'obtient au Robo Pass Dispenser du Mountain Top et via les quêtes."
+    paliers:"Bronze manche 5 → Argent 10 → Or 15 → Diamant 20 → Suprême 25",
+    notes:"Le Gold Cog Amulet débloque l'achat de Glitched Drives, le Diamant la fabrication de la Digital Bee, et le Suprême le skin Robo Cub."
   },
 ];
 const AMULETTES_CATS = ["Tous","Boss","Défi","Génération"];
@@ -2293,26 +2298,50 @@ const AMULETTES_TIERS = {
     ],
     couleurs:["#C08457","#F0B429","#F4DD44"]
   },
-  generic5: {
-    titre:"Les 5 paliers",
-    colonnes:["Palier","Nombre de bonus","Qualité des bonus"],
+  shell: {
+    titre:"Les 5 paliers du Shell Amulet",
+    colonnes:["Palier","Condition"],
     lignes:[
-      ["Bronze",  "Le moins",  "Valeurs les plus basses"],
-      ["Argent",  "↑",         "↑"],
-      ["Or",      "↑↑",        "↑↑"],
-      ["Diamant", "↑↑↑",       "↑↑↑"],
-      ["Suprême", "Le plus",   "Valeurs les plus hautes · la couleur de l'amulette change légèrement"],
+      ["Bronze",  "Au moins 1 Stump Snail vaincu"],
+      ["Argent",  "Au moins 1 Stump Snail vaincu"],
+      ["Or",      "Au moins 5 Stump Snail vaincus"],
+      ["Diamant", "Au moins 7 Stump Snail vaincus"],
+      ["Suprême", "Au moins 15 Stump Snail vaincus"],
+    ],
+    couleurs:["#C08457","#C9D1D9","#F0B429","#7FE4E0","#F4DD44"]
+  },
+  ant: {
+    titre:"Les 5 paliers du Ant Amulet",
+    colonnes:["Palier","Score au Ant Challenge"],
+    lignes:[
+      ["Bronze",  "0 à 24 points"],
+      ["Argent",  "25 à 49 points"],
+      ["Or",      "50 à 99 points"],
+      ["Diamant", "100 à 149 points"],
+      ["Suprême", "150 points et plus"],
+    ],
+    couleurs:["#C08457","#C9D1D9","#F0B429","#7FE4E0","#F4DD44"]
+  },
+  cog: {
+    titre:"Les 5 paliers du Cog Amulet",
+    colonnes:["Palier","Manche atteinte","Débloque en plus"],
+    lignes:[
+      ["Bronze",  "Manche 5 et plus",  "—"],
+      ["Argent",  "Manche 10 et plus", "—"],
+      ["Or",      "Manche 15 et plus", "L'achat de Glitched Drives"],
+      ["Diamant", "Manche 20 et plus", "La fabrication de la Digital Bee"],
+      ["Suprême", "Manche 25",         "Défi terminé + le skin Robo Cub, une seule fois par compte"],
     ],
     couleurs:["#C08457","#C9D1D9","#F0B429","#7FE4E0","#F4DD44"]
   },
   stickbug: {
-    titre:"Les 4 paliers",
-    colonnes:["Palier","Nombre de bonus","Qualité des bonus"],
+    titre:"Les 4 paliers du Stick Bug Amulet",
+    colonnes:["Palier","Score au défi","Niveau du Stick Bug"],
     lignes:[
-      ["Bronze",  "Le moins", "Valeurs les plus basses"],
-      ["Argent",  "↑",        "↑"],
-      ["Or",      "↑↑",       "↑↑"],
-      ["Diamant", "Le plus",  "Valeurs les plus hautes — pas de palier Suprême"],
+      ["Bronze",  "Au moins 1 M",  "Niveau 5 minimum"],
+      ["Argent",  "Au moins 8 M",  "Niveau 8 minimum"],
+      ["Or",      "Au moins 20 M", "Niveau 11 minimum"],
+      ["Diamant", "Au moins 50 M", "Niveau 13 minimum"],
     ],
     couleurs:["#C08457","#C9D1D9","#F0B429","#7FE4E0"]
   },
@@ -2726,6 +2755,8 @@ const IMG_EXT = {
   amulette: 'png',
   beequip:  'png',
   bees:     'png',
+  mobs:     'webp',
+  bears:    'webp',
 };
 const IMG_EXT_DEFAUT = 'png';
 
@@ -2741,6 +2772,8 @@ const IMG_STYLE = {
   amulette: 'espace',
   beequip:  'espace',
   bees:     'espace',
+  mobs:     'underscore',
+  bears:    'underscore',
 };
 const IMG_STYLE_DEFAUT = 'espace';
 
@@ -2801,6 +2834,11 @@ function imgSrcs(folder, o){
     liste.push(`images/stickers/Hivesticker_${encodeURIComponent(bas)}.${ext}`);
     liste.push(`images/stickers/${propre}.${ext}`);
     liste.push(`images/stickers/${encodeURIComponent(nom)}.${ext}`);
+  } else if(folder === 'mobs' || folder === 'bears'){
+    liste.push(`images/${folder}/${propre}.${ext}`);
+    liste.push(`images/${folder}/${encodeURIComponent(nom.toLowerCase().replace(/\s+/g,'_'))}.${ext}`);
+    liste.push(`images/${folder}/${encodeURIComponent(nom)}.${ext}`);
+    liste.push(`images/${folder}/${propre}.png`);
   } else {
     liste.push(`images/${folder}/${propre}.${ext}`);
   }
@@ -3178,7 +3216,27 @@ const GUIDE_CATS = ["Incolore","Red","Blue","White"];
 /* ---------- DONNÉES · MAP INFOS ---------- */
 const MAPINFOS = {
   "Zone":  [],
-  "Bears": [],
+  "Bears": [
+    { titre:"Ours à quêtes", dossier:"bears", blocs:[
+      { t:'p', v:"Ils donnent des quêtes qui rapportent du miel, des objets et des abeilles. Le cœur de la progression." },
+      { t:'tags', v:["Black Bear","Mother Bear","Brown Bear","Panda Bear","Science Bear","Dapper Bear","Polar Bear","Robo Bear","Spirit Bear"] },
+    ]},
+    { titre:"Ours voyageurs", dossier:"bears", blocs:[
+      { t:'p', v:"Ils n'apparaissent que par intermittence, à des endroits variables de la carte." },
+      { t:'tags', v:["Sun Bear","Gummy Bear","Bee Bear"] },
+    ]},
+    { titre:"Ours marchands", dossier:"bears", blocs:[
+      { t:'p', v:"Ils tiennent les boutiques : outils, sacs et accessoires." },
+      { t:'tags', v:["Noob Bear","Pro Bear","Top Bear"] },
+    ]},
+    { titre:"Ours hostiles", dossier:"bears", blocs:[
+      { t:'p', v:"Ce sont des monstres, pas des marchands : ils se combattent." },
+      { t:'tags', v:["Tunnel Bear","Snowbear"] },
+    ]},
+    { titre:"Divers", dossier:"bears", blocs:[
+      { t:'tags', v:["Shadow Bear"] },
+    ]},
+  ],
   "Mobs":  [
     { titre:"Normaux", blocs:[
       { t:'tags', v:["Ladybug","Rhino Beetle","Aphid","Spider","Mantis","Scorpion","Werewolf","Cave Monster"] },
@@ -3204,28 +3262,38 @@ const MAPINFOS = {
     { titre:"Passifs", blocs:[
       { t:'tags', v:["Firefly","Bean Bug","Frog"] },
     ]},
-    { titre:"Flore", blocs:[
-      { t:'p', v:"Ils ne se déplacent pas et ne peuvent pas te blesser : ils poussent sur place et se frappent pour récupérer des ressources." },
-      { t:'tags', v:["Puffshroom","Bloom"] },
-    ]},
     { titre:"Retirés du jeu", blocs:[
       { t:'tags', v:["Chick","Hostage Chick","Spotted Chick"] },
     ]},
   ],
+  "Flore": [
+    { titre:"Flore", blocs:[
+      { t:'p', v:"Elle ne se déplace pas et ne peut pas te blesser : elle pousse sur place et se frappe pour récupérer des ressources." },
+      { t:'tags', v:["Puffshroom","Bloom"] },
+    ]},
+  ],
 };
-const MAPINFOS_CATS = ["Zone","Bears","Mobs"];
+const MAPINFOS_CATS = ["Zone","Bears","Mobs","Flore"];
 
 /* ---------- Rendu des deux nouvelles pages ---------- */
+/* Vignettes illustrées — images dans images/mobs/ */
+function tuilesHTML(noms, dossier){
+  const dos = dossier || 'mobs';
+  return `<div class="tagline">${noms.map(n=>`<span class="tagx">
+    <span class="tagx-i"><img ${imgAttrs(dos,{nom:n})} alt="" loading="lazy" decoding="async"
+      onerror="imgFallback(this,'ph','${esc(initiales(n))}')"></span>${esc(n)}</span>`).join('')}</div>`;
+}
+
 function blocHTML(b){
   const corps = (b.blocs || []).map(x=>{
     if(x.t === 'p')     return `<p class="lead" style="margin:.5rem 0">${x.v}</p>`;
     if(x.t === 'liste') return `<ul class="notes-list" style="margin:.6rem 0">${x.v.map(i=>`<li>${i}</li>`).join('')}</ul>`;
     if(x.t === 'etapes')return `<div class="info-grid" style="margin:.8rem 0">${x.v.map((i,k)=>
         `<div class="info-card"><span class="big">${k+1}</span><h4>${i.t}</h4><p>${i.d}</p></div>`).join('')}</div>`;
-    if(x.t === 'tags')  return `<div class="tagline">${x.v.map(i=>`<span class="tagx">${esc(i)}</span>`).join('')}</div>`;
+    if(x.t === 'tags')  return tuilesHTML(x.v, b.dossier);
     if(x.t === 'sous')  return x.v.map(g=>`<div class="sousg">
         <div class="sousg-t">${esc(g.titre)}<b>${g.items.length}</b></div>
-        <div class="tagline">${g.items.map(i=>`<span class="tagx">${esc(i)}</span>`).join('')}</div>
+        ${tuilesHTML(g.items, b.dossier)}
       </div>`).join('');
     return '';
   }).join('');
