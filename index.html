@@ -618,6 +618,19 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 .lg{width:10px;height:10px;border-radius:3px;display:inline-block;flex:0 0 auto}
 .lg-v{background:#6BD08B}.lg-o{background:#F0B429}.lg-n{background:var(--line)}
 
+/* pages Guide et Map infos */
+.guide-sec{margin-bottom:1.6rem}
+.tagline{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0 .2rem}
+.tagx{font-size:.86rem;color:var(--cream);background:var(--panel);
+  border:1px solid var(--line-soft);border-radius:20px;padding:.3rem .75rem;
+  transition:border-color .15s,color .15s}
+.tagx:hover{border-color:var(--honey);color:var(--honey)}
+.sousg{margin:.9rem 0 0;border-left:2px solid var(--line-soft);padding-left:.9rem}
+.sousg-t{display:flex;align-items:center;gap:.5rem;font-family:'Fredoka';font-weight:600;
+  font-size:.8rem;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)}
+.sousg-t b{font-family:'Fredoka';font-size:.7rem;color:var(--ink-950);
+  background:var(--honey);border-radius:20px;padding:.05rem .45rem}
+
 /* arbre de fabrication */
 .tree{border:1px solid var(--line-soft);border-radius:14px;background:var(--ink-950);
   margin-bottom:1.2rem;overflow:hidden}
@@ -3166,7 +3179,39 @@ const GUIDE_CATS = ["Incolore","Red","Blue","White"];
 const MAPINFOS = {
   "Zone":  [],
   "Bears": [],
-  "Mobs":  [],
+  "Mobs":  [
+    { titre:"Normaux", blocs:[
+      { t:'tags', v:["Ladybug","Rhino Beetle","Aphid","Spider","Mantis","Scorpion","Werewolf","Cave Monster"] },
+      { t:'sous', v:[
+        { titre:"Aphids", items:["Aphid","Rage Aphid","Armored Aphid","Diamond Aphid"] },
+      ]},
+    ]},
+    { titre:"Mini-boss", blocs:[
+      { t:'tags', v:["Rogue Vicious Bee","Wild Windy Bee","Stump Snail","Commando Chick","Snowbear"] },
+    ]},
+    { titre:"Boss", blocs:[
+      { t:'tags', v:["King Beetle","Tunnel Bear","Coconut Crab","Mondo Chick"] },
+    ]},
+    { titre:"Défis", blocs:[
+      { t:'sous', v:[
+        { titre:"Ants",                 items:["Ant","Army Ant","Flying Ant","Giant Ant","Fire Ant"] },
+        { titre:"Stick Bug",            items:["Stick Bug","Stick Nymph","Festive Nymph"] },
+        { titre:"Retro Swarm Challenge",items:["Slime","Zombie","Brick Bloom"] },
+        { titre:"Robo Bear Challenge",  items:["Mechsquito","Cogmower","Cogturret","Mega Mechsquito","Golden Cogmower"] },
+        { titre:"Robo Party",           items:["Party Mechsquito","Party Cogmower","Party Cogturret","Party Mega Mechsquito"] },
+      ]},
+    ]},
+    { titre:"Passifs", blocs:[
+      { t:'tags', v:["Firefly","Bean Bug","Frog"] },
+    ]},
+    { titre:"Flore", blocs:[
+      { t:'p', v:"Ils ne se déplacent pas et ne peuvent pas te blesser : ils poussent sur place et se frappent pour récupérer des ressources." },
+      { t:'tags', v:["Puffshroom","Bloom"] },
+    ]},
+    { titre:"Retirés du jeu", blocs:[
+      { t:'tags', v:["Chick","Hostage Chick","Spotted Chick"] },
+    ]},
+  ],
 };
 const MAPINFOS_CATS = ["Zone","Bears","Mobs"];
 
@@ -3177,6 +3222,11 @@ function blocHTML(b){
     if(x.t === 'liste') return `<ul class="notes-list" style="margin:.6rem 0">${x.v.map(i=>`<li>${i}</li>`).join('')}</ul>`;
     if(x.t === 'etapes')return `<div class="info-grid" style="margin:.8rem 0">${x.v.map((i,k)=>
         `<div class="info-card"><span class="big">${k+1}</span><h4>${i.t}</h4><p>${i.d}</p></div>`).join('')}</div>`;
+    if(x.t === 'tags')  return `<div class="tagline">${x.v.map(i=>`<span class="tagx">${esc(i)}</span>`).join('')}</div>`;
+    if(x.t === 'sous')  return x.v.map(g=>`<div class="sousg">
+        <div class="sousg-t">${esc(g.titre)}<b>${g.items.length}</b></div>
+        <div class="tagline">${g.items.map(i=>`<span class="tagx">${esc(i)}</span>`).join('')}</div>
+      </div>`).join('');
     return '';
   }).join('');
   return `<div class="guide-sec"><h3 class="sub-h">${b.titre}</h3>${corps}</div>`;
