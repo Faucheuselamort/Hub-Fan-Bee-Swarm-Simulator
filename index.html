@@ -636,6 +636,73 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 .sousg-t b{font-family:'Fredoka';font-size:.7rem;color:var(--ink-950);
   background:var(--honey);border-radius:20px;padding:.05rem .45rem}
 
+/* page Amulettes */
+.amu-pick{display:grid;grid-template-columns:repeat(auto-fit,minmax(124px,1fr));gap:.6rem;margin-bottom:1.6rem}
+.amu-b{position:relative;display:flex;flex-direction:column;align-items:center;gap:.35rem;cursor:pointer;
+  background:linear-gradient(165deg,var(--panel),var(--ink-900));border:1px solid var(--line-soft);
+  border-radius:16px;padding:.85rem .5rem .7rem;color:var(--cream);font-family:inherit;
+  transition:transform .16s,border-color .16s,box-shadow .16s}
+.amu-b:hover{transform:translateY(-3px);border-color:var(--accent)}
+.amu-b.active{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 10px 26px rgba(0,0,0,.4);
+  background:radial-gradient(200px 90px at 50% -10%,var(--glow),transparent 70%),var(--panel)}
+.amu-b-i{width:52px;height:52px;display:grid;place-items:center;overflow:hidden;
+  background:rgba(0,0,0,.28);border:1px solid var(--line-soft);border-radius:14px}
+.amu-b-i img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;image-rendering:pixelated}
+.amu-b-i .ph{font-family:'Fredoka';font-weight:700;font-size:.95rem;color:var(--accent);opacity:.8}
+.amu-b-n{font-family:'Fredoka';font-weight:600;font-size:.92rem;line-height:1.15;text-align:center}
+.amu-b-t{font-size:.62rem;text-transform:uppercase;letter-spacing:.7px;color:var(--muted)}
+.amu-b.active .amu-b-t{color:var(--accent)}
+
+.amu-head{display:flex;gap:1rem;align-items:center;padding:1.1rem 1.2rem;border-radius:18px;
+  border:1px solid var(--line-soft);
+  background:radial-gradient(420px 160px at 12% 0%,var(--glow),transparent 70%),var(--panel)}
+.amu-head-i{width:64px;height:64px;flex:0 0 auto;display:grid;place-items:center;overflow:hidden;
+  background:rgba(0,0,0,.3);border:1px solid var(--line-soft);border-radius:16px}
+.amu-head-i img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;image-rendering:pixelated}
+.amu-head-i .ph{font-family:'Fredoka';font-weight:700;font-size:1.2rem;color:var(--accent)}
+.amu-head h3{font-size:1.4rem;margin-bottom:.25rem}
+.amu-head p{font-size:.9rem;color:var(--muted);line-height:1.55}
+.amu-rows{margin-top:.4rem}
+.amu-rows .m-row .v{max-width:62%}
+
+.pal-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.7rem}
+.pal-c{border:1px solid var(--line-soft);border-top:3px solid var(--tc);border-radius:14px;
+  background:var(--ink-950);overflow:hidden;display:flex;flex-direction:column}
+.pal-h{padding:.7rem .9rem .5rem}
+.pal-p{font-family:'Fredoka';font-weight:700;font-size:1.05rem;color:var(--tc)}
+.pal-b{padding:0 .9rem .9rem;display:grid;gap:.55rem}
+.pal-r{display:flex;flex-direction:column;gap:.1rem}
+.pal-r span{font-size:.66rem;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+.pal-r b{font-size:.88rem;color:var(--cream);font-weight:600;line-height:1.35}
+
+/* statistiques possibles des amulettes */
+.bf-tabs{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.9rem}
+.bf-tab-b{background:var(--panel);border:1px solid var(--line-soft);border-radius:20px;
+  padding:.35rem .9rem;color:var(--muted);cursor:pointer;font-family:'Fredoka';font-weight:500;font-size:.85rem}
+.bf-tab-b:hover{color:var(--cream);border-color:var(--honey)}
+.bf-tab-b.active{background:var(--honey);color:var(--ink-950);border-color:var(--honey);font-weight:600}
+.bf-wrap{display:grid;gap:.8rem}
+.bf-g{border:1px solid var(--line-soft);border-radius:14px;overflow:hidden;background:var(--ink-950)}
+.bf-g.bf-sure{border-color:rgba(107,208,139,.4)}
+.bf-t{display:flex;align-items:center;gap:.5rem;font-family:'Fredoka';font-weight:600;font-size:.75rem;
+  text-transform:uppercase;letter-spacing:1px;color:var(--muted);padding:.6rem .9rem;
+  border-bottom:1px solid var(--line-soft);background:rgba(255,255,255,.03)}
+.bf-g.bf-sure .bf-t{color:#6BD08B}
+.bf-t b{font-family:'Fredoka';font-size:.7rem;color:var(--ink-950);background:var(--honey);
+  border-radius:20px;padding:.05rem .45rem;margin-left:auto}
+.bf-g.bf-sure .bf-t b{background:#6BD08B}
+.bf-tab{width:100%;border-collapse:collapse}
+.bf-tab th{text-align:left;font-family:'Fredoka';font-weight:500;font-size:.68rem;text-transform:uppercase;
+  letter-spacing:.5px;color:var(--muted);padding:.45rem .9rem;border-bottom:1px solid var(--line-soft)}
+.bf-tab td{padding:.5rem .9rem;border-bottom:1px solid var(--line-soft);font-size:.88rem;vertical-align:top}
+.bf-tab tr:last-child td{border-bottom:0}
+.bf-n{color:var(--cream)}
+.bf-p{font-family:'Fredoka';font-weight:600;color:var(--honey)}
+.bf-p span{display:block;font-family:'Inter';font-weight:400;font-size:.72rem;color:var(--muted)}
+.bf-c{text-align:right;font-family:'Fredoka';font-weight:700;color:var(--cream);white-space:nowrap}
+.bf-warn{padding:.6rem .9rem;font-size:.8rem;color:var(--amber);border-top:1px solid var(--line-soft);
+  background:rgba(240,180,41,.07)}
+
 /* arbre de fabrication */
 .tree{border:1px solid var(--line-soft);border-radius:14px;background:var(--ink-950);
   margin-bottom:1.2rem;overflow:hidden}
@@ -843,16 +910,9 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
   <div class="sec-head"><h2 class="section-title">Amulettes</h2><span class="count-pill count-visible"></span></div>
   <p class="lead">Les 7 types d'amulettes du jeu : où les obtenir, quels bonus elles donnent et comment leur qualité est déterminée.</p>
   <div class="info-grid" id="amulettes-info"></div>
-  <div class="toolbar">
-    <div class="search"><span>🔍</span><input type="text" placeholder="Rechercher une amulette…" oninput="filterCards('amulettes',this.value)"></div>
-    <div class="chips" id="amulettes-chips"></div>
-  </div>
-  <div class="card-grid" id="amulettes-grid"></div>
-  <p class="hint" style="margin-top:.8rem">Clique une amulette pour voir le détail de ses paliers (Bronze, Argent, Or, Diamant, Suprême) et ses conditions d'obtention.</p>
-
-  <h3 class="sub-h">Les capacités passives des Star Amulets</h3>
-  <p class="lead">Le Diamond Star Amulet peut tirer l'un des deux premiers passifs, avec 1 chance sur 100. Le Supreme Star Amulet en tire toujours un parmi les six, avec 1 chance sur 6 pour chacun — et 1 chance sur 50 d'en avoir deux, soit 1 sur 750 pour une paire précise.</p>
-  <div class="passifs-grid" id="star-passifs"></div>
+  <h3 class="sub-h">Choisis une amulette</h3>
+  <div class="amu-pick" id="amu-pick"></div>
+  <div id="amu-detail"></div>
 
   <div class="warn"><span class="i">⚠︎</span><div>Les <b>plages de valeurs exactes et les probabilités de chaque statistique</b>, palier par palier, vivent dans un module Lua du wiki (<i>Module:Amulet Stats/data</i>) qui ne se lit pas automatiquement : les tableaux sont générés à l'affichage. J'ai donc mis tout ce qui est vérifiable — paliers, conditions, coûts en miel, passifs complets — mais pas le détail statistique ligne par ligne.</div></div>
 </section>
@@ -2347,6 +2407,47 @@ const AMULETTES_TIERS = {
   },
 };
 
+/* ---- Statistiques possibles, palier par palier ----
+   groupes : "Garanti" = toujours donné, "Choisir N" = N stats tirées dans la liste.
+   plage / pas / proba reprennent exactement le tableau du wiki.
+   unique  : pour les amulettes sans palier.                                  */
+const AMULETTES_BUFFS = {
+  "King Beetle Amulet": { unique:[
+    { prise:"Garanti", stats:[
+      { nom:"Convert Rate", plage:"+25 % – +100 %", pas:"1 %", proba:"100 %" },
+    ]},
+    { prise:"Choisir 1", stats:[
+      { nom:"Red Bee Attack",  plage:"+0 – +1", pas:"1", proba:"33,33 %" },
+      { nom:"Blue Bee Attack", plage:"+0 – +1", pas:"1", proba:"33,33 %" },
+      { nom:"Bee Attack",      plage:"+0 – +1", pas:"1", proba:"33,33 %" },
+    ]},
+    { prise:"Choisir 2", stats:[
+      { nom:"Mushroom Field Pollen",    plage:"+20 % – +100 %", pas:"1 %", proba:"40 %" },
+      { nom:"Blue Flower Field Pollen", plage:"+20 % – +100 %", pas:"1 %", proba:"40 %" },
+      { nom:"Clover Field Pollen",      plage:"+20 % – +100 %", pas:"1 %", proba:"40 %" },
+      { nom:"Strawberry Field Pollen",  plage:"+20 % – +100 %", pas:"1 %", proba:"40 %" },
+      { nom:"Bamboo Field Pollen",      plage:"+20 % – +100 %", pas:"1 %", proba:"40 %" },
+    ]},
+  ]},
+
+  "Star Amulet": { paliers:{
+    "Bronze": [
+      { prise:"Garanti", stats:[
+        { nom:"Capacity", plage:"×1,25", pas:"—", proba:"100 %" },
+      ]},
+      { prise:"Choisir 2", incomplet:true, stats:[
+        { nom:"Convert Rate",     plage:"×1,05 – ×1,15", pas:"0,01", proba:"22,22 %" },
+        { nom:"Pollen",           plage:"+5 % – +15 %",  pas:"1 %",  proba:"22,22 %" },
+        { nom:"White Pollen",     plage:"+15 % – +50 %", pas:"1 %",  proba:"22,22 %" },
+        { nom:"Red Pollen",       plage:"+15 % – +50 %", pas:"1 %",  proba:"22,22 %" },
+        { nom:"Blue Pollen",      plage:"+15 % – +50 %", pas:"1 %",  proba:"22,22 %" },
+        { nom:"Bee Ability Rate", plage:"+1 % – +5 %",   pas:"1 %",  proba:"22,22 %" },
+        { nom:"Critical Chance",  plage:"+1 % – +5 %",   pas:"1 %",  proba:"22,22 %" },
+      ]},
+    ],
+  }},
+};
+
 /* ---- Les capacités passives des Star Amulets ---- */
 const STAR_PASSIFS = [
   { nom:"Guiding Star", pal:"Diamant (1/100) et Suprême", chance:"1/6 en Suprême", cd:"5 min",
@@ -3143,8 +3244,117 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') fermerModale(); })
 
 renderCards('items',ITEMS,ITEMS_CATS,'item');
 renderCards('stickers',STICKERS,STICKERS_CATS,'stickers');
-renderCards('amulettes',AMULETTES,AMULETTES_CATS,'amulette');
 renderCards('beequip',BEEQUIP,BEEQUIP_CATS,'beequip');
+
+/* ---------- Page Amulettes : sélecteur + paliers détaillés ---------- */
+let AMU_ACTIVE = "King Beetle Amulet";
+
+function renderAmuPicker(){
+  const el = document.getElementById('amu-pick'); if(!el) return;
+  el.innerHTML = AMULETTES.map(a=>{
+    const c = accentOf(a);
+    return `<button class="amu-b ${a.nom===AMU_ACTIVE?'active':''}" data-n="${esc(a.nom)}"
+        style="--accent:${c};--glow:${hexToGlow(c,.2)}">
+      <span class="amu-b-i"><img ${imgAttrs('amulette',a)} alt="" loading="lazy"
+        onerror="imgFallback(this,'ph','${esc(initiales(a.nom))}')"></span>
+      <span class="amu-b-n">${esc(a.nom.replace(' Amulet',''))}</span>
+      <span class="amu-b-t">${esc(a.categorie)}</span>
+    </button>`;
+  }).join('');
+  el.addEventListener('click', e=>{
+    const b = e.target.closest('.amu-b'); if(!b) return;
+    AMU_ACTIVE = b.dataset.n; AMU_PALIER = null;
+    el.querySelectorAll('.amu-b').forEach(x=>x.classList.toggle('active', x===b));
+    renderAmuDetail();
+  });
+}
+
+function renderAmuDetail(){
+  const el = document.getElementById('amu-detail'); if(!el) return;
+  const a = AMULETTES.find(x=>x.nom===AMU_ACTIVE); if(!a) return;
+  const accent = accentOf(a);
+  const t = AMULETTES_TIERS[a.tiersId];
+
+  const lignes = [
+    ["Où l'obtenir", a.lieu],
+    ["Bonus accordés", a.effet],
+    ["Paliers", a.paliers],
+    ["À savoir", a.notes],
+  ].filter(x=>x[1]);
+
+  let cartes = '';
+  if(t){
+    cartes = `<div class="pal-g">${t.lignes.map((l,k)=>{
+      const c = (t.couleurs && t.couleurs[k]) || accent;
+      const infos = l.slice(1).map((v,n)=>`<div class="pal-r"><span>${esc(t.colonnes[n+1])}</span><b>${v}</b></div>`).join('');
+      return `<div class="pal-c" style="--tc:${c}">
+        <div class="pal-h"><span class="pal-p">${esc(l[0])}</span></div>
+        <div class="pal-b">${infos}</div></div>`;
+    }).join('')}</div>`;
+  }
+
+  const passifs = a.tiersId === 'star'
+    ? `<h3 class="sub-h">Les capacités passives</h3>
+       <p class="lead">Le palier Diamant peut tirer l'un des deux premiers, avec 1 chance sur 100. Le Suprême en tire toujours un parmi les six, avec 1 chance sur 6 chacun — et 1 chance sur 50 d'en avoir deux, soit 1 sur 750 pour une paire précise.</p>
+       <div class="passifs-grid">${STAR_PASSIFS.map(p=>`<div class="passif">
+         <div class="p-head"><h4>${p.nom}</h4><span class="p-meta">${p.pal} · ${p.chance}${p.cd&&p.cd!=='—'?' · recharge '+p.cd:''}</span></div>
+         <p>${p.d}</p></div>`).join('')}</div>` : '';
+
+  el.innerHTML = `<div class="amu-head" style="--accent:${accent};--glow:${hexToGlow(accent,.18)}">
+      <span class="amu-head-i"><img ${imgAttrs('amulette',a)} alt="" loading="lazy"
+        onerror="imgFallback(this,'ph','${esc(initiales(a.nom))}')"></span>
+      <div><h3>${esc(a.nom)}</h3><p>${esc(a.desc)}</p></div>
+    </div>
+    <div class="amu-rows">${lignes.map(([k,v])=>
+      `<div class="m-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join('')}</div>
+    ${t?`<h3 class="sub-h">${t.titre}</h3>${cartes}`:''}
+    ${buffsHTML(a)}
+    ${passifs}`;
+
+  const tabs = el.querySelector('.bf-tabs');
+  if(tabs) tabs.addEventListener('click', e=>{
+    const b = e.target.closest('.bf-tab-b'); if(!b) return;
+    AMU_PALIER = b.dataset.p;
+    renderAmuDetail();
+  });
+}
+
+/* Tableau des statistiques possibles */
+function groupeBuffHTML(g){
+  const lignes = g.stats.map(st=>`<tr>
+      <td class="bf-n">${esc(st.nom)}</td>
+      <td class="bf-p">${esc(st.plage)}${st.pas && st.pas!=='—' ? `<span>par ${esc(st.pas)}</span>` : ''}</td>
+      <td class="bf-c">${esc(st.proba)}</td>
+    </tr>`).join('');
+  const garanti = /Garanti/i.test(g.prise);
+  return `<div class="bf-g${garanti?' bf-sure':''}">
+    <div class="bf-t">${esc(g.prise)}<b>${g.stats.length}</b></div>
+    <table class="bf-tab"><thead><tr>
+      <th>Statistique</th><th>Plage</th><th style="text-align:right">Chance</th>
+    </tr></thead><tbody>${lignes}</tbody></table>
+    ${g.incomplet?`<div class="bf-warn">Liste partielle : il manque des statistiques que je n'ai pas encore reçues.</div>`:''}
+  </div>`;
+}
+
+let AMU_PALIER = null;
+function buffsHTML(a){
+  const b = AMULETTES_BUFFS[a.nom];
+  if(!b) return `<h3 class="sub-h">Statistiques possibles</h3>
+    <div class="warn"><span class="i">✎</span><div>Les statistiques de cette amulette ne sont pas encore renseignées. Envoie-moi le tableau du wiki et je l'ajoute.</div></div>`;
+
+  if(b.unique) return `<h3 class="sub-h">Statistiques possibles</h3>
+    <div class="bf-wrap">${b.unique.map(groupeBuffHTML).join('')}</div>`;
+
+  const noms = Object.keys(b.paliers);
+  if(!noms.includes(AMU_PALIER)) AMU_PALIER = noms[0];
+  const onglets = noms.map(n=>`<button class="bf-tab-b ${n===AMU_PALIER?'active':''}" data-p="${esc(n)}">${esc(n)}</button>`).join('');
+  return `<h3 class="sub-h">Statistiques possibles</h3>
+    <div class="bf-tabs">${onglets}</div>
+    <div class="bf-wrap">${b.paliers[AMU_PALIER].map(groupeBuffHTML).join('')}</div>`;
+}
+
+renderAmuPicker();
+renderAmuDetail();
 
 /* ---------- Blocs d'information ---------- */
 function renderInfoCards(elId, list){
