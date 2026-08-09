@@ -714,6 +714,8 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
       <button class="tab-btn" data-view="amulettes">Amulettes</button>
       <button class="tab-btn" data-view="beequip">Beequip</button>
       <button class="tab-btn" data-view="mutations">Mutations</button>
+      <button class="tab-btn" data-view="guide">Guide</button>
+      <button class="tab-btn" data-view="mapinfos">Map infos</button>
       <button class="tab-btn" data-view="outils">Outils</button>
     </nav>
   </div>
@@ -762,6 +764,14 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
       <div class="home-card" onclick="showView('mutations')">
         <div class="ico">🧬</div><h3>Mutations</h3>
         <p>Les 11 mutations d'abeilles, leur probabilité, leur plage et leur couleur.</p>
+      </div>
+      <div class="home-card" onclick="showView('guide')">
+        <div class="ico">📘</div><h3>Guide</h3>
+        <p>Les parcours de progression : ruche incolore, rouge, bleue ou blanche.</p>
+      </div>
+      <div class="home-card" onclick="showView('mapinfos')">
+        <div class="ico">🗺️</div><h3>Map infos</h3>
+        <p>Les zones de la carte, les ours et leurs quêtes, et les monstres.</p>
       </div>
       <div class="home-card" onclick="showView('outils')">
         <div class="ico">🛠️</div><h3>Outils</h3>
@@ -866,6 +876,34 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 
   <h3 class="sub-h">Bon à savoir</h3>
   <ul class="notes-list" id="mut-notes"></ul>
+</section>
+
+<!-- ============================ GUIDE ============================ -->
+<section class="view" id="guide">
+  <div class="eyebrow">Progression</div>
+  <div class="sec-head"><h2 class="section-title">Guide</h2>
+    <span class="count-pill ghost" id="guide-count"></span></div>
+  <p class="lead">Les parcours de progression, classés par orientation de ruche. Choisis une voie pour voir les étapes conseillées.</p>
+
+  <div class="toolbar">
+    <div class="chips" id="guide-chips"></div>
+  </div>
+
+  <div id="guide-body"></div>
+</section>
+
+<!-- ============================ MAP INFOS ============================ -->
+<section class="view" id="mapinfos">
+  <div class="eyebrow">La carte</div>
+  <div class="sec-head"><h2 class="section-title">Map infos</h2>
+    <span class="count-pill ghost" id="map-count"></span></div>
+  <p class="lead">Tout ce qui se trouve sur la carte : les zones, les ours et leurs quêtes, et les monstres.</p>
+
+  <div class="toolbar">
+    <div class="chips" id="map-chips"></div>
+  </div>
+
+  <div id="map-body"></div>
 </section>
 
 <!-- ============================ OUTILS ============================ -->
@@ -2713,6 +2751,12 @@ const IMG_FICHIER = {
   "stickers/Red Hive Skin":        "Hive_model_basic_red",
   "stickers/Black Hive Skin":      "Hive_model_basic_black",
   "stickers/White Hive Skin":      "Hive_model_basic_white",
+  "stickers/Wavy Cyan Hive Skin":  "Hive_model_wavy_cyan",
+  "stickers/Wavy Purple Hive Skin":"Hive_model_wavy_purple",
+  "stickers/Wavy Festive Hive Skin":"Hive_model_wavy_festive",
+  "stickers/Wavy Gold Hive Skin":  "Hive_model_wavy_yellow",
+  "stickers/Doodle Hive Skin":     "Hive_model_wavy_doodle",
+  "stickers/Icy Crowned Hive Skin":"Hive_model_icy_crowned",
 };
 
 function imgNom(folder, nom){
@@ -3074,6 +3118,69 @@ renderRegles('stickers-regles',   STICKERS_REGLES);
 renderSpots('stickers-spots',     STICKERS_SPOTS);
 renderInfoCards('mut-niveau',     MUTATIONS_NIVEAU);
 renderPassifs('star-passifs',     STAR_PASSIFS);
+
+/* ---------- DONNÉES · GUIDE ---------- */
+/* Chaque catégorie contient des sections libres : titre + paragraphes/étapes.
+   Tu peux remplir sans limite, l'affichage s'adapte. */
+const GUIDE = {
+  "Incolore": [],
+  "Red": [],
+  "Blue": [],
+  "White": [],
+};
+const GUIDE_CATS = ["Incolore","Red","Blue","White"];
+
+/* ---------- DONNÉES · MAP INFOS ---------- */
+const MAPINFOS = {
+  "Zone":  [],
+  "Bears": [],
+  "Mobs":  [],
+};
+const MAPINFOS_CATS = ["Zone","Bears","Mobs"];
+
+/* ---------- Rendu des deux nouvelles pages ---------- */
+function blocHTML(b){
+  const corps = (b.blocs || []).map(x=>{
+    if(x.t === 'p')     return `<p class="lead" style="margin:.5rem 0">${x.v}</p>`;
+    if(x.t === 'liste') return `<ul class="notes-list" style="margin:.6rem 0">${x.v.map(i=>`<li>${i}</li>`).join('')}</ul>`;
+    if(x.t === 'etapes')return `<div class="info-grid" style="margin:.8rem 0">${x.v.map((i,k)=>
+        `<div class="info-card"><span class="big">${k+1}</span><h4>${i.t}</h4><p>${i.d}</p></div>`).join('')}</div>`;
+    return '';
+  }).join('');
+  return `<div class="guide-sec"><h3 class="sub-h">${b.titre}</h3>${corps}</div>`;
+}
+
+function renderPageLibre(key, data, cats, elChips, elBody, elCount, vide){
+  const chips = document.getElementById(elChips);
+  const body  = document.getElementById(elBody);
+  let actif = cats[0];
+
+  const dessine = ()=>{
+    const sections = data[actif] || [];
+    body.innerHTML = sections.length
+      ? sections.map(blocHTML).join('')
+      : `<div class="warn"><span class="i">✎</span><div>${vide.replace('%s', actif)}</div></div>`;
+    const c = document.getElementById(elCount);
+    if(c) c.textContent = sections.length + (sections.length > 1 ? ' sections' : ' section');
+  };
+
+  chips.innerHTML = cats.map((c,i)=>{
+    const n = (data[c] || []).length;
+    return `<span class="chip ${i===0?'active':''}" data-cat="${c}">${c} <b style="opacity:.6">${n}</b></span>`;
+  }).join('');
+  chips.addEventListener('click', e=>{
+    const chip = e.target.closest('.chip'); if(!chip) return;
+    chips.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active', x===chip));
+    actif = chip.dataset.cat;
+    dessine();
+  });
+  dessine();
+}
+
+renderPageLibre('guide', GUIDE, GUIDE_CATS, 'guide-chips', 'guide-body', 'guide-count',
+  "La section <b>%s</b> est prête mais encore vide. Donne-moi le contenu et je le remplis.");
+renderPageLibre('map', MAPINFOS, MAPINFOS_CATS, 'map-chips', 'map-body', 'map-count',
+  "La section <b>%s</b> est prête mais encore vide. Donne-moi le contenu et je le remplis.");
 
 /* ---------- Statistiques de l'accueil ---------- */
 (function(){
