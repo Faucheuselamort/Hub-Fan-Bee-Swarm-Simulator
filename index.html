@@ -1471,7 +1471,7 @@ const STICKERS = [
   { nom:"Squashed Head Bear", valeur:"0.05 - 0.1", categorie:"Bears" },
   { nom:"Stretched Head Bear", valeur:"0.05 - 0.1", categorie:"Bears" },
   { nom:"Sideways Spirit Bear", valeur:"0.15 - 0.25", categorie:"Bears" },
-  { nom:"Dapper Bear From Above", valeur:"0.5 - 0.66", categorie:"Bears" },
+  { nom:"Dapper From Above", valeur:"0.5 - 0.66", categorie:"Bears" },
   { nom:"Shy Brown Bear", valeur:"0.5 - 0.75", categorie:"Bears" },
   { nom:"Sitting Mother Bear", valeur:"2 - 2.5", categorie:"Bears" },
   { nom:"Glowering Gummy Bear", valeur:"18 - 20", categorie:"Bears" },
@@ -2769,14 +2769,46 @@ function imgNom(folder, nom){
 }
 
 function imgSrc(folder, o){
-  if(o && o.img) return o.img;                 // chemin explicite prioritaire
+  return imgSrcs(folder, o)[0];
+}
+
+/* Toutes les adresses plausibles pour une image, dans l'ordre d'essai.
+   Si la première n'existe pas, le navigateur passe à la suivante. */
+function imgSrcs(folder, o){
+  if(o && o.img) return [o.img];
   const ext = IMG_EXT[folder] || IMG_EXT_DEFAUT;
-  return `images/${folder}/${imgNom(folder, o.nom)}.${ext}`;
+  const nom = String(o.nom);
+  const propre = imgNom(folder, nom);
+  const liste = [];
+  if(folder === 'stickers'){
+    /* Tous les stickers suivent le même motif : Hivesticker_<nom en minuscules>.
+       Les anciens noms restent testés en secours, au cas où un fichier
+       n'aurait pas encore été renommé. */
+    const bas = nom.replace(/[’'`]/g, '').replace(/\s+/g, '_').toLowerCase();
+    liste.push(`images/stickers/Hivesticker_${encodeURIComponent(bas)}.${ext}`);
+    liste.push(`images/stickers/${propre}.${ext}`);
+    liste.push(`images/stickers/${encodeURIComponent(nom)}.${ext}`);
+  } else {
+    liste.push(`images/${folder}/${propre}.${ext}`);
+  }
+  return liste;
+}
+
+/* Attributs à poser sur une balise <img> : la 1re adresse + les suivantes en réserve */
+function imgAttrs(folder, o){
+  const l = imgSrcs(folder, o);
+  return `src="${l[0]}"` + (l.length > 1 ? ` data-alt="${esc(l.slice(1).join('|'))}"` : '');
 }
 
 /* Image absente : on affiche un contenu de secours.
    mode : 'ph' = initiales, 'emoji' = emoji, 'gone' = on retire, 'hide' = on masque */
 function imgFallback(el, mode, valeur){
+  const reserve = (el.dataset.alt || '').split('|').filter(Boolean);
+  if(reserve.length){
+    el.dataset.alt = reserve.slice(1).join('|');
+    el.setAttribute('src', reserve[0]);
+    return;
+  }
   const parent = el.parentNode;
   el.remove();
   if(!parent) return;
@@ -2896,7 +2928,7 @@ function carteHTML(o, folder, key, idx){
   const accent = accentOf(o);
   const tag = o.categorie || o.rarete || '';
   const kl  = keylineOf(o);
-  const img = `<div class="card-img"><img src="${imgSrc(folder,o)}" alt="${esc(o.nom)}"
+  const img = `<div class="card-img"><img ${imgAttrs(folder,o)} alt="${esc(o.nom)}"
       loading="lazy" decoding="async"
       onerror="imgFallback(this,'ph','${esc(initiales(o.nom))}')"></div>`;
   return `<div class="card" data-name="${esc(o.nom.toLowerCase())}" data-cat="${esc(tag)}"
@@ -2945,7 +2977,7 @@ function ouvrirModale(key, idx){
   back.style.setProperty('--accent', accent);
   back.style.setProperty('--glow', hexToGlow(accent,.18));
   back.querySelector('.m-img').innerHTML =
-    `<img src="${imgSrc(ds.folder,o)}" alt="${esc(o.nom)}"
+    `<img ${imgAttrs(ds.folder,o)} alt="${esc(o.nom)}"
       onerror="imgFallback(this,'ph','${esc(initiales(o.nom))}')">`;
   back.querySelector('.m-title').innerHTML =
     `<h3>${esc(o.nom)}</h3>${o.categorie?`<span class="m-tag">${esc(o.categorie)}</span>`:''}`;
@@ -3603,7 +3635,7 @@ function renderTradeSearch(side){
   box.innerHTML = matches.length ? matches.map(s=>{
     const val = s.valeur==='TBD' ? 'TBD' : (s.valeur ? s.valeur+' signs' : '—');
     return `<div class="tr-item" onclick="addTradeItem('${side}',&quot;${s.nom.replace(/"/g,'&#34;')}&quot;)">
-      <span class="tr-ic"><img src="${imgSrc('stickers',s)}" alt="" loading="lazy" decoding="async" onerror="imgFallback(this,'gone')"></span>
+      <span class="tr-ic"><img ${imgAttrs('stickers',s)} alt="" loading="lazy" decoding="async" onerror="imgFallback(this,'gone')"></span>
       <span class="tr-nm">${s.nom}</span><span class="tr-val">${val}</span></div>`;
   }).join('') : '<div class="tr-empty">Aucun sticker</div>';
   box.classList.add('open');
@@ -3628,7 +3660,7 @@ function renderTrade(){
     ul.innerHTML = trade[side].map(x=>{
       const val = (VALEURS_TRADE[x.item]||0)*x.qty; total += val;
       const st = STICKERS.find(s=>s.nom===x.item) || {nom:x.item};
-      return `<li><span class="tl-info"><span class="tl-ic"><img src="${imgSrc('stickers',st)}" alt="" loading="lazy" decoding="async" onerror="imgFallback(this,'gone')"></span>${x.qty}× ${x.item} <small style="color:var(--muted)">(${fmtSigns(val)})</small></span>
+      return `<li><span class="tl-info"><span class="tl-ic"><img ${imgAttrs('stickers',st)} alt="" loading="lazy" decoding="async" onerror="imgFallback(this,'gone')"></span>${x.qty}× ${x.item} <small style="color:var(--muted)">(${fmtSigns(val)})</small></span>
         <span class="rm" onclick="removeTrade('${side}',&quot;${x.item.replace(/"/g,'&#34;')}&quot;)">✕</span></li>`;
     }).join('') || '<li style="background:transparent;color:var(--muted);justify-content:center">Vide</li>';
     document.getElementById('trade-total-'+side).textContent = fmtSigns(total)+' signs';
