@@ -298,7 +298,8 @@ table.calc td.n{text-align:right;font-family:'Fredoka';font-weight:600;color:var
 .cell .hex,.cell .inner{position:absolute;inset:0;clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%)}
 .cell .hex{background:#2a4653;transition:.1s;inset:2.5px}
 .cell:hover .hex{background:var(--cream)}
-.cell.gifted .hex{background:var(--honey)}
+.cell.gifted .hex{background:#EEFF00;
+  box-shadow:0 0 10px rgba(238,255,0,.75), 0 0 22px rgba(238,255,0,.35)}
 .cell.selected{transform:scale(1.06);z-index:5}
 .cell.can .hex{background:#37c26b}
 .cell.cant .hex{background:#e0554e}
@@ -1167,18 +1168,19 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 
       <div class="builder-layout">
         <div class="items-menu">
-          <h4>Objets</h4>
+          <h4>Catégories</h4>
           <div class="obj-cats" id="obj-cats">
-            <button class="obj-cat active" data-cat="mutation">🧬 Mutation</button>
+            <button class="obj-cat active" data-cat="bee">🐝 Abeilles</button>
+            <button class="obj-cat" data-cat="mutation">🧬 Mutation</button>
             <button class="obj-cat" data-cat="beequip">🎒 Beequip</button>
             <button class="obj-cat" data-cat="beesmas">🎄 Beequip Beesmas</button>
             <button class="obj-cat" data-cat="sticker">🏷️ Sticker</button>
             <button class="obj-cat" data-cat="hiveskin">🎨 Hive Skin</button>
             <button class="obj-cat" data-cat="cubskin">🧸 Cub Skin</button>
           </div>
-          <div class="obj-list" id="obj-list"></div>
-          <p class="item-soon" id="item-soon">Clique une abeille ou un objet, puis une case.</p>
+          <p class="item-soon" id="item-soon"></p>
         </div>
+
         <div class="hive-wrap">
           <div class="hive-stage" id="hive-stage">
             <div class="hive" id="hive"></div>
@@ -1214,6 +1216,7 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
         </div>
 
         <div class="builder-side">
+          <div id="side-bees">
           <div class="bee-head">
             <h4>Choisir une abeille</h4>
             <label class="gift-sw" title="Les abeilles placées seront gifted">
@@ -1226,6 +1229,12 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
           </div>
           <div class="rar-chips" id="bee-rar-chips"></div>
           <div class="bee-list" id="bee-list"></div>
+          </div>
+
+          <div id="side-objs" class="hidden">
+            <h4 id="obj-title">Objets</h4>
+            <div class="obj-list" id="obj-list"></div>
+          </div>
 
           <div class="cell-config hidden" id="cell-config">
             <h4 id="cc-title">Case</h4>
@@ -1595,7 +1604,7 @@ const STICKERS = [
   { nom:"Offline Voucher", valeur:"24 - 26", categorie:"Vouchers" },
   // --- Bees ---
   { nom:"Fuzz Bomb", valeur:"0.05 - 0.1", categorie:"Bees" },
-  { nom:"Blob Bumble", valeur:"0.1 - 0.15", categorie:"Bees" },
+  { nom:"Blob Bumble Bee", valeur:"0.1 - 0.15", categorie:"Bees" },
   { nom:"Round Rascal Bee", valeur:"0.1 - 0.15", categorie:"Bees" },
   { nom:"Flying Brave Bee", valeur:"0.15 - 0.2", categorie:"Bees" },
   { nom:"Flying Ninja Bee", valeur:"0.15 - 0.2", categorie:"Bees" },
@@ -1607,17 +1616,17 @@ const STICKERS = [
   { nom:"Precise Eye", valeur:"0.25 - 0.33", categorie:"Bees" },
   { nom:"Flying Photon Bee", valeur:"0.33 - 0.5", categorie:"Bees" },
   { nom:"Drooping Stubborn Bee", valeur:"0.5 - 0.66", categorie:"Bees" },
-  { nom:"Wobbly Looker", valeur:"0.5 - 0.75", categorie:"Bees" },
+  { nom:"Wobbly Looker Bee", valeur:"0.5 - 0.75", categorie:"Bees" },
   { nom:"Tabby From Behind", valeur:"2 - 2.5", categorie:"Bees" },
   { nom:"Bear Bee Offer", valeur:"2.5 - 3", categorie:"Bees" },
-  { nom:"Round Basic", valeur:"10 - 11", categorie:"Bees" },
+  { nom:"Round Basic Bee", valeur:"10 - 11", categorie:"Bees" },
   // --- Bears ---
   { nom:"Chef Hat Polar Bear", valeur:"0.025 - 0.05", categorie:"Bears" },
   { nom:"Honey Bee Bear", valeur:"0.025 - 0.05", categorie:"Bears" },
   { nom:"Panicked Science Bear", valeur:"0.025 - 0.05", categorie:"Bears" },
   { nom:"Sitting Green Shirt Bear", valeur:"0.025 - 0.05", categorie:"Bears" },
   { nom:"Uplooking Bear", valeur:"0.025 - 0.05", categorie:"Bears" },
-  { nom:"Bomber Bear", valeur:"0.05 - 0.1", categorie:"Bears" },
+  { nom:"Bomber Bee Bear", valeur:"0.05 - 0.1", categorie:"Bears" },
   { nom:"Squashed Head Bear", valeur:"0.05 - 0.1", categorie:"Bears" },
   { nom:"Stretched Head Bear", valeur:"0.05 - 0.1", categorie:"Bears" },
   { nom:"Sideways Spirit Bear", valeur:"0.15 - 0.25", categorie:"Bears" },
@@ -1625,7 +1634,7 @@ const STICKERS = [
   { nom:"Shy Brown Bear", valeur:"0.5 - 0.75", categorie:"Bears" },
   { nom:"Sitting Mother Bear", valeur:"2 - 2.5", categorie:"Bears" },
   { nom:"Glowering Gummy Bear", valeur:"18 - 20", categorie:"Bears" },
-  { nom:"Sunbear", valeur:"27 - 30", categorie:"Bears" },
+  { nom:"Stranded Sun Bear", valeur:"27 - 30", categorie:"Bears" },
   // --- Mobs ---
   { nom:"Coiled Snake", valeur:"0.025 - 0.05", categorie:"Mobs" },
   { nom:"Forward Facing Aphid", valeur:"0.025 - 0.05", categorie:"Mobs" },
@@ -1845,7 +1854,7 @@ const STICKERS = [
   { nom:"Black Star", valeur:"0.33 - 0.4", categorie:"Miscellaneous" },
   { nom:"Black Diamond", valeur:"0.33 - 0.5", categorie:"Miscellaneous" },
   { nom:"Glowing Smile", valeur:"0.33 - 0.5", categorie:"Miscellaneous" },
-  { nom:"Jack-0-Lantern", valeur:"0.33 - 0.5", categorie:"Miscellaneous" },
+  { nom:"Jack-O-Lantern", valeur:"0.33 - 0.5", categorie:"Miscellaneous" },
   { nom:"Robot Head", valeur:"0.33 - 0.5", categorie:"Miscellaneous" },
   { nom:"Dark Flame", valeur:"0.5 - 1", categorie:"Miscellaneous" },
   { nom:"Tornado", valeur:"0.75 - 1", categorie:"Miscellaneous" },
@@ -2306,8 +2315,6 @@ const STICKER_ALIAS = {
   "peppermintcub":"peppermintrobocub",
   "goldhive":"yellowhive",
   "cubvoucher":"cubbuddyvoucher",
-  "sunbear":"strandedsun",
-  "jack0lantern":"jackolantern",
 };
 
 /* Normalisation : minuscules, on retire la ponctuation et les mots "décoratifs" */
@@ -4320,6 +4327,7 @@ function beeIconHTML(b, cls){
 
 function initBuilder(){
   buildHiveCells();
+  majPanneauDroit();
   appliquerSkin(); initStagePose(); renderHiveStk();
   renderBeeChips();
   renderBeeList();
@@ -4693,7 +4701,9 @@ function downloadHiveImage(){
       const cx=x+W/2, cy=y+H/2, b=ABEILLES[c.bee];
       const sB=0.86, sI=0.74;                                                            // écart entre alvéoles
       const hb=cy+0.5*H*sB, hr=cx+0.5*W*sB;
-      hexPath(cx,cy,sB); ctx.fillStyle=c.gifted?'#F4DD44':'#2a4653'; ctx.fill();          // bordure
+      hexPath(cx,cy,sB);
+      if(c.gifted){ ctx.shadowColor='rgba(238,255,0,.8)'; ctx.shadowBlur=14; }
+      ctx.fillStyle=c.gifted?'#EEFF00':'#2a4653'; ctx.fill(); ctx.shadowBlur=0;   // bordure
       ctx.save(); hexPath(cx,cy,sI); ctx.clip();                                          // intérieur
       ctx.fillStyle=COULEUR_RARETE_BEE[b.rarete]||'#555'; hexPath(cx,cy,sI); ctx.fill();   // fond = rareté
       const bi=imgMap[imgSrc('bees',b)];
@@ -4818,13 +4828,15 @@ function clearHive(){
 }
 
 /* ---------- Menu d'objets (Mutation / Beequip / Beesmas) ---------- */
-let objCat = "mutation";
+let objCat = "bee";
 function initObjets(){
   const cats=document.getElementById('obj-cats');
   cats.addEventListener('click',e=>{
     const btn=e.target.closest('.obj-cat'); if(!btn) return;
     objCat=btn.dataset.cat; activeObject=null;
     document.querySelector('.builder-layout').classList.remove('obj-mode');
+    majPanneauDroit();
+    if(objCat==='bee'){ renderObjets(); updateModeHint(); return; }
     cats.querySelectorAll('.obj-cat').forEach(b=>b.classList.toggle('active',b===btn));
     renderObjets();
   });
@@ -4836,8 +4848,26 @@ function listeObjets(){
   if(objCat==='cubskin')  return STICKERS.filter(x=>x.categorie==='Cub Skins');
   return OBJETS[objCat]||[];
 }
+const OBJ_TITRES = {
+  mutation:'Mutations', beequip:'Beequips', beesmas:'Beequips Beesmas',
+  sticker:'Stickers', hiveskin:'Hive Skins', cubskin:'Cub Skins'
+};
+function majPanneauDroit(){
+  const bees = document.getElementById('side-bees');
+  const objs = document.getElementById('side-objs');
+  if(!bees || !objs) return;
+  const surAbeilles = (objCat === 'bee');
+  bees.classList.toggle('hidden', !surAbeilles);
+  objs.classList.toggle('hidden',  surAbeilles);
+  if(!surAbeilles){
+    const t = document.getElementById('obj-title');
+    if(t) t.textContent = OBJ_TITRES[objCat] || 'Objets';
+  }
+}
+
 function renderObjets(){
   const el=document.getElementById('obj-list');
+  if(objCat==='bee'){ el.innerHTML=''; return; }
   const list=listeObjets();
   const dossier = (objCat==='sticker'||objCat==='hiveskin'||objCat==='cubskin') ? 'stickers' : 'beequip';
   el.innerHTML = list.map((o,idx)=>{
@@ -4876,6 +4906,7 @@ function updateModeHint(){
   if(activeObject && activeObject.kind==='sticker') el.innerHTML=`▸ <b style="color:var(--honey)">${activeObject.nom}</b> : clique sur la ruche pour le coller`;
   else if(objCat==='hiveskin') el.innerHTML=`▸ Couleur de ruche : <b style="color:var(--honey)">${hiveSkin||'Jaune (aucun skin)'}</b>`;
   else if(activeObject) el.innerHTML=`▸ <b style="color:var(--honey)">${activeObject.nom}</b> : clique une case verte`;
+  else if(objCat==='bee' && activeBee>=0) el.innerHTML=`▸ <b style="color:var(--honey)">${ABEILLES[activeBee].nom}</b> : clique une case vide`;
   else if(activeBee>=0) el.innerHTML=`▸ <b style="color:var(--honey)">${ABEILLES[activeBee].nom}</b> : clique une case verte`;
   else el.textContent="Clique une abeille ou un objet, puis une case. Reclique pour désélectionner.";
 }
