@@ -4519,6 +4519,7 @@ function onCellClick(i){
   if(hive[i]!==null) selectCell(i); else deselectCell();
 }
 function deselectCell(){
+  setTimeout(majPanneauDroit, 0);
   selectedCell=null;
   document.getElementById('cell-config').classList.add('hidden');
   document.querySelectorAll('#hive .cell').forEach(c=>c.classList.remove('selected'));
@@ -4531,6 +4532,7 @@ function selectCell(i){
   const cfg=document.getElementById('cell-config');
   if(i===null || hive[i]===null){ cfg.classList.add('hidden'); return; }
   cfg.classList.remove('hidden');
+  majPanneauDroit();
   syncConfig();
 }
 function syncConfig(){
@@ -4847,12 +4849,15 @@ function initObjets(){
   const cats=document.getElementById('obj-cats');
   cats.addEventListener('click',e=>{
     const btn=e.target.closest('.obj-cat'); if(!btn) return;
-    objCat=btn.dataset.cat; activeObject=null;
+    /* re-cliquer la catégorie ouverte la referme */
+    objCat = (objCat === btn.dataset.cat) ? null : btn.dataset.cat;
+    activeObject=null;
+    if(objCat !== 'bee') activeBee = -1;
     document.querySelector('.builder-layout').classList.remove('obj-mode');
+    cats.querySelectorAll('.obj-cat').forEach(b=>b.classList.toggle('active', objCat && b===btn));
     majPanneauDroit();
-    if(objCat==='bee'){ renderObjets(); updateModeHint(); return; }
-    cats.querySelectorAll('.obj-cat').forEach(b=>b.classList.toggle('active',b===btn));
     renderObjets();
+    updateModeHint(); highlightCells();
   });
   renderObjets();
 }
@@ -4870,6 +4875,11 @@ function majPanneauDroit(){
   const bees = document.getElementById('side-bees');
   const objs = document.getElementById('side-objs');
   if(!bees || !objs) return;
+  /* le cadre lui-même se masque s'il n'y a ni menu ouvert ni case sélectionnée */
+  const side = document.querySelector('.builder-side');
+  const cfg  = document.getElementById('cell-config');
+  const cfgVisible = cfg && !cfg.classList.contains('hidden');
+  if(side) side.classList.toggle('hidden', !objCat && !cfgVisible);
   bees.classList.toggle('hidden', objCat !== 'bee');
   objs.classList.toggle('hidden', !objCat || objCat === 'bee');
   if(objCat && objCat !== 'bee'){
