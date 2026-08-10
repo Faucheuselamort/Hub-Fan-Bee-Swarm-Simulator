@@ -703,57 +703,37 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 .bf-warn{padding:.6rem .9rem;font-size:.8rem;color:var(--amber);border-top:1px solid var(--line-soft);
   background:rgba(240,180,41,.07)}
 
-/* Hive builder : bascule de mode */
-.bm-tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.1rem}
-.bm-b{background:var(--panel);border:1px solid var(--line-soft);border-radius:14px;
-  padding:.6rem 1.1rem;color:var(--muted);cursor:pointer;font-family:'Fredoka';font-weight:600;font-size:.95rem}
-.bm-b:hover{color:var(--cream);border-color:var(--honey)}
-.bm-b.active{background:var(--honey);color:var(--ink-950);border-color:var(--honey)}
-
-/* Hive builder avec stickers */
-.hs-layout{display:grid;grid-template-columns:230px 1fr 250px;gap:1rem;align-items:start}
-.hs-list{display:grid;gap:.3rem;max-height:420px;overflow:auto;padding-right:.2rem}
-.hs-s{display:flex;align-items:center;gap:.5rem;background:var(--ink-900);border:1px solid var(--line-soft);
-  border-radius:10px;padding:.3rem .5rem;cursor:pointer;color:var(--cream);text-align:left;font-family:inherit}
-.hs-s:hover{border-color:var(--honey)}
-.hs-s.active{border-color:var(--honey);background:rgba(244,221,68,.12)}
-.hs-s img{width:26px;height:26px;object-fit:contain;image-rendering:pixelated;flex:0 0 auto}
-.hs-s .ph{font-family:'Fredoka';font-size:.6rem;color:var(--honey)}
-.hs-s span{font-size:.78rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-
-.hs-top{display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem}
-.hs-count{font-family:'Fredoka';font-weight:700;font-size:1rem;color:var(--ink-950);
-  background:var(--honey);border-radius:20px;padding:.2rem .7rem}
-.hs-count.full{background:#F0736A;color:#fff}
-.hs-count.hs-flash{animation:fade .45s ease}
-
-.hs-board{position:relative;width:100%;aspect-ratio:1/1;max-width:520px;margin:0 auto;
-  border:1px solid var(--line-soft);border-radius:18px;overflow:hidden;
-  background:repeating-conic-gradient(rgba(255,255,255,.02) 0% 25%,transparent 0% 50%) 50%/22px 22px,var(--ink-950);
-  cursor:crosshair;touch-action:none}
-.hs-board .hs-skin{position:absolute;inset:0;margin:auto;max-width:82%;max-height:82%;
-  object-fit:contain;image-rendering:pixelated;pointer-events:none}
-.hs-p{position:absolute;display:block;cursor:grab;touch-action:none}
-.hs-p img{width:100%;height:auto;display:block;image-rendering:pixelated;pointer-events:none}
+/* Hive builder : scène (ruche + stickers) */
+.hive-stage{position:relative;margin:0 auto;width:max-content;padding:56px;border-radius:22px;
+  background:var(--ink-950);overflow:hidden}
+.hive-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  image-rendering:pixelated;pointer-events:none;opacity:.95}
+.hive-stage .hive{position:relative;z-index:2}
+.hive-stk{position:absolute;inset:0;pointer-events:none;z-index:3}
+.hive-stk .hs-p{pointer-events:auto}
+.hs-p{position:absolute;display:block;cursor:grab;touch-action:none;width:38px;
+  transform:translate(-50%,-50%)}
+.hs-p img{width:100%;height:auto;display:block;image-rendering:pixelated;pointer-events:none;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,.55))}
+.hs-p .ph{font-family:'Fredoka';font-weight:700;font-size:9px;color:var(--honey)}
 .hs-p.sel{outline:2px dashed var(--honey);outline-offset:3px;border-radius:4px}
 .hs-p:active{cursor:grabbing}
+.hive-stage.refus{animation:fade .3s ease;box-shadow:inset 0 0 0 2px rgba(240,115,106,.6)}
+.hs-p.nope{outline-color:#F0736A}
 
-.hs-opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:.35rem}
-.hs-opt{background:var(--ink-900);border:1px solid var(--line-soft);border-radius:10px;
-  padding:.25rem;cursor:pointer;display:grid;place-items:center;height:46px}
-.hs-opt:hover{border-color:var(--honey)}
-.hs-opt.active{border-color:var(--honey);background:rgba(244,221,68,.14)}
-.hs-opt img{max-width:100%;max-height:36px;object-fit:contain;image-rendering:pixelated}
-.hs-opt .ph{font-family:'Fredoka';font-size:.58rem;color:var(--honey)}
-.hs-none{color:var(--muted);font-size:.9rem}
-.hs-lim{font-family:'Fredoka';font-size:.62rem;color:var(--ink-950);background:var(--honey);
-  border-radius:20px;padding:.05rem .4rem;margin-left:.3rem;vertical-align:middle}
-.hs-cubview{display:flex;align-items:center;gap:.5rem;margin-top:.5rem;font-size:.8rem;color:var(--muted)}
-.hs-cubview img{width:34px;height:34px;object-fit:contain;image-rendering:pixelated}
-.hs-edit-h{font-family:'Fredoka';font-weight:600;font-size:.92rem;color:var(--honey);margin-bottom:.5rem}
+.hive-cub{position:absolute;right:-96px;bottom:0;width:84px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:.2rem}
+.hive-cub img{width:64px;height:64px;object-fit:contain;image-rendering:pixelated}
+.hive-cub span{font-size:.62rem;color:var(--muted);line-height:1.2}
+
+.hs-top{display:flex;align-items:center;gap:.5rem;margin:.9rem 0 .3rem}
+.hs-count{font-family:'Fredoka';font-weight:700;font-size:.95rem;color:var(--ink-950);
+  background:var(--honey);border-radius:20px;padding:.15rem .65rem}
+.hs-count.full{background:#F0736A;color:#fff}
+.hs-count.hs-flash{animation:fade .45s ease}
 .hs-edit-b{display:flex;gap:.4rem;margin-top:.6rem}
 .hs-edit-b .btn{flex:1;font-size:.8rem;padding:.4rem .5rem}
-@media(max-width:900px){ .hs-layout{grid-template-columns:1fr} }
+@media(max-width:1100px){ .hive-cub{position:static;width:auto;flex-direction:row;margin-top:.6rem} }
 
 /* arbre de fabrication */
 .tree{border:1px solid var(--line-soft);border-radius:14px;background:var(--ink-950);
@@ -1161,12 +1141,6 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 
   <!-- ---- OUTIL : Build your Hive ---- -->
   <div class="tool-panel" id="tool-builder">
-    <div class="bm-tabs" id="bm-tabs">
-      <button class="bm-b active" data-m="classic"  onclick="setBuilderMode('classic')">🐝 Hive builder classic</button>
-      <button class="bm-b" data-m="stickers" onclick="setBuilderMode('stickers')">🏷️ Hive builder avec stickers</button>
-    </div>
-
-    <div id="bm-classic">
     <div class="panel">
       <h3 style="font-size:1.3rem;margin-bottom:.4rem">Build your Hive</h3>
       <p class="hint" style="margin-bottom:1.4rem">Choisis une abeille dans le menu de droite, clique une case vide pour la placer, une case remplie pour régler son <b>niveau</b> ou la passer <b>gifted</b>. À gauche, les objets (Mutation, Beequip) — bientôt à glisser sur les abeilles. <b>Ajoute tes images</b> dans le bloc <b>DONNÉES · ABEILLES</b>.</p>
@@ -1178,12 +1152,23 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
             <button class="obj-cat active" data-cat="mutation">🧬 Mutation</button>
             <button class="obj-cat" data-cat="beequip">🎒 Beequip</button>
             <button class="obj-cat" data-cat="beesmas">🎄 Beequip Beesmas</button>
+            <button class="obj-cat" data-cat="sticker">🏷️ Sticker</button>
+            <button class="obj-cat" data-cat="hiveskin">🎨 Hive Skin</button>
+            <button class="obj-cat" data-cat="cubskin">🧸 Cub Skin</button>
           </div>
           <div class="obj-list" id="obj-list"></div>
-          <p class="item-soon" id="item-soon">Clique un objet, puis une abeille.</p>
+          <p class="item-soon" id="item-soon">Clique une abeille ou un objet, puis une case.</p>
         </div>
         <div class="hive-wrap">
-          <div class="hive" id="hive"></div>
+          <div class="hive-stage" id="hive-stage">
+            <div class="hive" id="hive"></div>
+            <div class="hive-stk" id="hive-stk"></div>
+          </div>
+          <div class="hs-top">
+            <span class="hs-count" id="hs-count">0 / 50</span>
+            <span class="hint" style="margin:0">stickers sur la ruche · le skin ne compte pas</span>
+          </div>
+          <div class="cell-config hidden" id="hs-edit"></div>
           <div class="builder-stats" id="hive-stats"></div>
           <div class="all-level">
             <label>Niveau de toutes les abeilles</label>
@@ -1230,52 +1215,6 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
           </div>
         </div>
       </div>
-    </div>
-    </div>
-
-    <div id="bm-stickers" class="hidden">
-    <div class="panel">
-      <h3 style="font-size:1.3rem;margin-bottom:.4rem">Décore ta ruche</h3>
-      <p class="hint" style="margin-bottom:1.2rem">Choisis un skin de ruche, puis un sticker dans la liste et clique sur la ruche pour le poser. Tu peux le déplacer au doigt ou à la souris. <b>50 stickers maximum</b> sur la ruche — le skin de ruche ne compte pas — et <b>un seul cub à la fois</b>, comme en jeu.</p>
-
-      <div class="hs-layout">
-        <div class="items-menu">
-          <h4>Stickers</h4>
-          <div class="search" style="margin-bottom:.6rem"><span>🔍</span>
-            <input type="text" id="hs-search" placeholder="Rechercher…"></div>
-          <div class="chips" id="hs-chips" style="margin-bottom:.6rem"></div>
-          <div class="hs-list" id="hs-list"></div>
-          <p class="item-soon">Pinceau : <b id="hs-brush">aucun</b></p>
-        </div>
-
-        <div class="hive-wrap">
-          <div class="hs-top">
-            <span class="hs-count" id="hs-count">0 / 50</span>
-            <span class="hint" style="margin:0">stickers posés</span>
-          </div>
-          <div class="hs-board" id="hs-board"></div>
-          <div class="hive-actions">
-            <button class="btn btn-ghost" onclick="hsExport()">⬇️ Exporter</button>
-            <button class="btn btn-ghost" onclick="document.getElementById('hs-imp').click()">⬆️ Importer</button>
-            <button class="btn btn-ghost" onclick="hsClear()">🗑️ Tout retirer</button>
-            <input type="file" id="hs-imp" accept="application/json,.json" style="display:none"
-                   onchange="if(this.files[0])hsImport(this.files[0]); this.value='';">
-          </div>
-        </div>
-
-        <div class="builder-side">
-          <h4>Skin de ruche</h4>
-          <div class="hs-opts" id="hs-skins"></div>
-
-          <h4 style="margin-top:1.1rem">Cub Buddy <span class="hs-lim">1 max</span></h4>
-          <div class="hs-opts" id="hs-cubs"></div>
-          <div class="hs-cubview" id="hs-cubview"></div>
-
-          <h4 style="margin-top:1.1rem">Sticker sélectionné</h4>
-          <div class="cell-config" id="hs-edit"></div>
-        </div>
-      </div>
-    </div>
     </div>
   </div>
 </section>
@@ -4109,214 +4048,138 @@ function renderTrade(){
   else { v.className='verdict lose'; v.textContent=`❌ En ta défaveur : tu donnes ${fmtSigns(Math.abs(diff))} signs de trop (−${pct.toFixed(0)} %).`; }
 }
 
-/* ---------- OUTIL 4 bis : Hive builder avec stickers ---------- */
-const HS_MAX = 50;                 // 50 stickers max sur la ruche
-let hsSkin   = "Blue Hive Skin";   // skin de ruche (ne compte pas dans les 50)
-let hsCub    = null;               // 1 cub skin maximum
-let hsPosed  = [];                 // [{nom, x, y, taille, rot}] en % du plateau
-let hsBrush  = null;               // sticker sélectionné dans la liste
-let hsSel    = -1;                 // sticker posé en cours d'édition
-let hsFiltre = "Tous";
+/* ---------- Skins de ruche : couleur et forme des alvéoles ---------- */
+const HS_MAX = 50;
+let hiveSkin = "Blue Hive Skin";
+let hiveCub  = null;
+let hsPosed  = [];     // [{nom, x, y}] en % de la scène — taille fixe, comme en jeu
+let hsSel    = -1;
 
-const hsSkins = () => STICKERS.filter(s => s.categorie === "Hive Skins");
-const hsCubs  = () => STICKERS.filter(s => s.categorie === "Cub Skins");
-const hsPosables = () => STICKERS.filter(s => s.categorie !== "Hive Skins" && s.categorie !== "Cub Skins");
-
-function initHiveStickers(){
-  /* skins de ruche */
-  document.getElementById('hs-skins').innerHTML = hsSkins().map(s=>
-    `<button class="hs-opt ${s.nom===hsSkin?'active':''}" data-n="${esc(s.nom)}" title="${esc(s.nom)}">
-      <img ${imgAttrs('stickers',s)} alt="" loading="lazy" onerror="imgFallback(this,'ph','${esc(initiales(s.nom))}')">
-    </button>`).join('');
-  document.getElementById('hs-skins').addEventListener('click', e=>{
-    const b = e.target.closest('.hs-opt'); if(!b) return;
-    hsSkin = b.dataset.n; renderHS();
-  });
-
-  /* cub skins : un seul à la fois */
-  document.getElementById('hs-cubs').innerHTML =
-    `<button class="hs-opt ${!hsCub?'active':''}" data-n="" title="Aucun cub"><span class="hs-none">✕</span></button>` +
-    hsCubs().map(s=>`<button class="hs-opt ${s.nom===hsCub?'active':''}" data-n="${esc(s.nom)}" title="${esc(s.nom)}">
-      <img ${imgAttrs('stickers',s)} alt="" loading="lazy" onerror="imgFallback(this,'ph','${esc(initiales(s.nom))}')">
-    </button>`).join('');
-  document.getElementById('hs-cubs').addEventListener('click', e=>{
-    const b = e.target.closest('.hs-opt'); if(!b) return;
-    hsCub = b.dataset.n || null; renderHS();
-  });
-
-  /* filtres et liste des stickers posables */
-  const cats = ["Tous", ...STICKERS_CATS.filter(c=>c!=="Tous" && c!=="Hive Skins" && c!=="Cub Skins")];
-  document.getElementById('hs-chips').innerHTML = cats.map((c,i)=>
-    `<span class="chip ${i===0?'active':''}" data-cat="${esc(c)}">${esc(c)}</span>`).join('');
-  document.getElementById('hs-chips').addEventListener('click', e=>{
-    const c = e.target.closest('.chip'); if(!c) return;
-    document.querySelectorAll('#hs-chips .chip').forEach(x=>x.classList.toggle('active', x===c));
-    hsFiltre = c.dataset.cat; renderHSList();
-  });
-  document.getElementById('hs-search').addEventListener('input', renderHSList);
-
-  /* plateau : clic pour poser */
-  const board = document.getElementById('hs-board');
-  board.addEventListener('click', e=>{
-    if(e.target.closest('.hs-p')) return;             // clic sur un sticker déjà posé
-    if(!hsBrush){ hsSel = -1; renderHSEdit(); return; }
-    if(hsPosed.length >= HS_MAX){ hsFlash(); return; }
-    const r = board.getBoundingClientRect();
-    hsPosed.push({
-      nom: hsBrush,
-      x: Math.max(2, Math.min(98, (e.clientX - r.left) / r.width  * 100)),
-      y: Math.max(2, Math.min(98, (e.clientY - r.top)  / r.height * 100)),
-      taille: 12, rot: 0
-    });
-    hsSel = hsPosed.length - 1;
-    renderHS();
-  });
-
-  renderHSList();
-  renderHS();
+function appliquerSkin(){
+  const st = document.getElementById('hive-stage'); if(!st) return;
+  let bg = st.querySelector('.hive-bg');
+  if(!bg){ bg = document.createElement('img'); bg.className = 'hive-bg'; st.prepend(bg); }
+  const sk = STICKERS.find(x=>x.nom===hiveSkin);
+  if(!sk){ bg.removeAttribute('src'); return; }
+  const l = imgSrcs('stickers', sk);
+  bg.dataset.alt = l.slice(1).join('|');
+  bg.onerror = () => imgFallback(bg, 'hide');
+  bg.style.display = '';
+  bg.src = l[0];
 }
 
-function hsFlash(){
+/* ---------- Stickers posés sur la ruche ---------- */
+function renderHiveStk(){
+  const el = document.getElementById('hive-stk'); if(!el) return;
+  el.innerHTML = hsPosed.map((p,i)=>{
+    const s = STICKERS.find(x=>x.nom===p.nom) || {nom:p.nom};
+    return `<span class="hs-p ${i===hsSel?'sel':''}" data-i="${i}"
+      style="left:${p.x}%;top:${p.y}%">
+      <img ${imgAttrs('stickers',s)} alt="" draggable="false" onerror="imgFallback(this,'ph','${esc(initiales(p.nom))}')">
+    </span>`;
+  }).join('');
   const c = document.getElementById('hs-count');
-  c.classList.remove('hs-flash'); void c.offsetWidth; c.classList.add('hs-flash');
+  if(c){ c.textContent = hsPosed.length + ' / ' + HS_MAX; c.classList.toggle('full', hsPosed.length >= HS_MAX); }
+  attacherDragStk();
+  renderHsEdit();
 }
 
-function renderHSList(){
-  const q = (document.getElementById('hs-search').value || '').toLowerCase().trim();
-  const liste = hsPosables().filter(s =>
-    (hsFiltre === "Tous" || s.categorie === hsFiltre) && s.nom.toLowerCase().includes(q));
-  document.getElementById('hs-list').innerHTML = liste.length ? liste.map(s=>
-    `<button class="hs-s ${s.nom===hsBrush?'active':''}" data-n="${esc(s.nom)}" title="${esc(s.nom)}">
-      <img ${imgAttrs('stickers',s)} alt="" loading="lazy" onerror="imgFallback(this,'ph','${esc(initiales(s.nom))}')">
-      <span>${esc(s.nom)}</span>
-    </button>`).join('') : `<p class="hint" style="margin:0">Aucun sticker.</p>`;
-}
-
-/* délégation : choix du pinceau */
-document.addEventListener('click', e=>{
-  const b = e.target.closest('#hs-list .hs-s'); if(!b) return;
-  hsBrush = (hsBrush === b.dataset.n) ? null : b.dataset.n;
-  document.querySelectorAll('#hs-list .hs-s').forEach(x=>x.classList.toggle('active', x.dataset.n === hsBrush));
-  document.getElementById('hs-brush').textContent = hsBrush || 'aucun';
-});
-
-function renderHS(){
-  const board = document.getElementById('hs-board');
-  if(!board) return;
-  const skin = STICKERS.find(s=>s.nom===hsSkin);
-  const cub  = hsCub ? STICKERS.find(s=>s.nom===hsCub) : null;
-
-  board.innerHTML =
-    `<img class="hs-skin" ${imgAttrs('stickers',skin)} alt="" onerror="imgFallback(this,'hide')">` +
-    hsPosed.map((p,i)=>{
-      const s = STICKERS.find(x=>x.nom===p.nom) || {nom:p.nom};
-      return `<span class="hs-p ${i===hsSel?'sel':''}" data-i="${i}"
-        style="left:${p.x}%;top:${p.y}%;width:${p.taille}%;transform:translate(-50%,-50%) rotate(${p.rot}deg)">
-        <img ${imgAttrs('stickers',s)} alt="" draggable="false" onerror="imgFallback(this,'ph','${esc(initiales(p.nom))}')">
-      </span>`;
-    }).join('');
-
-  document.getElementById('hs-cubview').innerHTML = cub
-    ? `<img ${imgAttrs('stickers',cub)} alt="" onerror="imgFallback(this,'hide')"><span>${esc(cub.nom)}</span>`
-    : `<span class="hint" style="margin:0">Aucun cub</span>`;
-
-  document.getElementById('hs-count').textContent = hsPosed.length + ' / ' + HS_MAX;
-  document.getElementById('hs-count').classList.toggle('full', hsPosed.length >= HS_MAX);
-  document.querySelectorAll('#hs-skins .hs-opt').forEach(b=>b.classList.toggle('active', b.dataset.n===hsSkin));
-  document.querySelectorAll('#hs-cubs .hs-opt').forEach(b=>b.classList.toggle('active', (b.dataset.n||null)===hsCub));
-
-  attacherDrag();
-  renderHSEdit();
-}
-
-/* déplacement à la souris / au doigt */
-function attacherDrag(){
-  const board = document.getElementById('hs-board');
-  board.querySelectorAll('.hs-p').forEach(el=>{
+function attacherDragStk(){
+  const stage = document.getElementById('hive-stage');
+  document.querySelectorAll('#hive-stk .hs-p').forEach(el=>{
     el.addEventListener('pointerdown', ev=>{
-      ev.preventDefault();
+      ev.preventDefault(); ev.stopPropagation();
       const i = +el.dataset.i;
-      hsSel = i; renderHSEdit();
-      board.querySelectorAll('.hs-p').forEach(x=>x.classList.toggle('sel', x===el));
-      const r = board.getBoundingClientRect();
-      let bouge = false;
+      hsSel = i;
+      document.querySelectorAll('#hive-stk .hs-p').forEach(x=>x.classList.toggle('sel', x===el));
+      renderHsEdit();
+      const r = stage.getBoundingClientRect();
       const move = e2=>{
-        bouge = true;
-        hsPosed[i].x = Math.max(2, Math.min(98, (e2.clientX - r.left) / r.width  * 100));
-        hsPosed[i].y = Math.max(2, Math.min(98, (e2.clientY - r.top)  / r.height * 100));
+        const px = Math.max(0, Math.min(r.width,  e2.clientX - r.left));
+        const py = Math.max(0, Math.min(r.height, e2.clientY - r.top));
+        if(surAlveole(px, py)){ el.classList.add('nope'); return; }   // on ne lâche pas sur une alvéole
+        el.classList.remove('nope');
+        hsPosed[i].x = px / r.width  * 100;
+        hsPosed[i].y = py / r.height * 100;
         el.style.left = hsPosed[i].x + '%';
         el.style.top  = hsPosed[i].y + '%';
       };
-      const up = ()=>{
-        window.removeEventListener('pointermove', move);
-        window.removeEventListener('pointerup', up);
-        if(bouge) renderHSEdit();
-      };
+      const up = ()=>{ window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); };
       window.addEventListener('pointermove', move);
       window.addEventListener('pointerup', up);
     });
   });
 }
 
-function renderHSEdit(){
-  const el = document.getElementById('hs-edit');
-  if(hsSel < 0 || !hsPosed[hsSel]){
-    el.innerHTML = `<p class="hint" style="margin:0">Clique un sticker posé pour le redimensionner, le faire pivoter ou le retirer.</p>`;
-    return;
-  }
+function renderHsEdit(){
+  const el = document.getElementById('hs-edit'); if(!el) return;
+  if(hsSel < 0 || !hsPosed[hsSel]){ el.classList.add('hidden'); return; }
+  el.classList.remove('hidden');
   const p = hsPosed[hsSel];
-  el.innerHTML = `<div class="hs-edit-h">${esc(p.nom)}</div>
-    <div class="cc-row"><label>Taille</label>
-      <input type="range" id="hs-size" min="4" max="40" value="${p.taille}">
-      <span class="cc-lvl-val">${p.taille}</span></div>
-    <div class="cc-row"><label>Rotation</label>
-      <input type="range" id="hs-rot" min="-180" max="180" value="${p.rot}">
-      <span class="cc-lvl-val">${p.rot}°</span></div>
+  el.innerHTML = `<h4>${esc(p.nom)}</h4>
+    <p class="hint" style="margin:.2rem 0 .6rem">Tous les stickers ont la même taille en jeu : seule leur position est réglable.</p>
     <div class="hs-edit-b">
-      <button class="btn btn-ghost" id="hs-front">Mettre devant</button>
+      <button class="btn btn-ghost" id="hs-front">Devant</button>
       <button class="btn btn-ghost" id="hs-del">Retirer</button>
     </div>`;
-  el.querySelector('#hs-size').addEventListener('input', e=>{
-    hsPosed[hsSel].taille = +e.target.value; renderHS(); });
-  el.querySelector('#hs-rot').addEventListener('input', e=>{
-    hsPosed[hsSel].rot = +e.target.value; renderHS(); });
-  el.querySelector('#hs-del').addEventListener('click', ()=>{
-    hsPosed.splice(hsSel,1); hsSel = -1; renderHS(); });
-  el.querySelector('#hs-front').addEventListener('click', ()=>{
-    const p2 = hsPosed.splice(hsSel,1)[0]; hsPosed.push(p2); hsSel = hsPosed.length-1; renderHS(); });
+  el.querySelector('#hs-del').addEventListener('click',  ()=>{ hsPosed.splice(hsSel,1); hsSel = -1; renderHiveStk(); });
+  el.querySelector('#hs-front').addEventListener('click',()=>{ const q = hsPosed.splice(hsSel,1)[0]; hsPosed.push(q); hsSel = hsPosed.length-1; renderHiveStk(); });
 }
 
-function hsClear(){ hsPosed = []; hsSel = -1; renderHS(); }
-
-function hsExport(){
-  const data = { skin:hsSkin, cub:hsCub, stickers:hsPosed };
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(data,null,2)], {type:'application/json'}));
-  a.download = 'ma-ruche-stickers.json'; a.click(); URL.revokeObjectURL(a.href);
-}
-function hsImport(file){
-  const r = new FileReader();
-  r.onload = () => {
-    try{
-      const d = JSON.parse(r.result);
-      if(d.skin) hsSkin = d.skin;
-      hsCub = d.cub || null;
-      hsPosed = Array.isArray(d.stickers) ? d.stickers.slice(0, HS_MAX) : [];
-      hsSel = -1; renderHS();
-    }catch(err){ alert("Fichier illisible."); }
-  };
-  r.readAsText(file);
-}
-
-/* ---------- Bascule entre les deux modes ---------- */
-function setBuilderMode(m){
-  document.querySelectorAll('#bm-tabs .bm-b').forEach(b=>b.classList.toggle('active', b.dataset.m===m));
-  document.getElementById('bm-classic').classList.toggle('hidden', m!=='classic');
-  document.getElementById('bm-stickers').classList.toggle('hidden', m!=='stickers');
-  if(m==='stickers' && !document.getElementById('hs-board').dataset.pret){
-    document.getElementById('hs-board').dataset.pret = '1';
-    initHiveStickers();
+/* Un sticker ne peut pas être collé sur une alvéole : on teste si le point
+   tombe dans l'un des hexagones de la ruche. Coordonnées en pixels, repère scène. */
+function surAlveole(px, py){
+  const hv = document.getElementById('hive'); if(!hv || !cellGeom.length) return false;
+  const ox = hv.offsetLeft, oy = hv.offsetTop;
+  for(const g of cellGeom){
+    const x = px - ox - g.x, y = py - oy - g.y;
+    if(x < 0 || y < 0 || x > g.W || y > g.H) continue;
+    const pts = [[0.25*g.W,0],[0.75*g.W,0],[g.W,0.5*g.H],[0.75*g.W,g.H],[0.25*g.W,g.H],[0,0.5*g.H]];
+    let dedans = false;
+    for(let i=0, j=pts.length-1; i<pts.length; j=i++){
+      const [xi,yi] = pts[i], [xj,yj] = pts[j];
+      if(((yi>y)!==(yj>y)) && (x < (xj-xi)*(y-yi)/(yj-yi)+xi)) dedans = !dedans;
+    }
+    if(dedans) return true;
   }
+  return false;
+}
+function refusPose(){
+  const st = document.getElementById('hive-stage');
+  st.classList.remove('refus'); void st.offsetWidth; st.classList.add('refus');
+  const h = document.getElementById('item-soon');
+  if(h) h.innerHTML = '▸ <b style="color:#F0736A">Impossible sur une alvéole</b> — colle le sticker autour, sur la ruche.';
+}
+
+/* pose d'un sticker : clic sur la ruche avec un sticker en main */
+function renderCub(){
+  let el = document.getElementById('hive-cub');
+  const stage = document.getElementById('hive-stage'); if(!stage) return;
+  if(!el){ el = document.createElement('div'); el.id='hive-cub'; el.className='hive-cub'; stage.appendChild(el); }
+  if(!hiveCub){ el.innerHTML=''; return; }
+  const c = STICKERS.find(x=>x.nom===hiveCub) || {nom:hiveCub};
+  el.innerHTML = `<img ${imgAttrs('stickers',c)} alt="" onerror="imgFallback(this,'hide')"><span>${esc(hiveCub)}</span>`;
+}
+
+function initStagePose(){
+  const stage = document.getElementById('hive-stage'); if(!stage) return;
+  stage.addEventListener('click', e=>{
+    if(!activeObject || activeObject.cat !== 'sticker') return;
+    if(e.target.closest('.hs-p')) return;
+    if(hsPosed.length >= HS_MAX){
+      const c = document.getElementById('hs-count');
+      c.classList.remove('hs-flash'); void c.offsetWidth; c.classList.add('hs-flash');
+      return;
+    }
+    const r = stage.getBoundingClientRect();
+    const px = e.clientX - r.left, py = e.clientY - r.top;
+    if(surAlveole(px, py)){ refusPose(); return; }
+    hsPosed.push({ nom:activeObject.nom,
+      x:(e.clientX - r.left)/r.width*100, y:(e.clientY - r.top)/r.height*100
+    });
+    hsSel = hsPosed.length - 1;
+    renderHiveStk();
+  }, true);
 }
 
 /* ---------- OUTIL 4 : Build your Hive ---------- */
@@ -4338,6 +4201,7 @@ function beeIconHTML(b, cls){
 
 function initBuilder(){
   buildHiveCells();
+  appliquerSkin(); initStagePose(); renderHiveStk(); renderCub();
   renderBeeChips();
   renderBeeList();
   paintHive();
@@ -4470,6 +4334,7 @@ function canApplyObject(obj, i){
 }
 // Allume les cases en vert/rouge selon la sélection courante
 function highlightCells(){
+  if(activeObject && activeObject.kind==='sticker'){ document.querySelectorAll('#hive .cell').forEach(c=>c.classList.remove('can','cant')); return; }
   document.querySelectorAll('#hive .cell').forEach(cell=>{
     cell.classList.remove('can','cant');
     const i=parseInt(cell.dataset.i);
@@ -4653,6 +4518,8 @@ function downloadHiveImage(){
     srcs.add(imgSrc('bees',ABEILLES[c.bee]));
     if(c.beequip){ const bq=BEEQUIP.find(x=>x.nom===c.beequip)||{nom:c.beequip}; srcs.add(imgSrc('beequip',bq)); }
   });
+  hsPosed.forEach(pp=>{ const st=STICKERS.find(x=>x.nom===pp.nom)||{nom:pp.nom}; srcs.add(imgSrc('stickers',st)); });
+  if(hiveCub){ const cu=STICKERS.find(x=>x.nom===hiveCub)||{nom:hiveCub}; srcs.add(imgSrc('stickers',cu)); }
   const imgMap={}; let pending=srcs.size;
   const done=()=>{ if(--pending<=0) render(); };
   if(pending===0){ render(); }
@@ -4682,6 +4549,20 @@ function downloadHiveImage(){
         else { ctx.font='14px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='alphabetic'; ctx.fillText('🎒', bx+bs/2, by+bs*0.78); }
       }
     }
+    // --- Stickers collés sur la ruche ---
+    const stW = (cols-1)*hstep+W, stH = (rows-1)*vstep+H+H/2;
+    hsPosed.forEach(pp=>{
+      const st = STICKERS.find(x=>x.nom===pp.nom)||{nom:pp.nom};
+      const im = imgMap[imgSrc('stickers',st)];
+      const w  = 38;
+      const cx = pad + stW * pp.x/100, cy = pad + stH * pp.y/100;
+      ctx.save(); ctx.translate(cx,cy);
+      if(im){ const h = w * (im.naturalHeight/im.naturalWidth || 1); ctx.drawImage(im, -w/2, -h/2, w, h); }
+      else { ctx.fillStyle='#F4DD44'; ctx.font='700 10px Fredoka, sans-serif'; ctx.textAlign='center';
+             ctx.textBaseline='middle'; ctx.fillText(pp.nom.slice(0,10), 0, 0); }
+      ctx.restore();
+    });
+
     // --- Passage 2 : les chiffres de niveau, TOUJOURS par-dessus ---
     ctx.font='800 14px Fredoka, sans-serif'; ctx.textAlign='left'; ctx.textBaseline='alphabetic';
     ctx.lineWidth=3; ctx.lineJoin='round';
@@ -4779,18 +4660,26 @@ function initObjets(){
   const cats=document.getElementById('obj-cats');
   cats.addEventListener('click',e=>{
     const btn=e.target.closest('.obj-cat'); if(!btn) return;
-    objCat=btn.dataset.cat;
+    objCat=btn.dataset.cat; activeObject=null;
+    document.querySelector('.builder-layout').classList.remove('obj-mode');
     cats.querySelectorAll('.obj-cat').forEach(b=>b.classList.toggle('active',b===btn));
     renderObjets();
   });
   renderObjets();
 }
+function listeObjets(){
+  if(objCat==='sticker')  return STICKERS.filter(x=>x.categorie!=='Hive Skins' && x.categorie!=='Cub Skins');
+  if(objCat==='hiveskin') return STICKERS.filter(x=>x.categorie==='Hive Skins');
+  if(objCat==='cubskin')  return STICKERS.filter(x=>x.categorie==='Cub Skins');
+  return OBJETS[objCat]||[];
+}
 function renderObjets(){
   const el=document.getElementById('obj-list');
-  const list=OBJETS[objCat]||[];
+  const list=listeObjets();
+  const dossier = (objCat==='sticker'||objCat==='hiveskin'||objCat==='cubskin') ? 'stickers' : 'beequip';
   el.innerHTML = list.map((o,idx)=>{
     const ic = (objCat==='mutation') ? '🧬'
-             : `<img src="${imgSrc('beequip',o)}" alt="" loading="lazy" decoding="async" onerror="imgFallback(this,'emoji','🎒')">`;
+             : `<img ${imgAttrs(dossier,o)} alt="" loading="lazy" decoding="async" onerror="imgFallback(this,'emoji','🏷️')">`;
     const dot = (objCat==='mutation'&&o.couleur)?`<span class="odot" style="background:${o.couleur}"></span>`:'';
     const active = (activeObject && activeObject.nom===o.nom) ? ' active':'';
     return `<div class="obj-opt${active}" data-idx="${idx}" title="${o.nom}">
@@ -4802,8 +4691,17 @@ function renderObjets(){
       if(activeObject && activeObject.nom===o.nom){   // re-clic => désélection
         activeObject=null; op.classList.remove('active');
         document.querySelector('.builder-layout').classList.remove('obj-mode');
+      } else if(objCat==='hiveskin'){
+        hiveSkin=o.nom; appliquerSkin(); paintHive();
+        el.querySelectorAll('.obj-opt').forEach(x=>x.classList.toggle('active',x===op));
+        updateModeHint(); return;
+      } else if(objCat==='cubskin'){
+        hiveCub = (hiveCub===o.nom) ? null : o.nom;      // un seul cub à la fois
+        el.querySelectorAll('.obj-opt').forEach(x=>x.classList.toggle('active', hiveCub && x===op));
+        renderCub(); updateModeHint(); return;
       } else {
-        activeObject={ kind: objCat==='mutation'?'mutation':'beequip', nom:o.nom, couleur:o.couleur||null };
+        const kind = objCat==='sticker' ? 'sticker' : (objCat==='mutation'?'mutation':'beequip');
+        activeObject={ kind, cat:objCat, nom:o.nom, couleur:o.couleur||null };
         el.querySelectorAll('.obj-opt').forEach(x=>x.classList.toggle('active',x===op));
         activeBee=-1;
         document.querySelectorAll('#bee-list .bee-opt').forEach(x=>x.classList.remove('active'));
@@ -4815,7 +4713,10 @@ function renderObjets(){
 }
 function updateModeHint(){
   const el=document.getElementById('item-soon'); if(!el) return;
-  if(activeObject) el.innerHTML=`▸ <b style="color:var(--honey)">${activeObject.nom}</b> : clique une case verte`;
+  if(activeObject && activeObject.kind==='sticker') el.innerHTML=`▸ <b style="color:var(--honey)">${activeObject.nom}</b> : clique sur la ruche pour le coller`;
+  else if(objCat==='hiveskin') el.innerHTML=`▸ Skin actuel : <b style="color:var(--honey)">${hiveSkin}</b>`;
+  else if(objCat==='cubskin')  el.innerHTML=`▸ Cub : <b style="color:var(--honey)">${hiveCub||'aucun'}</b>`;
+  else if(activeObject) el.innerHTML=`▸ <b style="color:var(--honey)">${activeObject.nom}</b> : clique une case verte`;
   else if(activeBee>=0) el.innerHTML=`▸ <b style="color:var(--honey)">${ABEILLES[activeBee].nom}</b> : clique une case verte`;
   else el.textContent="Clique une abeille ou un objet, puis une case. Reclique pour désélectionner.";
 }
