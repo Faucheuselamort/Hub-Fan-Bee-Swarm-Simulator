@@ -704,6 +704,8 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 .bf-warn{padding:.6rem .9rem;font-size:.8rem;color:var(--amber);border-top:1px solid var(--line-soft);
   background:rgba(240,180,41,.07)}
 
+.side-search{margin-bottom:.6rem}
+.side-search input{font-size:.86rem}
 .bee-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
 .gift-sw{display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;
   background:var(--ink-900);border:1px solid var(--line-soft);border-radius:20px;padding:.25rem .6rem}
@@ -1170,7 +1172,7 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
         <div class="items-menu">
           <h4>Catégories</h4>
           <div class="obj-cats" id="obj-cats">
-            <button class="obj-cat active" data-cat="bee">🐝 Abeilles</button>
+            <button class="obj-cat" data-cat="bee">🐝 Abeilles</button>
             <button class="obj-cat" data-cat="mutation">🧬 Mutation</button>
             <button class="obj-cat" data-cat="beequip">🎒 Beequip</button>
             <button class="obj-cat" data-cat="beesmas">🎄 Beequip Beesmas</button>
@@ -1193,7 +1195,12 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
           <div class="cell-config hidden" id="hs-edit"></div>
           <div class="builder-stats" id="hive-stats"></div>
           <div class="all-level">
-            <label>Niveau de toutes les abeilles</label>
+            <label>Statut gifted de toute la ruche</label>
+            <div class="gift-actions">
+              <button class="btn btn-ghost" onclick="toutGifted(true)">✨ Tout gifted</button>
+              <button class="btn btn-ghost" onclick="toutGifted(false)">Tout normal</button>
+            </div>
+            <label style="margin-top:.9rem">Niveau de toutes les abeilles</label>
             <div class="all-level-ctl">
               <input type="range" id="all-level" min="1" max="25" value="1" oninput="document.getElementById('all-level-val').textContent=this.value">
               <span class="cc-lvl-val" id="all-level-val">1</span>
@@ -1223,16 +1230,16 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
               <input type="checkbox" id="gift-auto"><span>Gifted</span>
             </label>
           </div>
-          <div class="gift-actions">
-            <button class="btn btn-ghost" onclick="toutGifted(true)">Tout gifted</button>
-            <button class="btn btn-ghost" onclick="toutGifted(false)">Tout normal</button>
-          </div>
+          <div class="search side-search"><span>🔍</span>
+            <input type="text" id="bee-search" placeholder="Rechercher une abeille…"></div>
           <div class="rar-chips" id="bee-rar-chips"></div>
           <div class="bee-list" id="bee-list"></div>
           </div>
 
           <div id="side-objs" class="hidden">
             <h4 id="obj-title">Objets</h4>
+            <div class="search side-search"><span>🔍</span>
+              <input type="text" id="obj-search" placeholder="Rechercher…"></div>
             <div class="obj-list" id="obj-list"></div>
           </div>
 
@@ -4328,6 +4335,10 @@ function beeIconHTML(b, cls){
 function initBuilder(){
   buildHiveCells();
   majPanneauDroit();
+  const bs=document.getElementById('bee-search');
+  if(bs) bs.addEventListener('input', renderBeeList);
+  const os=document.getElementById('obj-search');
+  if(os) os.addEventListener('input', renderObjets);
   appliquerSkin(); initStagePose(); renderHiveStk();
   renderBeeChips();
   renderBeeList();
@@ -4597,8 +4608,10 @@ function renderBeeChips(){
 }
 function renderBeeList(){
   const el=document.getElementById('bee-list');
+  const q=((document.getElementById('bee-search')||{}).value||'').toLowerCase().trim();
   el.innerHTML=ABEILLES.map((b,i)=>{
     if(beeFilter!=="Tous" && b.rarete!==beeFilter) return '';
+    if(q && !b.nom.toLowerCase().includes(q)) return '';
     return `<div class="bee-opt ${i===activeBee?'active':''}" data-i="${i}" title="${b.nom} · ${b.rarete}">
       ${beeIconHTML(b,'ic')}
       <span class="rdot" style="background:${COULEUR_RARETE_BEE[b.rarete]||'#888'}"></span>
@@ -4828,7 +4841,7 @@ function clearHive(){
 }
 
 /* ---------- Menu d'objets (Mutation / Beequip / Beesmas) ---------- */
-let objCat = "bee";
+let objCat = null;   // rien de sélectionné : le panneau de droite reste fermé
 function initObjets(){
   const cats=document.getElementById('obj-cats');
   cats.addEventListener('click',e=>{
@@ -4856,19 +4869,24 @@ function majPanneauDroit(){
   const bees = document.getElementById('side-bees');
   const objs = document.getElementById('side-objs');
   if(!bees || !objs) return;
-  const surAbeilles = (objCat === 'bee');
-  bees.classList.toggle('hidden', !surAbeilles);
-  objs.classList.toggle('hidden',  surAbeilles);
-  if(!surAbeilles){
+  bees.classList.toggle('hidden', objCat !== 'bee');
+  objs.classList.toggle('hidden', !objCat || objCat === 'bee');
+  if(objCat && objCat !== 'bee'){
     const t = document.getElementById('obj-title');
     if(t) t.textContent = OBJ_TITRES[objCat] || 'Objets';
+    const q = document.getElementById('obj-search');
+    if(q){
+      q.placeholder = 'Rechercher dans ' + (OBJ_TITRES[objCat]||'les objets').toLowerCase() + '…';
+      q.value = '';                      // on repart d'une recherche vide à chaque onglet
+    }
   }
 }
 
 function renderObjets(){
   const el=document.getElementById('obj-list');
-  if(objCat==='bee'){ el.innerHTML=''; return; }
-  const list=listeObjets();
+  if(!objCat || objCat==='bee'){ el.innerHTML=''; return; }
+  const q=((document.getElementById('obj-search')||{}).value||'').toLowerCase().trim();
+  const list=listeObjets().filter(o=>!q || String(o.nom).toLowerCase().includes(q));
   const dossier = (objCat==='sticker'||objCat==='hiveskin'||objCat==='cubskin') ? 'stickers' : 'beequip';
   el.innerHTML = list.map((o,idx)=>{
     const ic = (objCat==='mutation') ? '🧬'
