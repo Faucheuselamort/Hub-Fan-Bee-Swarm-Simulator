@@ -705,9 +705,12 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 
 /* Hive builder : scène (ruche + stickers) */
 .hive-stage{position:relative;margin:0 auto;width:max-content;padding:56px;border-radius:22px;
-  background:var(--ink-950);overflow:hidden}
-.hive-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-  image-rendering:pixelated;pointer-events:none;opacity:.95}
+  background:var(--ink-950);overflow:hidden;--skin:#E3A81B}
+.hive-stage .cell .hex{background:var(--skin)}
+.hive-stage .cell:hover .hex{filter:brightness(1.35)}
+.hive-stage .cell.gifted .hex{background:var(--honey);filter:none}
+.hive-stage .cell.can .hex{background:#37c26b}
+.hive-stage .cell.cant .hex{background:#e0554e}
 .hive-stage .hive{position:relative;z-index:2}
 .hive-stk{position:absolute;inset:0;pointer-events:none;z-index:3}
 .hive-stk .hs-p{pointer-events:auto}
@@ -721,10 +724,7 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 .hive-stage.refus{animation:fade .3s ease;box-shadow:inset 0 0 0 2px rgba(240,115,106,.6)}
 .hs-p.nope{outline-color:#F0736A}
 
-.hive-cub{position:absolute;right:-96px;bottom:0;width:84px;text-align:center;
   display:flex;flex-direction:column;align-items:center;gap:.2rem}
-.hive-cub img{width:64px;height:64px;object-fit:contain;image-rendering:pixelated}
-.hive-cub span{font-size:.62rem;color:var(--muted);line-height:1.2}
 
 .hs-top{display:flex;align-items:center;gap:.5rem;margin:.9rem 0 .3rem}
 .hs-count{font-family:'Fredoka';font-weight:700;font-size:.95rem;color:var(--ink-950);
@@ -733,7 +733,6 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 .hs-count.hs-flash{animation:fade .45s ease}
 .hs-edit-b{display:flex;gap:.4rem;margin-top:.6rem}
 .hs-edit-b .btn{flex:1;font-size:.8rem;padding:.4rem .5rem}
-@media(max-width:1100px){ .hive-cub{position:static;width:auto;flex-direction:row;margin-top:.6rem} }
 
 /* arbre de fabrication */
 .tree{border:1px solid var(--line-soft);border-radius:14px;background:var(--ink-950);
@@ -4049,24 +4048,35 @@ function renderTrade(){
 }
 
 /* ---------- Skins de ruche : couleur et forme des alvéoles ---------- */
+/* Un hive skin change la couleur des alvéoles. Sans skin, la ruche est jaune. */
+const HIVE_JAUNE = "#E3A81B";
+const HIVE_SKIN_COULEUR = {
+  "Blue Hive Skin":        "#2E6FA8",
+  "Red Hive Skin":         "#B03A32",
+  "Green Hive Skin":       "#3F8C46",
+  "Pink Hive Skin":        "#C2679B",
+  "White Hive Skin":       "#D6DDE2",
+  "Black Hive Skin":       "#23272C",
+  "Wavy Gold Hive Skin":   "#D9A521",
+  "Wavy Cyan Hive Skin":   "#2FA3A8",
+  "Wavy Purple Hive Skin": "#6E49A6",
+  "Wavy Festive Hive Skin":"#9E2F3A",
+  "Doodle Hive Skin":      "#5A6068",
+  "Icy Crowned Hive Skin": "#5FA8CC",
+};
+function couleurRuche(){ return HIVE_SKIN_COULEUR[hiveSkin] || HIVE_JAUNE; }
+
 const HS_MAX = 50;
-let hiveSkin = "Blue Hive Skin";
-let hiveCub  = null;
+let hiveSkin = null;      // null = ruche jaune par défaut
 let hsPosed  = [];     // [{nom, x, y}] en % de la scène — taille fixe, comme en jeu
 let hsSel    = -1;
 
 function appliquerSkin(){
   const st = document.getElementById('hive-stage'); if(!st) return;
-  let bg = st.querySelector('.hive-bg');
-  if(!bg){ bg = document.createElement('img'); bg.className = 'hive-bg'; st.prepend(bg); }
-  const sk = STICKERS.find(x=>x.nom===hiveSkin);
-  if(!sk){ bg.removeAttribute('src'); return; }
-  const l = imgSrcs('stickers', sk);
-  bg.dataset.alt = l.slice(1).join('|');
-  bg.onerror = () => imgFallback(bg, 'hide');
-  bg.style.display = '';
-  bg.src = l[0];
+  st.style.setProperty('--skin', couleurRuche());
+  const bg = st.querySelector('.hive-bg'); if(bg) bg.remove();
 }
+
 
 /* ---------- Stickers posés sur la ruche ---------- */
 function renderHiveStk(){
@@ -4144,27 +4154,24 @@ function surAlveole(px, py){
   }
   return false;
 }
-function refusPose(){
+function estCub(nom){
+  const st = STICKERS.find(x=>x.nom===nom);
+  return !!st && st.categorie === 'Cub Skins';
+}
+function refusPose(msg){
   const st = document.getElementById('hive-stage');
   st.classList.remove('refus'); void st.offsetWidth; st.classList.add('refus');
   const h = document.getElementById('item-soon');
-  if(h) h.innerHTML = '▸ <b style="color:#F0736A">Impossible sur une alvéole</b> — colle le sticker autour, sur la ruche.';
+  if(h) h.innerHTML = msg || '▸ <b style="color:#F0736A">Impossible sur une alvéole</b> — colle le sticker autour, sur la ruche.';
 }
 
 /* pose d'un sticker : clic sur la ruche avec un sticker en main */
-function renderCub(){
-  let el = document.getElementById('hive-cub');
-  const stage = document.getElementById('hive-stage'); if(!stage) return;
-  if(!el){ el = document.createElement('div'); el.id='hive-cub'; el.className='hive-cub'; stage.appendChild(el); }
-  if(!hiveCub){ el.innerHTML=''; return; }
-  const c = STICKERS.find(x=>x.nom===hiveCub) || {nom:hiveCub};
-  el.innerHTML = `<img ${imgAttrs('stickers',c)} alt="" onerror="imgFallback(this,'hide')"><span>${esc(hiveCub)}</span>`;
-}
+
 
 function initStagePose(){
   const stage = document.getElementById('hive-stage'); if(!stage) return;
   stage.addEventListener('click', e=>{
-    if(!activeObject || activeObject.cat !== 'sticker') return;
+    if(!activeObject || activeObject.kind !== 'sticker') return;
     if(e.target.closest('.hs-p')) return;
     if(hsPosed.length >= HS_MAX){
       const c = document.getElementById('hs-count');
@@ -4174,6 +4181,10 @@ function initStagePose(){
     const r = stage.getBoundingClientRect();
     const px = e.clientX - r.left, py = e.clientY - r.top;
     if(surAlveole(px, py)){ refusPose(); return; }
+    if(activeObject.cat === 'cubskin' && hsPosed.some(q=>estCub(q.nom))){
+      refusPose("▸ <b style=\"color:#F0736A\">Un seul Cub Buddy</b> — retire celui déjà posé pour en mettre un autre.");
+      return;
+    }
     hsPosed.push({ nom:activeObject.nom,
       x:(e.clientX - r.left)/r.width*100, y:(e.clientY - r.top)/r.height*100
     });
@@ -4201,7 +4212,7 @@ function beeIconHTML(b, cls){
 
 function initBuilder(){
   buildHiveCells();
-  appliquerSkin(); initStagePose(); renderHiveStk(); renderCub();
+  appliquerSkin(); initStagePose(); renderHiveStk();
   renderBeeChips();
   renderBeeList();
   paintHive();
@@ -4519,7 +4530,6 @@ function downloadHiveImage(){
     if(c.beequip){ const bq=BEEQUIP.find(x=>x.nom===c.beequip)||{nom:c.beequip}; srcs.add(imgSrc('beequip',bq)); }
   });
   hsPosed.forEach(pp=>{ const st=STICKERS.find(x=>x.nom===pp.nom)||{nom:pp.nom}; srcs.add(imgSrc('stickers',st)); });
-  if(hiveCub){ const cu=STICKERS.find(x=>x.nom===hiveCub)||{nom:hiveCub}; srcs.add(imgSrc('stickers',cu)); }
   const imgMap={}; let pending=srcs.size;
   const done=()=>{ if(--pending<=0) render(); };
   if(pending===0){ render(); }
@@ -4535,7 +4545,7 @@ function downloadHiveImage(){
       const cx=x+W/2, cy=y+H/2, b=ABEILLES[c.bee];
       const sB=0.86, sI=0.74;                                                            // écart entre alvéoles
       const hb=cy+0.5*H*sB, hr=cx+0.5*W*sB;
-      hexPath(cx,cy,sB); ctx.fillStyle=c.gifted?'#F4DD44':'#2a4653'; ctx.fill();          // bordure
+      hexPath(cx,cy,sB); ctx.fillStyle=c.gifted?'#F4DD44':couleurRuche(); ctx.fill();          // bordure
       ctx.save(); hexPath(cx,cy,sI); ctx.clip();                                          // intérieur
       ctx.fillStyle=COULEUR_RARETE_BEE[b.rarete]||'#555'; hexPath(cx,cy,sI); ctx.fill();   // fond = rareté
       const bi=imgMap[imgSrc('bees',b)];
@@ -4692,15 +4702,12 @@ function renderObjets(){
         activeObject=null; op.classList.remove('active');
         document.querySelector('.builder-layout').classList.remove('obj-mode');
       } else if(objCat==='hiveskin'){
-        hiveSkin=o.nom; appliquerSkin(); paintHive();
-        el.querySelectorAll('.obj-opt').forEach(x=>x.classList.toggle('active',x===op));
+        hiveSkin = (hiveSkin===o.nom) ? null : o.nom;    // re-clic = retour au jaune
+        appliquerSkin(); paintHive();
+        el.querySelectorAll('.obj-opt').forEach(x=>x.classList.toggle('active', hiveSkin && x===op));
         updateModeHint(); return;
-      } else if(objCat==='cubskin'){
-        hiveCub = (hiveCub===o.nom) ? null : o.nom;      // un seul cub à la fois
-        el.querySelectorAll('.obj-opt').forEach(x=>x.classList.toggle('active', hiveCub && x===op));
-        renderCub(); updateModeHint(); return;
       } else {
-        const kind = objCat==='sticker' ? 'sticker' : (objCat==='mutation'?'mutation':'beequip');
+        const kind = (objCat==='sticker'||objCat==='cubskin') ? 'sticker' : (objCat==='mutation'?'mutation':'beequip');
         activeObject={ kind, cat:objCat, nom:o.nom, couleur:o.couleur||null };
         el.querySelectorAll('.obj-opt').forEach(x=>x.classList.toggle('active',x===op));
         activeBee=-1;
@@ -4714,8 +4721,7 @@ function renderObjets(){
 function updateModeHint(){
   const el=document.getElementById('item-soon'); if(!el) return;
   if(activeObject && activeObject.kind==='sticker') el.innerHTML=`▸ <b style="color:var(--honey)">${activeObject.nom}</b> : clique sur la ruche pour le coller`;
-  else if(objCat==='hiveskin') el.innerHTML=`▸ Skin actuel : <b style="color:var(--honey)">${hiveSkin}</b>`;
-  else if(objCat==='cubskin')  el.innerHTML=`▸ Cub : <b style="color:var(--honey)">${hiveCub||'aucun'}</b>`;
+  else if(objCat==='hiveskin') el.innerHTML=`▸ Couleur de ruche : <b style="color:var(--honey)">${hiveSkin||'Jaune (aucun skin)'}</b>`;
   else if(activeObject) el.innerHTML=`▸ <b style="color:var(--honey)">${activeObject.nom}</b> : clique une case verte`;
   else if(activeBee>=0) el.innerHTML=`▸ <b style="color:var(--honey)">${ABEILLES[activeBee].nom}</b> : clique une case verte`;
   else el.textContent="Clique une abeille ou un objet, puis une case. Reclique pour désélectionner.";
