@@ -703,6 +703,16 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 .bf-warn{padding:.6rem .9rem;font-size:.8rem;color:var(--amber);border-top:1px solid var(--line-soft);
   background:rgba(240,180,41,.07)}
 
+.bee-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.gift-sw{display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;
+  background:var(--ink-900);border:1px solid var(--line-soft);border-radius:20px;padding:.25rem .6rem}
+.gift-sw span{font-family:'Fredoka';font-weight:600;font-size:.78rem;color:var(--muted)}
+.gift-sw input{accent-color:var(--honey);cursor:pointer}
+.gift-sw:has(input:checked){border-color:var(--honey);background:rgba(244,221,68,.12)}
+.gift-sw:has(input:checked) span{color:var(--honey)}
+.gift-actions{display:flex;gap:.4rem;margin:.5rem 0 .7rem}
+.gift-actions .btn{flex:1;font-size:.78rem;padding:.35rem .4rem}
+
 /* Hive builder : scène (ruche + stickers) */
 .hive-stage{position:relative;margin:0 auto;width:max-content;
   --alv:64px;                      /* largeur d'une alvéole */
@@ -1204,7 +1214,16 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
         </div>
 
         <div class="builder-side">
-          <h4>Choisir une abeille</h4>
+          <div class="bee-head">
+            <h4>Choisir une abeille</h4>
+            <label class="gift-sw" title="Les abeilles placées seront gifted">
+              <input type="checkbox" id="gift-auto"><span>Gifted</span>
+            </label>
+          </div>
+          <div class="gift-actions">
+            <button class="btn btn-ghost" onclick="toutGifted(true)">Tout gifted</button>
+            <button class="btn btn-ghost" onclick="toutGifted(false)">Tout normal</button>
+          </div>
           <div class="rar-chips" id="bee-rar-chips"></div>
           <div class="bee-list" id="bee-list"></div>
 
@@ -4467,7 +4486,8 @@ function onCellClick(i){
   if(activeBee>=0){
     if(hive[i]===null){
       if(!canPlaceBee(activeBee,i)) return;          // bloqué (rouge)
-      hive[i]={bee:activeBee, level:1, gifted:false, beequip:null, mutation:null};
+      const g = !!(document.getElementById('gift-auto') || {}).checked;
+      hive[i]={bee:activeBee, level:1, gifted:g, beequip:null, mutation:null};
       selectCell(i); paintCell(i); updateStats(); highlightCells();
     } else {
       selectCell(i);                                 // case remplie : ouvrir la config
@@ -4516,8 +4536,26 @@ function updateBrushLabel(){
 }
 function replaceCellBee(){
   if(selectedCell===null || hive[selectedCell]===null || activeBee<0) return;
-  hive[selectedCell].bee = activeBee;
-  paintCell(selectedCell); syncConfig(); updateStats();
+  const i = selectedCell, avant = hive[i];
+  if(avant.bee === activeBee) return;
+
+  /* On teste la règle des abeilles d'événement en ignorant la case en cours,
+     sinon l'abeille qu'on remplace se compterait elle-même. */
+  const sauve = hive[i];
+  hive[i] = null;
+  const ok = canPlaceBee(activeBee, i);
+  hive[i] = sauve;
+  if(!ok){ alert("Cette abeille ne peut pas remplacer celle-ci : une seule abeille d'événement de chaque type est autorisée dans la ruche."); return; }
+
+  /* Changer d'abeille retire le beequip : ses conditions (abeille précise,
+     couleur, mutation…) ne valent plus pour la nouvelle. */
+  const avaitBeequip = !!avant.beequip;
+  hive[i] = { bee:activeBee, level:avant.level, gifted:avant.gifted, beequip:null, mutation:avant.mutation };
+  paintCell(i); syncConfig(); updateStats(); highlightCells();
+  if(avaitBeequip){
+    const h = document.getElementById('item-soon');
+    if(h) h.innerHTML = '▸ <b style="color:var(--honey)">Beequip retiré</b> — il ne correspondait plus à la nouvelle abeille.';
+  }
 }
 
 function paintCell(i){
@@ -4766,11 +4804,17 @@ function displayCaseNum(i){
   const cols=5, rows=10, wave=Math.floor(i/cols), col=i%cols;
   return (rows-1-wave)*cols + col + 1;
 }
+function toutGifted(v){
+  for(let i=0;i<HIVE_SIZE;i++) if(hive[i]) hive[i].gifted = v;
+  paintHive(); if(selectedCell!==null) syncConfig();
+}
 function clearHive(){
   hive=new Array(HIVE_SIZE).fill(null);
   selectedCell=null;
+  hsPosed=[]; hsSel=-1;                 // les stickers collés partent aussi
   document.getElementById('cell-config').classList.add('hidden');
-  paintHive(); highlightCells();
+  const he=document.getElementById('hs-edit'); if(he) he.classList.add('hidden');
+  paintHive(); highlightCells(); renderHiveStk();
 }
 
 /* ---------- Menu d'objets (Mutation / Beequip / Beesmas) ---------- */
