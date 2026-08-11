@@ -742,8 +742,9 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 /* Plateforme blanche sous la ruche — les stickers peuvent y être collés */
 /* cercle = largeur des 5 alvéoles, à 1 alvéole du bas de la ruche */
 .hive-pad{position:absolute;left:50%;bottom:var(--alv);transform:translateX(-50%);
+  z-index:5;   /* au-dessus des stickers : ceux qui le frôlent passent derrière */
   width:calc(var(--alv)*4);height:calc(var(--alv)*4);border-radius:50%;background:#F2F5F7;
-  border:6px solid rgba(0,0,0,.28);box-shadow:0 6px 18px rgba(0,0,0,.3);z-index:1}
+  border:6px solid rgba(0,0,0,.28);box-shadow:0 6px 18px rgba(0,0,0,.3);pointer-events:none}
 .hive-pad::after{content:"";position:absolute;inset:14px;border-radius:50%;
   border:2px solid rgba(0,0,0,.10)}
 .hive-stage .hive{position:relative;z-index:2}
@@ -3059,12 +3060,16 @@ function imgSrcs(folder, o){
   const propre = imgNom(folder, nom);
   const liste = [];
   if(folder === 'stickers'){
-    /* Tous les stickers suivent le même motif : Hivesticker_<nom en minuscules>.
-       Les anciens noms restent testés en secours, au cas où un fichier
-       n'aurait pas encore été renommé. */
+    /* La plupart des stickers suivent le motif Hivesticker_<nom en minuscules>.
+       Les Cub Skins, Hive Skins et Vouchers gardent leur propre nom
+       (Bee_Cub.webp, Hive_model_basic_blue.webp…) : on les teste en premier.
+       Dans les deux cas l'autre convention reste testée en secours. */
     const bas = nom.replace(/[’'`]/g, '').replace(/\s+/g, '_').toLowerCase();
-    liste.push(`images/stickers/Hivesticker_${encodeURIComponent(bas)}.${ext}`);
-    liste.push(`images/stickers/${propre}.${ext}`);
+    const motif = `images/stickers/Hivesticker_${encodeURIComponent(bas)}.${ext}`;
+    const brut  = `images/stickers/${propre}.${ext}`;
+    const nomPropre = { 'Cub Skins':1, 'Hive Skins':1, 'Vouchers':1 };
+    if(nomPropre[o.categorie]) liste.push(brut, motif);
+    else                       liste.push(motif, brut);
     liste.push(`images/stickers/${encodeURIComponent(nom)}.${ext}`);
   } else if(folder === 'mobs' || folder === 'bears'){
     liste.push(`images/${folder}/${propre}.${ext}`);
@@ -4345,7 +4350,7 @@ function attacherDragStk(){
       const move = e2=>{
         const px = Math.max(0, Math.min(r.width,  e2.clientX - r.left));
         const py = Math.max(0, Math.min(r.height, e2.clientY - r.top));
-        if(surAlveole(px, py)){ el.classList.add('nope'); return; }   // on ne lâche pas sur une alvéole
+        if(surAlveole(px, py) || surCercle(px, py)){ el.classList.add('nope'); return; }   // ni alvéole, ni plateforme
         el.classList.remove('nope');
         hsPosed[i].x = px / r.width  * 100;
         hsPosed[i].y = py / r.height * 100;
@@ -4396,6 +4401,15 @@ function estCub(nom){
   const st = STICKERS.find(x=>x.nom===nom);
   return !!st && st.categorie === 'Cub Skins';
 }
+/* La plateforme blanche est une zone interdite, au même titre que les alvéoles. */
+function surCercle(px, py){
+  const pad = document.querySelector('.hive-pad'); if(!pad) return false;
+  const cx = pad.offsetLeft + pad.offsetWidth/2;
+  const cy = pad.offsetTop  + pad.offsetHeight/2;
+  const r  = pad.offsetWidth/2;
+  return (px-cx)*(px-cx) + (py-cy)*(py-cy) <= r*r;
+}
+
 function refusPose(msg){
   const st = document.getElementById('hive-stage');
   st.classList.remove('refus'); void st.offsetWidth; st.classList.add('refus');
@@ -4419,6 +4433,7 @@ function initStagePose(){
     const r = stage.getBoundingClientRect();
     const px = e.clientX - r.left, py = e.clientY - r.top;
     if(surAlveole(px, py)){ refusPose(); return; }
+    if(surCercle(px, py)){ refusPose("▸ <b style=\"color:#F0736A\">Impossible sur la plateforme</b> — colle le sticker sur la ruche."); return; }
     if(activeObject.cat === 'cubskin' && hsPosed.some(q=>estCub(q.nom))){
       refusPose("▸ <b style=\"color:#F0736A\">Un seul Cub Buddy</b> — retire celui déjà posé pour en mettre un autre.");
       return;
@@ -4802,14 +4817,17 @@ function downloadHiveImage(){
   ctx.lineWidth=3; ctx.strokeStyle='rgba(0,0,0,.22)'; ctx.stroke(forme2D);
   ctx.clip(forme2D);
 
-  // plateforme blanche
+  ctx.clip(forme2D);
   const padR=gridW/2, padCx=cw/2, padCy=ch-W-padR;   // cercle à 1 alvéole du bas
-  ctx.beginPath(); ctx.arc(padCx,padCy,padR,0,Math.PI*2);
-  ctx.fillStyle='#F2F5F7'; ctx.fill();
-  ctx.lineWidth=6; ctx.strokeStyle='rgba(0,0,0,.28)'; ctx.stroke();
-  ctx.beginPath(); ctx.arc(padCx,padCy,padR-20,0,Math.PI*2);
-  ctx.lineWidth=2; ctx.strokeStyle='rgba(0,0,0,.10)'; ctx.stroke();
-  ctx.restore();
+  function dessinerPlateforme(){
+    ctx.save(); ctx.clip(forme2D);
+    ctx.beginPath(); ctx.arc(padCx,padCy,padR,0,Math.PI*2);
+    ctx.fillStyle='#F2F5F7'; ctx.fill();
+    ctx.lineWidth=6; ctx.strokeStyle='rgba(0,0,0,.28)'; ctx.stroke();
+    ctx.beginPath(); ctx.arc(padCx,padCy,padR-20,0,Math.PI*2);
+    ctx.lineWidth=2; ctx.strokeStyle='rgba(0,0,0,.10)'; ctx.stroke();
+    ctx.restore();
+  }
 
   // hexagone "face plate" centré en (cx,cy), échelle s
   const OFFS=[[-0.25,-0.5],[0.25,-0.5],[0.5,0],[0.25,0.5],[-0.25,0.5],[-0.5,0]];
@@ -4819,17 +4837,27 @@ function downloadHiveImage(){
     ctx.closePath();
   }
   // précharger les images
-  const srcs=new Set();
+  /* Chaque entrée garde sa clé (la 1re adresse) mais on essaie toutes les
+     variantes de nom, comme le fait l'affichage : sinon un fichier trouvé
+     par repli à l'écran ressort en texte dans l'image exportée. */
+  const aCharger=new Map();
+  const ajouter=(dossier,obj)=>{ const l=imgSrcs(dossier,obj); aCharger.set(l[0], l); };
   hive.forEach(c=>{ if(!c) return;
-    srcs.add(imgSrc('bees',ABEILLES[c.bee]));
-    if(c.beequip){ const bq=BEEQUIP.find(x=>x.nom===c.beequip)||{nom:c.beequip}; srcs.add(imgSrc('beequip',bq)); }
+    ajouter('bees', ABEILLES[c.bee]);
+    if(c.beequip){ const bq=BEEQUIP.find(x=>x.nom===c.beequip)||{nom:c.beequip}; ajouter('beequip',bq); }
   });
-  hsPosed.forEach(pp=>{ const st=STICKERS.find(x=>x.nom===pp.nom)||{nom:pp.nom}; srcs.add(imgSrc('stickers',st)); });
-  const imgMap={}; let pending=srcs.size;
+  hsPosed.forEach(pp=>{ const st=STICKERS.find(x=>x.nom===pp.nom)||{nom:pp.nom}; ajouter('stickers',st); });
+
+  const imgMap={}; let pending=aCharger.size;
   const done=()=>{ if(--pending<=0) render(); };
   if(pending===0){ render(); }
-  else srcs.forEach(src=>{ const im=new Image();
-    im.onload=()=>{imgMap[src]=im;done();}; im.onerror=()=>{imgMap[src]=null;done();}; im.src=src; });
+  else aCharger.forEach((liste, cle)=>{
+    let k=0;
+    const im=new Image();
+    im.onload =()=>{ imgMap[cle]=im; done(); };
+    im.onerror=()=>{ k++; if(k<liste.length){ im.src=liste[k]; } else { imgMap[cle]=null; done(); } };
+    im.src=liste[0];
+  });
 
   function render(){
     // --- Passage 1 : alvéoles, faces, images, badges beequip ---
@@ -4877,6 +4905,8 @@ function downloadHiveImage(){
              ctx.textBaseline='middle'; ctx.fillText(pp.nom.slice(0,10), 0, 0); }
       ctx.restore();
     });
+
+    dessinerPlateforme();   // le disque blanc recouvre les stickers qui le frôlent
 
     // --- Passage 2 : les chiffres de niveau, TOUJOURS par-dessus ---
     ctx.font='800 14px Fredoka, sans-serif'; ctx.textAlign='left'; ctx.textBaseline='alphabetic';
