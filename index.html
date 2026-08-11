@@ -705,6 +705,14 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 .bf-warn{padding:.6rem .9rem;font-size:.8rem;color:var(--amber);border-top:1px solid var(--line-soft);
   background:rgba(240,180,41,.07)}
 
+.bond-tab-wrap{max-height:320px;overflow:auto;padding:0 1.1rem 1rem}
+.bond-tab td:first-child{font-family:'Fredoka';font-weight:600;color:var(--cream)}
+.solo-row{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:.8rem;align-items:end}
+.solo-bond{display:flex;gap:.4rem}
+.solo-bond input{flex:1}
+.solo-bond select{flex:0 0 auto;width:auto}
+@media(max-width:700px){ .solo-row{grid-template-columns:1fr} }
+
 .side-search{margin-bottom:.6rem}
 .side-search input{font-size:.86rem}
 .bee-head{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
@@ -1122,6 +1130,37 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
       </div>
 
       <div class="price-out" id="lvl-result" style="margin-top:1.6rem"></div>
+
+      <h3 class="sub-h" style="margin-top:2.2rem">Une seule abeille, déjà entamée</h3>
+      <p class="hint" style="margin-bottom:1rem">Le bond, c'est l'expérience de l'abeille. Le tableau du dessus part toujours d'un niveau tout juste atteint ; ici tu peux déduire le bond <b>déjà accumulé</b> vers le niveau suivant. Un <b>Treat</b> donne 10 bond et coûte 10 000 miel, soit 1 000 miel par bond — les bonus Puppy et Moon augmentent le bond gagné par Treat.</p>
+
+      <div class="solo-row">
+        <div class="field">
+          <label>Niveau actuel</label>
+          <select id="solo-de"></select>
+        </div>
+        <div class="field">
+          <label>Bond déjà accumulé</label>
+          <div class="solo-bond">
+            <input type="number" id="solo-bond" min="0" value="0" placeholder="0">
+            <select id="solo-unite">
+              <option value="abs">bond</option>
+              <option value="pct">%</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>Niveau visé</label>
+          <select id="solo-vers"></select>
+        </div>
+      </div>
+
+      <div class="price-out" id="solo-result" style="margin-top:1.1rem"></div>
+
+      <details class="zone" style="margin-top:1rem">
+        <summary><span>Bond nécessaire pour chaque niveau</span><b id="bond-n">24</b></summary>
+        <div class="bond-tab-wrap"><table class="calc bond-tab" id="bond-tab"></table></div>
+      </details>
     </div>
   </div>
 
@@ -3925,6 +3964,14 @@ function renderCourses(){
 
 /* ---------- OUTIL 2 : Niveau d'abeilles (répartition de la ruche) ---------- */
 const NIV_MAX = 25;      // niveau maximum d'une abeille
+/* Le bond, c'est l'expérience de l'abeille.
+   1 Treat = 10 bond de base et coûte 10 000 miel, donc 1 bond = 1 000 miel.
+   La table PRIX_NIVEAU est en miel : on en déduit le bond de chaque palier. */
+const MIEL_PAR_BOND = 1000;
+const BOND_PAR_TREAT = 10;
+const MIEL_PAR_TREAT = MIEL_PAR_BOND * BOND_PAR_TREAT;
+function bondPalier(L){ return (PRIX_NIVEAU[L]||0) / MIEL_PAR_BOND; }        // niveau L -> L+1
+function bondCumule(L){ return (CUM[L]||0) / MIEL_PAR_BOND; }                // niveau 1 -> L
 const RUCHE_MAX = 50;    // nombre max d'abeilles dans une ruche
 let puppyBonus = 0;                              // 0 ou 20 selon le Puppy Gift
 let asCounts   = new Array(NIV_MAX+1).fill(0);   // abeilles que tu AS, par niveau
@@ -3941,14 +3988,14 @@ function initNiveau(){
   buildCumul();
   const moon = document.getElementById('lvl-moon');
   for(let p=0;p<=10;p++) moon.insertAdjacentHTML('beforeend',`<option value="${p}"${p===0?' selected':''}>${p}% bond</option>`);
-  moon.addEventListener('change',computeNiveau);
+  moon.addEventListener('change',()=>{ computeNiveau(); computeSolo(); });
 
   const puppyBox = document.getElementById('lvl-puppy');
   puppyBox.addEventListener('click',e=>{
     if(e.target.dataset.v===undefined) return;
     puppyBonus = parseInt(e.target.dataset.v);
     puppyBox.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b===e.target));
-    computeNiveau();
+    computeNiveau(); computeSolo();
   });
 
   // Toutes les cases à zéro par défaut
@@ -3965,10 +4012,85 @@ function initNiveau(){
   const tbody = document.getElementById('lvl-rows');
   tbody.innerHTML = html;
   tbody.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',()=>onCountInput(inp)));
+  initSolo();
+  renderBondTable();
   computeNiveau();
 }
 
 function totalCol(arr){ return arr.reduce((a,b)=>a+b,0); }
+
+/* ---- Une abeille déjà entamée : on retire le bond déjà gagné ---- */
+function initSolo(){
+  const de = document.getElementById('solo-de'), vers = document.getElementById('solo-vers');
+  if(!de) return;
+  for(let L=1; L<NIV_MAX; L++)  de.insertAdjacentHTML('beforeend',   `<option value="${L}"${L===20?' selected':''}>Niveau ${L}</option>`);
+  for(let L=2; L<=NIV_MAX; L++) vers.insertAdjacentHTML('beforeend', `<option value="${L}"${L===21?' selected':''}>Niveau ${L}</option>`);
+  ['solo-de','solo-vers','solo-bond','solo-unite'].forEach(id=>{
+    const el = document.getElementById(id);
+    el.addEventListener('input', computeSolo);
+    el.addEventListener('change', computeSolo);
+  });
+  computeSolo();
+}
+
+function computeSolo(){
+  const box = document.getElementById('solo-result'); if(!box) return;
+  const de    = parseInt(document.getElementById('solo-de').value);
+  const vers  = parseInt(document.getElementById('solo-vers').value);
+  const unite = document.getElementById('solo-unite').value;
+  const champ = document.getElementById('solo-bond');
+
+  if(vers <= de){
+    box.innerHTML = `<div class="price-label">⚠️ Le niveau visé doit être supérieur au niveau actuel.</div>`;
+    return;
+  }
+
+  const palier = bondPalier(de);                    // bond du niveau actuel vers le suivant
+  let deja = Math.max(0, parseFloat(champ.value) || 0);
+  if(unite === 'pct'){
+    champ.max = 100;
+    deja = Math.min(100, deja) / 100 * palier;
+  } else {
+    champ.max = palier;
+    if(deja > palier){ deja = palier; champ.value = palier; }
+  }
+
+  const bondTotal = bondCumule(vers) - bondCumule(de);
+  const reste     = Math.max(0, bondTotal - deja);
+  const bonus     = bonusActuel();
+  const parTreat  = BOND_PAR_TREAT * (1 + bonus/100);   // bond gagné par Treat, bonus compris
+  const treats    = reste / parTreat;
+  const miel      = treats * MIEL_PAR_TREAT;
+  const pct       = palier ? Math.min(100, deja / palier * 100) : 0;
+
+  box.innerHTML = `
+    <div class="price-label">Il te reste <b>${fmt(reste)} bond</b> pour passer du niveau ${de} au niveau ${vers}</div>
+    <div class="price-value">${fmt(miel)} <span>miel</span></div>
+    <div class="price-sub">
+      ${fmt(Math.ceil(treats))} Treat${treats>1?'s':''} à acheter ·
+      1 Treat = ${fmt(parTreat)} bond avec tes bonus (10 de base +${bonus}%) ·
+      bond total ${de} → ${vers} : ${fmt(bondTotal)} ·
+      déjà accumulé : ${fmt(deja)} bond (${pct.toFixed(0)} % du palier ${de} → ${de+1}, qui demande ${fmt(palier)} bond)
+    </div>`;
+}
+
+function renderBondTable(){
+  const t = document.getElementById('bond-tab'); if(!t) return;
+  let rows = '';
+  for(let L=1; L<NIV_MAX; L++){
+    rows += `<tr><td>${L} → ${L+1}</td>
+      <td class="n">${fmt(bondPalier(L))}</td>
+      <td class="n">${fmt(Math.ceil(bondPalier(L)/BOND_PAR_TREAT))}</td>
+      <td class="n">${fmt(bondCumule(L+1))}</td></tr>`;
+  }
+  t.innerHTML = `<thead><tr><th>Palier</th>
+      <th style="text-align:right">Bond</th>
+      <th style="text-align:right">Treats</th>
+      <th style="text-align:right">Bond cumulé depuis le niv. 1</th>
+    </tr></thead><tbody>${rows}</tbody>`;
+  const n = document.getElementById('bond-n'); if(n) n.textContent = (NIV_MAX-1);
+}
+
 
 /* Saisie d'une case : on borne à 0 et on empêche le total de la colonne de dépasser 50. */
 function onCountInput(inp){
