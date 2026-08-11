@@ -728,8 +728,10 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 /* Hive builder : scène (ruche + stickers) */
 .hive-stage{position:relative;margin:0 auto;width:max-content;
   --alv:64px;                      /* largeur d'une alvéole */
-  padding:var(--alv) var(--alv) calc(var(--alv)*5);
-  border-radius:22px;
+  /* bas = 1 alvéole d'écart + le cercle (4 alv) + 1 alvéole sous le cercle */
+  padding:var(--alv) var(--alv) calc(var(--alv)*6);
+  /* le bas suit la courbe du cercle : rayon = rayon du cercle + 1 alvéole */
+  border-radius:22px 22px calc(var(--alv)*3) calc(var(--alv)*3);
   overflow:hidden;--skin:#E3A81B;background:var(--skin);
   box-shadow:inset 0 0 0 3px rgba(0,0,0,.22)}
 /* Silhouettes Wavy et Icy : dessinées en SVG derrière la ruche */
@@ -745,9 +747,12 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 .hive-pad::after{content:"";position:absolute;inset:14px;border-radius:50%;
   border:2px solid rgba(0,0,0,.10)}
 .hive-stage .hive{position:relative;z-index:2}
+/* trait de séparation, 2 px sous la dernière rangée d'alvéoles */
+.hive-stage .hive::after{content:"";position:absolute;left:calc(-1*var(--alv));right:calc(-1*var(--alv));
+  top:calc(100% + 2px);height:3px;background:rgba(0,0,0,.28);z-index:2;pointer-events:none}
 .hive-stk{position:absolute;inset:0;pointer-events:none;z-index:3}
 .hive-stk .hs-p{pointer-events:auto}
-.hs-p{position:absolute;display:block;cursor:grab;touch-action:none;width:38px;
+.hs-p{position:absolute;display:block;cursor:grab;touch-action:none;width:58px;
   transform:translate(-50%,-50%)}
 .hs-p img{width:100%;height:auto;display:block;image-rendering:pixelated;pointer-events:none;
   filter:drop-shadow(0 1px 2px rgba(0,0,0,.55))}
@@ -4238,52 +4243,39 @@ let hiveSkin = null;      // null = ruche jaune par défaut
 let hsPosed  = [];     // [{nom, x, y}] en % de la scène — taille fixe, comme en jeu
 let hsSel    = -1;
 
-/* Silhouettes en coordonnées normalisées (0 → 1). Servent au SVG et à l'export. */
-const SILHOUETTES = {
-  wavy: [
-    ['M', .06,.02],
-    ['C', .30,-.01, .70,-.01, .94,.02],
-    ['C', .99,.11, .95,.20, .98,.29],
-    ['C', 1.01,.38, .96,.46, .98,.55],
-    ['C', 1.00,.64, .95,.72, .98,.81],
-    ['C', 1.01,.90, .98,.96, .94,.99],
-    ['C', .70,1.02, .30,1.02, .06,.99],
-    ['C', .02,.96, -.01,.90, .02,.81],
-    ['C', .05,.72, .00,.64, .02,.55],
-    ['C', .04,.46, -.01,.38, .02,.29],
-    ['C', .05,.20, .01,.11, .06,.02],
-    ['Z'],
-  ],
-  icy: [
-    ['M', .00,.062],
-    ['L', .09,.006], ['L', .18,.058],
-    ['L', .27,.000], ['L', .36,.052],
-    ['L', .45,.004], ['L', .55,.052],
-    ['L', .64,.000], ['L', .73,.058],
-    ['L', .82,.004], ['L', .91,.056], ['L', 1.00,.062],
-    ['C', 1.00,.40, 1.00,.70, 1.00,.965],
-    ['C', 1.00,.995, .985,1.00, .965,1.00],
-    ['L', .035,1.00],
-    ['C', .015,1.00, .00,.995, .00,.965],
-    ['Z'],
-  ],
-};
-function silhouetteD(forme){
-  const f = SILHOUETTES[forme]; if(!f) return '';
-  return f.map(c => c[0] === 'Z' ? 'Z'
-    : c[0] + ' ' + c.slice(1).map(v => (v*100).toFixed(2)).join(' ')).join(' ');
+/* Silhouettes tracées en pixels réels : le bas est un demi-cercle
+   concentrique avec la plateforme blanche, à une alvéole de distance. */
+const ALV = 64;
+const RAYON_BAS = ALV * 3;          // rayon du cercle (2 alv) + 1 alvéole d'écart
+
+function silhouetteD(forme, W, H){
+  const R = Math.min(RAYON_BAS, W/2, H/2);
+  const bas = `L ${W} ${H-R} A ${W/2} ${R} 0 0 1 0 ${H-R} Z`;
+  if(forme === 'icy'){
+    const pics = [0,.09,.18,.27,.36,.45,.55,.64,.73,.82,.91,1];
+    const creux = [.062,.006,.058,0,.052,.004,.052,0,.058,.004,.056,.062];
+    let d = `M 0 ${creux[0]*ALV*2}`;
+    for(let k=1;k<pics.length;k++) d += ` L ${pics[k]*W} ${creux[k]*ALV*2}`;
+    return d + ' ' + bas;
+  }
+  if(forme === 'wavy'){
+    const a = ALV*0.22, hb = H - R;                 // amplitude des vagues
+    let d = `M ${a*2} 6 C ${W*0.3} -6, ${W*0.7} -6, ${W-a*2} 6`;
+    const n = 5;
+    for(let k=0;k<n;k++){
+      const y1 = 6 + (hb-6)*(k+0.5)/n, y2 = 6 + (hb-6)*(k+1)/n;
+      d += ` C ${W+(k%2?-a:a)} ${y1}, ${W+(k%2?a:-a)} ${y1}, ${W} ${y2}`;
+    }
+    d += ` A ${W/2} ${R} 0 0 1 0 ${hb}`;
+    for(let k=n-1;k>=0;k--){
+      const y1 = 6 + (hb-6)*(k+0.5)/n, y2 = 6 + (hb-6)*k/n;
+      d += ` C ${(k%2?a:-a)} ${y1}, ${(k%2?-a:a)} ${y1}, 0 ${y2}`;
+    }
+    return d + ' Z';
+  }
+  return '';
 }
-function tracerSilhouette(ctx, forme, w, h){
-  const f = SILHOUETTES[forme]; if(!f) return false;
-  ctx.beginPath();
-  f.forEach(c=>{
-    if(c[0]==='M') ctx.moveTo(c[1]*w, c[2]*h);
-    else if(c[0]==='L') ctx.lineTo(c[1]*w, c[2]*h);
-    else if(c[0]==='C') ctx.bezierCurveTo(c[1]*w,c[2]*h,c[3]*w,c[4]*h,c[5]*w,c[6]*h);
-    else ctx.closePath();
-  });
-  return true;
-}
+
 
 function formeRuche(){
   if(!hiveSkin) return 'basic';
@@ -4303,13 +4295,14 @@ function appliquerSkin(){
     if(!svg){
       svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
       svg.setAttribute('class','hive-shape');
-      svg.setAttribute('viewBox','0 0 100 100');
       svg.setAttribute('preserveAspectRatio','none');
       svg.innerHTML = '<path></path>';
       st.prepend(svg);
     }
+    const W = st.offsetWidth || 384, H = st.offsetHeight || 1000;
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
     const path = svg.querySelector('path');
-    path.setAttribute('d', silhouetteD(forme));
+    path.setAttribute('d', silhouetteD(forme, W, H));
     path.setAttribute('fill', couleurRuche());
     path.setAttribute('stroke', 'rgba(0,0,0,.22)');
     path.setAttribute('stroke-width', '0.6');
@@ -4783,7 +4776,7 @@ function clearSelectedCell(){
 }
 function downloadHiveImage(){
   const cols=5, rows=10, W=64, H=Math.round(W*0.866), hstep=W*0.75, vstep=H;
-  const pad=W, padB=W*5, scale=2;      // 1 alvéole sur les côtés, 5 en bas
+  const pad=W, padB=W*6, scale=2;      // 1 alvéole sur les côtés, 6 en bas
   const gridW=(cols-1)*hstep+W, gridH=(rows-1)*vstep+H+H/2;
   const cw=gridW+pad*2, ch=gridH+pad+padB;
   const canvas=document.createElement('canvas');
@@ -4792,17 +4785,25 @@ function downloadHiveImage(){
   // fond du panneau, avec la forme du skin
   const forme=formeRuche();
   ctx.save();
-  if(!tracerSilhouette(ctx, forme, cw, ch)){
-    const r=22; ctx.beginPath();
-    ctx.moveTo(r,0); ctx.arcTo(cw,0,cw,ch,r); ctx.arcTo(cw,ch,0,ch,r);
-    ctx.arcTo(0,ch,0,0,r); ctx.arcTo(0,0,cw,0,r); ctx.closePath();
+  const dSil = silhouetteD(forme, cw, ch);
+  let forme2D = null;
+  if(dSil){ forme2D = new Path2D(dSil); }
+  else {
+    const r=22, R=Math.min(ALV*3, cw/2);
+    forme2D = new Path2D();
+    forme2D.moveTo(r,0);
+    forme2D.lineTo(cw-r,0); forme2D.quadraticCurveTo(cw,0,cw,r);
+    forme2D.lineTo(cw,ch-R);
+    forme2D.ellipse(cw/2, ch-R, cw/2, R, 0, 0, Math.PI);
+    forme2D.lineTo(0,r);  forme2D.quadraticCurveTo(0,0,r,0);
+    forme2D.closePath();
   }
-  ctx.fillStyle=couleurRuche(); ctx.fill();
-  ctx.lineWidth=3; ctx.strokeStyle='rgba(0,0,0,.22)'; ctx.stroke();
-  ctx.clip();
+  ctx.fillStyle=couleurRuche(); ctx.fill(forme2D);
+  ctx.lineWidth=3; ctx.strokeStyle='rgba(0,0,0,.22)'; ctx.stroke(forme2D);
+  ctx.clip(forme2D);
 
   // plateforme blanche
-  const padR=gridW/2, padCx=cw/2, padCy=ch-W-padR;
+  const padR=gridW/2, padCx=cw/2, padCy=ch-W-padR;   // cercle à 1 alvéole du bas
   ctx.beginPath(); ctx.arc(padCx,padCy,padR,0,Math.PI*2);
   ctx.fillStyle='#F2F5F7'; ctx.fill();
   ctx.lineWidth=6; ctx.strokeStyle='rgba(0,0,0,.28)'; ctx.stroke();
@@ -4860,11 +4861,15 @@ function downloadHiveImage(){
         else { ctx.font='14px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='alphabetic'; ctx.fillText('🎒', bx+bs/2, by+bs*0.78); }
       }
     }
+    // --- Trait de séparation sous la grille ---
+    ctx.fillStyle='rgba(0,0,0,.28)';
+    ctx.fillRect(0, pad + gridH + 2, cw, 3);
+
     // --- Stickers collés sur la ruche ---
     hsPosed.forEach(pp=>{
       const st = STICKERS.find(x=>x.nom===pp.nom)||{nom:pp.nom};
       const im = imgMap[imgSrc('stickers',st)];
-      const w  = 38;
+      const w  = 58;      // un chouia plus petit qu'une alvéole (64 px)
       const cx = cw * pp.x/100, cy = ch * pp.y/100;
       ctx.save(); ctx.translate(cx,cy);
       if(im){ const h = w * (im.naturalHeight/im.naturalWidth || 1); ctx.drawImage(im, -w/2, -h/2, w, h); }
