@@ -26,6 +26,6 @@
    plus tard, il faudra régénérer TOUS les comptes. */
 const SEL = "FauFau-2026";
 
-const COMPTES = [{ u: "faufau", h: "762f11bd4205f49399e686690cdf3f11a93a093eb2417cb87227d7d3615a0f1c", actif: true },
+const COMPTES = [{ u: "faufau", h: "762f11bd4205f49399e686690cdf3f11a93a093eb2417cb87227d7d3615a0f1c", actif: true },{ u: "smiless", h: "b2bfd21da48c4f09c2d522a2ed1437e10c30f0222d2805c8849333e38808a724", actif: true },
 
 ];
