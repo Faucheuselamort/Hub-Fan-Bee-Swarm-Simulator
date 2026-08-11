@@ -725,6 +725,28 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 .gift-actions{display:flex;gap:.4rem;margin:.5rem 0 .7rem}
 .gift-actions .btn{flex:1;font-size:.78rem;padding:.35rem .4rem}
 
+/* ---- Page de connexion ---- */
+body.verrouille > *:not(#porte){display:none !important}
+#porte{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:1.5rem;
+  background:radial-gradient(900px 500px at 50% -10%,rgba(244,221,68,.10),transparent 70%),var(--ink-950)}
+#porte .pbox{width:100%;max-width:420px;background:var(--panel);border:1px solid var(--line);
+  border-radius:22px;padding:2rem;box-shadow:0 30px 70px rgba(0,0,0,.5)}
+#porte .plogo{width:64px;height:64px;border-radius:18px;background:var(--honey);color:var(--ink-950);
+  display:grid;place-items:center;font-size:2rem;margin:0 auto 1.1rem}
+#porte h2{font-size:1.4rem;text-align:center;margin-bottom:.4rem}
+#porte .psub{text-align:center;color:var(--muted);font-size:.9rem;line-height:1.55;margin-bottom:1.5rem}
+#porte label{display:block;font-family:'Fredoka';font-weight:600;font-size:.74rem;text-transform:uppercase;
+  letter-spacing:.8px;color:var(--muted);margin-bottom:.35rem}
+#porte input{width:100%;background:var(--ink-950);border:1px solid var(--line-soft);border-radius:12px;
+  color:var(--cream);padding:.7rem .9rem;font-family:'Inter';font-size:.95rem;margin-bottom:1rem}
+#porte input:focus{outline:none;border-color:var(--honey)}
+#porte button{width:100%;background:var(--honey);color:var(--ink-950);border:0;border-radius:12px;
+  padding:.8rem;font-family:'Fredoka';font-weight:700;font-size:1rem;cursor:pointer}
+#porte button:hover{filter:brightness(1.08)}
+#porte .perr{margin-top:.9rem;font-size:.86rem;color:#F0736A;text-align:center;min-height:1.2em}
+#porte .pnote{margin-top:1.3rem;padding-top:1.1rem;border-top:1px solid var(--line-soft);
+  font-size:.78rem;color:var(--muted);line-height:1.6;text-align:center}
+
 /* Hive builder : scène (ruche + stickers) */
 .hive-stage{position:relative;margin:0 auto;width:max-content;
   --alv:64px;                      /* largeur d'une alvéole */
@@ -854,6 +876,22 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 </style>
 </head>
 <body>
+
+<!-- ============================ PAGE DE CONNEXION ============================ -->
+<div id="porte">
+  <div class="pbox">
+    <div class="plogo">🐝</div>
+    <h2>Hub Bee Swarm</h2>
+    <p class="psub">Accès réservé aux membres du serveur. Connecte-toi avec les identifiants qui t'ont été donnés.</p>
+    <label>Pseudo</label>
+    <input type="text" id="p-user" autocomplete="username" autocapitalize="off" spellcheck="false">
+    <label>Mot de passe</label>
+    <input type="password" id="p-pass" autocomplete="current-password">
+    <button onclick="tenterConnexion()">Entrer</button>
+    <div class="perr" id="p-err"></div>
+    <div class="pnote">Pas d'identifiants ? Demande-les sur le Discord.</div>
+  </div>
+</div>
 
 <!-- ============================ EN-TÊTE ============================ -->
 <header class="site">
@@ -1336,7 +1374,94 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
   </div>
 </div>
 
+<script src="acces.js"></script>
 <script>
+/* ============================================================
+   PORTE D'ENTRÉE
+   Les comptes sont dans acces.js. Voir ce fichier pour ajouter
+   ou retirer quelqu'un, et pour les limites de ce système.
+   ============================================================ */
+document.body.classList.add('verrouille');
+
+const CLE_SESSION = 'hubbss-acces';
+
+/* SHA-256 en JavaScript pur : sert de secours quand crypto.subtle est
+   indisponible, c'est-à-dire hors HTTPS — page ouverte en local, par exemple. */
+function sha256JS(msg){
+  const K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+  0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+  0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+  0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+  0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+  0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+  0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+  0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+  let H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  const b=[]; for(const ch of unescape(encodeURIComponent(msg))) b.push(ch.charCodeAt(0));
+  const l=b.length*8; b.push(0x80); while(b.length%64!==56) b.push(0);
+  for(let i=7;i>=0;i--) b.push((l/Math.pow(2,8*i))&0xff);
+  const rr=(x,n)=>(x>>>n)|(x<<(32-n));
+  for(let i=0;i<b.length;i+=64){
+    const w=new Array(64);
+    for(let j=0;j<16;j++) w[j]=(b[i+j*4]<<24)|(b[i+j*4+1]<<16)|(b[i+j*4+2]<<8)|b[i+j*4+3];
+    for(let j=16;j<64;j++){
+      const s0=rr(w[j-15],7)^rr(w[j-15],18)^(w[j-15]>>>3);
+      const s1=rr(w[j-2],17)^rr(w[j-2],19)^(w[j-2]>>>10);
+      w[j]=(w[j-16]+s0+w[j-7]+s1)|0;
+    }
+    let [a,bb,c,d,e,f,g,h]=H;
+    for(let j=0;j<64;j++){
+      const S1=rr(e,6)^rr(e,11)^rr(e,25), ch=(e&f)^(~e&g);
+      const t1=(h+S1+ch+K[j]+w[j])|0;
+      const S0=rr(a,2)^rr(a,13)^rr(a,22), mj=(a&bb)^(a&c)^(bb&c);
+      const t2=(S0+mj)|0;
+      h=g; g=f; f=e; e=(d+t1)|0; d=c; c=bb; bb=a; a=(t1+t2)|0;
+    }
+    H=[H[0]+a|0,H[1]+bb|0,H[2]+c|0,H[3]+d|0,H[4]+e|0,H[5]+f|0,H[6]+g|0,H[7]+h|0];
+  }
+  return H.map(x=>(x>>>0).toString(16).padStart(8,'0')).join('');
+}
+async function empreinte(txt){
+  if(typeof crypto !== 'undefined' && crypto.subtle && crypto.subtle.digest){
+    try{
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(txt));
+      return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+    }catch(e){}
+  }
+  return sha256JS(txt);
+}
+function ouvrirLeSite(){
+  document.body.classList.remove('verrouille');
+  const porte = document.getElementById('porte');
+  if(porte) porte.remove();
+}
+async function tenterConnexion(){
+  const err = document.getElementById('p-err');
+  const u = (document.getElementById('p-user').value || '').trim().toLowerCase();
+  const p = document.getElementById('p-pass').value || '';
+  if(typeof COMPTES === 'undefined'){
+    err.textContent = "La liste des comptes n'a pas pu être chargée.";
+    return;
+  }
+  if(!u || !p){ err.textContent = 'Remplis les deux champs.'; return; }
+  const h = await empreinte((typeof SEL !== 'undefined' ? SEL : '') + '::' + u + '::' + p);
+  const ok = COMPTES.some(c => c.actif !== false && c.u.trim().toLowerCase() === u && c.h === h);
+  if(!ok){ err.textContent = 'Pseudo ou mot de passe incorrect.'; return; }
+  try{ sessionStorage.setItem(CLE_SESSION, h); }catch(e){}
+  ouvrirLeSite();
+}
+/* on reste connecté le temps de l'onglet */
+(function(){
+  try{
+    const jeton = sessionStorage.getItem(CLE_SESSION);
+    if(jeton && typeof COMPTES !== 'undefined' &&
+       COMPTES.some(c => c.actif !== false && c.h === jeton)) ouvrirLeSite();
+  }catch(e){}
+  document.addEventListener('keydown', e=>{
+    if(e.key === 'Enter' && document.body.classList.contains('verrouille')) tenterConnexion();
+  });
+})();
+
 /* ============================================================================
    ██  DONNÉES DU JEU — c'est ICI que tu ajoutes / modifies le contenu  ██
    ============================================================================
@@ -4255,32 +4380,47 @@ const RAYON_BAS = ALV * 3;          // rayon du cercle (2 alv) + 1 alvéole d'é
 
 function silhouetteD(forme, W, H){
   const R = Math.min(RAYON_BAS, W/2, H/2);
-  const bas = `L ${W} ${H-R} A ${W/2} ${R} 0 0 1 0 ${H-R} Z`;
-  if(forme === 'icy'){
-    const pics = [0,.09,.18,.27,.36,.45,.55,.64,.73,.82,.91,1];
-    const creux = [.062,.006,.058,0,.052,.004,.052,0,.058,.004,.056,.062];
-    let d = `M 0 ${creux[0]*ALV*2}`;
-    for(let k=1;k<pics.length;k++) d += ` L ${pics[k]*W} ${creux[k]*ALV*2}`;
-    return d + ' ' + bas;
-  }
-  if(forme === 'wavy'){
-    const a = ALV*0.22, hb = H - R;                 // amplitude des vagues
-    let d = `M ${a*2} 6 C ${W*0.3} -6, ${W*0.7} -6, ${W-a*2} 6`;
-    const n = 5;
-    for(let k=0;k<n;k++){
-      const y1 = 6 + (hb-6)*(k+0.5)/n, y2 = 6 + (hb-6)*(k+1)/n;
-      d += ` C ${W+(k%2?-a:a)} ${y1}, ${W+(k%2?a:-a)} ${y1}, ${W} ${y2}`;
-    }
-    d += ` A ${W/2} ${R} 0 0 1 0 ${hb}`;
-    for(let k=n-1;k>=0;k--){
-      const y1 = 6 + (hb-6)*(k+0.5)/n, y2 = 6 + (hb-6)*k/n;
-      d += ` C ${(k%2?a:-a)} ${y1}, ${(k%2?-a:a)} ${y1}, 0 ${y2}`;
-    }
-    return d + ' Z';
-  }
-  return '';
-}
+  const hb = H - R;
+  const pt = [];
 
+  if(forme === 'wavy'){
+    const A = 30, n = 5, sommet = 34;          // amplitude, nombre de vagues, hauteur du dôme
+    for(let k=0;k<=40;k++){                     // sommet bombé
+      const t=k/40; pt.push([A+(W-2*A)*t, sommet*(1-Math.sin(Math.PI*t))]);
+    }
+    for(let k=1;k<=120;k++){                    // bord droit ondulé
+      const t=k/120, y=sommet+(hb-sommet)*t;
+      pt.push([W-A*0.5+A*0.5*Math.cos(2*Math.PI*n*t+Math.PI), y]);
+    }
+  } else if(forme === 'icy'){
+    const nb=5, haut=150, cb=0.65;              // couronne de pointes
+    const creux = haut*0.55, pas = W/nb;
+    pt.push([0, creux]);
+    for(let k=0;k<nb;k++){
+      const h = haut*(k%2===0 ? 1 : 0.76);
+      const x0=pas*k, x1=pas*(k+1), xm=(x0+x1)/2;
+      for(let j2=1;j2<=12;j2++){ const t=j2/12; pt.push([x0+(xm-x0)*t, creux-h*Math.pow(t,cb)]); }
+      for(let j2=1;j2<=12;j2++){ const t=j2/12; pt.push([xm+(x1-xm)*t, creux-h*Math.pow(1-t,cb)]); }
+    }
+    pt.push([W, hb]);
+  } else {
+    return '';
+  }
+
+  let d = 'M ' + pt.map(q=>q[0].toFixed(1)+' '+q[1].toFixed(1)).join(' L ');
+  d += ` A ${W/2} ${R} 0 0 1 0 ${hb.toFixed(1)}`;   // bas en demi-cercle
+
+  if(forme === 'wavy'){                              // bord gauche, en remontant
+    const A = 30, n = 5, sommet = 34;
+    const g = [];
+    for(let k=1;k<=120;k++){
+      const t=1-k/120, y=sommet+(hb-sommet)*t;
+      g.push([A*0.5-A*0.5*Math.cos(2*Math.PI*n*t+Math.PI), y]);
+    }
+    d += ' L ' + g.map(q=>q[0].toFixed(1)+' '+q[1].toFixed(1)).join(' L ');
+  }
+  return d + ' Z';
+}
 
 function formeRuche(){
   if(!hiveSkin) return 'basic';
