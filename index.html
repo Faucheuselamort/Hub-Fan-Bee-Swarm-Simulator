@@ -747,6 +747,42 @@ body.verrouille > *:not(#porte){display:none !important}
 #porte .pnote{margin-top:1.3rem;padding-top:1.1rem;border-top:1px solid var(--line-soft);
   font-size:.78rem;color:var(--muted);line-height:1.6;text-align:center}
 
+/* Outil Blooms */
+.bl-head{display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:.9rem}
+.bl-prog{display:flex;align-items:center;gap:.6rem;font-size:.84rem;color:var(--muted)}
+.bl-prog b{font-family:'Fredoka';color:var(--honey);font-size:1rem}
+.bl-jauge{width:140px;height:7px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden}
+.bl-jauge i{display:block;height:100%;background:var(--honey);border-radius:6px;transition:width .2s}
+.bl-wrap{overflow:auto;max-height:60vh;border:1px solid var(--line-soft);border-radius:14px}
+.bl-table{border-collapse:separate;border-spacing:0;width:max-content;min-width:100%}
+.bl-table th{position:sticky;top:0;z-index:3;background:var(--ink-900);font-family:'Fredoka';font-weight:600;
+  font-size:.72rem;color:var(--muted);padding:.45rem .3rem;text-align:center;border-bottom:1px solid var(--line-soft)}
+.bl-table td{padding:.15rem;border-bottom:1px solid rgba(255,255,255,.05)}
+.bl-table .bl-f{position:sticky;left:0;z-index:2;background:var(--ink-900);font-family:'Fredoka';
+  font-weight:600;font-size:.84rem;color:var(--cream);padding:.3rem .7rem;white-space:nowrap;
+  border-right:1px solid var(--line-soft)}
+.bl-table th.bl-f{z-index:4}
+.bl-table .bl-p{text-align:right;padding-right:.7rem;font-size:.76rem;color:var(--muted);white-space:nowrap}
+.bl-table .bl-p .done{color:#6BD08B;font-weight:700}
+.bl-in{width:68px;text-align:right;background:var(--ink-950);border:1px solid transparent;border-radius:7px;
+  color:var(--muted);padding:.28rem .35rem;font-family:'Fredoka';font-size:.8rem}
+.bl-in:hover{border-color:var(--line-soft)}
+.bl-in:focus{outline:none;border-color:var(--honey);color:var(--cream)}
+.bl-in.ok{color:var(--honey);background:rgba(244,221,68,.08)}
+.bl-btns{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
+
+.champs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.7rem}
+.champ-c{background:var(--ink-900);border:1px solid var(--line-soft);border-radius:14px;padding:.8rem .95rem}
+.champ-t{display:flex;align-items:center;gap:.45rem;font-family:'Fredoka';font-weight:600;font-size:.95rem;
+  color:var(--cream);margin-bottom:.5rem}
+.champ-p{display:flex;flex-wrap:wrap;gap:.3rem}
+.pet{display:inline-flex;align-items:center;gap:.3rem;font-size:.74rem;color:var(--cream);
+  background:var(--panel);border:1px solid var(--line-soft);border-radius:20px;padding:.15rem .55rem .15rem .35rem}
+.pet::before{content:"";width:11px;height:11px;border-radius:50%;background:var(--pc);
+  border:1px solid rgba(0,0,0,.35);flex:0 0 auto}
+.pet.dom{border-color:var(--pc);font-weight:600}
+.pet.rare{border-style:dashed;opacity:.75}
+
 /* Hive builder : scène (ruche + stickers) */
 .hive-stage{position:relative;margin:0 auto;width:max-content;
   --alv:64px;                      /* largeur d'une alvéole */
@@ -2942,6 +2978,60 @@ function stickerValNum(v){
   return parts.reduce((a,b)=>a+b,0)/parts.length;
 }
 
+/* ---------- DONNÉES · CHAMPS (couleurs de pétales) ---------- */
+/* d = couleur dominante, p = les autres, r = les rares. */
+const CHAMPS = [
+  { nom:"Coconut Field",     ico:"🥥", d:["Blanc"],            p:["Gris","Rose","Vert","Cyan"],        r:[] },
+  { nom:"Pepper Field",      ico:"🌶️", d:["Écarlate","Rouge"], p:["Vert","Rose"],                      r:[] },
+  { nom:"Sunflower Field",   ico:"🌻", d:["Jaune"],            p:["Souci","Vert","Rose"],              r:["Blanc"] },
+  { nom:"Mushroom Field",    ico:"🍄", d:["Rouge","Blanc"],    p:["Vert","Noir"],                      r:["Violet"] },
+  { nom:"Dandelion Field",   ico:"🌼", d:["Blanc"],            p:["Noir","Vert","Gris"],               r:[] },
+  { nom:"Clover Field",      ico:"🍀", d:["Vert"],             p:["Violet"],                           r:[] },
+  { nom:"Blue Flower Field", ico:"🫐", d:["Blanc"],            p:["Cyan","Bleu"],                      r:[] },
+  { nom:"Bamboo Field",      ico:"🎍", d:["Bleu","Blanc"],     p:["Violet","Vert","Jaune","Noir"],     r:[] },
+  { nom:"Spider Field",      ico:"🕷️", d:["Blanc","Noir"],    p:["Rouge","Vert","Gris"],              r:[] },
+  { nom:"Strawberry Field",  ico:"🍓", d:["Rouge","Rose"],     p:["Blanc","Vert"],                     r:["Violet"] },
+  { nom:"Rose Field",        ico:"🌹", d:["Rouge"],            p:["Noir","Écarlate"],                  r:[] },
+  { nom:"Cactus Field",      ico:"🌵", d:["Vert","Noir"],      p:["Rouge","Bleu"],                     r:[] },
+  { nom:"Pumpkin Patch",     ico:"🎃", d:["Vert","Gris","Jaune","Cyan"], p:[],                         r:[], note:"Les quatre couleurs ont la même probabilité." },
+  { nom:"Pine Tree Forest",  ico:"🌲", d:["Bleu"],             p:["Vert"],                             r:["Noir"] },
+  { nom:"Mountain Top Field",ico:"⛰️", d:["Rouge","Bleu"],     p:["Rose","Noir","Blanc"],              r:[] },
+  { nom:"Pineapple Patch",   ico:"🍍", d:["Jaune","Cyan"],     p:["Blanc","Violet"],                   r:[] },
+  { nom:"Stump Field",       ico:"🪵", d:["Bleu","Cyan"],      p:["Vert","Violet","Gris"],             r:[] },
+  { nom:"Ant Field",         ico:"🐜", d:["Rouge","Bleu"],     p:["Blanc"],                            r:[] },
+];
+const PETALE_COULEUR = {
+  "Blanc":"#F2F5F7","Gris":"#8A9BA5","Noir":"#22262B","Rose":"#F49AC1","Rouge":"#E0554E",
+  "Écarlate":"#8C3A2E","Vert":"#5FBF6B","Cyan":"#5AC8E8","Bleu":"#3B7DD8","Jaune":"#F4D03F",
+  "Souci":"#E8862E","Violet":"#A97BE0",
+};
+
+/* ---------- DONNÉES · BLOOMS ---------- */
+/* Pollen nécessaire pour faire éclater un bloom, niveau par niveau (1 à 20).
+   null = valeur encore inconnue. Tu peux tout compléter directement depuis
+   l'onglet Outils › Blooms, puis recopier le bloc généré ici. */
+const BLOOM_NIVEAUX = 20;
+const BLOOMS = {
+  "Dandelion":    [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+  "Sunflower":    [30,40,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+  "Mushroom":     [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+  "Clover":       [null,150,290,null,null,2270,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+  "Blue Flower":  [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+  "Spider":       [1000,2070,4280,8860,18300,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+  "Bamboo":       [null,600,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+  "Strawberry":   [250,600,1430,3420,8170,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+  "Pineapple":    [null,1130,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+  "Stump":        [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+  "Cactus":       [500,null,null,5810,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+  "Pumpkin":      [null,3770,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+  "Pine Tree":    [null,null,null,null,69500,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+  "Rose":         [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+  "Mountain Top": [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+  "Coconut":      [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+  "Pepper":       [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+  "Hub":          [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+};
+
 /* ---------- DONNÉES · MUTATIONS ---------- */
 /* Source : wiki Bee Swarm Simulator (Mutation).
    IMPORTANT : la colonne « chance » ne dépend PAS du niveau de l'abeille — c'est la
@@ -3738,9 +3828,17 @@ const MAPINFOS = {
     ]},
   ],
   "Flore": [
-    { titre:"Flore", blocs:[
+    { titre:"La flore", dossier:"mobs", blocs:[
       { t:'p', v:"Elle ne se déplace pas et ne peut pas te blesser : elle pousse sur place et se frappe pour récupérer des ressources." },
       { t:'tags', v:["Puffshroom","Bloom"] },
+    ]},
+    { titre:"Pollen pour faire éclater un bloom", blocs:[
+      { t:'p', v:"Les 20 niveaux de bloom, champ par champ. Le tableau se complète directement ici : <b>tes saisies sont enregistrées dans ton navigateur</b>. Pour les rendre visibles par tout le monde, copie le bloc de données et colle-le dans <code>index.html</code>, à la place du bloc <b>DONNÉES · BLOOMS</b>." },
+      { t:'bloc', v:'blooms' },
+    ]},
+    { titre:"Couleurs de pétales par champ", blocs:[
+      { t:'p', v:"La couleur encadrée est <b>dominante</b>, celle en pointillés est <b>rare</b>." },
+      { t:'bloc', v:'champs' },
     ]},
   ],
 };
@@ -3755,12 +3853,39 @@ function tuilesHTML(noms, dossier){
       onerror="imgFallback(this,'ph','${esc(initiales(n))}')"></span>${esc(n)}</span>`).join('')}</div>`;
 }
 
+/* Blocs riches réutilisables dans Guide et Map infos */
+const BLOCS_SPECIAUX = {
+  blooms: `<div class="bl-head">
+        <div class="search" style="max-width:280px;margin:0"><span>🔍</span>
+          <input type="text" id="bl-search" placeholder="Filtrer un champ…"></div>
+        <div class="bl-prog"><div class="bl-jauge"><i id="bl-barre"></i></div>
+          <span id="bl-stats"></span></div>
+      </div>
+
+      <div class="bl-wrap"><table class="bl-table" id="bl-table"></table></div>
+
+      <div class="bl-btns">
+        <button class="btn btn-primary" id="bl-copy" onclick="copierBlooms()">📋 Copier le bloc de données</button>
+        <button class="btn btn-ghost" onclick="exporterBlooms()">⬇️ Exporter (.json)</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('bl-imp').click()">⬆️ Importer</button>
+        <button class="btn btn-ghost" onclick="viderBlooms()">🗑️ Vider mes saisies</button>
+        <input type="file" id="bl-imp" accept="application/json,.json" style="display:none"
+               onchange="if(this.files[0])importerBlooms(this.files[0]); this.value='';">
+      </div>
+      <textarea id="bl-code" class="hidden" readonly style="width:100%;height:160px;margin-top:.8rem;
+        background:var(--ink-950);color:var(--honey);border:1px solid var(--line-soft);border-radius:12px;
+        padding:.8rem;font-family:ui-monospace,monospace;font-size:.75rem"></textarea>
+      `,
+  champs: '<div class="champs-grid" id="bl-champs"></div>',
+};
+
 function blocHTML(b){
   const corps = (b.blocs || []).map(x=>{
     if(x.t === 'p')     return `<p class="lead" style="margin:.5rem 0">${x.v}</p>`;
     if(x.t === 'liste') return `<ul class="notes-list" style="margin:.6rem 0">${x.v.map(i=>`<li>${i}</li>`).join('')}</ul>`;
     if(x.t === 'etapes')return `<div class="info-grid" style="margin:.8rem 0">${x.v.map((i,k)=>
         `<div class="info-card"><span class="big">${k+1}</span><h4>${i.t}</h4><p>${i.d}</p></div>`).join('')}</div>`;
+    if(x.t === 'bloc') return BLOCS_SPECIAUX[x.v] || '';
     if(x.t === 'tags')  return tuilesHTML(x.v, b.dossier);
     if(x.t === 'sous')  return x.v.map(g=>`<div class="sousg">
         <div class="sousg-t">${esc(g.titre)}<b>${g.items.length}</b></div>
@@ -3783,6 +3908,11 @@ function renderPageLibre(key, data, cats, elChips, elBody, elCount, vide){
       : `<div class="warn"><span class="i">✎</span><div>${vide.replace('%s', actif)}</div></div>`;
     const c = document.getElementById(elCount);
     if(c) c.textContent = sections.length + (sections.length > 1 ? ' sections' : ' section');
+    if(document.getElementById('bl-table')){
+      initBlooms();
+      const q = document.getElementById('bl-search');
+      if(q) q.addEventListener('input', renderBlooms);
+    }
   };
 
   chips.innerHTML = cats.map((c,i)=>{
@@ -4584,6 +4714,148 @@ function initStagePose(){
     hsSel = hsPosed.length - 1;
     renderHiveStk();
   }, true);
+}
+
+/* ---------- OUTIL 5 : Blooms ---------- */
+const CLE_BLOOMS = 'hubbss-blooms';
+let bloomsData = {};
+
+function chargerBlooms(){
+  bloomsData = JSON.parse(JSON.stringify(BLOOMS));
+  try{
+    const sauve = localStorage.getItem(CLE_BLOOMS);
+    if(sauve){
+      const d = JSON.parse(sauve);
+      Object.keys(d).forEach(champ=>{
+        if(bloomsData[champ]) d[champ].forEach((v,i)=>{ if(v!=null) bloomsData[champ][i]=v; });
+      });
+    }
+  }catch(e){}
+}
+function sauverBlooms(){
+  try{ localStorage.setItem(CLE_BLOOMS, JSON.stringify(bloomsData)); }catch(e){}
+}
+
+function initBlooms(){
+  chargerBlooms();
+  renderBlooms();
+  renderChamps();
+}
+
+function renderBlooms(){
+  const el = document.getElementById('bl-table'); if(!el) return;
+  const q = ((document.getElementById('bl-search')||{}).value||'').toLowerCase().trim();
+  const champs = Object.keys(bloomsData).filter(c=>!q || c.toLowerCase().includes(q));
+
+  let entetes = '<tr><th class="bl-f">Champ</th>';
+  for(let n=1;n<=BLOOM_NIVEAUX;n++) entetes += `<th>${n}</th>`;
+  entetes += '<th class="bl-p">Rempli</th></tr>';
+
+  const lignes = champs.map(champ=>{
+    const vals = bloomsData[champ];
+    const remplis = vals.filter(v=>v!=null).length;
+    const cases = vals.map((v,i)=>
+      `<td><input type="text" inputmode="numeric" class="bl-in${v!=null?' ok':''}"
+        data-c="${esc(champ)}" data-n="${i}" value="${v!=null?fmtEntier(v):''}"
+        placeholder="—" title="${esc(champ)} · niveau ${i+1}"></td>`).join('');
+    return `<tr><td class="bl-f">${esc(champ)}</td>${cases}
+      <td class="bl-p"><span class="${remplis===BLOOM_NIVEAUX?'done':''}">${remplis}/${BLOOM_NIVEAUX}</span></td></tr>`;
+  }).join('');
+
+  el.innerHTML = `<thead>${entetes}</thead><tbody>${lignes}</tbody>`;
+
+  el.querySelectorAll('.bl-in').forEach(inp=>{
+    inp.addEventListener('input', e=>{
+      const brut = e.target.value.replace(/[^\d]/g,'');
+      const champ = e.target.dataset.c, n = +e.target.dataset.n;
+      bloomsData[champ][n] = brut ? parseInt(brut) : null;
+      e.target.classList.toggle('ok', !!brut);
+      majBloomStats(); sauverBlooms();
+    });
+    /* Entrée ou flèche bas : on descend d'une ligne, même colonne */
+    inp.addEventListener('keydown', e=>{
+      if(e.key!=='Enter' && e.key!=='ArrowDown' && e.key!=='ArrowUp') return;
+      e.preventDefault();
+      const tr = e.target.closest('tr');
+      const voisin = (e.key==='ArrowUp') ? tr.previousElementSibling : tr.nextElementSibling;
+      if(!voisin) return;
+      const suiv = voisin.querySelectorAll('.bl-in')[+e.target.dataset.n];
+      if(suiv){ suiv.focus(); suiv.select(); }
+    });
+    inp.addEventListener('focus', e=>e.target.select());
+  });
+  majBloomStats();
+}
+
+function majBloomStats(){
+  const el = document.getElementById('bl-stats'); if(!el) return;
+  const total = Object.keys(bloomsData).length * BLOOM_NIVEAUX;
+  let n = 0;
+  Object.values(bloomsData).forEach(v=>{ n += v.filter(x=>x!=null).length; });
+  el.innerHTML = `<b>${n}</b> valeurs sur ${total} · ${(n/total*100).toFixed(0)} % complété`;
+  const barre = document.getElementById('bl-barre');
+  if(barre) barre.style.width = (n/total*100)+'%';
+  /* on remet à jour les compteurs de ligne sans tout redessiner */
+  document.querySelectorAll('#bl-table tbody tr').forEach(tr=>{
+    const champ = tr.querySelector('.bl-f').textContent;
+    const r = (bloomsData[champ]||[]).filter(v=>v!=null).length;
+    const c = tr.querySelector('.bl-p span');
+    if(c){ c.textContent = r+'/'+BLOOM_NIVEAUX; c.classList.toggle('done', r===BLOOM_NIVEAUX); }
+  });
+}
+
+/* ---- Export du bloc de données, à coller dans index.html ---- */
+function bloomsVersCode(){
+  const lg = Math.max(...Object.keys(bloomsData).map(c=>c.length));
+  const corps = Object.keys(bloomsData).map(c=>
+    `  ${('"'+c+'":').padEnd(lg+4)} [${bloomsData[c].map(v=>v==null?'null':v).join(',')}],`).join('\n');
+  return 'const BLOOMS = {\n' + corps + '\n};';
+}
+function copierBlooms(){
+  const txt = bloomsVersCode();
+  navigator.clipboard.writeText(txt).then(()=>{
+    const b = document.getElementById('bl-copy');
+    b.textContent = '✓ Copié !'; setTimeout(()=>b.textContent='📋 Copier le bloc de données', 1800);
+  }).catch(()=>{
+    const z = document.getElementById('bl-code');
+    z.classList.remove('hidden'); z.textContent = txt; z.select && z.select();
+  });
+}
+function exporterBlooms(){
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(bloomsData,null,1)],{type:'application/json'}));
+  a.download = 'blooms.json'; a.click(); URL.revokeObjectURL(a.href);
+}
+function importerBlooms(file){
+  const r = new FileReader();
+  r.onload = ()=>{
+    try{
+      const d = JSON.parse(r.result);
+      Object.keys(d).forEach(c=>{ if(bloomsData[c]) bloomsData[c] = d[c]; });
+      sauverBlooms(); renderBlooms();
+    }catch(e){ alert('Fichier illisible.'); }
+  };
+  r.readAsText(file);
+}
+function viderBlooms(){
+  if(!confirm('Effacer toutes les valeurs que tu as saisies ? Celles déjà présentes dans le fichier seront conservées.')) return;
+  try{ localStorage.removeItem(CLE_BLOOMS); }catch(e){}
+  chargerBlooms(); renderBlooms();
+}
+
+/* ---- Couleurs de pétales par champ ---- */
+function renderChamps(){
+  const el = document.getElementById('bl-champs'); if(!el) return;
+  const pastille = (c,cls)=>`<span class="pet ${cls}" style="--pc:${PETALE_COULEUR[c]||'#888'}">${esc(c)}</span>`;
+  el.innerHTML = CHAMPS.map(f=>`<div class="champ-c">
+    <div class="champ-t"><span>${f.ico}</span>${esc(f.nom)}</div>
+    <div class="champ-p">
+      ${f.d.map(c=>pastille(c,'dom')).join('')}
+      ${f.p.map(c=>pastille(c,'')).join('')}
+      ${f.r.map(c=>pastille(c,'rare')).join('')}
+    </div>
+    ${f.note?`<p class="hint" style="margin:.35rem 0 0">${f.note}</p>`:''}
+  </div>`).join('');
 }
 
 /* ---------- OUTIL 4 : Build your Hive ---------- */
