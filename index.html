@@ -1177,8 +1177,10 @@ body.verrouille > *:not(#porte){display:none !important}
   <div id="amu-detail"></div>
 
   <div class="warn"><span class="i">⚠︎</span><div>Les <b>plages de valeurs exactes et les probabilités de chaque statistique</b>, palier par palier, vivent dans un module Lua du wiki (<i>Module:Amulet Stats/data</i>) qui ne se lit pas automatiquement : les tableaux sont générés à l'affichage. J'ai donc mis tout ce qui est vérifiable — paliers, conditions, coûts en miel, passifs complets — mais pas le détail statistique ligne par ligne.</div></div>
-  </div>
+
+  <h3 class="sub-h">Bon à savoir</h3>
   <div class="info-grid" id="amulettes-info"></div>
+  </div>
 </section>
 
 <!-- ============================ BEEQUIP ============================ -->
@@ -1191,6 +1193,8 @@ body.verrouille > *:not(#porte){display:none !important}
   </div>
   <div class="card-grid" id="beequip-grid"></div>
   <div class="warn"><span class="i">⚠︎</span><div>Huit beequips gardent un <b>« ? »</b> sur le niveau ou la limite — Lei, Single Mitten, Warm Scarf, Beesmas Tree Hat, Toy Horn, Paper Angel, Toy Drum, Electric Candle. Leurs pages wiki n'étaient pas lisibles automatiquement ; les autres valeurs sont vérifiées. Les plages chiffrées exactes de chaque statistique sont, elles aussi, générées par un module Lua non lisible : seules celles que le wiki écrit en texte sont reprises (Bubble Light, Pinecone, Snowglobe, Icicles).</div></div>
+
+  <h3 class="sub-h">Bon à savoir</h3>
   <div class="info-grid" id="beequip-info"></div>
 </section>
 
@@ -1208,14 +1212,16 @@ body.verrouille > *:not(#porte){display:none !important}
     <table class="mut-table" id="mut-table"></table>
   </div>
 
-  <h3 class="sub-h">Le rôle du niveau de l'abeille</h3>
-
   <div class="warn"><span class="i">⚠︎</span><div>Il n'existe <b>pas de table publiée « probabilité par niveau »</b> : les 11 pourcentages ci-dessus sont constants quel que soit le niveau. Le niveau agit uniquement sur la <b>valeur maximale</b> atteignable. Le wiki ne documente que le seuil du niveau 20 et un exemple au niveau 21 (+5 % Bee Ability Rate) — le reste n'est pas connu publiquement.</div></div>
+
+  <h3 class="sub-h">Comment obtenir une mutation</h3>
+  <div class="info-grid" id="mut-sources"></div>
+
+  <h3 class="sub-h">Le rôle du niveau de l'abeille</h3>
+  <div class="info-grid" id="mut-niveau"></div>
 
   <h3 class="sub-h">Bon à savoir</h3>
   <ul class="notes-list" id="mut-notes"></ul>
-  <div class="info-grid" id="mut-sources"></div>
-  <div class="info-grid" id="mut-niveau"></div>
 </section>
 
 <!-- ============================ GUIDE ============================ -->
@@ -3461,15 +3467,24 @@ function majFil(extra, page){
   const v = page || vueActive;
   if(page && page !== vueActive) return;      // page en arrière-plan : on ne touche pas au fil
   const bouts = (v === 'accueil' ? ['Accueil'] : ['Accueil', FIL_VUES[v] || v]).concat(extra || []);
+  const dernierIndex = bouts.length - 1;
   el.innerHTML = bouts.map((b,i)=>{
-    const dernier = i === bouts.length-1;
-    if(dernier) return `<b>${esc(b)}</b>`;
-    /* Hub renvoie à l'accueil, le nom de la page renvoie à sa racine */
+    const dernier = i === dernierIndex;
+    const lib = (b && b.t) ? b.t : b;
+    if(dernier) return `<b>${esc(lib)}</b>`;
+    if(b && b.action) return `<a href="#" data-action="${b.action}">${esc(lib)}</a><i>›</i>`;
     const cible = i === 0 ? 'accueil' : v;
-    return `<a href="#" data-fil="${cible}" data-niveau="${i}">${esc(b)}</a><i>›</i>`;
+    return `<a href="#" data-fil="${cible}" data-niveau="${i}">${esc(lib)}</a><i>›</i>`;
   }).join('');
 }
 document.addEventListener('click', e=>{
+  const act = e.target.closest('#fil a[data-action]');
+  if(act){
+    e.preventDefault();
+    if(act.dataset.action === 'sous'){ mobOuvert = null; renderMapInfos();
+      window.scrollTo({top:0,behavior:'smooth'}); }
+    return;
+  }
   const a = e.target.closest('#fil a[data-fil]');
   if(!a) return;
   e.preventDefault();
@@ -4380,6 +4395,18 @@ const RARETE_LIB = {
   event:   { t:"Événement",       c:"#6BD08B" },
 };
 
+/* Un objet du butin peut venir de plusieurs dossiers : on cherche d'abord
+   dans les beequips, puis on applique les règles des œufs et des gelées. */
+function imgButin(nom){
+  if(typeof BEEQUIP !== 'undefined' && BEEQUIP.some(b=>b.nom===nom))
+    return imgAttrs('beequip',{nom});
+  if(/ Egg$/.test(nom)   && !/^(Basic|Silver|Gold|Diamond|Mythic|Star|Choose|Gifted)/.test(nom))
+    return 'src="images/item/Basic_Egg.webp"';
+  if(/ Jelly$/.test(nom) && !/^(Royal|Star)/.test(nom))
+    return 'src="images/item/Royal_Jelly.webp"';
+  return imgAttrs('item',{nom});
+}
+
 /* ---------- Fiche détaillée d'un mob ---------- */
 let mobOuvert = null;
 
@@ -4401,10 +4428,13 @@ function ficheMobHTML(nom){
       ${m.spots.map(sp=>`<tr><td>${esc(sp.champ)}</td><td>${esc(sp.spawn)}</td>
         <td>${esc(sp.lvl)}</td><td>${esc(sp.pv)}</td></tr>`).join('')}</tbody></table>` : '';
 
-  const objet = (nom2, note, cls) => `<div class="dr ${cls||''}">
-      <span class="dr-i"><img ${imgAttrs('item',{nom:nom2})} alt="" loading="lazy"
+  const objet = (nom2, note, cls) => {
+    const src = imgButin(nom2);
+    return `<div class="dr ${cls||''}">
+      <span class="dr-i"><img ${src} alt="" loading="lazy"
         onerror="imgFallback(this,'ph','${esc(initiales(nom2))}')"></span>
       <span class="dr-n">${esc(nom2)}${note?`<i>${esc(note)}</i>`:''}</span></div>`;
+  };
 
   const sur = m.sur ? m.sur.map(o=>objet(o.nom,o.note,'sur')).join('') : '';
 
@@ -4509,7 +4539,8 @@ function renderMapInfos(){
     if(count) count.textContent = sections.length + (sections.length>1?' sections':' section');
   }
 
-  majFil(sous ? [carte.titre, mapSous].concat(mobOuvert?[mobOuvert]:[]) : [carte.titre]);
+  majFil(sous ? [carte.titre, {t:mapSous, action:'sous'}].concat(mobOuvert?[mobOuvert]:[])
+              : [carte.titre]);
   body.innerHTML = `<div class="map-fil"><span>${carte.ico}</span>${esc(carte.titre)}${sous?' · '+esc(mapSous):''}</div>` + contenu;
 
   if(document.getElementById('bl-table')) initBlooms();
@@ -4518,19 +4549,20 @@ function renderMapInfos(){
 /* fiches de mobs : image, zones, niveau, butin */
 function fichesMobsHTML(liste){
   if(!liste.length) return `<div class="warn"><span class="i">✎</span><div>Rien pour le moment.</div></div>`;
-  return `<div class="mob-grid">${liste.map(m=>`
-    <div class="mob-c${MOBS_DATA[m.nom]?' ouvrable':''}" ${MOBS_DATA[m.nom]?`data-mob="${esc(m.nom)}"`:''}>
+  return `<div class="mob-grid">${liste.map(m=>{
+    const fiche = !!MOBS_DATA[m.nom];
+    return `<div class="mob-c${fiche?' ouvrable':''}" ${fiche?`data-mob="${esc(m.nom)}"`:''}>
       <div class="mob-img"><img ${imgAttrs('mobs',{nom:m.nom})} alt="" loading="lazy"
         onerror="imgFallback(this,'ph','${esc(initiales(m.nom))}')"></div>
       <div class="mob-b">
-        <div class="mob-n">${esc(m.nom)}${m.lvl && m.lvl!=='—' ? `<span class="mob-lvl">Niv. ${esc(m.lvl)}</span>`:''}</div>
-        ${m.desc?`<p class="mob-d">${esc(m.desc)}</p>`:''}
-        ${m.z && m.z.length?`<div class="mob-l"><span>Apparition</span><div>${m.z.map(z=>`<i>${esc(z)}</i>`).join('')}</div></div>`:''}
-        ${m.loot && m.loot.length?`<div class="mob-l"><span>Butin</span><div>${m.loot.map(l=>`<i class="lo">${esc(l)}</i>`).join('')}</div></div>`:''}
-        ${MOBS_DATA[m.nom]?'<span class="mob-go">Fiche complète →</span>':''}
+        <div class="mob-n">${esc(m.nom)}</div>
+        ${m.lvl && m.lvl!=='—' ? `<span class="mob-lvl">Niveau ${esc(m.lvl)}</span>` : ''}
+        <span class="mob-go">${fiche?'Voir plus de détails →':'<i>Fiche à venir</i>'}</span>
       </div>
-    </div>`).join('')}</div>`;
+    </div>`;
+  }).join('')}</div>`;
 }
+
 
 /* navigation */
 document.addEventListener('click', e=>{
