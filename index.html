@@ -748,6 +748,19 @@ body.verrouille > *:not(#porte){display:none !important}
   font-size:.78rem;color:var(--muted);line-height:1.6;text-align:center}
 
 /* Outil Blooms */
+.bl-ic{width:22px;height:22px;display:inline-grid;place-items:center;overflow:hidden;
+  vertical-align:middle;margin-right:.4rem}
+.bl-ic img{max-width:100%;max-height:100%;object-fit:contain;image-rendering:pixelated}
+.champ-i{width:30px;height:30px;flex:0 0 auto;display:grid;place-items:center;overflow:hidden}
+.champ-i img{max-width:100%;max-height:100%;object-fit:contain;image-rendering:pixelated}
+.champ-l{display:flex;align-items:baseline;gap:.5rem;margin-top:.4rem}
+.champ-lb{flex:0 0 66px;font-size:.66rem;text-transform:uppercase;letter-spacing:.6px;
+  color:var(--muted);font-family:'Fredoka';font-weight:600}
+.champ-l.dom .champ-lb{color:var(--honey)}
+.champ-l.rare .champ-lb{color:#B8A5ED}
+.champ-l.dom .pet{border-color:var(--pc);font-weight:600}
+.champ-l.rare .pet{border-style:dashed;opacity:.8}
+
 .bl-head{display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:.9rem}
 .bl-prog{display:flex;align-items:center;gap:.6rem;font-size:.84rem;color:var(--muted)}
 .bl-prog b{font-family:'Fredoka';color:var(--honey);font-size:1rem}
@@ -2981,24 +2994,24 @@ function stickerValNum(v){
 /* ---------- DONNÉES · CHAMPS (couleurs de pétales) ---------- */
 /* d = couleur dominante, p = les autres, r = les rares. */
 const CHAMPS = [
-  { nom:"Coconut Field",     ico:"🥥", d:["Blanc"],            p:["Gris","Rose","Vert","Cyan"],        r:[] },
-  { nom:"Pepper Field",      ico:"🌶️", d:["Écarlate","Rouge"], p:["Vert","Rose"],                      r:[] },
-  { nom:"Sunflower Field",   ico:"🌻", d:["Jaune"],            p:["Souci","Vert","Rose"],              r:["Blanc"] },
-  { nom:"Mushroom Field",    ico:"🍄", d:["Rouge","Blanc"],    p:["Vert","Noir"],                      r:["Violet"] },
-  { nom:"Dandelion Field",   ico:"🌼", d:["Blanc"],            p:["Noir","Vert","Gris"],               r:[] },
-  { nom:"Clover Field",      ico:"🍀", d:["Vert"],             p:["Violet"],                           r:[] },
-  { nom:"Blue Flower Field", ico:"🫐", d:["Blanc"],            p:["Cyan","Bleu"],                      r:[] },
-  { nom:"Bamboo Field",      ico:"🎍", d:["Bleu","Blanc"],     p:["Violet","Vert","Jaune","Noir"],     r:[] },
-  { nom:"Spider Field",      ico:"🕷️", d:["Blanc","Noir"],    p:["Rouge","Vert","Gris"],              r:[] },
-  { nom:"Strawberry Field",  ico:"🍓", d:["Rouge","Rose"],     p:["Blanc","Vert"],                     r:["Violet"] },
-  { nom:"Rose Field",        ico:"🌹", d:["Rouge"],            p:["Noir","Écarlate"],                  r:[] },
-  { nom:"Cactus Field",      ico:"🌵", d:["Vert","Noir"],      p:["Rouge","Bleu"],                     r:[] },
-  { nom:"Pumpkin Patch",     ico:"🎃", d:["Vert","Gris","Jaune","Cyan"], p:[],                         r:[], note:"Les quatre couleurs ont la même probabilité." },
-  { nom:"Pine Tree Forest",  ico:"🌲", d:["Bleu"],             p:["Vert"],                             r:["Noir"] },
-  { nom:"Mountain Top Field",ico:"⛰️", d:["Rouge","Bleu"],     p:["Rose","Noir","Blanc"],              r:[] },
-  { nom:"Pineapple Patch",   ico:"🍍", d:["Jaune","Cyan"],     p:["Blanc","Violet"],                   r:[] },
-  { nom:"Stump Field",       ico:"🪵", d:["Bleu","Cyan"],      p:["Vert","Violet","Gris"],             r:[] },
-  { nom:"Ant Field",         ico:"🐜", d:["Rouge","Bleu"],     p:["Blanc"],                            r:[] },
+  { nom:"Coconut Field", stamp:"Coconut Field Stamp",     ico:"🥥", d:["Blanc"],            p:["Gris","Rose","Vert","Cyan"],        r:[] },
+  { nom:"Pepper Field", stamp:"Pepper Patch Stamp",      ico:"🌶️", d:["Écarlate","Rouge"], p:["Vert","Rose"],                      r:[] },
+  { nom:"Sunflower Field", stamp:"Sunflower Field Stamp",   ico:"🌻", d:["Jaune"],            p:["Souci","Vert","Rose"],              r:["Blanc"] },
+  { nom:"Mushroom Field", stamp:"Mushroom Field Stamp",    ico:"🍄", d:["Rouge","Blanc"],    p:["Vert","Noir"],                      r:["Violet"] },
+  { nom:"Dandelion Field", stamp:"Dandelion Field Stamp",   ico:"🌼", d:["Blanc"],            p:["Noir","Vert","Gris"],               r:[] },
+  { nom:"Clover Field", stamp:"Clover Field Stamp",      ico:"🍀", d:["Vert"],             p:["Violet"],                           r:[] },
+  { nom:"Blue Flower Field", stamp:"Blue Flower Field Stamp", ico:"🫐", d:["Blanc"],            p:["Cyan","Bleu"],                      r:[] },
+  { nom:"Bamboo Field", stamp:"Bamboo Field Stamp",      ico:"🎍", d:["Bleu","Blanc"],     p:["Violet","Vert","Jaune","Noir"],     r:[] },
+  { nom:"Spider Field", stamp:"Spider Field Stamp",      ico:"🕷️", d:["Blanc","Noir"],    p:["Rouge","Vert","Gris"],              r:[] },
+  { nom:"Strawberry Field", stamp:"Strawberry Field Stamp",  ico:"🍓", d:["Rouge","Rose"],     p:["Blanc","Vert"],                     r:["Violet"] },
+  { nom:"Rose Field", stamp:"Rose Field Stamp",        ico:"🌹", d:["Rouge"],            p:["Noir","Écarlate"],                  r:[] },
+  { nom:"Cactus Field", stamp:"Cactus Field Stamp",      ico:"🌵", d:["Vert","Noir"],      p:["Rouge","Bleu"],                     r:[] },
+  { nom:"Pumpkin Patch", stamp:"Pumpkin Patch Stamp",     ico:"🎃", d:["Vert","Gris","Jaune","Cyan"], p:[],                         r:[], note:"Les quatre couleurs ont la même probabilité." },
+  { nom:"Pine Tree Forest", stamp:"Pine Tree Forest Stamp",  ico:"🌲", d:["Bleu"],             p:["Vert"],                             r:["Noir"] },
+  { nom:"Mountain Top Field", stamp:"Mountain Top Field Stamp",ico:"⛰️", d:["Rouge","Bleu"],     p:["Rose","Noir","Blanc"],              r:[] },
+  { nom:"Pineapple Patch", stamp:"Pineapple Patch Stamp",   ico:"🍍", d:["Jaune","Cyan"],     p:["Blanc","Violet"],                   r:[] },
+  { nom:"Stump Field", stamp:"Stump Field Stamp",       ico:"🪵", d:["Bleu","Cyan"],      p:["Vert","Violet","Gris"],             r:[] },
+  { nom:"Ant Field", stamp:"Ant Field Stamp",         ico:"🐜", d:["Rouge","Bleu"],     p:["Blanc"],                            r:[] },
 ];
 const PETALE_COULEUR = {
   "Blanc":"#F2F5F7","Gris":"#8A9BA5","Noir":"#22262B","Rose":"#F49AC1","Rouge":"#E0554E",
@@ -4717,6 +4730,27 @@ function initStagePose(){
 }
 
 /* ---------- OUTIL 5 : Blooms ---------- */
+/* 1 000 -> 1K, puis M, B, T. Une décimale seulement quand c'est utile. */
+function abrege(n){
+  if(n == null) return '';
+  const p = [[1e12,'T'],[1e9,'B'],[1e6,'M'],[1e3,'K']];
+  for(const [seuil,suf] of p){
+    if(n >= seuil){
+      const v = n/seuil;
+      const t = (v >= 100 || v % 1 === 0) ? Math.round(v) : v.toFixed(1).replace(/\.0$/,'');
+      return t + suf;
+    }
+  }
+  return String(n);
+}
+/* "12,5K" comme "12500" donnent 12500 */
+function litAbrege(txt){
+  const m = String(txt).trim().replace(/\s/g,'').replace(',','.').match(/^([\d.]+)\s*([kmbt])?$/i);
+  if(!m) return null;
+  const mult = {k:1e3,m:1e6,b:1e9,t:1e12}[(m[2]||'').toLowerCase()] || 1;
+  const v = parseFloat(m[1]);
+  return isNaN(v) ? null : Math.round(v*mult);
+}
 const CLE_BLOOMS = 'hubbss-blooms';
 let bloomsData = {};
 
@@ -4755,10 +4789,13 @@ function renderBlooms(){
     const vals = bloomsData[champ];
     const remplis = vals.filter(v=>v!=null).length;
     const cases = vals.map((v,i)=>
-      `<td><input type="text" inputmode="numeric" class="bl-in${v!=null?' ok':''}"
-        data-c="${esc(champ)}" data-n="${i}" value="${v!=null?fmtEntier(v):''}"
-        placeholder="—" title="${esc(champ)} · niveau ${i+1}"></td>`).join('');
-    return `<tr><td class="bl-f">${esc(champ)}</td>${cases}
+      `<td><input type="text" class="bl-in${v!=null?' ok':''}"
+        data-c="${esc(champ)}" data-n="${i}" value="${v!=null?abrege(v):''}"
+        placeholder="—" title="${esc(champ)} · niveau ${i+1}${v!=null?' · '+fmtEntier(v)+' pollen':''}"></td>`).join('');
+    const f = CHAMPS.find(x=>x.nom.toLowerCase().startsWith(champ.toLowerCase()));
+    const ic = f ? `<span class="bl-ic"><img ${imgAttrs('stickers',{nom:f.stamp,categorie:'Stamps'})} alt=""
+        loading="lazy" onerror="imgFallback(this,'emoji','${f.ico}')"></span>` : '';
+    return `<tr><td class="bl-f">${ic}${esc(champ)}</td>${cases}
       <td class="bl-p"><span class="${remplis===BLOOM_NIVEAUX?'done':''}">${remplis}/${BLOOM_NIVEAUX}</span></td></tr>`;
   }).join('');
 
@@ -4766,14 +4803,18 @@ function renderBlooms(){
 
   el.querySelectorAll('.bl-in').forEach(inp=>{
     inp.addEventListener('input', e=>{
-      const brut = e.target.value.replace(/[^\d]/g,'');
       const champ = e.target.dataset.c, n = +e.target.dataset.n;
-      bloomsData[champ][n] = brut ? parseInt(brut) : null;
-      e.target.classList.toggle('ok', !!brut);
+      const v = e.target.value.trim() ? litAbrege(e.target.value) : null;
+      bloomsData[champ][n] = v;
+      e.target.classList.toggle('ok', v != null);
+      e.target.title = champ + ' · niveau ' + (n+1) + (v!=null ? ' · '+fmtEntier(v)+' pollen' : '');
       majBloomStats(); sauverBlooms();
     });
-    /* Entrée ou flèche bas : on descend d'une ligne, même colonne */
-    inp.addEventListener('keydown', e=>{
+    inp.addEventListener('blur', e=>{          // on réaffiche en version abrégée
+      const v = bloomsData[e.target.dataset.c][+e.target.dataset.n];
+      e.target.value = v != null ? abrege(v) : '';
+    });
+    inp.addEventListener('keydown', e=>{       // Entrée / flèches : ligne suivante
       if(e.key!=='Enter' && e.key!=='ArrowDown' && e.key!=='ArrowUp') return;
       e.preventDefault();
       const tr = e.target.closest('tr');
@@ -4846,15 +4887,19 @@ function viderBlooms(){
 /* ---- Couleurs de pétales par champ ---- */
 function renderChamps(){
   const el = document.getElementById('bl-champs'); if(!el) return;
-  const pastille = (c,cls)=>`<span class="pet ${cls}" style="--pc:${PETALE_COULEUR[c]||'#888'}">${esc(c)}</span>`;
+  const pastille = c => `<span class="pet" style="--pc:${PETALE_COULEUR[c]||'#888'}">${esc(c)}</span>`;
+  const ligne = (lib, liste, cls) => liste.length
+    ? `<div class="champ-l ${cls}"><span class="champ-lb">${lib}</span>
+        <div class="champ-p">${liste.map(pastille).join('')}</div></div>` : '';
   el.innerHTML = CHAMPS.map(f=>`<div class="champ-c">
-    <div class="champ-t"><span>${f.ico}</span>${esc(f.nom)}</div>
-    <div class="champ-p">
-      ${f.d.map(c=>pastille(c,'dom')).join('')}
-      ${f.p.map(c=>pastille(c,'')).join('')}
-      ${f.r.map(c=>pastille(c,'rare')).join('')}
+    <div class="champ-t">
+      <span class="champ-i"><img ${imgAttrs('stickers',{nom:f.stamp,categorie:'Stamps'})} alt=""
+        loading="lazy" onerror="imgFallback(this,'emoji','${f.ico}')"></span>${esc(f.nom)}
     </div>
-    ${f.note?`<p class="hint" style="margin:.35rem 0 0">${f.note}</p>`:''}
+    ${ligne('Dominante', f.d, 'dom')}
+    ${ligne('Autres', f.p, '')}
+    ${ligne('Rare', f.r, 'rare')}
+    ${f.note?`<p class="hint" style="margin:.45rem 0 0">${f.note}</p>`:''}
   </div>`).join('');
 }
 
