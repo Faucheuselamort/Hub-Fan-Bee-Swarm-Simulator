@@ -750,6 +750,15 @@ body.verrouille > *:not(#porte){display:none !important}
   border-bottom:1px solid rgba(244,221,68,.4);padding-bottom:1px}
 #porte .pnote a:hover{border-bottom-color:var(--honey)}
 
+/* Fil d'Ariane */
+.fil{display:flex;align-items:center;flex-wrap:wrap;gap:.35rem;
+  font-size:.8rem;color:var(--muted);margin:0 0 1.4rem;min-height:1.2em}
+.fil a{color:var(--muted);text-decoration:none;transition:color .15s}
+.fil a:hover{color:var(--honey)}
+.fil b{color:var(--cream);font-weight:600}
+.fil i{font-style:normal;opacity:.4;font-size:.9em}
+@media(max-width:620px){ .fil{font-size:.74rem;margin-bottom:1rem} }
+
 /* Map infos : cartes de rubriques */
 .map-cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.9rem}
 .map-carte{display:flex;flex-direction:column;align-items:flex-start;gap:.35rem;cursor:pointer;text-align:left;
@@ -761,9 +770,6 @@ body.verrouille > *:not(#porte){display:none !important}
 .mc-t{font-family:'Fredoka';font-weight:700;font-size:1.15rem}
 .mc-d{font-size:.85rem;color:var(--muted);line-height:1.5}
 .mc-go{margin-top:.5rem;font-family:'Fredoka';font-weight:600;font-size:.8rem;color:var(--honey)}
-.map-retour{background:var(--panel);border:1px solid var(--line-soft);border-radius:20px;
-  padding:.35rem .9rem;color:var(--cream);cursor:pointer;font-family:'Fredoka';font-weight:600;font-size:.85rem}
-.map-retour:hover{border-color:var(--honey);color:var(--honey)}
 .map-fil{font-family:'Fredoka';font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:1px;
   color:var(--muted);margin-bottom:1rem;display:flex;align-items:center;gap:.4rem}
 
@@ -1006,6 +1012,8 @@ body.verrouille > *:not(#porte){display:none !important}
 </header>
 
 <main>
+<nav class="fil" id="fil" aria-label="Fil d'Ariane"></nav>
+
 
 <!-- ============================ ACCUEIL ============================ -->
 <section class="view active" id="accueil">
@@ -1067,7 +1075,6 @@ body.verrouille > *:not(#porte){display:none !important}
 
 <!-- ============================ ITEMS ============================ -->
 <section class="view" id="items">
-  <div class="eyebrow">Base de données</div>
   <div class="sec-head"><h2 class="section-title">Items du jeu</h2><span class="count-pill count-visible"></span></div>
   <p class="lead">Tous les objets du jeu, classés par famille : à quoi ils servent, combien ils coûtent et où les trouver.</p>
   <div class="note"><span class="i">🍯</span><div><b>26 catégories</b>, calquées sur l'inventaire du wiki. <b>Clique sur une carte</b> pour ouvrir sa fiche ; les prix seront ajoutés plus tard, chaque item indique pour l'instant où le trouver.<br>Images dans <b>images/item/</b>, au format <b>.webp</b>. Le nom du fichier reprend celui de l'item avec les <b>espaces remplacés par des underscores</b>, les tirets et les apostrophes étant conservés : « Basic Egg » → <code>Basic_Egg.webp</code>, « Box-O-Frogs » → <code>Box-O-Frogs.webp</code>, « Beekeeper's Boots » → <code>Beekeeper's_Boots.webp</code>. Les autres dossiers (stickers, beequip, amulette, bees) gardent les <b>espaces</b> et le <b>.png</b> — tout se règle dans le bloc <b>FORMAT DES IMAGES</b> en haut du script.<br>Deux images sont mutualisées : tous les œufs portant un nom d'abeille réutilisent <b>Basic_Egg.webp</b> (le Nectar Tester aussi), et toutes les gelées portant un nom d'abeille réutilisent <b>Royal_Jelly.webp</b>.</div></div>
@@ -1080,7 +1087,6 @@ body.verrouille > *:not(#porte){display:none !important}
 
 <!-- ============================ STICKERS ============================ -->
 <section class="view" id="stickers">
-  <div class="eyebrow">Base de données</div>
   <div class="sec-head"><h2 class="section-title">Stickers</h2><span class="count-pill count-visible"></span></div>
   <p class="lead">Chaque sticker, sa valeur de trade en signs, sa description et le bonus permanent qu'il donne une fois déposé dans le Sticker Stack.</p>
   <div class="note"><span class="i">🏷️</span><div>Les 289 stickers avec leur valeur en <b>signs</b> (bssmvalues) et, pour la plupart, leur description et leur <b>Stack Boost</b> (wiki officiel). La recherche fouille aussi dans les descriptions et les bonus : tape « Critical Power » ou « Capacity » pour voir. Images dans <b>images/stickers/</b>.</div></div>
@@ -1105,7 +1111,6 @@ body.verrouille > *:not(#porte){display:none !important}
 
 <!-- ============================ AMULETTES ============================ -->
 <section class="view" id="amulettes">
-  <div class="eyebrow">Base de données</div>
   <div class="sec-head"><h2 class="section-title">Amulettes</h2><span class="count-pill count-visible"></span></div>
   <p class="lead">Les 7 types d'amulettes du jeu : où les obtenir, quels bonus elles donnent et comment leur qualité est déterminée.</p>
   <div class="info-grid" id="amulettes-info"></div>
@@ -1118,7 +1123,6 @@ body.verrouille > *:not(#porte){display:none !important}
 
 <!-- ============================ BEEQUIP ============================ -->
 <section class="view" id="beequip">
-  <div class="eyebrow">Base de données</div>
   <div class="sec-head"><h2 class="section-title">Beequip</h2><span class="count-pill count-visible"></span></div>
   <p class="lead">L'équipement à poser sur tes abeilles : niveau minimum, limite dans la ruche, couleur, abeilles autorisées, bonus individuels et bonus de ruche. Clique une carte pour tout voir.</p>
   <div class="info-grid" id="beequip-info"></div>
@@ -1132,7 +1136,6 @@ body.verrouille > *:not(#porte){display:none !important}
 
 <!-- ============================ MUTATIONS ============================ -->
 <section class="view" id="mutations">
-  <div class="eyebrow">Mécanique de jeu</div>
   <div class="sec-head"><h2 class="section-title">Mutations d'abeilles</h2>
     <span class="count-pill">11 mutations</span></div>
   <p class="lead">Une mutation booste définitivement une statistique d'une abeille. Son numéro de niveau change alors de couleur, sur la case de ruche comme sur ses ailes — c'est cette couleur qui est reprise dans le <b>Build your Hive</b>.</p>
@@ -1157,7 +1160,6 @@ body.verrouille > *:not(#porte){display:none !important}
 
 <!-- ============================ GUIDE ============================ -->
 <section class="view" id="guide">
-  <div class="eyebrow">Progression</div>
   <div class="sec-head"><h2 class="section-title">Guide</h2>
     <span class="count-pill ghost" id="guide-count"></span></div>
   <p class="lead">Les parcours de progression, classés par orientation de ruche. Choisis une voie pour voir les étapes conseillées.</p>
@@ -1171,7 +1173,6 @@ body.verrouille > *:not(#porte){display:none !important}
 
 <!-- ============================ MAP INFOS ============================ -->
 <section class="view" id="mapinfos">
-  <div class="eyebrow">La carte</div>
   <div class="sec-head"><h2 class="section-title">Map infos</h2>
     <span class="count-pill ghost" id="map-count"></span></div>
   <p class="lead">Tout ce qui se trouve sur la carte : les zones, les ours et leurs quêtes, et les monstres.</p>
@@ -1185,7 +1186,6 @@ body.verrouille > *:not(#porte){display:none !important}
 
 <!-- ============================ OUTILS ============================ -->
 <section class="view" id="outils">
-  <div class="eyebrow">Boîte à outils</div>
   <h2 class="section-title">Outils</h2>
   <p class="lead">Des calculateurs qui font le travail à ta place. D'autres viendront s'ajouter plus tard.</p>
 
@@ -3377,9 +3377,43 @@ function imgFallback(el, mode, valeur){
 }
 
 /* ---------- Navigation entre onglets ---------- */
+/* ---------- Fil d'Ariane ---------- */
+const FIL_VUES = {
+  accueil:"Accueil", items:"Items", stickers:"Stickers", amulettes:"Amulettes",
+  beequip:"Beequip", mutations:"Mutations", guide:"Guide",
+  mapinfos:"Map infos", outils:"Outils",
+};
+let vueActive = 'accueil';
+
+/* Chaque page peut ajouter ses propres niveaux (onglet, rubrique, sous-partie). */
+function majFil(extra){
+  const el = document.getElementById('fil'); if(!el) return;
+  const bouts = ['Hub Bee Swarm', FIL_VUES[vueActive] || vueActive].concat(extra || []);
+  el.innerHTML = bouts.map((b,i)=>{
+    const dernier = i === bouts.length-1;
+    if(dernier) return `<b>${esc(b)}</b>`;
+    /* Hub renvoie à l'accueil, le nom de la page renvoie à sa racine */
+    const cible = i === 0 ? 'accueil' : vueActive;
+    return `<a href="#" data-fil="${cible}" data-niveau="${i}">${esc(b)}</a><i>›</i>`;
+  }).join('');
+}
+document.addEventListener('click', e=>{
+  const a = e.target.closest('#fil a[data-fil]');
+  if(!a) return;
+  e.preventDefault();
+  const cible = a.dataset.fil;
+  if(cible === vueActive && vueActive === 'mapinfos' && mapVue){
+    mapVue = null; mapSous = null; renderMapInfos();   // retour aux rubriques
+    window.scrollTo({top:0,behavior:'smooth'});
+  } else showView(cible);
+});
+
 function showView(id){
+  vueActive = id;
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.view===id));
+  if(id === 'mapinfos' && typeof renderMapInfos === 'function') renderMapInfos();
+  else majFil();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 document.getElementById('tabs').addEventListener('click',e=>{
@@ -4001,8 +4035,6 @@ function tuilesHTML(noms, dossier){
 /* Blocs riches réutilisables dans Guide et Map infos */
 const BLOCS_SPECIAUX = {
   blooms: `<div class="bl-head">
-        <div class="search" style="max-width:280px;margin:0"><span>🔍</span>
-          <input type="text" id="bl-search" placeholder="Filtrer un champ…"></div>
         <div class="bl-prog"><div class="bl-jauge"><i id="bl-barre"></i></div>
           <span id="bl-stats"></span></div>
       </div>
@@ -4044,6 +4076,7 @@ function renderPageLibre(key, data, cats, elChips, elBody, elCount, vide){
       : `<div class="warn"><span class="i">✎</span><div>${vide.replace('%s', actif)}</div></div>`;
     const c = document.getElementById(elCount);
     if(c) c.textContent = sections.length + (sections.length > 1 ? ' sections' : ' section');
+    if(key === 'guide' && vueActive === 'guide') majFil([actif]);
     if(document.getElementById('bl-table')){
       initBlooms();
       const q = document.getElementById('bl-search');
@@ -4090,6 +4123,7 @@ function renderMapInfos(){
 
   /* --- écran d'accueil : les quatre cartes --- */
   if(!mapVue){
+    majFil();
     if(chips) chips.innerHTML = '';
     if(count) count.textContent = MAP_CARTES.length + ' rubriques';
     body.innerHTML = `<div class="map-cartes">${MAP_CARTES.map(c=>`
@@ -4108,8 +4142,9 @@ function renderMapInfos(){
   if(sous && !sous.includes(mapSous)) mapSous = sous[0];
 
   if(chips){
-    chips.innerHTML = `<button class="map-retour">← Rubriques</button>` +
-      (sous ? sous.map(x=>`<span class="chip ${x===mapSous?'active':''}" data-sous="${esc(x)}">${esc(x)}</span>`).join('') : '');
+    chips.innerHTML = sous
+      ? sous.map(x=>`<span class="chip ${x===mapSous?'active':''}" data-sous="${esc(x)}">${esc(x)}</span>`).join('')
+      : '';
   }
 
   let contenu = '';
@@ -4135,6 +4170,7 @@ function renderMapInfos(){
     if(count) count.textContent = sections.length + (sections.length>1?' sections':' section');
   }
 
+  majFil(sous ? [carte.titre, mapSous] : [carte.titre]);
   body.innerHTML = `<div class="map-fil"><span>${carte.ico}</span>${esc(carte.titre)}${sous?' · '+esc(mapSous):''}</div>` + contenu;
 
   if(document.getElementById('bl-table')) initBlooms();
@@ -4160,12 +4196,12 @@ function fichesMobsHTML(liste){
 document.addEventListener('click', e=>{
   const carte = e.target.closest('.map-carte');
   if(carte){ mapVue = carte.dataset.vue; mapSous = null; renderMapInfos(); return; }
-  if(e.target.closest('.map-retour')){ mapVue = null; mapSous = null; renderMapInfos(); return; }
   const ch = e.target.closest('#map-chips .chip');
   if(ch && ch.dataset.sous){ mapSous = ch.dataset.sous; renderMapInfos(); }
 });
 
 renderMapInfos();
+majFil();
 
 /* ---------- Statistiques de l'accueil ---------- */
 (function(){
@@ -4186,6 +4222,9 @@ document.querySelector('.tool-nav').addEventListener('click',e=>{
   const t = e.target.dataset.tool; if(!t) return;
   document.querySelectorAll('.tool-nav button').forEach(b=>b.classList.toggle('active',b===e.target));
   document.querySelectorAll('.tool-panel').forEach(p=>p.classList.toggle('active',p.id==='tool-'+t));
+  const nom = {ingredients:"Calcul d'ingrédients", niveau:"Niveau d'abeilles",
+               trade:'Trade équitable', builder:'Build your Hive'}[t];
+  if(nom && vueActive === 'outils') majFil([nom]);
 });
 
 /* ---------- Formatage des grands nombres (K, M, B, T, Qa, Qn...) ---------- */
@@ -4996,8 +5035,7 @@ function initBlooms(){
 
 function renderBlooms(){
   const el = document.getElementById('bl-table'); if(!el) return;
-  const q = ((document.getElementById('bl-search')||{}).value||'').toLowerCase().trim();
-  const champs = Object.keys(bloomsData).filter(c=>!q || c.toLowerCase().includes(q));
+  const champs = Object.keys(bloomsData);
 
   let entetes = '<tr><th class="bl-f">Champ</th>';
   for(let n=1;n<=BLOOM_NIVEAUX;n++) entetes += `<th>${n}</th>`;
