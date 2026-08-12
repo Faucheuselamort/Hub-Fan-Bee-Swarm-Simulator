@@ -3011,6 +3011,8 @@ const CHAMPS = [
   { nom:"Mountain Top Field", stamp:"Mountain Top Field Stamp",ico:"⛰️", d:["Rouge","Bleu"],     p:["Rose","Noir","Blanc"],              r:[] },
   { nom:"Pineapple Patch", stamp:"Pineapple Patch Stamp",   ico:"🍍", d:["Jaune","Cyan"],     p:["Blanc","Violet"],                   r:[] },
   { nom:"Stump Field", stamp:"Stump Field Stamp",       ico:"🪵", d:["Bleu","Cyan"],      p:["Vert","Violet","Gris"],             r:[] },
+  { nom:"Hub Field", stamp:"Hub Field Stamp", ico:"🏠", d:["Blanc"], p:["Jaune","Vert"], r:[],
+    note:"Le tout premier champ, autour de la ruche." },
   { nom:"Ant Field", stamp:"Ant Field Stamp",         ico:"🐜", d:["Rouge","Bleu"],     p:["Blanc"],                            r:[] },
 ];
 const PETALE_COULEUR = {
@@ -3042,6 +3044,7 @@ const BLOOMS = {
   "Mountain Top": [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
   "Coconut":      [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
   "Pepper":       [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
+  "Ant":          [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
   "Hub":          [null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],
 };
 
@@ -4730,6 +4733,15 @@ function initStagePose(){
 }
 
 /* ---------- OUTIL 5 : Blooms ---------- */
+/* Nom court du tableau -> nom complet du champ, pour retrouver le bon stamp. */
+const CHAMP_DU_BLOOM = {
+  "Dandelion":"Dandelion Field", "Sunflower":"Sunflower Field", "Mushroom":"Mushroom Field",
+  "Clover":"Clover Field", "Blue Flower":"Blue Flower Field", "Spider":"Spider Field",
+  "Bamboo":"Bamboo Field", "Strawberry":"Strawberry Field", "Pineapple":"Pineapple Patch",
+  "Stump":"Stump Field", "Cactus":"Cactus Field", "Pumpkin":"Pumpkin Patch",
+  "Pine Tree":"Pine Tree Forest", "Rose":"Rose Field", "Mountain Top":"Mountain Top Field",
+  "Coconut":"Coconut Field", "Pepper":"Pepper Field", "Ant":"Ant Field", "Hub":"Hub Field",
+};
 /* 1 000 -> 1K, puis M, B, T. Une décimale seulement quand c'est utile. */
 function abrege(n){
   if(n == null) return '';
@@ -4792,7 +4804,8 @@ function renderBlooms(){
       `<td><input type="text" class="bl-in${v!=null?' ok':''}"
         data-c="${esc(champ)}" data-n="${i}" value="${v!=null?abrege(v):''}"
         placeholder="—" title="${esc(champ)} · niveau ${i+1}${v!=null?' · '+fmtEntier(v)+' pollen':''}"></td>`).join('');
-    const f = CHAMPS.find(x=>x.nom.toLowerCase().startsWith(champ.toLowerCase()));
+    const f = CHAMPS.find(x=>x.nom === CHAMP_DU_BLOOM[champ]) ||
+              CHAMPS.find(x=>x.nom.toLowerCase().startsWith(champ.toLowerCase()));
     const ic = f ? `<span class="bl-ic"><img ${imgAttrs('stickers',{nom:f.stamp,categorie:'Stamps'})} alt=""
         loading="lazy" onerror="imgFallback(this,'emoji','${f.ico}')"></span>` : '';
     return `<tr><td class="bl-f">${ic}${esc(champ)}</td>${cases}
