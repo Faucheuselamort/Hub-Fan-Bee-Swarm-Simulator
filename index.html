@@ -750,6 +750,46 @@ body.verrouille > *:not(#porte){display:none !important}
   border-bottom:1px solid rgba(244,221,68,.4);padding-bottom:1px}
 #porte .pnote a:hover{border-bottom-color:var(--honey)}
 
+/* Map infos : cartes de rubriques */
+.map-cartes{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:.9rem}
+.map-carte{display:flex;flex-direction:column;align-items:flex-start;gap:.35rem;cursor:pointer;text-align:left;
+  background:linear-gradient(165deg,var(--panel),var(--ink-900));border:1px solid var(--line-soft);
+  border-radius:18px;padding:1.3rem 1.2rem;color:var(--cream);font-family:inherit;
+  transition:transform .16s,border-color .16s,box-shadow .16s}
+.map-carte:hover{transform:translateY(-4px);border-color:var(--honey);box-shadow:0 14px 30px rgba(0,0,0,.4)}
+.mc-ico{font-size:2rem;line-height:1}
+.mc-t{font-family:'Fredoka';font-weight:700;font-size:1.15rem}
+.mc-d{font-size:.85rem;color:var(--muted);line-height:1.5}
+.mc-go{margin-top:.5rem;font-family:'Fredoka';font-weight:600;font-size:.8rem;color:var(--honey)}
+.map-retour{background:var(--panel);border:1px solid var(--line-soft);border-radius:20px;
+  padding:.35rem .9rem;color:var(--cream);cursor:pointer;font-family:'Fredoka';font-weight:600;font-size:.85rem}
+.map-retour:hover{border-color:var(--honey);color:var(--honey)}
+.map-fil{font-family:'Fredoka';font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:1px;
+  color:var(--muted);margin-bottom:1rem;display:flex;align-items:center;gap:.4rem}
+
+/* fiches de mobs */
+.mob-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.8rem}
+.mob-c{display:flex;gap:.85rem;background:var(--panel);border:1px solid var(--line-soft);
+  border-radius:16px;padding:.9rem;transition:border-color .15s}
+.mob-c:hover{border-color:var(--honey)}
+.mob-img{width:62px;height:62px;flex:0 0 auto;display:grid;place-items:center;overflow:hidden;
+  background:rgba(0,0,0,.28);border:1px solid var(--line-soft);border-radius:14px}
+.mob-img img{max-width:100%;max-height:100%;object-fit:contain;image-rendering:pixelated}
+.mob-img .ph{font-family:'Fredoka';font-weight:700;font-size:.95rem;color:var(--honey);opacity:.75}
+.mob-b{flex:1;min-width:0}
+.mob-n{font-family:'Fredoka';font-weight:700;font-size:1rem;color:var(--cream);
+  display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.35rem}
+.mob-lvl{font-size:.66rem;font-weight:600;color:var(--ink-950);background:var(--honey);
+  border-radius:20px;padding:.1rem .5rem;text-transform:uppercase;letter-spacing:.5px}
+.mob-d{font-size:.83rem;color:var(--muted);line-height:1.5;margin-bottom:.45rem}
+.mob-l{display:flex;gap:.5rem;margin-top:.35rem;font-size:.78rem}
+.mob-l>span{flex:0 0 62px;font-family:'Fredoka';font-weight:600;font-size:.64rem;text-transform:uppercase;
+  letter-spacing:.6px;color:var(--muted);padding-top:.15rem}
+.mob-l>div{display:flex;flex-wrap:wrap;gap:.25rem}
+.mob-l i{font-style:normal;background:var(--ink-950);border:1px solid var(--line-soft);border-radius:20px;
+  padding:.1rem .5rem;color:var(--cream);font-size:.74rem}
+.mob-l i.lo{border-color:rgba(244,221,68,.3);color:var(--honey)}
+
 /* Outil Blooms */
 .bl-ic{width:22px;height:22px;display:inline-grid;place-items:center;overflow:hidden;
   vertical-align:middle;margin-right:.4rem}
@@ -769,7 +809,7 @@ body.verrouille > *:not(#porte){display:none !important}
 .bl-prog b{font-family:'Fredoka';color:var(--honey);font-size:1rem}
 .bl-jauge{width:140px;height:7px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden}
 .bl-jauge i{display:block;height:100%;background:var(--honey);border-radius:6px;transition:width .2s}
-.bl-wrap{overflow:auto;max-height:60vh;border:1px solid var(--line-soft);border-radius:14px}
+.bl-wrap{overflow-x:auto;border:1px solid var(--line-soft);border-radius:14px}
 .bl-table{border-collapse:separate;border-spacing:0;width:max-content;min-width:100%}
 .bl-table th{position:sticky;top:0;z-index:3;background:var(--ink-900);font-family:'Fredoka';font-weight:600;
   font-size:.72rem;color:var(--muted);padding:.45rem .3rem;text-align:center;border-bottom:1px solid var(--line-soft)}
@@ -3860,6 +3900,95 @@ const MAPINFOS = {
 };
 const MAPINFOS_CATS = ["Zone","Bears","Mobs","Flore"];
 
+/* ---------- DONNÉES · MOBS (fiches détaillées) ---------- */
+/* z = zones d'apparition · lvl = niveau · loot = butin possible
+   Complète librement : les champs vides sont simplement masqués. */
+const MOBS_FICHES = {
+  "Normaux": [
+    { nom:"Ladybug",       z:["Sunflower Field","Blue Flower Field","Clover Field","Pine Tree Forest","Strawberry Field","Rose Field"], lvl:"1 – 5",
+      loot:["Strawberry","Treat","Honey","Ticket","Royal Jelly"] },
+    { nom:"Rhino Beetle",  z:["Bamboo Field","Pine Tree Forest","Pumpkin Patch","Cactus Field","Rose Field"], lvl:"1 – 5",
+      loot:["Treat","Honey","Ticket","Royal Jelly","Bitterberry"] },
+    { nom:"Spider",        z:["Spider Field","Pine Tree Forest","Rose Field"], lvl:"5 – 10",
+      loot:["Honey","Ticket","Royal Jelly","Glue","Stinger"] },
+    { nom:"Mantis",        z:["Pineapple Patch","Pumpkin Patch","Mountain Top Field"], lvl:"10 – 15",
+      loot:["Honey","Ticket","Royal Jelly","Stinger","Blue Extract"] },
+    { nom:"Scorpion",      z:["Rose Field","Cactus Field","Pepper Patch"], lvl:"10 – 15",
+      loot:["Honey","Ticket","Royal Jelly","Stinger","Red Extract"] },
+    { nom:"Werewolf",      z:["Pumpkin Patch","Pine Tree Forest"], lvl:"15 – 20",
+      loot:["Honey","Ticket","Royal Jelly","Stinger","Moon Charm"] },
+    { nom:"Cave Monster",  z:["Coconut Field","Pepper Patch"], lvl:"20+",
+      loot:["Honey","Ticket","Royal Jelly","Stinger","Coconut"] },
+  ],
+  "Aphids": [
+    { nom:"Aphid",         z:["Tous les champs"],          lvl:"1", loot:["Pollen volé"] },
+    { nom:"Rage Aphid",    z:["Champs rouges"],            lvl:"—", loot:["Pollen volé"] },
+    { nom:"Armored Aphid", z:["Champs de fin de jeu"],     lvl:"—", loot:["Pollen volé"] },
+    { nom:"Diamond Aphid", z:["Rare, tous les champs"],    lvl:"—", loot:["Pollen volé","Récompenses rares"] },
+  ],
+  "Mini-boss": [
+    { nom:"Rogue Vicious Bee", z:["Champs bleus, apparition aléatoire"], lvl:"20", loot:["Icicles","Honey","Ticket","Royal Jelly","Glitter"] },
+    { nom:"Wild Windy Bee",    z:["Mountain Top Field"],   lvl:"—",  loot:["Windy Bee Jelly","Honey","Ticket"] },
+    { nom:"Stump Snail",       z:["Stump Field"],          lvl:"—",  loot:["Shell Amulet","Honey","Ticket","Gumdrops"] },
+    { nom:"Commando Chick",    z:["Planque du Hub"],       lvl:"—",  loot:["Honey","Ticket"] },
+    { nom:"Snowbear",          z:["Zone enneigée, Beesmas"],lvl:"—", loot:["Objets de Beesmas"] },
+  ],
+  "Boss": [
+    { nom:"King Beetle",  z:["King Beetle Lair"],  lvl:"—", loot:["King Beetle Amulet","Honey","Ticket","Royal Jelly","Glue"] },
+    { nom:"Tunnel Bear",  z:["Tunnel Bear Cave"],  lvl:"—", loot:["Honey","Ticket","Gumdrops","Royal Jelly"] },
+    { nom:"Coconut Crab", z:["Coconut Field"],     lvl:"—", loot:["Coconut","Honey","Ticket","Royal Jelly"] },
+    { nom:"Mondo Chick",  z:["Mondo Buff Arena"],  lvl:"—", loot:["Honey","Ticket","Royal Jelly"] },
+  ],
+  "Défis · Ants": [
+    { nom:"Ant",        z:["Ant Field"], lvl:"—", loot:["Points de défi"] },
+    { nom:"Army Ant",   z:["Ant Field"], lvl:"—", loot:["Points de défi"] },
+    { nom:"Flying Ant", z:["Ant Field"], lvl:"—", loot:["Points de défi"] },
+    { nom:"Giant Ant",  z:["Ant Field"], lvl:"—", loot:["Points de défi"] },
+    { nom:"Fire Ant",   z:["Ant Field"], lvl:"—", loot:["Points de défi"] },
+  ],
+  "Défis · Stick Bug": [
+    { nom:"Stick Bug",      z:["Stick Bug Challenge"], lvl:"1 – 20", loot:["Stick Bug Amulet","Score"] },
+    { nom:"Stick Nymph",    z:["Stick Bug Challenge"], lvl:"—",      loot:["Score"] },
+    { nom:"Festive Nymph",  z:["Stick Bug Challenge, Beesmas"], lvl:"—", loot:["Score"] },
+  ],
+  "Défis · Retro Swarm": [
+    { nom:"Slime",       z:["Retro Swarm Challenge"], lvl:"—", loot:["Score"] },
+    { nom:"Zombie",      z:["Retro Swarm Challenge"], lvl:"—", loot:["Score"] },
+    { nom:"Brick Bloom", z:["Retro Swarm Challenge"], lvl:"—", loot:["Score"] },
+  ],
+  "Défis · Robo Bear": [
+    { nom:"Mechsquito",       z:["Robo Bear Challenge"], lvl:"—", loot:["Cog","Drives"] },
+    { nom:"Cogmower",         z:["Robo Bear Challenge"], lvl:"—", loot:["Cog","Drives"] },
+    { nom:"Cogturret",        z:["Robo Bear Challenge"], lvl:"—", loot:["Cog","Drives"] },
+    { nom:"Mega Mechsquito",  z:["Robo Bear Challenge"], lvl:"—", loot:["Cog","Drives"] },
+    { nom:"Golden Cogmower",  z:["Robo Bear Challenge"], lvl:"—", loot:["7-Pronged Cog","Cog"] },
+  ],
+  "Défis · Robo Party": [
+    { nom:"Party Mechsquito",      z:["Robo Party"], lvl:"—", loot:["Cog","Drives"] },
+    { nom:"Party Cogmower",        z:["Robo Party"], lvl:"—", loot:["Cog","Drives"] },
+    { nom:"Party Cogturret",       z:["Robo Party"], lvl:"—", loot:["Cog","Drives"] },
+    { nom:"Party Mega Mechsquito", z:["Robo Party"], lvl:"—", loot:["Cog","Drives"] },
+  ],
+  "Passifs": [
+    { nom:"Firefly",  z:["Pine Tree Forest","Mountain Top Field"], lvl:"—", loot:["Aucun — sert de repère lumineux"] },
+    { nom:"Bean Bug", z:["Sprouts"],                                lvl:"—", loot:["Tokens de pollen"] },
+    { nom:"Frog",     z:["Box-O-Frogs"],                            lvl:"—", loot:["Tokens de pollen"] },
+  ],
+  "Retirés du jeu": [
+    { nom:"Chick",         z:["—"], lvl:"—", loot:[] },
+    { nom:"Hostage Chick", z:["—"], lvl:"—", loot:[] },
+    { nom:"Spotted Chick", z:["—"], lvl:"—", loot:[] },
+  ],
+};
+
+const FLORE_FICHES = {
+  "Puffshroom": [
+    { nom:"Puffshroom", z:["Mushroom Field"], lvl:"—",
+      loot:["Nuage de spores","Pollen"],
+      desc:"Champignon fixe qui pousse dans le Mushroom Field. Il ne se déplace pas et ne peut pas te blesser. En le frappant, il libère un nuage de spores qui pollinise les fleurs alentour." },
+  ],
+};
+
 /* ---------- Rendu des deux nouvelles pages ---------- */
 /* Vignettes illustrées — images dans images/mobs/ */
 function tuilesHTML(noms, dossier){
@@ -3937,8 +4066,106 @@ function renderPageLibre(key, data, cats, elChips, elBody, elCount, vide){
 
 renderPageLibre('guide', GUIDE, GUIDE_CATS, 'guide-chips', 'guide-body', 'guide-count',
   "La section <b>%s</b> est prête mais encore vide. Donne-moi le contenu et je le remplis.");
-renderPageLibre('map', MAPINFOS, MAPINFOS_CATS, 'map-chips', 'map-body', 'map-count',
-  "La section <b>%s</b> est prête mais encore vide. Donne-moi le contenu et je le remplis.");
+/* ---------- Page Map infos : cartes puis contenu ---------- */
+const MAP_CARTES = [
+  { id:"Zone",  ico:"🗺️", titre:"Zones",  desc:"Les champs et les lieux de la carte." },
+  { id:"Bears", ico:"🐻", titre:"Ours",   desc:"Les ours à quêtes, marchands, voyageurs et hostiles." },
+  { id:"Mobs",  ico:"👾", titre:"Mobs",   desc:"Monstres, boss et créatures de défi, avec leurs zones et leurs loots." },
+  { id:"Flore", ico:"🌿", titre:"Flore",  desc:"Puffshrooms et blooms, avec le pollen requis par niveau." },
+];
+
+/* sous-catégories affichées après avoir choisi une carte */
+const MAP_SOUS = {
+  Mobs:  Object.keys(MOBS_FICHES),
+  Flore: ["Puffshroom","Bloom"],
+};
+
+let mapVue = null, mapSous = null;
+
+function renderMapInfos(){
+  const chips = document.getElementById('map-chips');
+  const body  = document.getElementById('map-body');
+  const count = document.getElementById('map-count');
+  if(!body) return;
+
+  /* --- écran d'accueil : les quatre cartes --- */
+  if(!mapVue){
+    if(chips) chips.innerHTML = '';
+    if(count) count.textContent = MAP_CARTES.length + ' rubriques';
+    body.innerHTML = `<div class="map-cartes">${MAP_CARTES.map(c=>`
+      <button class="map-carte" data-vue="${c.id}">
+        <span class="mc-ico">${c.ico}</span>
+        <span class="mc-t">${c.titre}</span>
+        <span class="mc-d">${c.desc}</span>
+        <span class="mc-go">Ouvrir →</span>
+      </button>`).join('')}</div>`;
+    return;
+  }
+
+  /* --- une rubrique est ouverte --- */
+  const carte = MAP_CARTES.find(c=>c.id===mapVue) || {titre:mapVue, ico:''};
+  const sous  = MAP_SOUS[mapVue] || null;
+  if(sous && !sous.includes(mapSous)) mapSous = sous[0];
+
+  if(chips){
+    chips.innerHTML = `<button class="map-retour">← Rubriques</button>` +
+      (sous ? sous.map(x=>`<span class="chip ${x===mapSous?'active':''}" data-sous="${esc(x)}">${esc(x)}</span>`).join('') : '');
+  }
+
+  let contenu = '';
+  if(mapVue === 'Mobs'){
+    contenu = fichesMobsHTML(MOBS_FICHES[mapSous] || []);
+    if(count) count.textContent = (MOBS_FICHES[mapSous]||[]).length + ' entrées';
+  } else if(mapVue === 'Flore'){
+    if(mapSous === 'Puffshroom'){
+      contenu = fichesMobsHTML(FLORE_FICHES.Puffshroom);
+      if(count) count.textContent = '1 entrée';
+    } else {
+      contenu = `<p class="lead" style="margin-bottom:1.2rem">Le tableau donne le <b>pollen à déposer</b> pour faire éclater un bloom, niveau par niveau et champ par champ. Un bloom monte jusqu'au niveau 20 : plus il est haut, plus il faut de pollen, et plus la récompense sur le champ est importante.</p>`
+        + BLOCS_SPECIAUX.blooms
+        + `<h3 class="sub-h">Couleurs de pétales par champ</h3>
+           <p class="hint" style="margin-bottom:.9rem">La couleur encadrée est <b>dominante</b>, celle en pointillés est <b>rare</b>.</p>`
+        + BLOCS_SPECIAUX.champs;
+      if(count) count.textContent = '20 niveaux';
+    }
+  } else {
+    const sections = MAPINFOS[mapVue] || [];
+    contenu = sections.length ? sections.map(blocHTML).join('')
+      : `<div class="warn"><span class="i">✎</span><div>La rubrique <b>${esc(carte.titre)}</b> est prête mais encore vide.</div></div>`;
+    if(count) count.textContent = sections.length + (sections.length>1?' sections':' section');
+  }
+
+  body.innerHTML = `<div class="map-fil"><span>${carte.ico}</span>${esc(carte.titre)}${sous?' · '+esc(mapSous):''}</div>` + contenu;
+
+  if(document.getElementById('bl-table')) initBlooms();
+}
+
+/* fiches de mobs : image, zones, niveau, butin */
+function fichesMobsHTML(liste){
+  if(!liste.length) return `<div class="warn"><span class="i">✎</span><div>Rien pour le moment.</div></div>`;
+  return `<div class="mob-grid">${liste.map(m=>`
+    <div class="mob-c">
+      <div class="mob-img"><img ${imgAttrs('mobs',{nom:m.nom})} alt="" loading="lazy"
+        onerror="imgFallback(this,'ph','${esc(initiales(m.nom))}')"></div>
+      <div class="mob-b">
+        <div class="mob-n">${esc(m.nom)}${m.lvl && m.lvl!=='—' ? `<span class="mob-lvl">Niv. ${esc(m.lvl)}</span>`:''}</div>
+        ${m.desc?`<p class="mob-d">${esc(m.desc)}</p>`:''}
+        ${m.z && m.z.length?`<div class="mob-l"><span>Apparition</span><div>${m.z.map(z=>`<i>${esc(z)}</i>`).join('')}</div></div>`:''}
+        ${m.loot && m.loot.length?`<div class="mob-l"><span>Butin</span><div>${m.loot.map(l=>`<i class="lo">${esc(l)}</i>`).join('')}</div></div>`:''}
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+/* navigation */
+document.addEventListener('click', e=>{
+  const carte = e.target.closest('.map-carte');
+  if(carte){ mapVue = carte.dataset.vue; mapSous = null; renderMapInfos(); return; }
+  if(e.target.closest('.map-retour')){ mapVue = null; mapSous = null; renderMapInfos(); return; }
+  const ch = e.target.closest('#map-chips .chip');
+  if(ch && ch.dataset.sous){ mapSous = ch.dataset.sous; renderMapInfos(); }
+});
+
+renderMapInfos();
 
 /* ---------- Statistiques de l'accueil ---------- */
 (function(){
