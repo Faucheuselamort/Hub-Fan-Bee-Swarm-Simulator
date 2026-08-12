@@ -773,6 +773,51 @@ body.verrouille > *:not(#porte){display:none !important}
 .map-fil{font-family:'Fredoka';font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:1px;
   color:var(--muted);margin-bottom:1rem;display:flex;align-items:center;gap:.4rem}
 
+/* fiche complète d'un mob */
+.mob-c.ouvrable{cursor:pointer}
+.mob-go{display:inline-block;margin-top:.5rem;font-family:'Fredoka';font-weight:600;
+  font-size:.74rem;color:var(--honey)}
+.mf-head{display:flex;gap:1.1rem;align-items:center;background:var(--panel);
+  border:1px solid var(--line-soft);border-radius:18px;padding:1.2rem;margin-bottom:1.2rem}
+.mf-img{width:88px;height:88px;flex:0 0 auto;display:grid;place-items:center;overflow:hidden;
+  background:rgba(0,0,0,.28);border:1px solid var(--line-soft);border-radius:18px}
+.mf-img img{max-width:100%;max-height:100%;object-fit:contain;image-rendering:pixelated}
+.mf-img .ph{font-family:'Fredoka';font-weight:700;font-size:1.3rem;color:var(--honey)}
+.mf-head h3{font-size:1.6rem;margin-bottom:.2rem}
+.mf-re{font-size:.86rem;color:var(--muted)}
+.mf-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.55rem;margin-bottom:.4rem}
+.mf-s{background:var(--ink-900);border:1px solid var(--line-soft);border-radius:12px;padding:.6rem .8rem}
+.mf-s span{display:block;font-size:.64rem;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);
+  font-family:'Fredoka';font-weight:600}
+.mf-s b{font-family:'Fredoka';font-weight:700;font-size:1.1rem;color:var(--honey)}
+.mf-h{font-family:'Fredoka';font-weight:600;font-size:.76rem;text-transform:uppercase;letter-spacing:1px;
+  color:var(--muted);margin:1.4rem 0 .6rem;display:flex;align-items:center;gap:.5rem}
+.mf-h::before{content:"";width:3px;height:1em;background:var(--honey);border-radius:3px}
+.pv-l{display:flex;flex-wrap:wrap;gap:.5rem}
+.pv-c{background:var(--ink-900);border:1px solid var(--line-soft);border-radius:20px;padding:.3rem .8rem;
+  display:flex;align-items:baseline;gap:.45rem}
+.pv-c span{font-size:.74rem;color:var(--muted)}
+.pv-c b{font-family:'Fredoka';font-weight:700;color:#F0736A;font-size:.9rem}
+.mf-tab{width:100%;border-collapse:collapse;border:1px solid var(--line-soft);border-radius:12px;overflow:hidden}
+.mf-tab th{text-align:left;font-family:'Fredoka';font-weight:600;font-size:.68rem;text-transform:uppercase;
+  letter-spacing:.5px;color:var(--muted);background:var(--ink-900);padding:.5rem .8rem;
+  border-bottom:1px solid var(--line-soft)}
+.mf-tab td{padding:.5rem .8rem;border-bottom:1px solid var(--line-soft);font-size:.88rem;color:var(--cream)}
+.mf-tab tr:last-child td{border-bottom:0}
+.dr-g{margin-bottom:.8rem}
+.dr-t{font-family:'Fredoka';font-weight:700;font-size:.72rem;text-transform:uppercase;letter-spacing:.8px;
+  color:var(--rc);margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem}
+.dr-t::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--rc)}
+.dr-l{display:flex;flex-wrap:wrap;gap:.4rem}
+.dr{display:flex;align-items:center;gap:.5rem;background:var(--ink-900);border:1px solid var(--line-soft);
+  border-radius:12px;padding:.35rem .7rem .35rem .4rem}
+.dr.sur{border-color:rgba(107,208,139,.4);background:rgba(107,208,139,.07)}
+.dr-i{width:28px;height:28px;flex:0 0 auto;display:grid;place-items:center;overflow:hidden}
+.dr-i img{max-width:100%;max-height:100%;object-fit:contain;image-rendering:pixelated}
+.dr-i .ph{font-family:'Fredoka';font-weight:700;font-size:.6rem;color:var(--honey);opacity:.7}
+.dr-n{font-size:.84rem;color:var(--cream);line-height:1.25}
+.dr-n i{display:block;font-style:normal;font-size:.7rem;color:var(--muted)}
+
 /* fiches de mobs */
 .mob-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.8rem}
 .mob-c{display:flex;gap:.85rem;background:var(--panel);border:1px solid var(--line-soft);
@@ -819,7 +864,9 @@ body.verrouille > *:not(#porte){display:none !important}
 .bl-table{border-collapse:separate;border-spacing:0;width:max-content;min-width:100%}
 .bl-table th{position:sticky;top:0;z-index:3;background:var(--ink-900);font-family:'Fredoka';font-weight:600;
   font-size:.72rem;color:var(--muted);padding:.45rem .3rem;text-align:center;border-bottom:1px solid var(--line-soft)}
-.bl-table td{padding:.15rem;border-bottom:1px solid rgba(255,255,255,.05)}
+.bl-table td{padding:.15rem;border-bottom:1px solid var(--line-soft);border-right:1px solid rgba(255,255,255,.05)}
+.bl-table tbody tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+.bl-table th{border-right:1px solid rgba(255,255,255,.06)}
 .bl-table .bl-f{position:sticky;left:0;z-index:2;background:var(--ink-900);font-family:'Fredoka';
   font-weight:600;font-size:.84rem;color:var(--cream);padding:.3rem .7rem;white-space:nowrap;
   border-right:1px solid var(--line-soft)}
@@ -848,7 +895,8 @@ body.verrouille > *:not(#porte){display:none !important}
 .hive-stage{position:relative;margin:0 auto;width:max-content;
   --alv:64px;                      /* largeur d'une alvéole */
   /* bas = 1 alvéole d'écart + le cercle (4 alv) + 1 alvéole sous le cercle */
-  padding:var(--alv) var(--alv) calc(var(--alv)*6);
+  /* une alvéole de plus en haut, pour coller des stickers au-dessus de la ruche */
+  padding:calc(var(--alv)*2) var(--alv) calc(var(--alv)*6);
   /* le bas suit la courbe du cercle : rayon = rayon du cercle + 1 alvéole */
   border-radius:22px 22px calc(var(--alv)*3) calc(var(--alv)*3);
   overflow:hidden;--skin:#E3A81B;background:var(--skin);
@@ -1121,7 +1169,6 @@ body.verrouille > *:not(#porte){display:none !important}
 <section class="view" id="amulettes">
   <div class="sec-head"><h2 class="section-title">Amulettes</h2><span class="count-pill count-visible"></span></div>
   <p class="lead">Les 7 types d'amulettes du jeu : où les obtenir, quels bonus elles donnent et comment leur qualité est déterminée.</p>
-  <div class="info-grid" id="amulettes-info"></div>
   <div id="amulettes-cartes"></div>
 
   <div id="amulettes-vue" class="hidden">
@@ -1131,19 +1178,20 @@ body.verrouille > *:not(#porte){display:none !important}
 
   <div class="warn"><span class="i">⚠︎</span><div>Les <b>plages de valeurs exactes et les probabilités de chaque statistique</b>, palier par palier, vivent dans un module Lua du wiki (<i>Module:Amulet Stats/data</i>) qui ne se lit pas automatiquement : les tableaux sont générés à l'affichage. J'ai donc mis tout ce qui est vérifiable — paliers, conditions, coûts en miel, passifs complets — mais pas le détail statistique ligne par ligne.</div></div>
   </div>
+  <div class="info-grid" id="amulettes-info"></div>
 </section>
 
 <!-- ============================ BEEQUIP ============================ -->
 <section class="view" id="beequip">
   <div class="sec-head"><h2 class="section-title">Beequip</h2><span class="count-pill count-visible"></span></div>
   <p class="lead">L'équipement à poser sur tes abeilles : niveau minimum, limite dans la ruche, couleur, abeilles autorisées, bonus individuels et bonus de ruche. Clique une carte pour tout voir.</p>
-  <div class="info-grid" id="beequip-info"></div>
   <div class="toolbar">
     <div class="search"><span>🔍</span><input type="text" placeholder="Rechercher un beequip…" oninput="filterCards('beequip',this.value)"></div>
     <div class="chips" id="beequip-chips"></div>
   </div>
   <div class="card-grid" id="beequip-grid"></div>
   <div class="warn"><span class="i">⚠︎</span><div>Huit beequips gardent un <b>« ? »</b> sur le niveau ou la limite — Lei, Single Mitten, Warm Scarf, Beesmas Tree Hat, Toy Horn, Paper Angel, Toy Drum, Electric Candle. Leurs pages wiki n'étaient pas lisibles automatiquement ; les autres valeurs sont vérifiées. Les plages chiffrées exactes de chaque statistique sont, elles aussi, générées par un module Lua non lisible : seules celles que le wiki écrit en texte sont reprises (Bubble Light, Pinecone, Snowglobe, Icicles).</div></div>
+  <div class="info-grid" id="beequip-info"></div>
 </section>
 
 <!-- ============================ MUTATIONS ============================ -->
@@ -1153,7 +1201,6 @@ body.verrouille > *:not(#porte){display:none !important}
   <p class="lead">Une mutation booste définitivement une statistique d'une abeille. Son numéro de niveau change alors de couleur, sur la case de ruche comme sur ses ailes — c'est cette couleur qui est reprise dans le <b>Build your Hive</b>.</p>
 
   <h3 style="font-size:1.15rem;margin:1.6rem 0 .8rem">Comment obtenir une mutation</h3>
-  <div class="info-grid" id="mut-sources"></div>
 
   <h3 style="font-size:1.15rem;margin:.4rem 0 .8rem">Les 11 mutations possibles</h3>
   <p class="lead" style="margin-bottom:1rem">Les plages ci-dessous valent pour les abeilles de <b>niveau 20 ou moins</b> : au-delà, on peut obtenir des valeurs plus élevées.</p>
@@ -1162,12 +1209,13 @@ body.verrouille > *:not(#porte){display:none !important}
   </div>
 
   <h3 class="sub-h">Le rôle du niveau de l'abeille</h3>
-  <div class="info-grid" id="mut-niveau"></div>
 
   <div class="warn"><span class="i">⚠︎</span><div>Il n'existe <b>pas de table publiée « probabilité par niveau »</b> : les 11 pourcentages ci-dessus sont constants quel que soit le niveau. Le niveau agit uniquement sur la <b>valeur maximale</b> atteignable. Le wiki ne documente que le seuil du niveau 20 et un exemple au niveau 21 (+5 % Bee Ability Rate) — le reste n'est pas connu publiquement.</div></div>
 
   <h3 class="sub-h">Bon à savoir</h3>
   <ul class="notes-list" id="mut-notes"></ul>
+  <div class="info-grid" id="mut-sources"></div>
+  <div class="info-grid" id="mut-niveau"></div>
 </section>
 
 <!-- ============================ GUIDE ============================ -->
@@ -3427,7 +3475,7 @@ document.addEventListener('click', e=>{
   e.preventDefault();
   const cible = a.dataset.fil;
   if(cible === vueActive && vueActive === 'mapinfos' && mapVue){
-    mapVue = null; mapSous = null; renderMapInfos();
+    mapVue = null; mapSous = null; mobOuvert = null; renderMapInfos();
     window.scrollTo({top:0,behavior:'smooth'});
   } else if(cible === vueActive && NAV[cible]){
     fermerRubrique(cible);
@@ -4278,6 +4326,116 @@ document.addEventListener('click', e=>{
   if(c){ ouvrirRubrique(c.dataset.page, c.dataset.rub); return; }
 });
 
+/* ---------- DONNÉES · MOBS (fiches complètes) ----------
+   Format d'une fiche :
+     stats     : respawn, degats, points, bond, miel, niveau
+     pv        : { "1":12, "2":20 }            → PV par niveau
+     spots     : [{champ, spawn, lvl, pv}]     → tableau des apparitions
+     sur       : ["Honey 75"]                  → butin garanti
+     drops     : [{nom, note, rarete}]         → butin possible
+   rarete : "commun" | "peu" | "rare" | "tresrare" | "extreme" | "event"   */
+const MOBS_DATA = {
+  "Ladybug": {
+    cat:"Normaux",
+    stats:{
+      respawn:"5 minutes · 4 min 15 s avec une Gifted Vicious Bee",
+      degats:"15", points:"1", bond:"5", miel:"~75", niveau:"1 à 3",
+    },
+    pv:{ "1":"12", "2":"20", "3":"28" },
+    spots:[
+      { champ:"Mushroom Field",   spawn:"1",          lvl:"1", pv:"12" },
+      { champ:"Clover Field",     spawn:"1",          lvl:"2", pv:"20" },
+      { champ:"Strawberry Field", spawn:"1 (gauche)", lvl:"3", pv:"28" },
+      { champ:"Strawberry Field", spawn:"1 (droite)", lvl:"2", pv:"20" },
+    ],
+    sur:[ { nom:"Honey", note:"75, augmenté par le Honey From Tokens" } ],
+    drops:[
+      { nom:"Ticket",           note:"2 % · par 1, 5 ou 10", rarete:"peu" },
+      { nom:"Strawberry",       note:"par 1, 5 ou 10",       rarete:"commun" },
+      { nom:"Gumdrops",         note:"par 1, 5 ou 10",       rarete:"commun" },
+      { nom:"Treat",            note:"par 1 ou 50",          rarete:"commun" },
+      { nom:"Royal Jelly",      note:"",                     rarete:"peu" },
+      { nom:"Robo Pass",        note:"",                     rarete:"rare" },
+      { nom:"Magic Bean",       note:"",                     rarete:"rare" },
+      { nom:"Red Extract",      note:"",                     rarete:"rare" },
+      { nom:"Field Dice",       note:"",                     rarete:"rare" },
+      { nom:"Honeysuckle",      note:"",                     rarete:"rare" },
+      { nom:"Bitterberry",      note:"par 1 ou 5",           rarete:"rare" },
+      { nom:"Neonberry",        note:"",                     rarete:"tresrare" },
+      { nom:"Ant Pass",         note:"",                     rarete:"tresrare" },
+      { nom:"Elf Cap",          note:"pendant Beesmas",      rarete:"event" },
+      { nom:"Gingerbread Bear", note:"pendant Beesmas",      rarete:"event" },
+      { nom:"Rascal Bee Egg",   note:"",                     rarete:"extreme" },
+      { nom:"Pink Balloon",     note:"quasi impossible",     rarete:"extreme" },
+    ],
+  },
+};
+
+const RARETE_LIB = {
+  commun:  { t:"Courant",         c:"#8FD14F" },
+  peu:     { t:"Peu courant",     c:"#5AC8E8" },
+  rare:    { t:"Rare",            c:"#B8A5ED" },
+  tresrare:{ t:"Très rare",       c:"#F0B429" },
+  extreme: { t:"Extrêmement rare",c:"#F0736A" },
+  event:   { t:"Événement",       c:"#6BD08B" },
+};
+
+/* ---------- Fiche détaillée d'un mob ---------- */
+let mobOuvert = null;
+
+function ficheMobHTML(nom){
+  const m = MOBS_DATA[nom];
+  if(!m) return `<div class="warn"><span class="i">✎</span><div>La fiche de <b>${esc(nom)}</b> n'est pas encore renseignée.</div></div>`;
+
+  const st = m.stats || {};
+  const chiffres = [
+    ["Niveaux", st.niveau], ["Dégâts", st.degats], ["Points de combat", st.points],
+    ["Bond", st.bond], ["Miel", st.miel],
+  ].filter(x=>x[1]);
+
+  const pv = m.pv ? Object.keys(m.pv).map(n=>
+    `<div class="pv-c"><span>Niveau ${n}</span><b>${esc(m.pv[n])} PV</b></div>`).join('') : '';
+
+  const spots = m.spots ? `<table class="mf-tab"><thead><tr>
+      <th>Champ</th><th>Spawn</th><th>Niveau</th><th>PV</th></tr></thead><tbody>
+      ${m.spots.map(sp=>`<tr><td>${esc(sp.champ)}</td><td>${esc(sp.spawn)}</td>
+        <td>${esc(sp.lvl)}</td><td>${esc(sp.pv)}</td></tr>`).join('')}</tbody></table>` : '';
+
+  const objet = (nom2, note, cls) => `<div class="dr ${cls||''}">
+      <span class="dr-i"><img ${imgAttrs('item',{nom:nom2})} alt="" loading="lazy"
+        onerror="imgFallback(this,'ph','${esc(initiales(nom2))}')"></span>
+      <span class="dr-n">${esc(nom2)}${note?`<i>${esc(note)}</i>`:''}</span></div>`;
+
+  const sur = m.sur ? m.sur.map(o=>objet(o.nom,o.note,'sur')).join('') : '';
+
+  const parRarete = {};
+  (m.drops||[]).forEach(dd=>{ (parRarete[dd.rarete] = parRarete[dd.rarete] || []).push(dd); });
+  const drops = Object.keys(RARETE_LIB).filter(r=>parRarete[r]).map(r=>{
+    const info = RARETE_LIB[r];
+    return `<div class="dr-g"><div class="dr-t" style="--rc:${info.c}">${info.t}</div>
+      <div class="dr-l">${parRarete[r].map(o=>objet(o.nom,o.note)).join('')}</div></div>`;
+  }).join('');
+
+  return `<div class="mf">
+    <div class="mf-head">
+      <div class="mf-img"><img ${imgAttrs('mobs',{nom})} alt="" loading="lazy"
+        onerror="imgFallback(this,'ph','${esc(initiales(nom))}')"></div>
+      <div>
+        <h3>${esc(nom)}</h3>
+        ${st.respawn?`<p class="mf-re">↻ Réapparaît toutes les ${esc(st.respawn)}</p>`:''}
+      </div>
+    </div>
+
+    ${chiffres.length?`<div class="mf-stats">${chiffres.map(([k,v])=>
+      `<div class="mf-s"><span>${k}</span><b>${esc(v)}</b></div>`).join('')}</div>`:''}
+
+    ${pv?`<h4 class="mf-h">Points de vie</h4><div class="pv-l">${pv}</div>`:''}
+    ${spots?`<h4 class="mf-h">Où le trouver</h4>${spots}`:''}
+    ${sur?`<h4 class="mf-h">Butin garanti</h4><div class="dr-l">${sur}</div>`:''}
+    ${drops?`<h4 class="mf-h">Butin possible</h4>${drops}`:''}
+  </div>`;
+}
+
 /* ---------- Page Map infos : cartes puis contenu ---------- */
 const MAP_CARTES = [
   { id:"Zone",  ico:"🗺️", titre:"Zones",  desc:"Les champs et les lieux de la carte." },
@@ -4327,9 +4485,11 @@ function renderMapInfos(){
   }
 
   let contenu = '';
-  if(mapVue === 'Mobs'){
+  if(mapVue === 'Mobs' && !mobOuvert){
     contenu = fichesMobsHTML(MOBS_FICHES[mapSous] || []);
     if(count) count.textContent = (MOBS_FICHES[mapSous]||[]).length + ' entrées';
+  } else if(mapVue === 'Mobs' && mobOuvert){
+    contenu = ficheMobHTML(mobOuvert);
   } else if(mapVue === 'Flore'){
     if(mapSous === 'Puffshroom'){
       contenu = fichesMobsHTML(FLORE_FICHES.Puffshroom);
@@ -4349,7 +4509,7 @@ function renderMapInfos(){
     if(count) count.textContent = sections.length + (sections.length>1?' sections':' section');
   }
 
-  majFil(sous ? [carte.titre, mapSous] : [carte.titre]);
+  majFil(sous ? [carte.titre, mapSous].concat(mobOuvert?[mobOuvert]:[]) : [carte.titre]);
   body.innerHTML = `<div class="map-fil"><span>${carte.ico}</span>${esc(carte.titre)}${sous?' · '+esc(mapSous):''}</div>` + contenu;
 
   if(document.getElementById('bl-table')) initBlooms();
@@ -4359,7 +4519,7 @@ function renderMapInfos(){
 function fichesMobsHTML(liste){
   if(!liste.length) return `<div class="warn"><span class="i">✎</span><div>Rien pour le moment.</div></div>`;
   return `<div class="mob-grid">${liste.map(m=>`
-    <div class="mob-c">
+    <div class="mob-c${MOBS_DATA[m.nom]?' ouvrable':''}" ${MOBS_DATA[m.nom]?`data-mob="${esc(m.nom)}"`:''}>
       <div class="mob-img"><img ${imgAttrs('mobs',{nom:m.nom})} alt="" loading="lazy"
         onerror="imgFallback(this,'ph','${esc(initiales(m.nom))}')"></div>
       <div class="mob-b">
@@ -4367,6 +4527,7 @@ function fichesMobsHTML(liste){
         ${m.desc?`<p class="mob-d">${esc(m.desc)}</p>`:''}
         ${m.z && m.z.length?`<div class="mob-l"><span>Apparition</span><div>${m.z.map(z=>`<i>${esc(z)}</i>`).join('')}</div></div>`:''}
         ${m.loot && m.loot.length?`<div class="mob-l"><span>Butin</span><div>${m.loot.map(l=>`<i class="lo">${esc(l)}</i>`).join('')}</div></div>`:''}
+        ${MOBS_DATA[m.nom]?'<span class="mob-go">Fiche complète →</span>':''}
       </div>
     </div>`).join('')}</div>`;
 }
@@ -4374,9 +4535,11 @@ function fichesMobsHTML(liste){
 /* navigation */
 document.addEventListener('click', e=>{
   const carte = e.target.closest('.map-carte[data-vue]');
-  if(carte){ mapVue = carte.dataset.vue; mapSous = null; renderMapInfos(); return; }
+  if(carte){ mapVue = carte.dataset.vue; mapSous = null; mobOuvert = null; renderMapInfos(); return; }
   const ch = e.target.closest('#map-chips .chip');
-  if(ch && ch.dataset.sous){ mapSous = ch.dataset.sous; renderMapInfos(); }
+  if(ch && ch.dataset.sous){ mapSous = ch.dataset.sous; mobOuvert = null; renderMapInfos(); return; }
+  const mc = e.target.closest('.mob-c[data-mob]');
+  if(mc){ mobOuvert = mc.dataset.mob; renderMapInfos(); window.scrollTo({top:0,behavior:'smooth'}); }
 });
 
 renderMapInfos();
@@ -5621,9 +5784,9 @@ function clearSelectedCell(){
 }
 function downloadHiveImage(){
   const cols=5, rows=10, W=64, H=Math.round(W*0.866), hstep=W*0.75, vstep=H;
-  const pad=W, padB=W*6, scale=2;      // 1 alvéole sur les côtés, 6 en bas
+  const pad=W, padH=W*2, padB=W*6, scale=2;   // 2 alvéoles en haut, 1 sur les côtés, 6 en bas
   const gridW=(cols-1)*hstep+W, gridH=(rows-1)*vstep+H+H/2;
-  const cw=gridW+pad*2, ch=gridH+pad+padB;
+  const cw=gridW+pad*2, ch=gridH+padH+padB;
   const canvas=document.createElement('canvas');
   canvas.width=cw*scale; canvas.height=ch*scale;
   const ctx=canvas.getContext('2d'); ctx.scale(scale,scale);
@@ -5694,7 +5857,7 @@ function downloadHiveImage(){
     for(let i=0;i<HIVE_SIZE;i++){
       const c=hive[i]; if(!c) continue;
       const wave=Math.floor(i/cols), col=i%cols;
-      const x=pad+col*hstep, y=pad+wave*vstep+((col%2)?0:H/2);
+      const x=pad+col*hstep, y=padH+wave*vstep+((col%2)?0:H/2);
       const cx=x+W/2, cy=y+H/2, b=ABEILLES[c.bee];
       const sB=0.86, sI=0.74;                                                            // écart entre alvéoles
       const hb=cy+0.5*H*sB, hr=cx+0.5*W*sB;
@@ -5721,7 +5884,7 @@ function downloadHiveImage(){
     }
     // --- Trait de séparation sous la grille ---
     ctx.fillStyle='rgba(0,0,0,.28)';
-    ctx.fillRect(0, pad + gridH + 2, cw, 3);
+    ctx.fillRect(0, padH + gridH + 2, cw, 3);
 
     // --- Stickers collés sur la ruche ---
     hsPosed.forEach(pp=>{
@@ -5744,7 +5907,7 @@ function downloadHiveImage(){
     for(let i=0;i<HIVE_SIZE;i++){
       const c=hive[i]; if(!c) continue;
       const wave=Math.floor(i/cols), col=i%cols;
-      const x=pad+col*hstep, y=pad+wave*vstep+((col%2)?0:H/2);
+      const x=pad+col*hstep, y=padH+wave*vstep+((col%2)?0:H/2);
       const cx=x+W/2, cy=y+H/2;
       const sB=0.86, hb=cy+0.5*H*sB, hl=cx-0.5*W*sB;
       ctx.strokeStyle='rgba(0,0,0,.9)';
