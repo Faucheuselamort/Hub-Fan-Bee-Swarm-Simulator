@@ -622,6 +622,17 @@ details.zone li::before{content:"›";position:absolute;left:0;color:var(--honey
 
 /* pages Guide et Map infos */
 .guide-sec{margin-bottom:1.6rem}
+.g-h{font-family:'Fredoka';font-weight:600;font-size:1.02rem;color:var(--honey);margin:1.35rem 0 .45rem}
+.g-comp{background:var(--ink-900);border:1px solid var(--line-soft);border-left:3px solid var(--honey);
+  border-radius:14px;padding:.9rem 1.05rem;margin:.85rem 0}
+.g-comp-t{font-family:'Fredoka';font-weight:700;color:var(--cream);font-size:1rem}
+.g-comp-s{font-size:.84rem;color:var(--muted);margin-top:.15rem;line-height:1.5}
+.g-comp-r{display:inline-block;margin-top:.55rem;font-family:'Fredoka';font-weight:600;font-size:.76rem;
+  color:var(--ink-950);background:var(--honey);border-radius:20px;padding:.15rem .65rem}
+.g-comp ul{list-style:none;margin:.65rem 0 0;display:grid;gap:.38rem}
+.g-comp li{font-size:.88rem;color:var(--muted);line-height:1.55;padding-left:.9rem;position:relative}
+.g-comp li::before{content:"\203A";position:absolute;left:0;color:var(--honey)}
+.g-comp b{color:var(--cream)}
 .tagline{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0 .2rem}
 .tagx{display:inline-flex;align-items:center;gap:.45rem;font-size:.86rem;color:var(--cream);
   background:var(--panel);border:1px solid var(--line-soft);border-radius:22px;
@@ -3949,7 +3960,389 @@ const GUIDE = {
   "Incolore": [],
   "Red": [],
   "Blue": [],
-  "White": [],
+  "White": [
+
+    { titre:"1.1 Composition de la ruche", blocs:[
+      { t:'comp', v:[
+        { nom:"Standard White Hive Comp", sous:"La composition de référence pour une ruche blanche.",
+          ratio:"Ratio : 18-19 Vector / 7 Precise" },
+      ]},
+      { t:'h', v:"Hive adjustments \u2014 changements possibles" },
+      { t:'liste', v:[
+        "<b>8 Precise</b> si les 7 autres n'ont pas de mutations <b>BMS</b>, si tu manques d'experience, ou simplement par preference. Garde toujours <b>3x Prec marks</b> (dont ~2 dans un coin pour faire grossir le baller) et <b>10x Precision</b>.",
+        "<b>Tadpoles</b> peuvent remplacer 1-2 <b>Babys</b> si tu joues des Poinsettias (comps 15 slots). Les Babies produisent du Baby Love plus vite que les Tadpoles. Il faut <b>5 producteurs de baby love</b> au total, certains n'en jouent que 4 s'ils savent abuser des Duped Tokens pour prolonger le baby love (deconseille aux debutants).",
+        "<b>Photon</b> peut etre retire pour un Vector / Precise de plus, mais ce n'est pas recommande : tu perds une source de Haste, un type colorless unique et un porteur de Paper Angel.",
+        "<b>Bomber ou Shy</b> facilitent les Blooms (compatible avec Photon). L'un ou l'autre devient un porteur de Paper Angel supplementaire pour le Token Link. Bomber donne un acces plus simple au Rare Bee Leaderboard et un bon buff Honey From Token ; le buff 5% BAP de Shy s'applique aussi en dehors de la Gummy Star, ce qui le rend legerement plus fort. C'est plutot une option d'endgame.",
+      ]},
+      { t:'note', v:"<b>Ne joue jamais Ninja</b>, quelle que soit la raison. Un colorless gifted est presque toujours meilleur." },
+      { t:'h', v:"Quick notes" },
+      { t:'liste', v:[
+        "Vise <b>+5 BMS</b> sur toutes les Legendary, Epic et Rare (via Royal Jelly).",
+        "<b>BAR + BMS</b> sont interchangeables sur les <b>Precise</b> \u2014 BMS reste globalement meilleur.",
+        "En revanche, <b>BMS est nettement meilleur que BAR</b> sur les <b>Vector</b>.",
+      ]},
+    ]},
+
+    { titre:"1.2 Beequips", blocs:[
+      { t:'p', v:"Les beequips sont l'un des elements les plus importants d'une bonne ruche : ils apportent des buffs inegales au fill, a la production de tokens, a la capacite et au boost en general." },
+      { t:'liste', v:[
+        "Seulement <b>13 slots</b> sont disponibles, donc chaque slot doit apporter quelque chose de reel. <b>14 et 15 slots</b> sont possibles si tu as termine la quete Beesmas 2020 de Bee Bear.",
+        "Les comps sont donnees avec <b>15 beequips</b>, en precisant lesquels retirer si tu n'as que 13 slots.",
+        "<b>NE SWITCHE PAS</b> tant que tu n'es pas certain de pouvoir t'offrir la majorite des beequips de cette liste.",
+        "A cause de l'inflation des signes, les prix bougent vite : refere-toi a <b>Tabby V</b> pour la valeur des signes. Les stats detaillees sont dans le <b>Beequip Spreadsheet</b> \u2014 attention, le <i>weight</i> n'est pas la meme chose que la CHANCE.",
+      ]},
+      { t:'h', v:"Beequips recommandes" },
+      { t:'tab', v:{ cols:["Beequip","Cout approx.","Stats a viser","A poser sur"], rows:[
+        ["2 Smiley Stickers","20-40 signes","Tres important en White : plus de marks = plus de pollen via Triangulate. <b>Doit avoir +Honey mark</b> ; le +%mark duration (HB) est optionnel si tu as les signes.","Honey + Stubborn ; sinon n'importe quel Vector / Precise avec le meilleur BMS et le meilleur niveau, ou Basic si tu joues les Shades sur Honey"],
+        ["2 Toy Drums \uD83C\uDF84","6-18 signes","Excellente source de Haste + BAP. Minimum <b>+2% BAP</b> (HB), de preference +4%.","Demo + Brave"],
+        ["Sweatband","7-18 signes","Buff inestimable au White Gather Amount, buffe fortement les Smiley Tokens. Doit avoir <b>+26% WGA</b> ; le +%WP est optionnel. 28%+ recommande.","Digital"],
+        ["Whistle","4-5 signes","Bon boost au SCP et a l'uptime Haste. Minimum <b>+3% SCP</b> (HB). Le +Melody est inutile si tu as deja 5 producteurs.","Commander"],
+        ["Toy Horn \uD83C\uDF84","9-11 signes","Requis pour l'uptime Melody + BAP. Vise au moins <b>+2% BAP</b>.","Lion"],
+        ["Paper Angel \uD83C\uDF84","12 signes","Parfait pour aligner les Smileys (ATL) et comme source de Token Link. Devrait avoir <b>+1% ATL</b> et <b>+2% BAP</b> ; tu peux viser plus haut mais le cout grimpe tres vite.","Photon"],
+        ["Kazoo","4 signes","Bien pour la Melody et pour buffer SCP / CPower. Vise au moins <b>+1% SCP</b> et <b>4-5%+ CPower</b>.","Shocked"],
+        ["2 Paperclips","4-6 signes","Bon pour l'uptime des tokens (ATL + TL) et le BAP. Optionnel mais tres confortable. Cherche <b>+4% ATL</b>, n'importe quel +%BAP fait l'affaire.","Looker + Hasty"],
+        ["Pink Shades","20-21 signes","Bon boost SCP + SCC ; peut aider a atteindre le Common LB s'il a un bon stat vert SCC (optionnel). Vise <b>+3% SCP</b> et n'importe quel <b>+1% SCC</b>.","Basic, ou Honey si tu joues le Smiley sur Basic"],
+      ]}},
+      { t:'h', v:"Beequips optionnels" },
+      { t:'liste', v:[
+        "<b>Reindeer Antlers</b> \u2014 doit avoir Baby Love pour valoir le coup (extremement cher), sur Puppy. En general il vaut mieux depenser ses signes ailleurs.",
+        "<b>Charm Bracelet</b> \u2014 bon pour l'uptime Melody, donne un peu de %Mark Duration et %Ability Rate a la Carpenter Bee. Assez mediocre, souvent surclasse par un 2e Paper Angel ou de 2es Peppermint Antennas.",
+        "<b>Peppermint Antennas</b> \u2014 peuvent donner du BAR pour enchainer les 'White Boost', sur Windy. Peuvent aussi donner du BAR en HB : pas cher et correct en attendant mieux. Jouables sur Bear Bee pour un peu plus de Bear Morphs, mais le gain est minime : Windy reste recommande.",
+        "<b>Bead Lizard</b> \u2014 un Paperclip au rabais, a jouer uniquement s'il a du BAP en HB, sur n'importe quelle rare bee.",
+        "<b>Candy Ring</b> \u2014 seulement avec HFT et 3%+ Honey per goo, sur Gummy. Extremement rare et cher : ca ne vaut pas la peine de le chercher.",
+        "<b>Poinsettias</b> \u2014 demandent un gros BGP en HB (ca buffe Digi), sur Windy / Tadpoles. Si tu les joues, remplace les Baby Bees par des Tads.",
+        "<b>Beesmas Tops</b> \u2014 dernier recours si tu n'as aucun beequip : vise <b>8%+ CPower</b>.",
+      ]},
+    ]},
+
+    { titre:"1.3 Amulettes", blocs:[
+      { t:'h', v:"Legende des stats" },
+      { t:'liste', v:[
+        "<b>Bleu</b> \u2014 stat la plus importante, requise pour l'amulette.",
+        "<b>Vert</b> \u2014 bonne stat, a rechercher.",
+        "<b>Orange</b> \u2014 stat de remplissage, utile ailleurs dans le jeu.",
+        "<b>Rouge</b> \u2014 nuisible, a eviter totalement.",
+        "Toute stat non listee n'a aucune importance : la jouer ou non ne change rien.",
+      ]},
+      { t:'h', v:"Star Amulet \u2014 5/5" },
+      { t:'p', v:"Priorite : <b>WP = Pollen > BGP = CC > BAR</b>. Passif : <b>Gummy Star + Star Saw</b>." },
+      { t:'tab', v:{ cols:["Stat","Maximum","Niveau"], rows:[
+        ["White Pollen","+70%","Requise"],
+        ["Pollen","+20%","Requise"],
+        ["Bee Gather Pollen","+70%","Requise"],
+        ["Critical Chance","+7%","Requise"],
+        ["Bee Ability Rate","+7%","Bonne"],
+      ]}},
+      { t:'note', v:"Si tu transitionnes vers le White, une <b>Star Amulet 5/5 DP SSA</b> est une exigence stricte." },
+      { t:'h', v:"Ant Amulet \u2014 4/4" },
+      { t:'p', v:"Priorite : <b>WP = CPower > PMS / CC / Pollen</b>." },
+      { t:'tab', v:{ cols:["Stat","Maximum","Niveau"], rows:[
+        ["White Pollen","+30%","Requise"],
+        ["Critical Power","+50%","Requise"],
+        ["Critical Chance","+3%","Bonne"],
+        ["Player Movespeed","+3","Bonne"],
+        ["Red Pollen","+30%","Remplissage"],
+      ]}},
+      { t:'liste', v:[
+        "Pollen / PMS / CC sont interchangeables, CC et PMS etant legerement plus efficaces.",
+        "Le Pollen sert parfois de remplacement au CC quand on abuse des Precise Marks pour atteindre 100% de crit chance sur Triangulate \u2014 l'inconvenient etant que les Smileys de Digi perdent ce CC.",
+      ]},
+      { t:'h', v:"Stickbug Amulet \u2014 4/4" },
+      { t:'p', v:"Priorite : <b>HFT > WP > RBA > BA / MRT</b>." },
+      { t:'tab', v:{ cols:["Stat","Maximum","Niveau"], rows:[
+        ["White Pollen","+30%","Requise"],
+        ["Honey from tokens","+100%","Requise"],
+        ["Red Bee Attack","+2","Bonne"],
+        ["Bee Attack / Monster Respawn Time","+1 / -10%","Bonne"],
+      ]}},
+      { t:'liste', v:["Le MRT peut aider a faire de meilleurs snail runs et bugruns."] },
+      { t:'h', v:"Moon Amulet \u2014 2/2" },
+      { t:'p', v:"Priorite : <b>WP > BGP / Pollen</b>." },
+      { t:'tab', v:{ cols:["Stat","Maximum","Niveau"], rows:[
+        ["Capacity","+250k","Garanti apres 11 replaces"],
+        ["White Pollen","+50%","Requise"],
+        ["Bee Gather Pollen / Pollen","+25% / +5%","Requise"],
+        ["Movement collection","\u2014","A NE PAS JOUER : detruit les fleurs"],
+      ]}},
+      { t:'liste', v:["Pollen contre BGP n'a pas ete teste a fond : le Pollen est meilleur pour la collecte globale, le BGP est meilleur pour les lineups de Smiley Token."] },
+      { t:'h', v:"Cog Amulet \u2014 5/5" },
+      { t:'p', v:"Priorite : <b>MAP = HFT > WP > WIC = BA</b>." },
+      { t:'tab', v:{ cols:["Stat","Maximum","Niveau"], rows:[
+        ["White Pollen","+30%","Requise"],
+        ["Mark Ability Pollen","+20%","Requise"],
+        ["Honey From Tokens","+75%","Requise"],
+        ["Instant White Conversion","+5%","Bonne"],
+        ["Bee Attack / Red Bee Attack","+15% / +2","Bonne"],
+      ]}},
+      { t:'liste', v:["Le Bee Attack% est meilleur que du +RBA ou du +CBA."] },
+      { t:'h', v:"Shell Amulet \u2014 5/5" },
+      { t:'p', v:"Priorite : <b>Goo Conv > HFT > Spider% = Dandelion%</b>." },
+      { t:'tab', v:{ cols:["Stat","Maximum","Niveau"], rows:[
+        ["Goo","+15%","Garanti"],
+        ["Goo Conversion","+10%","Requise"],
+        ["Honey From Tokens","+50%","Requise"],
+        ["Spider Field Pollen","+30%","Requise"],
+        ["Dandelion Field Pollen","+30%","Bonne"],
+      ]}},
+      { t:'liste', v:["Dandelion% ou Spider% depend de ta preference de boost : en White on boost surtout sur Spider."] },
+      { t:'h', v:"King Beetle Amulet \u2014 1/1" },
+      { t:'p', v:"Priorite : <b>BA</b>." },
+      { t:'tab', v:{ cols:["Stat","Maximum","Niveau"], rows:[
+        ["Bee Attack","+1","Requise"],
+        ["Bamboo Field Pollen","+100%","Remplissage"],
+        ["Blueflower Field Pollen","+100%","Remplissage"],
+      ]}},
+      { t:'liste', v:["Le pollen de champ ne compte que pour le RBC."] },
+    ]},
+
+    { titre:"2.1 Transition", blocs:[
+      { t:'h', v:"Prerequis" },
+      { t:'liste', v:[
+        "<b>Gummyballer</b> + <b>Coconut belt</b>.",
+        "Des amulettes correctes pour switcher (Cog, Stick, etc.).",
+        "<b>500 white drives</b> / <b>300+ glitched drives</b>.",
+        "<b>2qd+</b> (avec une 5/5 DP SSA et une ruche gifted non mutee) \u2014 <b>20qd+</b> si tu comptes roll des mutations mythiques au Royal Jelly.",
+        "Au moins <b>2 alts</b> et <b>2-3 gumdroppers</b> : 2 Fuzzy-guiding, ou 1 Fuzzy + 1 Guiding. Les gumdroppers peuvent etre d'autres joueurs, mais ce n'est pas vraiment recommande.",
+      ]},
+      { t:'h', v:"A savoir" },
+      { t:'liste', v:[
+        "Pour obtenir les drives necessaires sur Digi, il est fortement recommande de passer en comp <b>red</b> ou <b>RBC</b> avant de switcher en white.",
+        "Pense a avoir la <b>Dark Scythe</b> pour le confort en dehors des boosts.",
+      ]},
+    ]},
+
+    { titre:"2.2 Preparation du boost", blocs:[
+      { t:'h', v:"Preparation des materiaux" },
+      { t:'tab', v:{ cols:["Quantite","Materiel","Notes / Usage"], rows:[
+        ["2","Glitter","1. En debut de boost, avant d'utiliser les Loaded Dice. 2. Apres ~14m45s, pour prolonger le field boost x4."],
+        ["4","Loaded Dice","Field boost x4 garanti."],
+        ["2","Super Smoothie","Un stat stick, mais consommable."],
+        ["120-160","(a confirmer)","120 pour 30 minutes, 160 pour 40 minutes."],
+        ["900-1.2k","Gumdrops","1 200 sur le main + les alts on-field, pour 40 minutes."],
+        ["40-60","Jelly Beans","60 sur le main + les alts on-field, pour 40 minutes. Compte <b>1 Jelly Bean par Gummy Star</b> si tu enchaines plusieurs boosts."],
+        ["180-240","Coconuts","Alimente le Coconut Combo, qui fournit du haste."],
+        ["10","(a confirmer)","10 sur le main + les alts on-field."],
+        ["1","(a confirmer)","Optionnel, a utiliser pendant les tres bons lineups."],
+      ]}},
+      { t:'h', v:"Preparation des buffs" },
+      { t:'tab', v:{ cols:["Buff","Quantite","Notes / Usage"], rows:[
+        ["Wealth Clock","x5","x1.05 Honey Per Pollen."],
+        ["Nectars","20h+","Au minimum Satisfying et Motivating au maximum."],
+        ["Puffshroom Blessing","x100","Apporte UIC, HFT, Pollen et Capacity."],
+        ["Mondo Blessing","\u2014","Surtout pour les 10% de pollen, mais donne aussi de la capacite."],
+        ["Festive Nymph","x250","Capacity, Bee Attack, HPP et Instant Bee Gather Convert."],
+        ["Robo Party Blessing","x100","Capacity, Crit Power, Red Pollen, White Pollen (et Blue Pollen)."],
+        ["Honey Wreath","\u2014","Bonus Honey Bee."],
+        ["Onett's Lid Art","\u2014","Des abeilles supplementaires."],
+        ["Gummy Cannon","\u2014","3 Gummy Bees = beaucoup de Gummy Tokens, ce qui declenche le Gummy Morph tres frequemment."],
+      ]}},
+    ]},
+
+    { titre:"2.3 Technique", blocs:[
+      { t:'note', v:"<b>Avertissement :</b> tes premiers boosts seront mauvais. Meme en ayant tout fait correctement (lvl 20+, drives, ruche entierement gifted...), tu peux ne faire que ~50T sur ton premier boost. Ne te decourage pas, reste en white, ca va s'ameliorer. Les informations ci-dessous aident pour les premiers boosts, mais la pratique t'apprendra bien plus que n'importe quel guide ou video." },
+      { t:'h', v:"Precise Bee" },
+      { t:'p', v:"C'est de loin la partie la plus importante du White." },
+      { t:'liste', v:[
+        "Maintiens <b>10x precision</b> et <b>3x precise marks</b> pour le SCC et le CC.",
+        "Garde au moins <b>2 precise marks cote a cote</b>.",
+        "Il est recommande de jouer <b>8 Precise</b> au debut, le temps de t'habituer au white.",
+      ]},
+      { t:'h', v:"Gummyballer" },
+      { t:'p', v:"Les choses a surveiller en permanence :" },
+      { t:'liste', v:[
+        "L'emplacement des precise marks, c'est-a-dire ou tu veux lancer la balle.",
+        "La progression de la balle, donc sa taille.",
+        "L'alignement des formations : Gummy, bear morphs, Gummy star, etc.",
+        "Une fois maitrisee, la conversion elevee du goo reduit fortement les problemes de remplissage de sac.",
+        "Pense au <b>Rebind Alignment Key</b> (rebind sur les boutons lateraux pour mieux lancer) et aux <b>Hotbar Extensions</b> (confort de gestion du clavier).",
+      ]},
+      { t:'h', v:"Corruption" },
+      { t:'p', v:"Toute la logique des lineups tourne autour de la gestion des Smiley tokens." },
+      { t:'liste', v:[
+        "Utilise <b>Stubborn + Paperclips</b> pour retarder la collecte des Smiley tokens.",
+        "Essaie de faire coincider le Smiley avec la <b>Gummy star</b> et un <b>Gummy Baller</b> deja gros.",
+        "Retarder la collecte permet aussi d'empiler des Triangulate dupliques.",
+      ]},
+      { t:'h', v:"Coconut Combo" },
+      { t:'liste', v:[
+        "Jusqu'a <b>50% pollen / WP / HFT</b>, <b>75% UIC</b> et <b>1.5x pollen</b> a 100x combo.",
+        "Pas trop difficile a maintenir une fois habitue, mais la vitesse augmente avec les catches : viser un combo tres haut peut etre irrealiste.",
+        "Si tous tes catchers ont une Coco belt, tu peux laisser tomber le combo entre deux Gummy stars \u2014 cela demande de bien timer la pity star.",
+        "Emplacements des catchers (pour 1 catcher) : <b>Spider = Straw catcher</b>, <b>Dandelion = Clover catcher</b>, <b>Coconut = Pepper catcher</b>. Avec 2 catchers, places-en 1 dans le champ ou tu boostes.",
+      ]},
+      { t:'h', v:"Bonus : les Winds" },
+      { t:'liste', v:[
+        "Ils donnent du pollen specifique au champ et des stats IC% qui buffent fortement le white.",
+        "Selon la chance, ils peuvent determiner le champ dans lequel tu vas booster.",
+        "Pense a ramasser tous les winds pour du WP% supplementaire.",
+      ]},
+      { t:'h', v:"Donations optimales" },
+      { t:'etapes', v:[
+        { t:"Gifted Mythic Egg", d:"A garder pour les boosts HD sauf si tu en as beaucoup. On les obtient via des 'GME Boosts' : tu remplaces quelques abeilles de ta ruche par des rare bees pour entrer sans difficulte dans le Rare Bee leaderboard." },
+        { t:"Turpentine", d:"Donne de gros winds, mais coute cher." },
+        { t:"Swirled", d:"Tres bonne source de Spider Winds." },
+      ]},
+      { t:'h', v:"Comment progresser" },
+      { t:'liste', v:[
+        "<b>Pratique</b> \u2014 enregistre tes boosts pour les revoir et reperer tes erreurs : precise drops, mauvais lancers, mauvais timing, combos perdus. Tu peux aussi demander a d'autres joueurs de les relire.",
+        "<b>Regarder les autres booster</b> \u2014 FragileSilence, Smarti66 et WR boost sont de bonnes references pour comprendre le white.",
+      ]},
+    ]},
+
+    { titre:"2.4 Analyse des champs", blocs:[
+      { t:'comp', v:[
+        { nom:"Spider Field", notes:[
+          "<b>Pour :</b> 100% de fleurs blanches.",
+          "<b>Pour :</b> petit champ, avec une bonne forme.",
+          "<b>Contre :</b> les baby bees n'aiment pas ce champ (bug).",
+          "<b>Contre :</b> un seul type de Bloom utile y apparait (White).",
+          "<b>Contre :</b> difficile d'y construire un bon stack de White Petals.",
+        ]},
+        { nom:"Coconut Field", notes:[
+          "<b>Pour :</b> de bons blooms, avec beaucoup de gris et de blanc, et une chance de violet, pink et periwinkle.",
+          "<b>Pour :</b> les baby bees aiment ce champ (bug).",
+          "<b>Pour :</b> petit champ.",
+          "<b>Contre :</b> tu peux tout simplement tomber du champ.",
+          "<b>Contre :</b> mauvaise visibilite.",
+          "<b>Contre :</b> il faut tuer le crab sur tous les comptes, donc dedier des slots aux degats.",
+          "<b>Contre :</b> tres dependant des blooms.",
+        ]},
+        { nom:"Dandelion Field", notes:[
+          "<b>Pour :</b> les grey blooms y sont tres frequents.",
+          "<b>Pour :</b> 2 duped slots de plus que Spider.",
+          "<b>Pour :</b> le combo est plus facile a construire.",
+          "<b>Contre :</b> un grand champ peut poser probleme.",
+          "<b>Contre :</b> tres dependant des blooms.",
+        ]},
+      ]},
+      { t:'note', v:"<b>Consensus :</b> boost principalement sur Spider. Les autres champs peuvent valoir le coup si tu n'obtiens pas de Spider winds, ou selon ta Shell Amulet. Au final, ca reste une preference personnelle." },
+    ]},
+
+    { titre:"3. Construction des alts", blocs:[
+      { t:'p', v:"Les comptes alts jouent un role enorme dans la quantite de miel que tu fais. Ne les neglige pas, sinon tu ne gagneras presque rien." },
+      { t:'h', v:"Les 4 mecaniques utilisees" },
+      { t:'liste', v:[
+        "<b>Flower Pollination</b>",
+        "<b>Balloon Aura</b>",
+        "<b>Guiding Star</b>",
+        "<b>Autres supports</b> \u2014 Gummy Bee, Gummy Mask et Gummy Boots donnent du goo ; Festive Bee fournit les festive gifts et la Festive Wreath ; Digital Bee sert a la Map Corruption ; Inspire Coconuts et les Coconuts lancent les Coconut Combos.",
+      ]},
+      { t:'note', v:"Si tu joues <b>2 alts ou plus</b>, ils doivent avoir un pattern dedie, stable, qui ne s'eloigne pas trop de leur spot de gumdropping : il est vraiment important que le champ soit plein de goo en permanence pendant le boost." },
+      { t:'h', v:"A savoir" },
+      { t:'liste', v:[
+        "<b>Precise, Rage et Vicious Bees</b> sont presentes dans chaque comp pour tuer la Wild Windy Bee, ce qui permet de preparer toutes les fioles sur un seul windy : c'est critique pour enchainer les boosts (HD).",
+        "Les <b>mutations</b> doivent etre emulees du mieux possible : les producteurs de boost ont besoin de <b>BMS</b> pour des spawns de guide plus rapides, Vicious a besoin d'<b>Attack%</b> pour tuer Windy confortablement, et si tu n'arrives pas a mutate correctement les mythiques (BAR / BMS), l'<b>Energy%</b> fait un placeholder correct. Le reste des mutations coule de source.",
+        "Le <b>Petal planter</b> est obligatoire pour maintenir Spider / Coconut / Dandelion parmi les 3 champs les moins recoltes, pour tous les guiding alts on-field (Fuzzy Guiding, Hybrid alts).",
+        "Il est fortement recommande de monter tes alts au <b>lvl 20</b> ; le <b>lvl 15</b> reste correct a court terme.",
+        "Comme ligne de conduite generale, commence par des alts standard puis passe aux composite alts (1 Fuzzy + 1 Guiding donne 2 Fuzzy-guiding). Evidemment, chaque alt existe pour une raison et cette regle ne vaut pas pour tout le monde : tu peux tres bien garder un solo guiding alt comme coco catcher, ou un solo fuzzy pour des RBC plus faciles.",
+      ]},
+    ]},
+
+    { titre:"3.1 Guiding Alts", blocs:[
+      { t:'comp', v:[
+        { nom:"Solo Combo-Guide Alt", sous:"Sert de Coconut Catcher off-field permanent.",
+          ratio:"Ratio : 0 Fuzzy Bees / 0 Buoyant Bees / 39 Boost Producers",
+          notes:[
+            "Cette comp precise joue <b>Guiding Star + Star Shower</b>, ce qui permet d'abuser d'Inspire Coconuts pour lancer des Coco Combos a un rythme delirant.",
+            "N'oublie pas que c'est aussi un coconut catcher off-field : les emplacements sont dans la section 2.3 Technique.",
+          ]},
+      ]},
+      { t:'h', v:"Utilite : Guiding Star" },
+      { t:'liste', v:[
+        "Elle donne aux autres joueurs un bonus <b>x1.25 pollen et capacite</b> sur les champs ou elle est invoquee.",
+        "Les alts utilisent ce passif d'amulette, associe a des abeilles boost-producers, pour tenter de faire apparaitre cette etoile dans le champ ou tu boostes.",
+        "Plusieurs alts avec des cooldowns desynchronises permettent de spammer les guides.",
+        "Cela permet aussi de repartir les Fuzzies sur plusieurs comptes, ce qui est moins bon pour le RBC.",
+      ]},
+    ]},
+
+    { titre:"3.2 Balloon Alts", blocs:[
+      { t:'comp', v:[
+        { nom:"Solo Buoyant Alt", sous:"Sert de balloon spammer pour remplacer d'autres alts.",
+          ratio:"Ratio : 0 Fuzzy Bees / 36 Buoyant Bees",
+          notes:[
+            "Cette comp complete les comps multi-alts qui n'ont pas de Buoyants.",
+            "Les Gifting Buoyants peuvent servir a declencher 'Surprise Party', mais c'est tres inconstant et rarement rentable vu le cout et le lag ajoute. Ils sont aussi remplis instantanement, donc leur production de tokens est negligeable.",
+            "En regle generale, les Guide-Buo alts font mieux pour le miel : garde cette comp comme solution temporaire pour les ballons.",
+          ]},
+      ]},
+      { t:'h', v:"Utilite : Balloon Aura" },
+      { t:'liste', v:[
+        "Rester sous les ballons donne un buff d'aura allant jusqu'a <b>x1.2 pollen</b> et <b>+20% Honey From Tokens</b> sur les ballons lances par les alts.",
+        "Maintenir le maximum de stacks est difficile, mais environ <b>80 Buoyant Bees</b> repartis sur plusieurs alts on-field suffisent la plupart du temps. <b>~45</b> est le montant recommande pour maximiser les benefices.",
+        "Garde en tete qu'ajouter 80 abeilles de plus sur le champ coute tres cher en lag.",
+      ]},
+    ]},
+
+    { titre:"3.3 Fuzzy Alts", blocs:[
+      { t:'comp', v:[
+        { nom:"Solo Fuzzy Alt", sous:"Priorise la pollinisation plutot que la fabrication de guiding alts.",
+          ratio:"Ratio : 24 Fuzzy Bees / 0 Buoyant Bees / 15 Boost Producers",
+          notes:[
+            "Tous les Fuzzy alts doivent jouer <b>Scorch + Guiding</b> ou <b>Shower + Guiding</b>.",
+            "Toutes les abeilles sont gifted pour 'Inspire Coconuts', afin de lancer le Coconut Combo si l'alt a une Coconut belt.",
+            "Ce Solo Fuzzy Alt ne devrait servir que si tu n'as pas beaucoup d'alts, ou si tu veux centraliser les Fuzzies pour le RBC. En boost, le Fuzzy-guiding fait presque toujours mieux.",
+          ]},
+      ]},
+      { t:'h', v:"Utilite : Flower Pollination" },
+      { t:'liste', v:[
+        "Permet de faire monter les tiers inferieurs jusqu'a des fleurs <b>tier 5 etoiles</b> grace aux Fuzzy Bees gifted.",
+        "Il faut environ <b>24 Fuzzy Bees</b> pour polliniser entierement Spider, Coconut ou Dandelion \u2014 ce nombre varie selon le pattern et le lag.",
+      ]},
+    ]},
+
+    { titre:"3.4 Composite Alts", blocs:[
+      { t:'comp', v:[
+        { nom:"2 Guide-Fuzzy Alts", sous:"Duo pensé pour une pollinisation complete avec des spawns de guide frequents.",
+          ratio:"12 Fuzzy (24 au total) / 0 Buoyant / 27 Boost Producers",
+          notes:[
+            "La production d'Inspire est coupee ici, mais peut etre reactivee pour le Coco Combo.",
+            "Cette comp n'utilise pas de Buoyants : il est recommande de jouer plutot 1 Fuzzy + 2 Guide-Buo, 2 Guide-Fuzzy + 2 Buo-Guide, ou 3-4 Hybrid Alts.",
+          ]},
+        { nom:"2 Guide-Buo Alts", sous:"A utiliser avec 1 fuzzy ou 2 hybrid alts.",
+          ratio:"0 Fuzzy / 22 Buoyant (44 au total) / 17 Boost Producers",
+          notes:[
+            "Cette comp repose sur la pollinisation faite par les autres alts, elle peut donc se concentrer uniquement sur les ballons tout en faisant spawn des guiding stars frequemment.",
+            "Une troisieme peut etre ajoutee pour une meilleure Balloon Aura.",
+          ]},
+        { nom:"3 Hybrid Alts", sous:"Laisse la place pour 1 alt supplementaire de ton choix.",
+          ratio:"8 Fuzzy (24 au total) / 18 Buoyant (54 au total) / 13 Boost Producers",
+          notes:[
+            "Bonne comp si tu joues 3 clone alts. Avoir les abeilles aussi decentralisees peut etre penible pour des choses comme le RBC, mais ca boost tres bien.",
+            "Balloon et Boost Producers sont interchangeables.",
+          ]},
+        { nom:"4 Hybrid Alts", sous:"Engagement total sur la repartition des abeilles.",
+          ratio:"6 Fuzzy (24 au total) / 20 Buoyant (80 au total) / 13 Boost Producers",
+          notes:[
+            "Plus tu joues de comps hybrides, plus elles sont difficiles a optimiser. C'est simplement la comp 3 Hybrid Alts avec la pollinisation adaptee.",
+            "Jouer davantage d'alts claimed est deconseille.",
+            "Balloon et Boost Producers sont interchangeables.",
+          ]},
+      ]},
+      { t:'note', v:"<b>Token Link Producers</b> \u2014 identiques pour les quatre comps : 4 Rage + 2 Paper Angel + 2 Paperclip + 1 Bead Lizard." },
+    ]},
+
+    { titre:"3.5 Gumdroppers", blocs:[
+      { t:'liste', v:[
+        "Tu dois obligatoirement faire tourner <b>3 a 4 gumdroppers</b> pour maintenir le goo et la croissance de la Gummy Star.",
+        "Ce peut etre des alts on-field (Hybrid, Balloon, Fuzzy...) ou des amis et helpers.",
+        "Les gumdroppers peuvent choisir de ne pas claim leur ruche pour reduire le lag : c'est en general le cas des autres joueurs, des alts sous-developpes, ou de ceux qui ont deja claim 4 ruches.",
+        "Ils doivent avoir le <b>Gummy mask</b> et <b>900 a 1 200 gumdrops</b> par boost.",
+        "Chaque alt ou joueur a sa propre position et son propre pattern, pour maintenir une couverture complete du champ.",
+      ]},
+      { t:'note', v:"Les positions de reference se repartissent en quatre points du champ : deux dans la moitie haute, deux dans la moitie basse, suffisamment espaces pour que les patterns ne se chevauchent pas." },
+    ]},
+
+    { titre:"Credits", blocs:[
+      { t:'p', v:"Ce guide est l'adaptation francaise de <b>The Definitive White Hive Guide</b>, ecrit par <b>riot003</b> et <b>anthrox0</b>, publie par l'<b>Abyssal Trench Network</b>. Derniere mise a jour du document source : 26 mars 2026." },
+      { t:'liste', v:[
+        "Redaction originale : <b>riot003</b> et <b>anthrox0</b>.",
+        "Spreadsheets, outils et guides de reference : <b>Abyssal Trench Network</b>.",
+        "Valeurs des signes : <b>Tabby V</b>. Stats des beequips : <b>Beequip Spreadsheet</b>.",
+      ]},
+    ]},
+
+  ],
 };
 const GUIDE_CATS = ["Incolore","Red","Blue","White"];
 
@@ -4143,6 +4536,18 @@ function blocHTML(b){
     if(x.t === 'etapes')return `<div class="info-grid" style="margin:.8rem 0">${x.v.map((i,k)=>
         `<div class="info-card"><span class="big">${k+1}</span><h4>${i.t}</h4><p>${i.d}</p></div>`).join('')}</div>`;
     if(x.t === 'bloc') return BLOCS_SPECIAUX[x.v] || '';
+    if(x.t === 'h')     return `<h4 class="g-h">${x.v}</h4>`;
+    if(x.t === 'note')  return `<div class="warn" style="margin:.8rem 0"><span class="i">\u2605</span><div>${x.v}</div></div>`;
+    if(x.t === 'tab')   return `<div class="mut-table-wrap" style="margin:.8rem 0"><table class="mut-table">
+        <thead><tr>${x.v.cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead>
+        <tbody>${x.v.rows.map(r=>`<tr>${r.map((c,i)=>
+          `<td${i===0?' class="mut-name"':''}>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+    if(x.t === 'comp')  return x.v.map(c=>`<div class="g-comp">
+        <div class="g-comp-t">${c.nom}</div>
+        ${c.sous ? `<div class="g-comp-s">${c.sous}</div>` : ''}
+        ${c.ratio ? `<span class="g-comp-r">${c.ratio}</span>` : ''}
+        ${(c.notes||[]).length ? `<ul>${c.notes.map(n=>`<li>${n}</li>`).join('')}</ul>` : ''}
+      </div>`).join('');
     if(x.t === 'tags')  return tuilesHTML(x.v, b.dossier);
     if(x.t === 'sous')  return x.v.map(g=>`<div class="sousg">
         <div class="sousg-t">${esc(g.titre)}<b>${g.items.length}</b></div>
