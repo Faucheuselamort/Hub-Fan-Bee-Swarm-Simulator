@@ -829,7 +829,7 @@ body.verrouille > *:not(#porte){display:none !important}
 .mob-img .ph{font-family:'Fredoka';font-weight:700;font-size:.95rem;color:var(--honey);opacity:.75}
 .mob-b{flex:1;min-width:0}
 .mob-n{font-family:'Fredoka';font-weight:700;font-size:1rem;color:var(--cream);
-  display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.35rem}
+  display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-bottom:.35rem}
 .mob-lvl{font-size:.66rem;font-weight:600;color:var(--ink-950);background:var(--honey);
   border-radius:20px;padding:.1rem .5rem;text-transform:uppercase;letter-spacing:.5px}
 .mob-d{font-size:.83rem;color:var(--muted);line-height:1.5;margin-bottom:.45rem}
@@ -1204,21 +1204,19 @@ body.verrouille > *:not(#porte){display:none !important}
     <span class="count-pill">11 mutations</span></div>
   <p class="lead">Une mutation booste définitivement une statistique d'une abeille. Son numéro de niveau change alors de couleur, sur la case de ruche comme sur ses ailes — c'est cette couleur qui est reprise dans le <b>Build your Hive</b>.</p>
 
-  <h3 style="font-size:1.15rem;margin:1.6rem 0 .8rem">Comment obtenir une mutation</h3>
-
-  <h3 style="font-size:1.15rem;margin:.4rem 0 .8rem">Les 11 mutations possibles</h3>
+  <h3 class="sub-h">Les 11 mutations possibles</h3>
   <p class="lead" style="margin-bottom:1rem">Les plages ci-dessous valent pour les abeilles de <b>niveau 20 ou moins</b> : au-delà, on peut obtenir des valeurs plus élevées.</p>
   <div class="mut-table-wrap">
     <table class="mut-table" id="mut-table"></table>
   </div>
-
-  <div class="warn"><span class="i">⚠︎</span><div>Il n'existe <b>pas de table publiée « probabilité par niveau »</b> : les 11 pourcentages ci-dessus sont constants quel que soit le niveau. Le niveau agit uniquement sur la <b>valeur maximale</b> atteignable. Le wiki ne documente que le seuil du niveau 20 et un exemple au niveau 21 (+5 % Bee Ability Rate) — le reste n'est pas connu publiquement.</div></div>
 
   <h3 class="sub-h">Comment obtenir une mutation</h3>
   <div class="info-grid" id="mut-sources"></div>
 
   <h3 class="sub-h">Le rôle du niveau de l'abeille</h3>
   <div class="info-grid" id="mut-niveau"></div>
+
+  <div class="warn"><span class="i">⚠︎</span><div>Il n'existe <b>pas de table publiée « probabilité par niveau »</b> : les 11 pourcentages ci-dessus sont constants quel que soit le niveau. Le niveau agit uniquement sur la <b>valeur maximale</b> atteignable. Le wiki ne documente que le seuil du niveau 20 et un exemple au niveau 21 (+5 % Bee Ability Rate) — le reste n'est pas connu publiquement.</div></div>
 
   <h3 class="sub-h">Bon à savoir</h3>
   <ul class="notes-list" id="mut-notes"></ul>
@@ -3481,8 +3479,7 @@ document.addEventListener('click', e=>{
   const act = e.target.closest('#fil a[data-action]');
   if(act){
     e.preventDefault();
-    if(act.dataset.action === 'sous'){ mobOuvert = null; renderMapInfos();
-      window.scrollTo({top:0,behavior:'smooth'}); }
+    actionFil(act.dataset.action);
     return;
   }
   const a = e.target.closest('#fil a[data-fil]');
@@ -3848,7 +3845,7 @@ function renderAmuDetail(){
     AMU_PALIER = b.dataset.p;
     renderAmuDetail();
     if(vueActive==='amulettes' && NAV.amulettes)
-      majFil([NAV.amulettes.replace(' Amulet',''), AMU_PALIER]);
+      majFil([{t:NAV.amulettes.replace(' Amulet',''), action:'amu'}, AMU_PALIER], 'amulettes');
   });
 }
 
@@ -4285,6 +4282,16 @@ function fermerRubrique(page){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
+/* Chaque page déclare comment revenir à un niveau donné du fil. */
+function actionFil(nom){
+  if(nom === 'sous'){ mobOuvert = null; renderMapInfos(); }
+  else if(nom === 'rubrique'){ mobOuvert = null; mapSous = null; mapVue = null; renderMapInfos(); }
+  else if(nom === 'racine'){ fermerRubrique(vueActive); return; }
+  else if(nom === 'amu'){ AMU_PALIER = null; renderAmuDetail();
+    majFil([NAV.amulettes.replace(' Amulet','')], 'amulettes'); }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
 function rendrePage(page){
   const rub = NAV[page];
   const zoneCartes = document.getElementById(page+'-cartes');
@@ -4539,7 +4546,8 @@ function renderMapInfos(){
     if(count) count.textContent = sections.length + (sections.length>1?' sections':' section');
   }
 
-  majFil(sous ? [carte.titre, {t:mapSous, action:'sous'}].concat(mobOuvert?[mobOuvert]:[])
+  majFil(sous ? [{t:carte.titre, action:'rubrique'}, {t:mapSous, action:'sous'}]
+                  .concat(mobOuvert?[mobOuvert]:[])
               : [carte.titre]);
   body.innerHTML = `<div class="map-fil"><span>${carte.ico}</span>${esc(carte.titre)}${sous?' · '+esc(mapSous):''}</div>` + contenu;
 
@@ -4555,8 +4563,8 @@ function fichesMobsHTML(liste){
       <div class="mob-img"><img ${imgAttrs('mobs',{nom:m.nom})} alt="" loading="lazy"
         onerror="imgFallback(this,'ph','${esc(initiales(m.nom))}')"></div>
       <div class="mob-b">
-        <div class="mob-n">${esc(m.nom)}</div>
-        ${m.lvl && m.lvl!=='—' ? `<span class="mob-lvl">Niveau ${esc(m.lvl)}</span>` : ''}
+        <div class="mob-n">${esc(m.nom)}
+          ${m.lvl && m.lvl!=='—' ? `<span class="mob-lvl">Niv. ${esc(m.lvl)}</span>` : ''}</div>
         <span class="mob-go">${fiche?'Voir plus de détails →':'<i>Fiche à venir</i>'}</span>
       </div>
     </div>`;
@@ -5299,8 +5307,11 @@ function renderHsEdit(){
 /* Un sticker ne peut pas être collé sur une alvéole : on teste si le point
    tombe dans l'un des hexagones de la ruche. Coordonnées en pixels, repère scène. */
 function surAlveole(px, py){
-  const hv = document.getElementById('hive'); if(!hv || !cellGeom.length) return false;
-  const ox = hv.offsetLeft, oy = hv.offsetTop;
+  const hv = document.getElementById('hive');
+  const stage = document.getElementById('hive-stage');
+  if(!hv || !stage || !cellGeom.length) return false;
+  const rh = hv.getBoundingClientRect(), rs = stage.getBoundingClientRect();
+  const ox = rh.left - rs.left, oy = rh.top - rs.top;
   for(const g of cellGeom){
     const x = px - ox - g.x, y = py - oy - g.y;
     if(x < 0 || y < 0 || x > g.W || y > g.H) continue;
@@ -5320,10 +5331,15 @@ function estCub(nom){
 }
 /* La plateforme blanche est une zone interdite, au même titre que les alvéoles. */
 function surCercle(px, py){
-  const pad = document.querySelector('.hive-pad'); if(!pad) return false;
-  const cx = pad.offsetLeft + pad.offsetWidth/2;
-  const cy = pad.offsetTop  + pad.offsetHeight/2;
-  const r  = pad.offsetWidth/2;
+  const pad   = document.querySelector('.hive-pad');
+  const stage = document.getElementById('hive-stage');
+  if(!pad || !stage) return false;
+  /* offsetLeft ignore le translateX(-50%) du cercle : on mesure à l'écran,
+     puis on ramène les coordonnées dans le repère de la scène. */
+  const rp = pad.getBoundingClientRect(), rs = stage.getBoundingClientRect();
+  const cx = rp.left - rs.left + rp.width/2;
+  const cy = rp.top  - rs.top  + rp.height/2;
+  const r  = rp.width/2;
   return (px-cx)*(px-cx) + (py-cy)*(py-cy) <= r*r;
 }
 
