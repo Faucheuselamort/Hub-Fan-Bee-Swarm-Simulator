@@ -258,6 +258,7 @@ table.calc td.n{text-align:right;font-family:'Fredoka';font-weight:600;color:var
 .obj-opt .odot{width:9px;height:9px;border-radius:50%;flex:0 0 auto;margin-left:auto}
 .hive-badge{position:absolute;width:28px;height:28px;display:grid;place-items:center;font-size:14px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))}
 .hive-badge img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.cc-ico{width:18px;height:18px;object-fit:contain;vertical-align:-4px}
 .cc-obj{display:flex;justify-content:space-between;align-items:center;gap:.5rem;font-family:'Fredoka';
   font-weight:600;font-size:.85rem;background:var(--ink-950);border:1px solid var(--line-soft);
   border-radius:8px;padding:.4rem .6rem;margin-bottom:.5rem}
@@ -516,6 +517,11 @@ footer.site{border-top:1px solid var(--line);background:var(--ink-900);margin-to
   overflow:hidden;min-width:70px;margin-top:.3rem}
 .mut-bar i{position:absolute;left:0;top:0;bottom:0;border-radius:6px;display:block}
 .mut-chance{font-family:'Fredoka';font-weight:700;color:var(--cream)}
+/* icône Atomic Treat recolorée à la teinte de la mutation */
+.mut-cell{display:flex;align-items:center;gap:.6rem}
+.mut-ico{width:34px;height:34px;flex:0 0 auto;border-radius:9px;background:var(--ink-950);
+  border:1px solid var(--line-soft);display:grid;place-items:center;overflow:hidden;font-size:15px}
+.mut-ico img{width:100%;height:100%;object-fit:contain;image-rendering:auto}
 .mut-table td .mut-plage{font-family:'Fredoka';font-weight:600;color:var(--cream)}
 
 /* --- micro-ajustements --- */
@@ -3285,18 +3291,21 @@ const BLOOMS = {
    IMPORTANT : la colonne « chance » ne dépend PAS du niveau de l'abeille — c'est la
    probabilité de tirer cette stat parmi les 11 quand une mutation se déclenche.
    Ce qui dépend du niveau, c'est la VALEUR maximale atteignable. */
+/* img : l'Atomic Treat recoloré à la teinte de la mutation.
+   8 fichiers seulement : les mutations qui partagent une couleur partagent l'image.
+   👉 Les images vont dans le dossier images/item/ . */
 const MUTATIONS = [
-  { nom:"% Attack",             chance:"17.9 %", plage:"5 % – 20 %",  incr:"1 %", couleur:"#e83a36", couleurNom:"Rouge" },
-  { nom:"+ Attack",             chance:"3.87 %", plage:"1 – 2",       incr:"1",   couleur:"#e83a36", couleurNom:"Rouge" },
-  { nom:"% Convert Amount",     chance:"17.9 %", plage:"10 % – 30 %", incr:"1 %", couleur:"#feca41", couleurNom:"Orange" },
-  { nom:"+ Convert Amount",     chance:"8.55 %", plage:"20 – 80",     incr:"1",   couleur:"#feca41", couleurNom:"Orange" },
-  { nom:"% Gather Amount",      chance:"17.9 %", plage:"10 % – 30 %", incr:"1 %", couleur:"#ceff80", couleurNom:"Vert clair" },
-  { nom:"+ Gather Amount",      chance:"8.55 %", plage:"2 – 10",      incr:"1",   couleur:"#ceff80", couleurNom:"Vert clair" },
-  { nom:"% Energy",             chance:"17.9 %", plage:"10 % – 40 %", incr:"1 %", couleur:"#ac8c58", couleurNom:"Marron" },
-  { nom:"% Instant Conversion", chance:"4.57 %", plage:"8 % – 20 %",  incr:"1 %", couleur:"#f3fe1e", couleurNom:"Jaune" },
-  { nom:"% Bee Ability Rate",   chance:"1.87 %", plage:"1 % – 4 %",   incr:"1 %", couleur:"#b8a5ed", couleurNom:"Violet" },
-  { nom:"% Critical Chance",    chance:"1.87 %", plage:"1 % – 3 %",   incr:"1 %", couleur:"#47cf72", couleurNom:"Vert" },
-  { nom:"+ Movespeed",          chance:"1.87 %", plage:"2 – 6",       incr:"1",   couleur:"#4fb8f0", couleurNom:"Cyan foncé" },
+  { nom:"% Attack",             chance:"17.9 %", plage:"5 % – 20 %",  incr:"1 %", couleur:"#e83a36", couleurNom:"Rouge",      img:"images/item/Mutation_Red.webp" },
+  { nom:"+ Attack",             chance:"3.87 %", plage:"1 – 2",       incr:"1",   couleur:"#e83a36", couleurNom:"Rouge",      img:"images/item/Mutation_Red.webp" },
+  { nom:"% Convert Amount",     chance:"17.9 %", plage:"10 % – 30 %", incr:"1 %", couleur:"#feca41", couleurNom:"Orange",     img:"images/item/Mutation_Orange.webp" },
+  { nom:"+ Convert Amount",     chance:"8.55 %", plage:"20 – 80",     incr:"1",   couleur:"#feca41", couleurNom:"Orange",     img:"images/item/Mutation_Orange.webp" },
+  { nom:"% Gather Amount",      chance:"17.9 %", plage:"10 % – 30 %", incr:"1 %", couleur:"#ceff80", couleurNom:"Vert clair", img:"images/item/Mutation_Lime.webp" },
+  { nom:"+ Gather Amount",      chance:"8.55 %", plage:"2 – 10",      incr:"1",   couleur:"#ceff80", couleurNom:"Vert clair", img:"images/item/Mutation_Lime.webp" },
+  { nom:"% Energy",             chance:"17.9 %", plage:"10 % – 40 %", incr:"1 %", couleur:"#ac8c58", couleurNom:"Marron",     img:"images/item/Mutation_Brown.webp" },
+  { nom:"% Instant Conversion", chance:"4.57 %", plage:"8 % – 20 %",  incr:"1 %", couleur:"#f3fe1e", couleurNom:"Jaune",      img:"images/item/Mutation_Yellow.webp" },
+  { nom:"% Bee Ability Rate",   chance:"1.87 %", plage:"1 % – 4 %",   incr:"1 %", couleur:"#b8a5ed", couleurNom:"Violet",     img:"images/item/Mutation_Purple.webp" },
+  { nom:"% Critical Chance",    chance:"1.87 %", plage:"1 % – 3 %",   incr:"1 %", couleur:"#47cf72", couleurNom:"Vert",       img:"images/item/Mutation_Green.webp" },
+  { nom:"+ Movespeed",          chance:"1.87 %", plage:"2 – 6",       incr:"1",   couleur:"#4fb8f0", couleurNom:"Cyan foncé", img:"images/item/Mutation_Cyan.webp" },
 ];
 
 /* Comment obtenir une mutation */
@@ -3331,7 +3340,7 @@ const MUTATIONS_NOTES = [
 /* 3 catégories. Chaque objet : { nom, img }. img="" -> icône de secours.
    👉 Complète chaque catégorie avec tes objets et colle leurs images dans "img". */
 const OBJETS = {
-  "mutation": MUTATIONS.map(m=>({nom:m.nom, couleur:m.couleur, img:""})),
+  "mutation": MUTATIONS.map(m=>({nom:m.nom, couleur:m.couleur, img:m.img||""})),
   // Beequip et Beesmas sont repris automatiquement de la liste BEEQUIP ci-dessus.
   "beequip": BEEQUIP.filter(b=>b.categorie==="Non-Event").map(b=>({nom:b.nom,img:b.img||""})),
   "beesmas": BEEQUIP.filter(b=>b.categorie==="Beesmas").map(b=>({nom:b.nom,img:b.img||""})),
@@ -5844,7 +5853,13 @@ function syncConfig(){
   document.getElementById('cc-gifted').classList.toggle('on',c.gifted);
   let oh='';
   if(c.beequip) oh+=`<div class="cc-obj"><span>🎒 ${c.beequip}</span><span class="cc-remove" onclick="removeCellObj('beequip')">retirer</span></div>`;
-  if(c.mutation) oh+=`<div class="cc-obj"><span style="color:${c.mutation.couleur}">🧬 ${c.mutation.nom}</span><span class="cc-remove" onclick="removeCellObj('mutation')">retirer</span></div>`;
+  if(c.mutation){
+    const mi = MUTATIONS.find(m=>m.nom===c.mutation.nom);
+    const ico = (mi && mi.img)
+      ? `<img class="cc-ico" src="${mi.img}" alt="" decoding="async" onerror="imgFallback(this,'emoji','🧬')">`
+      : '🧬';
+    oh+=`<div class="cc-obj"><span style="color:${c.mutation.couleur}">${ico} ${c.mutation.nom}</span><span class="cc-remove" onclick="removeCellObj('mutation')">retirer</span></div>`;
+  }
   document.getElementById('cc-objects').innerHTML=oh;
   updateBrushLabel();
 }
@@ -6233,7 +6248,8 @@ function renderObjets(){
   const list=listeObjets().filter(o=>!q || String(o.nom).toLowerCase().includes(q));
   const dossier = (objCat==='sticker'||objCat==='hiveskin'||objCat==='cubskin') ? 'stickers' : 'beequip';
   el.innerHTML = list.map((o,idx)=>{
-    const ic = (objCat==='mutation') ? '🧬'
+    const ic = (objCat==='mutation')
+             ? `<img ${imgAttrs('item',o)} alt="" loading="lazy" decoding="async" onerror="imgFallback(this,'emoji','🧬')">`
              : `<img ${imgAttrs(dossier,o)} alt="" loading="lazy" decoding="async" onerror="imgFallback(this,'emoji','🏷️')">`;
     const dot = (objCat==='mutation'&&o.couleur)?`<span class="odot" style="background:${o.couleur}"></span>`:'';
     const active = (activeObject && activeObject.nom===o.nom) ? ' active':'';
@@ -6279,7 +6295,7 @@ function renderMutations(){
   const rows=MUTATIONS.map(m=>{
     const ch = parseFloat(m.chance);
     return `<tr>
-    <td><span class="mut-name" style="color:${m.couleur}">${m.nom}</span></td>
+    <td><span class="mut-cell"><span class="mut-ico"><img src="${m.img}" alt="" loading="lazy" decoding="async" onerror="imgFallback(this,'emoji','🧬')"></span><span class="mut-name" style="color:${m.couleur}">${m.nom}</span></span></td>
     <td><span class="mut-chance">${m.chance}</span>
         <span class="mut-bar"><i style="width:${(ch/maxCh*100).toFixed(1)}%;background:${m.couleur}"></i></span></td>
     <td><span class="mut-plage">${m.plage}</span><br><span style="color:var(--muted);font-size:.82rem">par ${m.incr}</span></td>
