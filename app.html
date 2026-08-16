@@ -1909,6 +1909,146 @@ footer.site{
 <script src="nuage.js"></script>
 <script src="acces.js"></script>
 <script>
+/* ============================================================
+   PORTE D'ENTRÉE
+   Les comptes sont dans acces.js. Voir ce fichier pour ajouter
+   ou retirer quelqu'un, et pour les limites de ce système.
+   ============================================================ */
+/* ---- Textes : t('cle') lit le pack de la langue active et retombe
+   sur le francais si la cle n'est pas encore traduite. ---- */
+const PACK    = (window.LANGUES && window.LANGUES[window.LANG]) || {};
+const PACK_FR = (window.LANGUES && window.LANGUES.fr) || {};
+const T     = PACK.T     || PACK_FR.T     || {};
+const GUIDE = PACK.GUIDE || PACK_FR.GUIDE || { Incolore:[], Red:[], Blue:[], White:[] };
+function t(cle){
+  if(T[cle] != null) return T[cle];
+  if(PACK_FR.T && PACK_FR.T[cle] != null) return PACK_FR.T[cle];
+  return cle;
+}
+/* tf('cle', a, b, ...) : comme t(), mais remplace %1, %2... par les valeurs. */
+function tf(cle){
+  const vals = arguments;
+  return t(cle).replace(/%(\d+)/g, function(m, i){
+    return vals[+i] != null ? vals[+i] : m;
+  });
+}
+
+function changerLangue(){
+  try{ localStorage.setItem('hubbss-langue', (window.LANG === 'en') ? 'fr' : 'en'); }catch(e){}
+  location.reload();
+}
+
+/* ---- Traduction du reste du site -------------------------------------
+   Le francais est la source : lang-fr.js n'a rien a declarer ici.
+   lang-en.js fournit LANGUES.en.TXT, un dictionnaire
+   "texte francais affiche" -> "texte anglais". On repasse sur le DOM
+   apres chaque rendu et on remplace ce qui a une entree ; tout ce qui
+   n'en a pas reste en francais (repli automatique).
+   Une cle prefixee par ATTR_PREF vise un attribut, pas un noeud texte.
+   Si TXT est vide (langue francaise), tout ce bloc ne fait rien.
+   ---------------------------------------------------------------------- */
+const TXT       = PACK.TXT || {};
+const TXT_ACTIF = Object.keys(TXT).length > 0;
+const ATTR_PREF = '\u0000ATTR\u0000';
+const ATTRS_TR  = ['placeholder','title','aria-label'];
+
+function tr(txt){
+  if(!TXT_ACTIF || !txt) return txt;
+  const cle = txt.trim();
+  if(!cle) return txt;
+  const val = TXT[cle];
+  if(val == null) return txt;
+  /* on remet les espaces qui entouraient le texte d'origine */
+  const avant = txt.match(/^\s*/)[0], apres = txt.match(/\s*$/)[0];
+  return avant + val + apres;
+}
+
+function trNoeud(n){
+  if(!n) return;
+  if(n.nodeType === 3){
+    const v = tr(n.nodeValue);
+    if(v !== n.nodeValue) n.nodeValue = v;
+    return;
+  }
+  if(n.nodeType !== 1) return;
+  const bal = n.tagName;
+  if(bal === 'SCRIPT' || bal === 'STYLE') return;
+  for(const a of ATTRS_TR){
+    if(!n.hasAttribute(a)) continue;
+    const val = TXT[ATTR_PREF + n.getAttribute(a).trim()];
+    if(val != null) n.setAttribute(a, val);
+  }
+  for(let c = n.firstChild; c; c = c.nextSibling) trNoeud(c);
+}
+
+function traduireDOM(racine){
+  if(!TXT_ACTIF) return;
+  trNoeud(racine || document.body);
+}
+
+/* Le site regenere beaucoup de HTML a la volee (fiches, filtres, outils,
+   builder). Plutot que d'appeler traduireDOM() a chaque endroit, on
+   observe les ajouts de noeuds. On n'observe ni les attributs ni les
+   donnees texte : nos propres modifications ne relancent donc rien. */
+if(TXT_ACTIF){
+  const titre = TXT[document.title.trim()];
+  if(titre) document.title = titre;
+  traduireDOM(document.body);
+  new MutationObserver(function(mutations){
+    for(const m of mutations)
+      for(const n of m.addedNodes) trNoeud(n);
+  }).observe(document.body, { childList:true, subtree:true });
+}
+
+document.body.classList.add('verrouille');
+
+const CLE_SESSION = 'hubbss-acces';
+
+/* SHA-256 en JavaScript pur : sert de secours quand crypto.subtle est
+   indisponible, c'est-à-dire hors HTTPS — page ouverte en local, par exemple. */
+function sha256JS(msg){
+  const K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+  0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+  0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+  0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+  0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+  0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+  0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+  0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+  let H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  const b=[]; for(const ch of unescape(encodeURIComponent(msg))) b.push(ch.charCodeAt(0));
+  const l=b.length*8; b.push(0x80); while(b.length%64!==56) b.push(0);
+  for(let i=7;i>=0;i--) b.push((l/Math.pow(2,8*i))&0xff);
+  const rr=(x,n)=>(x>>>n)|(x<<(32-n));
+  for(let i=0;i<b.length;i+=64){
+    const w=new Array(64);
+    for(let j=0;j<16;j++) w[j]=(b[i+j*4]<<24)|(b[i+j*4+1]<<16)|(b[i+j*4+2]<<8)|b[i+j*4+3];
+    for(let j=16;j<64;j++){
+      const s0=rr(w[j-15],7)^rr(w[j-15],18)^(w[j-15]>>>3);
+      const s1=rr(w[j-2],17)^rr(w[j-2],19)^(w[j-2]>>>10);
+      w[j]=(w[j-16]+s0+w[j-7]+s1)|0;
+    }
+    let [a,bb,c,d,e,f,g,h]=H;
+    for(let j=0;j<64;j++){
+      const S1=rr(e,6)^rr(e,11)^rr(e,25), ch=(e&f)^(~e&g);
+      const t1=(h+S1+ch+K[j]+w[j])|0;
+      const S0=rr(a,2)^rr(a,13)^rr(a,22), mj=(a&bb)^(a&c)^(bb&c);
+      const t2=(S0+mj)|0;
+      h=g; g=f; f=e; e=(d+t1)|0; d=c; c=bb; bb=a; a=(t1+t2)|0;
+    }
+    H=[H[0]+a|0,H[1]+bb|0,H[2]+c|0,H[3]+d|0,H[4]+e|0,H[5]+f|0,H[6]+g|0,H[7]+h|0];
+  }
+  return H.map(x=>(x>>>0).toString(16).padStart(8,'0')).join('');
+}
+async function empreinte(txt){
+  if(typeof crypto !== 'undefined' && crypto.subtle && crypto.subtle.digest){
+    try{
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(txt));
+      return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+    }catch(e){}
+  }
+  return sha256JS(txt);
+}
 /* ============================================================================
    ██  PORTE D'ACCÈS TEMPORAIRE  ██
    ----------------------------------------------------------------------------
