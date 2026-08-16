@@ -1255,6 +1255,114 @@ footer.site{
   .mascot{max-width:180px}
   .mascot img{width:180px}
 }
+
+/* ============================================================
+   ✦✦ ESPACE COMPTE — modale de connexion et panneau du compte
+   ============================================================ */
+.compte-btn{display:flex;align-items:center;gap:.45rem;border:1px solid var(--line)!important}
+.cb-etat{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:0 0 auto;transition:background .25s}
+.cb-etat.hors{background:#5A7280}
+.cb-etat.ok{background:var(--vert);box-shadow:0 0 8px rgba(143,232,107,.7)}
+.cb-etat.sauvegarde{background:var(--vert-2);animation:pulseSauve 1s ease-in-out infinite}
+.cb-etat.erreur{background:var(--bad);box-shadow:0 0 8px rgba(240,115,106,.7)}
+@keyframes pulseSauve{0%,100%{opacity:1}50%{opacity:.25}}
+
+.cm-fond{position:fixed;inset:0;z-index:9998;display:grid;place-items:center;padding:1.5rem;
+  overflow:auto;background:rgba(7,15,20,.74);backdrop-filter:blur(6px);animation:fade .2s ease}
+.cm-box{width:100%;max-width:430px;background-image:var(--surface);border:1px solid var(--line);
+  border-radius:22px;padding:1.8rem;box-shadow:var(--shadow-lg)}
+.cm-box.large{max-width:640px}
+.cm-box h3{font-size:1.3rem;margin-bottom:.2rem;display:flex;align-items:center;gap:.5rem}
+.cm-sous{color:var(--muted);font-size:.87rem;line-height:1.55;margin-bottom:1.3rem;word-break:break-word}
+.cm-box label{display:block;font-family:'Fredoka';font-weight:600;font-size:.74rem;text-transform:uppercase;
+  letter-spacing:.8px;color:var(--muted);margin-bottom:.35rem}
+.cm-box input[type=text],.cm-box input[type=email],.cm-box input[type=password],.cm-box select{
+  width:100%;background:var(--ink-950);border:1px solid var(--line-soft);border-radius:12px;
+  color:var(--cream);padding:.7rem .9rem;font-family:'Inter';font-size:.95rem;margin-bottom:1rem;outline:none}
+.cm-box input:focus,.cm-box select:focus{border-color:var(--vert);box-shadow:0 0 0 3px rgba(143,232,107,.10)}
+.cm-onglets{display:flex;gap:.3rem;background:var(--ink-950);border:1px solid var(--line-soft);
+  border-radius:12px;padding:.25rem;margin-bottom:1.3rem}
+.cm-onglets button{flex:1;background:transparent;color:var(--muted);border:0;border-radius:9px;padding:.55rem .4rem;
+  font-family:'Fredoka';font-weight:600;font-size:.86rem;cursor:pointer;transition:background .15s,color .15s}
+.cm-onglets button:hover{color:var(--cream)}
+.cm-onglets button.active{background:var(--vert);color:var(--ink-950)}
+.cm-actions{display:flex;flex-direction:column;gap:.5rem;margin-top:.4rem}
+.cm-actions .btn{width:100%;justify-content:center}
+.cm-danger{background:transparent;color:var(--bad);border:1px solid rgba(240,115,106,.35)}
+.cm-danger:hover{background:rgba(240,115,106,.10)}
+.cm-discord{background:#5865F2;color:#fff}
+.cm-discord:hover{filter:brightness(1.1)}
+.cm-err{margin-top:.9rem;font-size:.86rem;color:var(--bad);text-align:center;min-height:1.2em;line-height:1.5}
+.cm-ok{margin-top:.9rem;font-size:.86rem;color:var(--vert);text-align:center;line-height:1.5}
+.cm-lien{margin-top:.9rem;text-align:center}
+.cm-lien a{color:var(--muted);font-size:.8rem;cursor:pointer;text-decoration:none}
+.cm-lien a:hover{color:var(--vert)}
+.cm-ligne{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:.6rem 0;
+  border-bottom:1px solid var(--line-soft);font-size:.9rem}
+.cm-ligne:last-of-type{border-bottom:0}
+.cm-ligne .k{color:var(--muted)}
+.cm-ligne .v{font-family:'Fredoka';font-weight:600;color:var(--cream);text-align:right}
+.cm-note{margin-top:1.1rem;padding-top:1rem;border-top:1px solid var(--line-soft);
+  font-size:.78rem;color:var(--muted);line-height:1.6}
+.cm-x{margin-left:auto;background:transparent;border:0;color:var(--muted);font-size:1.3rem;
+  cursor:pointer;line-height:1;padding:0 .2rem}
+.cm-x:hover{color:var(--cream)}
+@media(max-width:620px){ #compte-lbl{max-width:88px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} }
+
+/* ============================================================
+   ✦✦ RUCHES SAUVEGARDÉES (panneau du Build your Hive)
+   ============================================================ */
+.obj-cat-sep{margin-top:.45rem;border-top:1px solid var(--line)!important;padding-top:.55rem!important;border-radius:0 0 10px 10px}
+.rs-save{display:flex;gap:.4rem;margin-bottom:.8rem}
+.rs-save input{flex:1;min-width:0;background:var(--ink-950);border:1px solid var(--line-soft);border-radius:9px;
+  color:var(--cream);padding:.5rem .6rem;font-family:'Inter';font-size:.84rem;outline:none}
+.rs-save input:focus{border-color:var(--vert)}
+.rs-save .btn{flex:0 0 auto;font-size:.78rem;padding:.5rem .7rem}
+.rs-liste{display:grid;gap:.4rem;max-height:420px;overflow:auto}
+.rs-item{background:var(--ink-950);border:1px solid var(--line-soft);border-radius:10px;padding:.55rem .65rem;
+  transition:border-color .15s,background .15s}
+.rs-item:hover{border-color:var(--vert)}
+.rs-item.actuelle{border-color:var(--vert);background:rgba(143,232,107,.07)}
+.rs-nom{font-family:'Fredoka';font-weight:600;font-size:.86rem;color:var(--cream);cursor:pointer;
+  display:block;width:100%;text-align:left;background:none;border:0;padding:0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rs-nom:hover{color:var(--vert)}
+.rs-bas{display:flex;align-items:center;gap:.5rem;margin-top:.3rem}
+.rs-date{font-size:.7rem;color:var(--muted);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rs-mini{background:transparent;border:0;color:var(--muted);cursor:pointer;font-size:.7rem;padding:0;
+  font-family:'Fredoka';font-weight:600}
+.rs-mini:hover{color:var(--cream)}
+.rs-mini.sup:hover{color:var(--bad)}
+.rs-vide{color:var(--muted);font-size:.78rem;text-align:center;padding:1.2rem .4rem;line-height:1.6}
+
+/* ============================================================
+   ✦✦ HISTORIQUE DES TRADES
+   ============================================================ */
+.th-liste{display:grid;gap:.6rem;max-height:52vh;overflow:auto;margin-top:.4rem}
+.th-item{background:var(--ink-950);border:1px solid var(--line-soft);border-radius:12px;padding:.75rem .85rem}
+.th-haut{display:flex;align-items:center;gap:.6rem;margin-bottom:.45rem}
+.th-date{font-size:.74rem;color:var(--muted);flex:1}
+.th-verdict{font-family:'Fredoka';font-weight:700;font-size:.72rem;padding:.15rem .55rem;border-radius:20px}
+.th-verdict.fair{background:rgba(107,208,139,.14);color:var(--good)}
+.th-verdict.pour{background:rgba(143,232,107,.14);color:var(--vert)}
+.th-verdict.contre{background:rgba(240,115,106,.14);color:var(--bad)}
+.th-cotes{display:grid;grid-template-columns:1fr auto 1fr;gap:.5rem;align-items:center;font-size:.8rem}
+.th-cote{color:var(--muted);line-height:1.45;min-width:0}
+.th-cote b{color:var(--cream);font-family:'Fredoka';display:block;font-size:.86rem}
+.th-vs{color:var(--muted);font-family:'Fredoka';font-weight:700;font-size:.72rem}
+.th-evo{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-top:.55rem;padding-top:.55rem;
+  border-top:1px dashed var(--line-soft)}
+.th-evo-t{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-family:'Fredoka';font-weight:600}
+.th-evo-v{font-size:.8rem;color:var(--cream);font-family:'Fredoka';font-weight:600;flex:1;min-width:0}
+.th-evo-v i{color:var(--muted);font-style:normal;font-weight:400;font-size:.72rem;padding:0 .15rem}
+.th-delta{font-size:.72rem;font-weight:700}
+.th-delta.up{color:var(--vert)}
+.th-delta.down{color:var(--bad)}
+.th-stable{font-size:.72rem;color:var(--muted)}
+.th-actions{display:flex;gap:.5rem;margin-top:.6rem}
+.th-actions .btn{flex:1;justify-content:center;font-size:.78rem;padding:.4rem .5rem}
+#th-compte{font-family:'Fredoka';font-weight:700;color:var(--vert)}
+
 </style>
 </head>
 <body>
@@ -1294,6 +1402,8 @@ footer.site{
       <button class="tab-btn" data-view="outils">Outils</button>
       <button class="tab-btn lang-btn" onclick="changerLangue()"
         title="Changer de langue / Switch language"><span id="lang-lbl">English</span></button>
+      <button class="tab-btn compte-btn" id="compte-btn" onclick="cliqueCompte()"
+        title="Mon compte"><span class="cb-etat" id="cb-etat"></span><span id="compte-lbl">Se connecter</span></button>
     </nav>
   </div>
 </header>
@@ -1644,6 +1754,11 @@ footer.site{
         </div>
       </div>
       <div class="verdict fair" id="trade-verdict">Ajoute des objets pour comparer.</div>
+      <div class="hive-actions">
+        <button class="btn btn-primary" onclick="garderTrade()">💾 Garder ce trade</button>
+        <button class="btn btn-ghost" onclick="ouvrirHistoriqueTrades()">🕘 Historique <span id="th-compte"></span></button>
+        <button class="btn btn-ghost" onclick="viderTrade()">🗑️ Vider les deux côtés</button>
+      </div>
     </div>
   </div>
 
@@ -1664,6 +1779,7 @@ footer.site{
             <button class="obj-cat" data-cat="sticker">🏷️ Sticker</button>
             <button class="obj-cat" data-cat="hiveskin">🎨 Hive Skin</button>
             <button class="obj-cat" data-cat="cubskin">🧸 Cub Skin</button>
+            <button class="obj-cat obj-cat-sep" data-cat="ruches">💾 Ruches sauvegardées</button>
           </div>
           <p class="item-soon" id="item-soon"></p>
         </div>
@@ -1719,6 +1835,16 @@ footer.site{
             <input type="text" id="bee-search" placeholder="Rechercher une abeille…"></div>
           <div class="rar-chips" id="bee-rar-chips"></div>
           <div class="bee-list" id="bee-list"></div>
+          </div>
+
+          <div id="side-ruches" class="hidden">
+            <h4>Ruches sauvegardées</h4>
+            <p class="hint" id="ruches-hint" style="margin:0 0 .7rem"></p>
+            <div class="rs-save">
+              <input type="text" id="rs-nom" maxlength="40" placeholder="Nom de cette ruche…" autocomplete="off">
+              <button class="btn btn-primary" onclick="sauverRucheNommee()">Sauvegarder</button>
+            </div>
+            <div class="rs-liste" id="rs-liste"></div>
           </div>
 
           <div id="side-objs" class="hidden">
@@ -1777,148 +1903,23 @@ footer.site{
   </div>
 </div>
 
+<!-- Comptes et sauvegarde en ligne (Supabase). L'ordre compte. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="nuage-config.js"></script>
+<script src="nuage.js"></script>
 <script src="acces.js"></script>
 <script>
-/* ============================================================
-   PORTE D'ENTRÉE
-   Les comptes sont dans acces.js. Voir ce fichier pour ajouter
-   ou retirer quelqu'un, et pour les limites de ce système.
-   ============================================================ */
-/* ---- Textes : t('cle') lit le pack de la langue active et retombe
-   sur le francais si la cle n'est pas encore traduite. ---- */
-const PACK    = (window.LANGUES && window.LANGUES[window.LANG]) || {};
-const PACK_FR = (window.LANGUES && window.LANGUES.fr) || {};
-const T     = PACK.T     || PACK_FR.T     || {};
-const GUIDE = PACK.GUIDE || PACK_FR.GUIDE || { Incolore:[], Red:[], Blue:[], White:[] };
-function t(cle){
-  if(T[cle] != null) return T[cle];
-  if(PACK_FR.T && PACK_FR.T[cle] != null) return PACK_FR.T[cle];
-  return cle;
-}
-/* tf('cle', a, b, ...) : comme t(), mais remplace %1, %2... par les valeurs. */
-function tf(cle){
-  const vals = arguments;
-  return t(cle).replace(/%(\d+)/g, function(m, i){
-    return vals[+i] != null ? vals[+i] : m;
-  });
-}
-
-function changerLangue(){
-  try{ localStorage.setItem('hubbss-langue', (window.LANG === 'en') ? 'fr' : 'en'); }catch(e){}
-  location.reload();
-}
-
-/* ---- Traduction du reste du site -------------------------------------
-   Le francais est la source : lang-fr.js n'a rien a declarer ici.
-   lang-en.js fournit LANGUES.en.TXT, un dictionnaire
-   "texte francais affiche" -> "texte anglais". On repasse sur le DOM
-   apres chaque rendu et on remplace ce qui a une entree ; tout ce qui
-   n'en a pas reste en francais (repli automatique).
-   Une cle prefixee par ATTR_PREF vise un attribut, pas un noeud texte.
-   Si TXT est vide (langue francaise), tout ce bloc ne fait rien.
-   ---------------------------------------------------------------------- */
-const TXT       = PACK.TXT || {};
-const TXT_ACTIF = Object.keys(TXT).length > 0;
-const ATTR_PREF = '\u0000ATTR\u0000';
-const ATTRS_TR  = ['placeholder','title','aria-label'];
-
-function tr(txt){
-  if(!TXT_ACTIF || !txt) return txt;
-  const cle = txt.trim();
-  if(!cle) return txt;
-  const val = TXT[cle];
-  if(val == null) return txt;
-  /* on remet les espaces qui entouraient le texte d'origine */
-  const avant = txt.match(/^\s*/)[0], apres = txt.match(/\s*$/)[0];
-  return avant + val + apres;
-}
-
-function trNoeud(n){
-  if(!n) return;
-  if(n.nodeType === 3){
-    const v = tr(n.nodeValue);
-    if(v !== n.nodeValue) n.nodeValue = v;
-    return;
-  }
-  if(n.nodeType !== 1) return;
-  const bal = n.tagName;
-  if(bal === 'SCRIPT' || bal === 'STYLE') return;
-  for(const a of ATTRS_TR){
-    if(!n.hasAttribute(a)) continue;
-    const val = TXT[ATTR_PREF + n.getAttribute(a).trim()];
-    if(val != null) n.setAttribute(a, val);
-  }
-  for(let c = n.firstChild; c; c = c.nextSibling) trNoeud(c);
-}
-
-function traduireDOM(racine){
-  if(!TXT_ACTIF) return;
-  trNoeud(racine || document.body);
-}
-
-/* Le site regenere beaucoup de HTML a la volee (fiches, filtres, outils,
-   builder). Plutot que d'appeler traduireDOM() a chaque endroit, on
-   observe les ajouts de noeuds. On n'observe ni les attributs ni les
-   donnees texte : nos propres modifications ne relancent donc rien. */
-if(TXT_ACTIF){
-  const titre = TXT[document.title.trim()];
-  if(titre) document.title = titre;
-  traduireDOM(document.body);
-  new MutationObserver(function(mutations){
-    for(const m of mutations)
-      for(const n of m.addedNodes) trNoeud(n);
-  }).observe(document.body, { childList:true, subtree:true });
-}
-
-document.body.classList.add('verrouille');
-
-const CLE_SESSION = 'hubbss-acces';
-
-/* SHA-256 en JavaScript pur : sert de secours quand crypto.subtle est
-   indisponible, c'est-à-dire hors HTTPS — page ouverte en local, par exemple. */
-function sha256JS(msg){
-  const K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
-  0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
-  0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
-  0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
-  0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
-  0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
-  0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
-  0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
-  let H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
-  const b=[]; for(const ch of unescape(encodeURIComponent(msg))) b.push(ch.charCodeAt(0));
-  const l=b.length*8; b.push(0x80); while(b.length%64!==56) b.push(0);
-  for(let i=7;i>=0;i--) b.push((l/Math.pow(2,8*i))&0xff);
-  const rr=(x,n)=>(x>>>n)|(x<<(32-n));
-  for(let i=0;i<b.length;i+=64){
-    const w=new Array(64);
-    for(let j=0;j<16;j++) w[j]=(b[i+j*4]<<24)|(b[i+j*4+1]<<16)|(b[i+j*4+2]<<8)|b[i+j*4+3];
-    for(let j=16;j<64;j++){
-      const s0=rr(w[j-15],7)^rr(w[j-15],18)^(w[j-15]>>>3);
-      const s1=rr(w[j-2],17)^rr(w[j-2],19)^(w[j-2]>>>10);
-      w[j]=(w[j-16]+s0+w[j-7]+s1)|0;
-    }
-    let [a,bb,c,d,e,f,g,h]=H;
-    for(let j=0;j<64;j++){
-      const S1=rr(e,6)^rr(e,11)^rr(e,25), ch=(e&f)^(~e&g);
-      const t1=(h+S1+ch+K[j]+w[j])|0;
-      const S0=rr(a,2)^rr(a,13)^rr(a,22), mj=(a&bb)^(a&c)^(bb&c);
-      const t2=(S0+mj)|0;
-      h=g; g=f; f=e; e=(d+t1)|0; d=c; c=bb; bb=a; a=(t1+t2)|0;
-    }
-    H=[H[0]+a|0,H[1]+bb|0,H[2]+c|0,H[3]+d|0,H[4]+e|0,H[5]+f|0,H[6]+g|0,H[7]+h|0];
-  }
-  return H.map(x=>(x>>>0).toString(16).padStart(8,'0')).join('');
-}
-async function empreinte(txt){
-  if(typeof crypto !== 'undefined' && crypto.subtle && crypto.subtle.digest){
-    try{
-      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(txt));
-      return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
-    }catch(e){}
-  }
-  return sha256JS(txt);
-}
+/* ============================================================================
+   ██  PORTE D'ACCÈS TEMPORAIRE  ██
+   ----------------------------------------------------------------------------
+   Ceci est l'avant-première réservée aux membres, RIEN À VOIR avec les comptes.
+   Pour l'enlever le jour de l'ouverture publique, il suffit de :
+     1. supprimer le bloc <div id="porte"> ... </div> dans le HTML
+     2. supprimer la balise  <script src="acces.js"><\/script>
+     3. supprimer les 3 fonctions ci-dessous jusqu'au repère FIN PORTE
+     4. retirer la règle CSS  body.verrouille  et la classe "verrouille"
+   Les comptes, eux, continueront de fonctionner sans rien changer.
+   ============================================================================ */
 function ouvrirLeSite(){
   document.body.classList.remove('verrouille');
   const porte = document.getElementById('porte');
@@ -1939,7 +1940,6 @@ async function tenterConnexion(){
   try{ sessionStorage.setItem(CLE_SESSION, h); }catch(e){}
   ouvrirLeSite();
 }
-/* on reste connecté le temps de l'onglet */
 (function(){
   try{
     const jeton = sessionStorage.getItem(CLE_SESSION);
@@ -1950,6 +1950,246 @@ async function tenterConnexion(){
     if(e.key === 'Enter' && document.body.classList.contains('verrouille')) tenterConnexion();
   });
 })();
+/* ██  FIN PORTE — tout ce qui suit concerne les comptes  ██ */
+
+
+/* ============================================================================
+   ██  ESPACE COMPTE  ██  (bouton en haut à droite)
+   ============================================================================ */
+let authMode = 'connexion';
+
+function cliqueCompte(){
+  if(typeof Nuage !== 'undefined' && Nuage.connecte()) ouvrirCompte();
+  else ouvrirAuth();
+}
+
+function fermerModaleCompte(){
+  const d = document.getElementById('cm-fond');
+  if(d) d.remove();
+}
+function poserModale(html, large){
+  fermerModaleCompte();
+  const d = document.createElement('div');
+  d.id = 'cm-fond'; d.className = 'cm-fond';
+  d.innerHTML = '<div class="cm-box' + (large ? ' large' : '') + '">' + html + '</div>';
+  d.addEventListener('click', e => { if(e.target === d) fermerModaleCompte(); });
+  document.body.appendChild(d);
+  return d;
+}
+
+/* ---------- connexion / inscription ---------- */
+function ouvrirAuth(mode){
+  authMode = mode || 'connexion';
+
+  if(typeof Nuage === 'undefined' || !Nuage.disponible()){
+    poserModale(
+      '<h3>Comptes indisponibles<button class="cm-x" onclick="fermerModaleCompte()">✕</button></h3>' +
+      '<p class="cm-sous">La sauvegarde en ligne n\u2019est pas encore branchée sur ce site. ' +
+      'Tes ruches restent exportables en fichier depuis le Build your Hive.</p>' +
+      '<div class="cm-actions"><button class="btn btn-ghost" onclick="fermerModaleCompte()">Fermer</button></div>');
+    return;
+  }
+
+  const inscr = (authMode === 'inscription');
+  poserModale(
+    '<h3>' + (inscr ? 'Créer un compte' : 'Se connecter') +
+      '<button class="cm-x" onclick="fermerModaleCompte()">✕</button></h3>' +
+    '<p class="cm-sous">' + (inscr
+      ? 'Ton compte garde tes ruches et tes trades, et te les retrouve sur tous tes appareils.'
+      : 'Content de te revoir. Tes données t\u2019attendent.') + '</p>' +
+
+    '<div class="cm-onglets" id="cm-onglets">' +
+      '<button class="' + (inscr ? '' : 'active') + '" data-mode="connexion">Se connecter</button>' +
+      '<button class="' + (inscr ? 'active' : '') + '" data-mode="inscription">Créer un compte</button>' +
+    '</div>' +
+
+    (inscr ? '<label>Pseudo</label><input type="text" id="cm-pseudo" autocomplete="nickname" ' +
+             'placeholder="Celui de ton Discord, par exemple" maxlength="24">' : '') +
+
+    '<label>E-mail</label><input type="email" id="cm-mail" autocomplete="email" autocapitalize="off" spellcheck="false">' +
+    '<label>Mot de passe</label><input type="password" id="cm-pass" ' +
+      'autocomplete="' + (inscr ? 'new-password' : 'current-password') + '" placeholder="6 caractères minimum">' +
+
+    (inscr ? '<label>Langue du site</label><select id="cm-langue">' +
+             '<option value="fr"' + ((window.LANG || 'fr') === 'fr' ? ' selected' : '') + '>Français</option>' +
+             '<option value="en"' + (window.LANG === 'en' ? ' selected' : '') + '>English</option>' +
+             '</select>' : '') +
+
+    '<div class="cm-actions">' +
+      '<button class="btn btn-primary" id="cm-valider" onclick="authValider()">' +
+        (inscr ? 'Créer mon compte' : 'Entrer') + '</button>' +
+      ((typeof NUAGE_CONFIG !== 'undefined' && NUAGE_CONFIG.discord)
+        ? '<button class="btn cm-discord" onclick="authDiscord()">Continuer avec Discord</button>' : '') +
+    '</div>' +
+
+    '<div class="cm-err" id="cm-err"></div><div class="cm-ok" id="cm-ok"></div>' +
+    (inscr ? '' : '<div class="cm-lien"><a onclick="authOublie()">Mot de passe oublié ?</a></div>')
+  );
+
+  document.getElementById('cm-onglets').addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if(b) ouvrirAuth(b.dataset.mode);
+  });
+  ['cm-pseudo','cm-mail','cm-pass'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.addEventListener('keydown', e => { if(e.key === 'Enter') authValider(); });
+  });
+  const prem = document.getElementById(inscr ? 'cm-pseudo' : 'cm-mail');
+  if(prem) prem.focus();
+}
+
+async function authValider(){
+  const btn = document.getElementById('cm-valider');
+  const err = document.getElementById('cm-err');
+  const ok  = document.getElementById('cm-ok');
+  err.textContent = ''; ok.textContent = '';
+
+  const inscr  = (authMode === 'inscription');
+  const mail   = (document.getElementById('cm-mail').value || '').trim();
+  const pass   = document.getElementById('cm-pass').value || '';
+  const pseudo = inscr ? (document.getElementById('cm-pseudo').value || '').trim() : '';
+  const langue = inscr ? (document.getElementById('cm-langue').value || 'fr') : null;
+
+  if(!mail || !pass){ err.textContent = 'Remplis les deux champs.'; return; }
+  if(inscr){
+    if(!pseudo){ err.textContent = 'Choisis un pseudo.'; return; }
+    if(pass.length < 6){ err.textContent = 'Mot de passe trop court (6 caractères minimum).'; return; }
+  }
+
+  const libelle = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Un instant…';
+  try{
+    if(inscr){
+      const r = await Nuage.inscription(mail, pass, pseudo);
+      /* la langue choisie à l'inscription devient la préférence du compte */
+      PREF_LANGUE = langue;
+      try{ localStorage.setItem('hubbss-langue', langue); }catch(e){}
+      if(r.confirmationRequise){
+        ouvrirAuth('connexion');
+        document.getElementById('cm-ok').textContent =
+          'Compte créé. Ouvre le lien envoyé à ' + mail + ' pour l\u2019activer, puis reviens te connecter.';
+        return;
+      }
+    }else{
+      await Nuage.connexion(mail, pass);
+    }
+    fermerModaleCompte();
+    await entrerAvecCompte();
+  }catch(e){
+    err.textContent = e.message;
+  }finally{
+    if(document.getElementById('cm-valider')){ btn.disabled = false; btn.textContent = libelle; }
+  }
+}
+
+async function authDiscord(){
+  try{ await Nuage.connexionDiscord(); }
+  catch(e){ document.getElementById('cm-err').textContent = e.message; }
+}
+
+async function authOublie(){
+  const err  = document.getElementById('cm-err');
+  const ok   = document.getElementById('cm-ok');
+  const mail = (document.getElementById('cm-mail').value || '').trim();
+  err.textContent = ''; ok.textContent = '';
+  if(!mail){ err.textContent = 'Écris d\u2019abord ton e-mail au-dessus.'; return; }
+  try{
+    await Nuage.motDePasseOublie(mail);
+    ok.textContent = 'Lien de réinitialisation envoyé à ' + mail + '.';
+  }catch(e){ err.textContent = e.message; }
+}
+
+/* ---------- une fois connecté ---------- */
+async function entrerAvecCompte(){
+  majBoutonCompte();
+  try{ await Nuage.toutCharger(); }
+  catch(e){ console.warn('Nuage : chargement impossible', e); }
+  Nuage.demarrerBoucle();
+  appliquerLangueDuCompte();
+}
+
+/* La langue enregistrée dans le compte prend la main sur celle de l'appareil.
+   Le drapeau en sessionStorage empêche toute boucle de rechargement. */
+let PREF_LANGUE = null;
+function appliquerLangueDuCompte(){
+  if(!PREF_LANGUE || PREF_LANGUE === window.LANG) return;
+  try{
+    if(sessionStorage.getItem('hubbss-langue-appliquee')) return;
+    sessionStorage.setItem('hubbss-langue-appliquee', '1');
+    localStorage.setItem('hubbss-langue', PREF_LANGUE);
+    location.reload();
+  }catch(e){}
+}
+
+function majBoutonCompte(){
+  const btn = document.getElementById('compte-btn');
+  const lbl = document.getElementById('compte-lbl');
+  const pas = document.getElementById('cb-etat');
+  if(!btn) return;
+  const u = (typeof Nuage !== 'undefined') ? Nuage.utilisateur() : null;
+  lbl.textContent = u ? u.pseudo : 'Se connecter';
+  btn.title = u ? 'Mon compte' : 'Se connecter pour sauvegarder';
+  if(!u && pas) pas.className = 'cb-etat hors';
+  majPanneauRuches();
+}
+
+/* ---------- panneau « mon compte » ---------- */
+function ouvrirCompte(){
+  const u = Nuage.utilisateur();
+  if(!u) return;
+  poserModale(
+    '<h3>' + esc(u.pseudo) + '<button class="cm-x" onclick="fermerModaleCompte()">✕</button></h3>' +
+    '<p class="cm-sous">' + esc(u.email) + '</p>' +
+    '<div class="cm-ligne"><span class="k">Sauvegarde</span><span class="v" id="cm-etat">à jour</span></div>' +
+    '<div class="cm-ligne"><span class="k">Ruches enregistrées</span><span class="v">' + RUCHES.length + '</span></div>' +
+    '<div class="cm-ligne"><span class="k">Trades gardés</span><span class="v">' + TRADES.length + '</span></div>' +
+    '<div class="cm-actions" style="margin-top:1.2rem">' +
+      '<button class="btn btn-primary" onclick="sauverEtFermer()">Sauvegarder maintenant</button>' +
+      '<button class="btn btn-ghost" onclick="fermerModaleCompte()">Continuer</button>' +
+      '<button class="btn btn-ghost" onclick="seDeconnecter()">Se déconnecter</button>' +
+      '<button class="btn cm-danger" onclick="effacerMesDonnees()">Effacer mes données</button>' +
+    '</div>' +
+    '<div class="cm-note">Tout est enregistré automatiquement toutes les quelques secondes. ' +
+      'Tu peux fermer l\u2019onglet sans crainte.</div>');
+}
+async function sauverEtFermer(){
+  await Nuage.sauverMaintenant();
+  fermerModaleCompte();
+}
+async function seDeconnecter(){
+  fermerModaleCompte();
+  try{ await Nuage.deconnexion(); }catch(e){}
+  try{ sessionStorage.removeItem('hubbss-langue-appliquee'); }catch(e){}
+  location.reload();
+}
+async function effacerMesDonnees(){
+  if(!confirm('Effacer TOUTES tes données sauvegardées (ruches, trades, calculateurs) ?\n\nCette action est définitive.')) return;
+  if(!confirm('Vraiment sûr ? Il n\u2019y a pas de retour en arrière.')) return;
+  try{ await Nuage.toutEffacer(); }catch(e){ alert(e.message); return; }
+  location.reload();
+}
+
+/* pastille d'état dans l'en-tête */
+if(typeof Nuage !== 'undefined') Nuage.surEtat(function(nom){
+  const p = document.getElementById('cb-etat');
+  if(p) p.className = 'cb-etat ' + (nom === 'chargement' ? 'sauvegarde' : nom);
+  const t = document.getElementById('cm-etat');
+  if(t) t.textContent = nom === 'sauvegarde' ? 'en cours…'
+                      : nom === 'erreur'     ? 'erreur'
+                      : nom === 'chargement' ? 'lecture…' : 'à jour';
+});
+
+/* ---------- démarrage ---------- */
+(async function(){
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') fermerModaleCompte(); });
+  if(typeof Nuage === 'undefined' || !Nuage.disponible()) return;
+  try{
+    const s = await Nuage.demarrer();
+    if(s) await entrerAvecCompte();
+    else  majBoutonCompte();
+  }catch(e){ console.warn('Nuage : démarrage impossible', e); }
+})();
+
 
 /* ============================================================================
    ██  DONNÉES DU JEU — c'est ICI que tu ajoutes / modifies le contenu  ██
@@ -6422,15 +6662,20 @@ const OBJ_TITRES = {
 function majPanneauDroit(){
   const bees = document.getElementById('side-bees');
   const objs = document.getElementById('side-objs');
+  const ruch = document.getElementById('side-ruches');
   if(!bees || !objs) return;
+  if(ruch){
+    ruch.classList.toggle('hidden', objCat !== 'ruches');
+    if(objCat === 'ruches') majPanneauRuches();
+  }
   /* le cadre lui-même se masque s'il n'y a ni menu ouvert ni case sélectionnée */
   const side = document.querySelector('.builder-side');
   const cfg  = document.getElementById('cell-config');
   const cfgVisible = cfg && !cfg.classList.contains('hidden');
   if(side) side.classList.toggle('hidden', !objCat && !cfgVisible);
   bees.classList.toggle('hidden', objCat !== 'bee');
-  objs.classList.toggle('hidden', !objCat || objCat === 'bee');
-  if(objCat && objCat !== 'bee'){
+  objs.classList.toggle('hidden', !objCat || objCat === 'bee' || objCat === 'ruches');
+  if(objCat && objCat !== 'bee' && objCat !== 'ruches'){
     const t = document.getElementById('obj-title');
     if(t) t.textContent = OBJ_TITRES[objCat] || 'Objets';
     const q = document.getElementById('obj-search');
@@ -6443,7 +6688,7 @@ function majPanneauDroit(){
 
 function renderObjets(){
   const el=document.getElementById('obj-list');
-  if(!objCat || objCat==='bee'){ el.innerHTML=''; return; }
+  if(!objCat || objCat==='bee' || objCat==='ruches'){ el.innerHTML=''; return; }
   const q=((document.getElementById('obj-search')||{}).value||'').toLowerCase().trim();
   const list=listeObjets().filter(o=>!q || String(o.nom).toLowerCase().includes(q));
   const dossier = (objCat==='sticker'||objCat==='hiveskin'||objCat==='cubskin') ? 'stickers' : 'beequip';
@@ -6513,6 +6758,392 @@ initTrade();
 initBuilder();
 initObjets();
 renderMutations();
+majPanneauRuches();
+majCompteurTrades();
+
+/* ============================================================================
+   ██  RUCHES SAUVEGARDÉES  ██
+   ----------------------------------------------------------------------------
+   Plusieurs ruches nommées par compte. On enregistre les abeilles par NOM :
+   si la liste ABEILLES change d'ordre un jour, les ruches restent correctes.
+   ============================================================================ */
+let RUCHES = [];                 // [{id, nom, date, cases, skin, stickers}]
+let rucheChargee = null;         // id de la ruche affichée, pour la surligner
+const RUCHES_MAX = 40;
+
+function rucheVersDonnees(){
+  return {
+    cases: hive.map(c => c ? {
+      bee:      ABEILLES[c.bee] ? ABEILLES[c.bee].nom : null,
+      level:    c.level,
+      gifted:   !!c.gifted,
+      beequip:  c.beequip || null,
+      mutation: c.mutation ? c.mutation.nom : null
+    } : null),
+    skin:     hiveSkin,
+    stickers: hsPosed
+  };
+}
+
+function donneesVersRuche(d){
+  if(!d) return;
+  if(Array.isArray(d.cases)){
+    const suivant = new Array(HIVE_SIZE).fill(null);
+    d.cases.forEach((c, i) => {
+      if(i >= HIVE_SIZE || !c) return;
+      const idx = ABEILLES.findIndex(b => b.nom === c.bee);
+      if(idx < 0) return;                        // abeille disparue : case laissée vide
+      let mut = null;
+      if(c.mutation){
+        const m = MUTATIONS.find(m => m.nom === c.mutation);
+        if(m) mut = { nom:m.nom, couleur:m.couleur };
+      }
+      suivant[i] = {
+        bee: idx,
+        level: Math.max(1, Math.min(25, parseInt(c.level) || 1)),
+        gifted: !!c.gifted,
+        beequip: c.beequip || null,
+        mutation: mut
+      };
+    });
+    hive = suivant;
+  }
+  hiveSkin = d.skin || null;
+  hsPosed  = Array.isArray(d.stickers) ? d.stickers : [];
+  hsSel = -1; selectedCell = null;
+  const cfg = document.getElementById('cell-config');
+  if(cfg) cfg.classList.add('hidden');
+  const he = document.getElementById('hs-edit');
+  if(he) he.classList.add('hidden');
+  appliquerSkin(); paintHive(); highlightCells();
+}
+
+function rucheEstVide(){ return hive.every(c => c === null); }
+
+function sauverRucheNommee(){
+  if(!exigeCompte('sauvegarder tes ruches')) return;
+  const champ = document.getElementById('rs-nom');
+  let nom = (champ.value || '').trim();
+  if(!nom) nom = 'Ruche du ' + new Date().toLocaleDateString('fr-FR');
+  if(rucheEstVide() && !confirm('Cette ruche est vide. La sauvegarder quand même ?')) return;
+
+  const existante = RUCHES.find(r => r.nom.toLowerCase() === nom.toLowerCase());
+  if(existante){
+    if(!confirm('« ' + nom + ' » existe déjà. Remplacer cette sauvegarde ?')) return;
+    Object.assign(existante, rucheVersDonnees(), { date: Date.now() });
+    rucheChargee = existante.id;
+  }else{
+    if(RUCHES.length >= RUCHES_MAX){
+      alert('Tu as atteint la limite de ' + RUCHES_MAX + ' ruches. Supprimes-en une pour continuer.');
+      return;
+    }
+    const r = Object.assign({ id: 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+                              nom: nom, date: Date.now() }, rucheVersDonnees());
+    RUCHES.unshift(r);
+    rucheChargee = r.id;
+  }
+  champ.value = '';
+  renderRuches();
+  if(typeof Nuage !== 'undefined') Nuage.sauverMaintenant();
+}
+
+function chargerRuche(id){
+  const r = RUCHES.find(x => x.id === id);
+  if(!r) return;
+  if(!rucheEstVide() && rucheChargee !== id &&
+     !confirm('Charger « ' + r.nom + ' » ? La ruche actuellement affichée sera remplacée.')) return;
+  donneesVersRuche(r);
+  rucheChargee = id;
+  renderRuches();
+}
+
+function renommerRuche(id){
+  const r = RUCHES.find(x => x.id === id);
+  if(!r) return;
+  const nom = prompt('Nouveau nom :', r.nom);
+  if(nom === null) return;
+  const propre = nom.trim();
+  if(!propre) return;
+  r.nom = propre.slice(0, 40);
+  renderRuches();
+}
+
+function supprimerRuche(id){
+  const r = RUCHES.find(x => x.id === id);
+  if(!r || !confirm('Supprimer « ' + r.nom + '  » ?\n\nLa ruche affichée à l\u2019écran n\u2019est pas touchée.')) return;
+  RUCHES = RUCHES.filter(x => x.id !== id);
+  if(rucheChargee === id) rucheChargee = null;
+  renderRuches();
+}
+
+function nbAbeilles(r){ return (r.cases || []).filter(Boolean).length; }
+
+function renderRuches(){
+  const el = document.getElementById('rs-liste');
+  if(!el) return;
+  if(!RUCHES.length){
+    el.innerHTML = '<div class="rs-vide">Aucune ruche enregistrée.<br>Compose ta ruche, donne-lui un nom, ' +
+                   'et elle apparaîtra ici.</div>';
+    return;
+  }
+  el.innerHTML = RUCHES.map(r =>
+    '<div class="rs-item' + (rucheChargee === r.id ? ' actuelle' : '') + '">' +
+      '<button class="rs-nom" onclick="chargerRuche(\'' + r.id + '\')" title="Cliquer pour charger cette ruche">' +
+        esc(r.nom) + '</button>' +
+      '<div class="rs-bas">' +
+        '<span class="rs-date">' + nbAbeilles(r) + ' abeilles · ' +
+          new Date(r.date).toLocaleDateString('fr-FR') + '</span>' +
+        '<button class="rs-mini" onclick="renommerRuche(\'' + r.id + '\')">Renommer</button>' +
+        '<button class="rs-mini sup" onclick="supprimerRuche(\'' + r.id + '\')">Supprimer</button>' +
+      '</div>' +
+    '</div>').join('');
+}
+
+function majPanneauRuches(){
+  const hint = document.getElementById('ruches-hint');
+  if(!hint) return;
+  const connecte = (typeof Nuage !== 'undefined' && Nuage.connecte());
+  hint.innerHTML = connecte
+    ? 'Clique un nom pour charger la ruche. Limite : ' + RUCHES_MAX + ' ruches.'
+    : '<b>Connecte-toi</b> (bouton en haut à droite) pour enregistrer tes ruches et les retrouver sur tous tes appareils.';
+  const s = document.querySelector('.rs-save');
+  if(s) s.style.display = connecte ? '' : 'none';
+  renderRuches();
+}
+
+function exigeCompte(quoi){
+  if(typeof Nuage !== 'undefined' && Nuage.connecte()) return true;
+  if(confirm('Il faut un compte pour ' + quoi + '.\n\nOuvrir la fenêtre de connexion ?')) ouvrirAuth();
+  return false;
+}
+
+
+/* ============================================================================
+   ██  HISTORIQUE DES TRADES  ██
+   ============================================================================ */
+let TRADES = [];                 // [{id, date, you:[], them:[]}]
+const TRADES_MAX = 50;
+
+function totalCote(liste){
+  return (liste || []).reduce((s, x) => s + (VALEURS_TRADE[x.item] || 0) * x.qty, 0);
+}
+
+function garderTrade(){
+  if(!exigeCompte('garder tes trades')) return;
+  if(!trade.you.length && !trade.them.length){
+    alert('Ajoute au moins un objet d\u2019un côté avant de garder ce trade.');
+    return;
+  }
+  TRADES.unshift({
+    id: 't' + Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+    date: Date.now(),
+    you:  JSON.parse(JSON.stringify(trade.you)),
+    them: JSON.parse(JSON.stringify(trade.them)),
+    /* Valeurs FIGÉES au jour de la sauvegarde. On les garde telles quelles :
+       comparées aux cotes du jour, elles montrent comment le trade a vieilli. */
+    valYou:  totalCote(trade.you),
+    valThem: totalCote(trade.them)
+  });
+  if(TRADES.length > TRADES_MAX) TRADES = TRADES.slice(0, TRADES_MAX);
+  majCompteurTrades();
+  if(typeof Nuage !== 'undefined') Nuage.sauverMaintenant();
+  const b = document.getElementById('th-compte');
+  if(b){ b.textContent = '(' + TRADES.length + ') ✓'; setTimeout(majCompteurTrades, 1600); }
+}
+
+function viderTrade(){
+  trade.you = []; trade.them = [];
+  renderTrade();
+}
+
+function majCompteurTrades(){
+  const el = document.getElementById('th-compte');
+  if(el) el.textContent = TRADES.length ? '(' + TRADES.length + ')' : '';
+}
+
+function ouvrirHistoriqueTrades(){
+  if(!TRADES.length){
+    poserModale(
+      '<h3>Historique des trades<button class="cm-x" onclick="fermerModaleCompte()">✕</button></h3>' +
+      '<p class="cm-sous">Aucun trade gardé pour l\u2019instant. Compose un échange, puis clique ' +
+      '<b>Garder ce trade</b> pour le retrouver ici.</p>' +
+      '<div class="cm-actions"><button class="btn btn-ghost" onclick="fermerModaleCompte()">Fermer</button></div>');
+    return;
+  }
+  const lignes = TRADES.map(tr => {
+    /* valeurs du jour de la sauvegarde (les anciennes fiches n'en ont pas :
+       on retombe alors sur un calcul aux cotes actuelles) */
+    const a0 = (tr.valYou  !== undefined) ? tr.valYou  : totalCote(tr.you);
+    const b0 = (tr.valThem !== undefined) ? tr.valThem : totalCote(tr.them);
+    const a1 = totalCote(tr.you), b1 = totalCote(tr.them);
+
+    const juge = (a, b) => {
+      const e = (a + b) ? Math.abs(a - b) / Math.max(a, b) : 0;
+      return e <= 0.10 ? { c:'fair', t:'Équitable' }
+           : b > a     ? { c:'pour', t:'À ton avantage' }
+                       : { c:'contre', t:'À leur avantage' };
+    };
+    const v0 = juge(a0, b0), v1 = juge(a1, b1);
+    const bouge = (a0 !== a1 || b0 !== b1);
+
+    const resume = l => l.length
+      ? l.map(x => x.qty + '× ' + esc(x.item)).join(', ')
+      : '<i style="opacity:.5">vide</i>';
+
+    /* évolution : on ne l'affiche que si les cotes ont réellement bougé */
+    let evo = '';
+    if(bouge){
+      const ecart = (n0, n1) => {
+        const d = n1 - n0;
+        if(!d) return '<span class="th-stable">=</span>';
+        const pc = n0 ? Math.round(d / n0 * 100) : 100;
+        return '<span class="th-delta ' + (d > 0 ? 'up' : 'down') + '">' +
+               (d > 0 ? '▲ +' : '▼ ') + pc + '%</span>';
+      };
+      evo = '<div class="th-evo">' +
+              '<span class="th-evo-t">Aux cotes d\u2019aujourd\u2019hui</span>' +
+              '<span class="th-evo-v">' + fmtSigns(a1) + ' ' + ecart(a0, a1) +
+                ' <i>vs</i> ' + fmtSigns(b1) + ' ' + ecart(b0, b1) + '</span>' +
+              '<span class="th-verdict ' + v1.c + '">' + v1.t + '</span>' +
+            '</div>';
+    }
+
+    return '<div class="th-item">' +
+      '<div class="th-haut"><span class="th-date">' +
+        new Date(tr.date).toLocaleString('fr-FR', {dateStyle:'medium', timeStyle:'short'}) +
+        '</span><span class="th-verdict ' + v0.c + '">' + v0.t + '</span></div>' +
+      '<div class="th-cotes">' +
+        '<div class="th-cote"><b>Toi · ' + fmtSigns(a0) + '</b>' + resume(tr.you) + '</div>' +
+        '<div class="th-vs">VS</div>' +
+        '<div class="th-cote"><b>Eux · ' + fmtSigns(b0) + '</b>' + resume(tr.them) + '</div>' +
+      '</div>' +
+      evo +
+      '<div class="th-actions">' +
+        '<button class="btn btn-primary" onclick="chargerTrade(\'' + tr.id + '\')">Recharger</button>' +
+        '<button class="btn cm-danger" onclick="supprimerTrade(\'' + tr.id + '\')">Supprimer</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  poserModale(
+    '<h3>Historique des trades<button class="cm-x" onclick="fermerModaleCompte()">✕</button></h3>' +
+    '<p class="cm-sous">' + TRADES.length + ' trade' + (TRADES.length > 1 ? 's' : '') +
+      ' gardé' + (TRADES.length > 1 ? 's' : '') + '. Les valeurs affichées sont celles du jour de la ' +
+      'sauvegarde. Si les cotes ont bougé depuis, l\u2019écart apparaît en dessous.</p>' +
+    '<div class="th-liste">' + lignes + '</div>' +
+    '<div class="cm-actions" style="margin-top:1rem">' +
+      '<button class="btn btn-ghost" onclick="fermerModaleCompte()">Fermer</button></div>', true);
+}
+
+function chargerTrade(id){
+  const tr = TRADES.find(x => x.id === id);
+  if(!tr) return;
+  trade.you  = JSON.parse(JSON.stringify(tr.you));
+  trade.them = JSON.parse(JSON.stringify(tr.them));
+  renderTrade();
+  fermerModaleCompte();
+  showView('outils');
+  const b = document.querySelector('.tool-nav button[data-tool="trade"]');
+  if(b) b.click();
+}
+
+function supprimerTrade(id){
+  TRADES = TRADES.filter(x => x.id !== id);
+  majCompteurTrades();
+  ouvrirHistoriqueTrades();
+}
+
+
+/* ============================================================================
+   ██  SAUVEGARDE EN LIGNE — ce qui est gardé pour chaque compte  ██
+   ============================================================================
+   Un bloc = une donnée sauvegardée.
+     cle    : identifiant en base, à ne plus changer une fois en production
+     lire   : renvoie ce qu'on veut garder (du JSON simple, rien d'autre)
+     ecrire : reçoit ce qui était en base et le remet dans la page
+
+   👉 POUR AJOUTER UNE NOUVELLE SAUVEGARDE PLUS TARD :
+      copie un bloc, change la clé, et c'est fini. Rien à toucher dans
+      Supabase — la base accepte n'importe quelle clé.
+   ============================================================================ */
+if(typeof Nuage !== 'undefined' && Nuage.disponible()){
+
+  /* ---- 1. La ruche affichée à l'écran (travail en cours) ----
+     Indépendante des ruches nommées : elle permet de retrouver son écran
+     exactement dans l'état où on l'a laissé. */
+  Nuage.emplacement({
+    cle: 'ruche',
+    lire:   () => rucheVersDonnees(),
+    ecrire: (v) => donneesVersRuche(v)
+  });
+
+  /* ---- 2. Les ruches nommées (onglet « Ruches sauvegardées ») ---- */
+  Nuage.emplacement({
+    cle: 'ruches',
+    lire:   () => RUCHES,
+    ecrire: (v) => { RUCHES = Array.isArray(v) ? v : []; renderRuches(); }
+  });
+
+  /* ---- 3. L'historique des trades ---- */
+  Nuage.emplacement({
+    cle: 'trades',
+    lire:   () => TRADES,
+    ecrire: (v) => { TRADES = Array.isArray(v) ? v : []; majCompteurTrades(); }
+  });
+
+  /* ---- 4. Préférences : la langue choisie à l'inscription ---- */
+  Nuage.emplacement({
+    cle: 'preferences',
+    lire:   () => ({ langue: PREF_LANGUE || window.LANG || 'fr' }),
+    ecrire: (v) => { if(v && v.langue) PREF_LANGUE = (v.langue === 'en') ? 'en' : 'fr'; }
+  });
+
+  /* ---- 5. Calculateur de niveaux ---- */
+  Nuage.emplacement({
+    cle: 'niveaux',
+    lire: () => ({ as: asCounts, veux: veuxCounts, puppy: puppyBonus }),
+    ecrire: (v) => {
+      if(!v) return;
+      if(Array.isArray(v.as))   for(let L=0; L<=NIV_MAX; L++) asCounts[L]   = parseInt(v.as[L])   || 0;
+      if(Array.isArray(v.veux)) for(let L=0; L<=NIV_MAX; L++) veuxCounts[L] = parseInt(v.veux[L]) || 0;
+      puppyBonus = (parseInt(v.puppy) === 20) ? 20 : 0;
+      document.querySelectorAll('#lvl-rows input[data-lvl]').forEach(inp => {
+        const L = parseInt(inp.dataset.lvl);
+        inp.value = (inp.dataset.col === 'as') ? asCounts[L] : veuxCounts[L];
+      });
+      document.querySelectorAll('#lvl-puppy button').forEach(b => {
+        b.classList.toggle('active', parseInt(b.dataset.v) === puppyBonus);
+      });
+      if(typeof computeNiveau === 'function') computeNiveau();
+      if(typeof computeSolo   === 'function') computeSolo();
+    }
+  });
+
+  /* ---- 6. Calculateur d'ingrédients : panier et stock ---- */
+  Nuage.emplacement({
+    cle: 'ingredients',
+    lire: () => ({ panier: PANIER, stock: STOCK }),
+    ecrire: (v) => {
+      if(!v) return;
+      PANIER = Array.isArray(v.panier) ? v.panier.filter(x => x && CATALOGUE[x.nom]) : [];
+      STOCK  = (v.stock && typeof v.stock === 'object') ? v.stock : {};
+      renderPanier(); renderCourses();
+    }
+  });
+
+  /* ---- 7. Le trade en cours de composition ---- */
+  Nuage.emplacement({
+    cle: 'trade',
+    lire: () => ({ you: trade.you, them: trade.them }),
+    ecrire: (v) => {
+      if(!v) return;
+      trade.you  = Array.isArray(v.you)  ? v.you  : [];
+      trade.them = Array.isArray(v.them) ? v.them : [];
+      renderTrade();
+    }
+  });
+
+}
 </script>
 </body>
 </html>
