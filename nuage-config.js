@@ -16,7 +16,7 @@
 
 window.NUAGE_CONFIG = {
   url: "https://tbgiuzatulactsvwjljq.supabase.co",
-  cle: "COLLE_LA_CLE_ICI",
+  cle: "sb_publishable_KBpi0vvtFs0ARrWsco4wvw_xTdA90Bf",
   discord: true,
 };
 
