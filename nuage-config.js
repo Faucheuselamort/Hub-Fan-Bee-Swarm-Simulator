@@ -1,30 +1,35 @@
 /* ============================================================
-   NUAGE-CONFIG.JS — les 2 seules valeurs à remplir
+   NUAGE-CONFIG.JS
    ------------------------------------------------------------
-   Tu les trouves dans Supabase :
-     Project Settings  ▸  API
-       • Project URL      -> url
-       • anon public key  -> cle
-   ------------------------------------------------------------
-   ⚠️  Ces deux valeurs sont PUBLIQUES, c'est normal et voulu.
-   Elles sont visibles par tout le monde dans le code du site.
-   Ce qui protège les données, ce n'est pas le secret de la clé,
-   c'est la « Row Level Security » activée par le fichier
-   supabase-setup.sql : chaque personne ne peut lire et écrire
-   que ses propres lignes, même en trafiquant la console.
+   Une seule ligne à modifier : celle de la clé.
+   Remplace uniquement ce qui est ENTRE LES GUILLEMETS.
 
-   Ne mets JAMAIS ici la clé « service_role » de Supabase :
-   celle-là ignore toutes les règles de sécurité.
+   Règles à respecter, sinon tout le fichier est ignoré :
+     • garder les guillemets droits  "  et pas les typographiques « ” »
+     • garder la virgule à la fin de chaque ligne
+     • la clé tient sur UNE seule ligne, sans espace ni retour à la ligne
+     • ne rien coller après la dernière accolode  };
+
+   Où trouver la clé : bouton vert « Connect » du tableau de bord,
+   ou ⚙️ Settings ▸ API Keys ▸ section « Publishable key ».
    ============================================================ */
 
 window.NUAGE_CONFIG = {
-
-  url: "https://tbgiuzatulactsvwjljq.supabase.co",   // ex. "https://abcdefghijklm.supabase.co"
-  cle: "sb_publishable_KBpi0vvtFs0ARrWsco4wvw_xTdA90Bf",   // la longue clé « anon public »
-
-  /* Passe à true seulement APRÈS avoir activé Discord dans
-     Supabase ▸ Authentication ▸ Providers. Sinon le bouton
-     s'affiche mais renvoie une erreur. */
+  url: "https://tbgiuzatulactsvwjljq.supabase.co",
+  cle: "COLLE_LA_CLE_ICI",
   discord: true,
-
 };
+
+/* ------------------------------------------------------------
+   Vérification automatique : si le fichier est mal formé, ce
+   message n'apparaîtra jamais dans la console — ce qui est déjà
+   une information utile.
+   ------------------------------------------------------------ */
+console.log(
+  "%cnuage-config.js lu correctement",
+  "color:#8FE86B;font-weight:bold",
+  "\n  url :", window.NUAGE_CONFIG.url,
+  "\n  clé :", window.NUAGE_CONFIG.cle === "COLLE_LA_CLE_ICI"
+             ? "⚠️ pas encore collée"
+             : window.NUAGE_CONFIG.cle.slice(0, 20) + "…"
+);

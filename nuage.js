@@ -45,6 +45,23 @@ window.Nuage = (function(){
   }
   function disponible(){ return configure() && bibliothequePresente(); }
 
+  /* Dit précisément CE QUI manque, pour ne pas chercher à l'aveugle. */
+  function diagnostic(){
+    if(typeof NUAGE_CONFIG === "undefined")
+      return { code:"config-absente",
+        texte:"nuage-config.js n'a pas été lu. Soit le fichier manque, soit il contient une erreur de syntaxe : ouvre la console (F12) et regarde s'il y a une ligne rouge « SyntaxError » suivie de nuage-config.js." };
+    if(!NUAGE_CONFIG.url || NUAGE_CONFIG.url.indexOf("A-REMPLIR") > -1)
+      return { code:"url-manquante",
+        texte:"L'adresse du serveur n'est pas renseignée dans nuage-config.js." };
+    if(!NUAGE_CONFIG.cle || NUAGE_CONFIG.cle.indexOf("A-REMPLIR") > -1)
+      return { code:"cle-manquante",
+        texte:"La clé n'est pas encore collée dans nuage-config.js. Récupère-la dans Supabase (bouton Connect, ou Settings ▸ API Keys ▸ Publishable key) et remplace A-REMPLIR." };
+    if(!bibliothequePresente())
+      return { code:"librairie-absente",
+        texte:"La librairie Supabase n'a pas pu être chargée. Un bloqueur de publicité ou un réseau filtré peut en être la cause." };
+    return { code:"ok", texte:"" };
+  }
+
   /* ---------- état affiché dans l'interface ---------- */
 
   function surEtat(fn){ ecouteurs.push(fn); }
@@ -255,6 +272,7 @@ window.Nuage = (function(){
   return {
     disponible: disponible,
     configure: configure,
+    diagnostic: diagnostic,
     demarrer: demarrer,
     inscription: inscription,
     connexion: connexion,

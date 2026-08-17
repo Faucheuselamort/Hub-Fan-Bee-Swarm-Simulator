@@ -2179,11 +2179,16 @@ function ouvrirAuth(mode){
   authMode = mode || 'connexion';
 
   if(typeof Nuage === 'undefined' || !Nuage.disponible()){
+    const d = (typeof Nuage !== 'undefined' && Nuage.diagnostic)
+            ? Nuage.diagnostic() : { code:'librairie-absente', texte:'' };
     poserModale(
-      '<h3>Comptes indisponibles<button class="cm-x" onclick="fermerModaleCompte()">✕</button></h3>' +
-      '<p class="cm-sous">La sauvegarde en ligne n\u2019est pas encore branchée sur ce site. ' +
+      '<h3>Comptes pas encore actifs<button class="cm-x" onclick="fermerModaleCompte()">✕</button></h3>' +
+      '<p class="cm-sous">La sauvegarde en ligne n\u2019est pas branchée. ' +
       'Tes ruches restent exportables en fichier depuis le Build your Hive.</p>' +
-      '<div class="cm-actions"><button class="btn btn-ghost" onclick="fermerModaleCompte()">Fermer</button></div>');
+      (d.texte ? '<div class="cm-avert">🔧 ' + esc(d.texte) + '</div>' : '') +
+      '<div class="cm-actions" style="margin-top:1rem">' +
+        '<button class="btn btn-ghost" onclick="fermerModaleCompte()">Fermer</button></div>' +
+      '<div class="cm-note">Code technique : <b>' + esc(d.code) + '</b></div>');
     return;
   }
 
@@ -6963,8 +6968,6 @@ initTrade();
 initBuilder();
 initObjets();
 renderMutations();
-majPanneauRuches();
-majCompteurTrades();
 
 /* ============================================================================
    ██  RUCHES SAUVEGARDÉES  ██
@@ -7257,6 +7260,13 @@ function supprimerTrade(id){
   majCompteurTrades();
   ouvrirHistoriqueTrades();
 }
+
+
+/* Ces deux appels doivent rester ICI, après les déclarations de RUCHES et
+   TRADES ci-dessus : une variable « let » n'existe pas avant sa ligne, les
+   appeler plus haut lève une ReferenceError. */
+majPanneauRuches();
+majCompteurTrades();
 
 
 /* ============================================================================
