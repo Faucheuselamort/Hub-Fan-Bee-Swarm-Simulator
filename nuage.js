@@ -149,8 +149,23 @@ window.Nuage = (function(){
             || (u.email ? u.email.split("@")[0] : "Membre"),
       /* "email" ou "discord" : utile quand quelqu'un ne retrouve plus ses
          ruches, c'est presque toujours qu'il s'est connecté autrement. */
-      fournisseur: app.provider || "email"
+      fournisseur: app.provider || "email",
+      /* Identifiant Discord, quand la connexion s'est faite par Discord.
+         C'est lui qui permet au bot de retrouver le compte de la personne
+         qui tape une commande. Null pour une inscription par e-mail. */
+      idDiscord: idDiscordDe(u)
     };
+  }
+
+  function idDiscordDe(u){
+    var ids = u.identities || [];
+    for(var i = 0; i < ids.length; i++)
+      if(ids[i].provider === "discord" && ids[i].id) return String(ids[i].id);
+    var meta = u.user_metadata || {};
+    if((u.app_metadata || {}).provider === "discord")
+      return meta.provider_id ? String(meta.provider_id)
+           : meta.sub ? String(meta.sub) : null;
+    return null;
   }
 
   function exigeClient(){

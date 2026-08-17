@@ -7306,14 +7306,30 @@ if(typeof Nuage !== 'undefined' && Nuage.disponible()){
     ecrire: (v) => { TRADES = Array.isArray(v) ? v : []; majCompteurTrades(); }
   });
 
-  /* ---- 4. Préférences : la langue choisie à l'inscription ---- */
+  /* ---- 4. Identifiant Discord ----
+     Sert uniquement au bot Discord : il cherche la ligne dont la valeur
+     correspond à l'identifiant de la personne qui tape la commande, et
+     remonte ainsi jusqu'à ses ruches. Aucune donnée nouvelle n'est
+     collectée : cet identifiant vient déjà de la connexion Discord.
+     Pour une inscription par e-mail, « lire » renvoie undefined, donc
+     rien n'est écrit du tout. */
+  Nuage.emplacement({
+    cle: 'discord',
+    lire: () => {
+      const u = Nuage.utilisateur();
+      return (u && u.idDiscord) ? u.idDiscord : undefined;
+    },
+    ecrire: () => {}          // rien à restaurer : la valeur vient du compte
+  });
+
+  /* ---- 5. Préférences : la langue choisie à l'inscription ---- */
   Nuage.emplacement({
     cle: 'preferences',
     lire:   () => ({ langue: PREF_LANGUE || window.LANG || 'fr' }),
     ecrire: (v) => { if(v && v.langue) PREF_LANGUE = (v.langue === 'en') ? 'en' : 'fr'; }
   });
 
-  /* ---- 5. Calculateur de niveaux ---- */
+  /* ---- 6. Calculateur de niveaux ---- */
   Nuage.emplacement({
     cle: 'niveaux',
     lire: () => ({ as: asCounts, veux: veuxCounts, puppy: puppyBonus }),
@@ -7334,7 +7350,7 @@ if(typeof Nuage !== 'undefined' && Nuage.disponible()){
     }
   });
 
-  /* ---- 6. Calculateur d'ingrédients : panier et stock ---- */
+  /* ---- 7. Calculateur d'ingrédients : panier et stock ---- */
   Nuage.emplacement({
     cle: 'ingredients',
     lire: () => ({ panier: PANIER, stock: STOCK }),
@@ -7346,7 +7362,7 @@ if(typeof Nuage !== 'undefined' && Nuage.disponible()){
     }
   });
 
-  /* ---- 7. Le trade en cours de composition ---- */
+  /* ---- 8. Le trade en cours de composition ---- */
   Nuage.emplacement({
     cle: 'trade',
     lire: () => ({ you: trade.you, them: trade.them }),
