@@ -1292,6 +1292,9 @@ footer.site{
 .cm-danger:hover{background:rgba(240,115,106,.10)}
 .cm-discord{background:#5865F2;color:#fff}
 .cm-discord:hover{filter:brightness(1.1)}
+.cm-avert{margin-top:.9rem;background:rgba(244,180,41,.09);border:1px solid rgba(244,180,41,.28);
+  border-radius:11px;padding:.65rem .8rem;font-size:.78rem;color:#E8CE8A;line-height:1.55}
+.cm-avert b{color:#F7DFA8}
 .cm-err{margin-top:.9rem;font-size:.86rem;color:var(--bad);text-align:center;min-height:1.2em;line-height:1.5}
 .cm-ok{margin-top:.9rem;font-size:.86rem;color:var(--vert);text-align:center;line-height:1.5}
 .cm-lien{margin-top:.9rem;text-align:center}
@@ -2162,6 +2165,13 @@ function ouvrirAuth(mode){
         ? '<button class="btn cm-discord" onclick="authDiscord()">Continuer avec Discord</button>' : '') +
     '</div>' +
 
+    /* Deux méthodes = deux comptes distincts. Mieux vaut le dire avant
+       qu'après, sinon on récupère des « j'ai perdu mes ruches ». */
+    ((typeof NUAGE_CONFIG !== 'undefined' && NUAGE_CONFIG.discord)
+      ? '<div class="cm-avert">⚠️ Utilise toujours <b>la même méthode</b> pour te connecter. ' +
+        'Un compte e-mail et un compte Discord sont deux comptes séparés : ' +
+        'tes ruches ne passent pas de l\u2019un à l\u2019autre.</div>' : '') +
+
     '<div class="cm-err" id="cm-err"></div><div class="cm-ok" id="cm-ok"></div>' +
     (inscr ? '' : '<div class="cm-lien"><a onclick="authOublie()">Mot de passe oublié ?</a></div>')
   );
@@ -2280,6 +2290,8 @@ function ouvrirCompte(){
   poserModale(
     '<h3>' + esc(u.pseudo) + '<button class="cm-x" onclick="fermerModaleCompte()">✕</button></h3>' +
     '<p class="cm-sous">' + esc(u.email) + '</p>' +
+    '<div class="cm-ligne"><span class="k">Connecté via</span><span class="v">' +
+      (u.fournisseur === 'discord' ? 'Discord' : 'E-mail') + '</span></div>' +
     '<div class="cm-ligne"><span class="k">Sauvegarde</span><span class="v" id="cm-etat">à jour</span></div>' +
     '<div class="cm-ligne"><span class="k">Ruches enregistrées</span><span class="v">' + RUCHES.length + '</span></div>' +
     '<div class="cm-ligne"><span class="k">Trades gardés</span><span class="v">' + TRADES.length + '</span></div>' +

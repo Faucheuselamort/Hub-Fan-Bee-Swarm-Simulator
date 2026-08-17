@@ -124,11 +124,15 @@ window.Nuage = (function(){
     if(!session) return null;
     var u = session.user;
     var meta = u.user_metadata || {};
+    var app = u.app_metadata || {};
     return {
       id: u.id,
       email: u.email || "",
       pseudo: meta.pseudo || meta.full_name || meta.name
-            || (u.email ? u.email.split("@")[0] : "Membre")
+            || (u.email ? u.email.split("@")[0] : "Membre"),
+      /* "email" ou "discord" : utile quand quelqu'un ne retrouve plus ses
+         ruches, c'est presque toujours qu'il s'est connecté autrement. */
+      fournisseur: app.provider || "email"
     };
   }
 
