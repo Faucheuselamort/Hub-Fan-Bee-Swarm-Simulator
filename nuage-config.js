@@ -19,8 +19,8 @@
 
 window.NUAGE_CONFIG = {
 
-  url: https://tbgiuzatulactsvwjljq.supabase.co,   // ex. "https://abcdefghijklm.supabase.co"
-  cle: sb_publishable_KBpi0vvtFs0ARrWsco4wvw_xTdA90Bf,   // la longue clé « anon public »
+  url: "https://tbgiuzatulactsvwjljq.supabase.co",   // ex. "https://abcdefghijklm.supabase.co"
+  cle: "sb_publishable_KBpi0vvtFs0ARrWsco4wvw_xTdA90Bf",   // la longue clé « anon public »
 
   /* Passe à true seulement APRÈS avoir activé Discord dans
      Supabase ▸ Authentication ▸ Providers. Sinon le bouton
