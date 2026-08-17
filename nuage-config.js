@@ -25,6 +25,6 @@ window.NUAGE_CONFIG = {
   /* Passe à true seulement APRÈS avoir activé Discord dans
      Supabase ▸ Authentication ▸ Providers. Sinon le bouton
      s'affiche mais renvoie une erreur. */
-  discord: false,
+  discord: true,
 
 };
