@@ -26,6 +26,6 @@
    plus tard, il faudra régénérer TOUS les comptes. */
 const SEL = "FauFau-2026";
 
-const COMPTES = [{ u: "faufau", h: "762f11bd4205f49399e686690cdf3f11a93a093eb2417cb87227d7d3615a0f1c", actif: true },{ u: "smiless", h: "b2bfd21da48c4f09c2d522a2ed1437e10c30f0222d2805c8849333e38808a724", actif: true },{ u: "g6027", h: "0e841dc9d8ddaafc50bff89f37c4e30e3a20dfc0281a0a90af8a6996de5cdb30", actif: true },{ u: "mimi", h: "a568e68b4bfecb35b26c2cecad8ce549e08e4f21e1dc9ac5f8de2525963b5854", actif: true },{ u: "asriel", h: "d6a4f7cddb57b95c53112e56b218340af5f8dc4292aa36875c059b44d6f86b8f", actif: true },
+const COMPTES = [{ u: "faufau", h: "762f11bd4205f49399e686690cdf3f11a93a093eb2417cb87227d7d3615a0f1c", actif: true },{ u: "smiless", h: "b2bfd21da48c4f09c2d522a2ed1437e10c30f0222d2805c8849333e38808a724", actif: true },{ u: "g6027", h: "0e841dc9d8ddaafc50bff89f37c4e30e3a20dfc0281a0a90af8a6996de5cdb30", actif: true },{ u: "mimi", h: "a568e68b4bfecb35b26c2cecad8ce549e08e4f21e1dc9ac5f8de2525963b5854", actif: true },{ u: "asriel", h: "8c2ee60e78682cb7a9b5e5aba6d92626cf8c30efe8c6aa6933abce2b343db3ca", actif: true },
 
 ];
