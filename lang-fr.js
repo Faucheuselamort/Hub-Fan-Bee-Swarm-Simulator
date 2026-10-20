@@ -17,7 +17,7 @@ LANGUES.fr.T = {
   guide_Red     : "Le parcours ruche rouge.",
   guide_Blue    : "Le parcours ruche bleue.",
   guide_White   : "Le parcours ruche blanche.",
-  guide_vide    : "La section <b>%s</b> est prête mais encore vide.",
+  guide_vide    : "Ce guide n'est pas encore disponible.",
   section       : "section",
   sections      : "sections",
 
