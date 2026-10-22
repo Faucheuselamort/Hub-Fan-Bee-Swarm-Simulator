@@ -6347,8 +6347,11 @@ function renderTrade(){
   else { v.className='verdict lose'; v.textContent=tf('trade_lose', fmtSigns(Math.abs(diff)), pct.toFixed(0)); }
 }
 
-/* ---------- Skins de ruche : couleur et forme des alvéoles ---------- */
-/* Un hive skin change la couleur des alvéoles. Sans skin, la ruche est jaune. */
+/* ---------- Skins de ruche : couleur, forme et décor ---------- */
+/* Un hive skin change la couleur du panneau. Sans skin, la ruche est jaune.
+   Les skins Wavy ont un contour ondulé (mur ET sol), l'Icy Crowned une
+   couronne de pics de glace et un sol en étoile. Couleurs relevées sur les
+   modèles 3D du wiki. */
 const HIVE_JAUNE = "#E3A81B";
 const HIVE_SKIN_COULEUR = {
   "Blue Hive Skin":        "#2E6FA8",
@@ -6357,12 +6360,21 @@ const HIVE_SKIN_COULEUR = {
   "Pink Hive Skin":        "#C2679B",
   "White Hive Skin":       "#D6DDE2",
   "Black Hive Skin":       "#23272C",
-  "Wavy Gold Hive Skin":   "#D9A521",
-  "Wavy Cyan Hive Skin":   "#2FA3A8",
-  "Wavy Purple Hive Skin": "#6E49A6",
-  "Wavy Festive Hive Skin":"#9E2F3A",
-  "Doodle Hive Skin":      "#5A6068",
-  "Icy Crowned Hive Skin": "#5FA8CC",
+  "Wavy Gold Hive Skin":   "#E6C23A",
+  "Wavy Yellow Hive Skin": "#E6C23A",
+  "Wavy Cyan Hive Skin":   "#58C6CD",
+  "Wavy Purple Hive Skin": "#6B24BC",
+  "Wavy Festive Hive Skin":"#A31F24",
+  "Doodle Hive Skin":      "#F3F3EE",
+  "Wavy Doodle Hive Skin": "#F3F3EE",
+  "Icy Crowned Hive Skin": "#A9DDE2",
+};
+/* décor propre à certains skins */
+const HIVE_SKIN_DECOR = {
+  "Wavy Festive Hive Skin": { sol:"#2E8B3E" },                       // mur rouge, sol vert
+  "Doodle Hive Skin":       { doodle:true, bord:"#36B746", rayons:"#46D251" },
+  "Wavy Doodle Hive Skin":  { doodle:true, bord:"#36B746", rayons:"#46D251" },
+  "Icy Crowned Hive Skin":  { glace:true, bord:"#4E97A5" },
 };
 function couleurRuche(){ return HIVE_SKIN_COULEUR[hiveSkin] || HIVE_JAUNE; }
 
@@ -6376,48 +6388,153 @@ let hsSel    = -1;
 const ALV = 64;
 const RAYON_BAS = ALV * 3;          // rayon du cercle (2 alv) + 1 alvéole d'écart
 
+function nuance(hex, f){            // f > 0 éclaircit, f < 0 assombrit
+  const m = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(hex); if(!m) return hex;
+  const c = [1,2,3].map(k=>parseInt(m[k],16)).map(v=> f>=0 ? v+(255-v)*f : v*(1+f));
+  return '#'+c.map(v=>Math.round(Math.max(0,Math.min(255,v))).toString(16).padStart(2,'0')).join('');
+}
+const fx = n => n.toFixed(1);
+const polyD = pts => 'M ' + pts.map(q=>fx(q[0])+' '+fx(q[1])).join(' L ') + ' Z';
+
+/* Contour de base (coins hauts arrondis + bas en demi-cercle), échantillonné
+   tous les ~2 px, en partant du milieu du haut et dans le sens horaire. */
+function contourBase(W, H, m){
+  const R = Math.min(RAYON_BAS, W/2, H/2), r = 40, cy = H - R, pts = [];
+  const seg = (x0,y0,x1,y1)=>{ const n=Math.max(2,Math.ceil(Math.hypot(x1-x0,y1-y0)/2));
+    for(let k=1;k<=n;k++) pts.push([x0+(x1-x0)*k/n, y0+(y1-y0)*k/n]); };
+  const arc = (cx,cy,rx,ry,a0,a1)=>{ const n=Math.max(4,Math.ceil(Math.abs(a1-a0)*Math.max(rx,ry)/2));
+    for(let k=1;k<=n;k++){ const a=a0+(a1-a0)*k/n; pts.push([cx+rx*Math.cos(a), cy+ry*Math.sin(a)]); } };
+  pts.push([W/2, m]);
+  seg(W/2, m, W-m-r, m);
+  arc(W-m-r, m+r, r, r, -Math.PI/2, 0);
+  seg(W-m, m+r, W-m, cy);
+  arc(W/2, cy, W/2-m, R-m, 0, Math.PI);
+  seg(m, cy, m, m+r);
+  arc(m+r, m+r, r, r, Math.PI, Math.PI*1.5);
+  seg(m+r, m, W/2, m);
+  pts.pop();
+  return pts;
+}
+
+/* Contour ondulé : chaque point du contour de base est poussé le long de sa
+   normale par une sinusoïde, avec un nombre entier de vagues pour boucler. */
+function contourOndule(W, H){
+  const A = 9, base = contourBase(W, H, A + 3);
+  const n = base.length, cum = [0];
+  for(let k=1;k<n;k++) cum.push(cum[k-1] + Math.hypot(base[k][0]-base[k-1][0], base[k][1]-base[k-1][1]));
+  const L = cum[n-1] + Math.hypot(base[0][0]-base[n-1][0], base[0][1]-base[n-1][1]);
+  const N = Math.max(8, Math.round(L / 118));
+  return base.map((q,k)=>{
+    const a = base[(k-1+n)%n], b = base[(k+1)%n];
+    let nx = b[1]-a[1], ny = -(b[0]-a[0]); const l = Math.hypot(nx,ny)||1; nx/=l; ny/=l;   // normale extérieure (sens horaire)
+    const d = A * Math.cos(2*Math.PI*N*cum[k]/L);      // une bosse au milieu du haut
+    return [q[0]+nx*d, q[1]+ny*d];
+  });
+}
+
+/* Icy Crowned : couronne de 5 pics en haut, côtés droits, sol en étoile. */
+function contourGlace(W, H){
+  const R = Math.min(RAYON_BAS, W/2, H/2), cy = H - R, cx = W/2, pts = [];
+  const quad = (p0,c,p1,n=24)=>{ for(let k=1;k<=n;k++){ const t=k/n, u=1-t;
+    pts.push([u*u*p0[0]+2*u*t*c[0]+t*t*p1[0], u*u*p0[1]+2*u*t*c[1]+t*t*p1[1]]); } };
+  // pics de la couronne (gauche → droite) : extérieur, intérieur, centre, intérieur, extérieur
+  const pics = [[1,60],[W*0.25,22],[cx,0],[W*0.75,22],[W-1,60]];
+  const creux = [96, 80, 80, 96];                 // fond des « bols » entre deux pics
+  pts.push(pics[0]);
+  for(let k=0;k<4;k++){
+    const a = pics[k], b = pics[k+1];
+    quad(a, [(a[0]+b[0])/2, 2*creux[k] - (a[1]+b[1])/2], b, 30);   // le bol descend jusqu'à creux[k]
+  }
+  // côté droit : petit retour concave sous le pic, puis droit jusqu'au sol
+  quad(pics[4], [W-5, 118], [W-7, 150], 10);
+  pts.push([W-7, cy]);
+  // sol en étoile : 5 pointes sur le demi-cercle, bols concaves entre elles
+  const Rt = R - 5, prof = 30;
+  const tips = [0, 1, 2, 3, 4].map(k=>{ const a = Math.PI*k/4; return [cx+Rt*Math.cos(a), cy+Rt*Math.sin(a)]; });
+  tips[0] = [W-7, cy + 6]; tips[4] = [7, cy + 6];
+  quad([W-7, cy], [W-5, cy+3], tips[0], 4);
+  for(let k=0;k<4;k++){
+    const am = Math.PI*(k+0.5)/4, rc = Rt - prof*2;
+    quad(tips[k], [cx+rc*Math.cos(am), cy+rc*Math.sin(am)], tips[k+1]);
+  }
+  quad(tips[4], [5, cy+3], [7, cy], 4);
+  // côté gauche en remontant
+  pts.push([7, 150]);
+  quad([7,150], [5,118], pics[0], 10);
+  pts.pop();
+  return pts;
+}
+
 function silhouetteD(forme, W, H){
-  const R = Math.min(RAYON_BAS, W/2, H/2);
-  const hb = H - R;
-  const pt = [];
+  if(forme === 'wavy') return polyD(contourOndule(W, H));
+  if(forme === 'icy')  return polyD(contourGlace(W, H));
+  return '';
+}
 
-  if(forme === 'wavy'){
-    const A = 30, n = 5, sommet = 34;          // amplitude, nombre de vagues, hauteur du dôme
-    for(let k=0;k<=40;k++){                     // sommet bombé
-      const t=k/40; pt.push([A+(W-2*A)*t, sommet*(1-Math.sin(Math.PI*t))]);
-    }
-    for(let k=1;k<=120;k++){                    // bord droit ondulé
-      const t=k/120, y=sommet+(hb-sommet)*t;
-      pt.push([W-A*0.5+A*0.5*Math.cos(2*Math.PI*n*t+Math.PI), y]);
-    }
-  } else if(forme === 'icy'){
-    const nb=5, haut=150, cb=0.65;              // couronne de pointes
-    const creux = haut*0.55, pas = W/nb;
-    pt.push([0, creux]);
-    for(let k=0;k<nb;k++){
-      const h = haut*(k%2===0 ? 1 : 0.76);
-      const x0=pas*k, x1=pas*(k+1), xm=(x0+x1)/2;
-      for(let j2=1;j2<=12;j2++){ const t=j2/12; pt.push([x0+(xm-x0)*t, creux-h*Math.pow(t,cb)]); }
-      for(let j2=1;j2<=12;j2++){ const t=j2/12; pt.push([xm+(x1-xm)*t, creux-h*Math.pow(1-t,cb)]); }
-    }
-    pt.push([W, hb]);
-  } else {
-    return '';
+/* petit générateur pseudo-aléatoire stable : le décor ne bouge pas d'un rendu à l'autre */
+function alea(graine){ let x = graine >>> 0; return ()=>{ x ^= x<<13; x ^= x>>>17; x ^= x<<5; return ((x>>>0) % 100000) / 100000; }; }
+
+/* Gribouillis du Wavy Doodle : lettres et traits au feutre rouge, bleu, vert */
+const DOODLES = [
+  'M -9 -9 L 9 -9 L -9 9 L 9 9',                 // Z
+  'M -8 9 L -8 -9 L 8 9 L 8 -9',                 // N
+  'M -8 -8 L 8 8 M 8 -8 L -8 8',                 // X
+  'M -9 9 L -2 -9 M 2 9 L 9 -9',                 // //
+  'M -8 -9 L -8 4 Q 0 14 8 4 L 8 -9',            // U
+  'M -9 -8 L 0 9 L 9 -8',                        // V
+  'M 0 -9 L 9 8 L -9 8 Z',                       // triangle
+  'M -10 0 Q -5 -8 0 0 T 10 0',                  // vague
+  'M -7 -9 L -7 9 M 0 -9 L 0 9 M 7 -9 L 7 9',    // |||
+  'M -9 -6 L 9 -6 M -9 6 L 9 6',                 // =
+];
+function decorDoodle(W, H, g){
+  const rnd = alea(20240715), coul = ['#E2433B','#3B5CDB','#2FA84A'];
+  const R = Math.min(RAYON_BAS, W/2, H/2), cy = H - R, padR = ALV*2 + 8;
+  const pris = []; let out = '', essais = 0;
+  while(pris.length < 30 && essais < 3000){
+    essais++;
+    const x = 22 + rnd()*(W-44), y = 24 + rnd()*(H-48);
+    if(x > g.x-14 && x < g.x+g.w+14 && y > g.y-14 && y < g.y+g.h+14) continue;   // pas sur les rayons
+    if(Math.hypot(x-W/2, y-cy) < padR) continue;                                   // pas sous la plateforme
+    if(pris.some(q=>Math.hypot(q[0]-x, q[1]-y) < 46)) continue;
+    pris.push([x,y]);
+    const d = DOODLES[Math.floor(rnd()*DOODLES.length)], c = coul[Math.floor(rnd()*3)];
+    const rot = Math.round(rnd()*90-45), sc = (1.05 + rnd()*0.5).toFixed(2);
+    out += `<path d="${d}" transform="translate(${fx(x)} ${fx(y)}) rotate(${rot}) scale(${sc})" fill="none" stroke="${c}" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>`;
   }
-
-  let d = 'M ' + pt.map(q=>q[0].toFixed(1)+' '+q[1].toFixed(1)).join(' L ');
-  d += ` A ${W/2} ${R} 0 0 1 0 ${hb.toFixed(1)}`;   // bas en demi-cercle
-
-  if(forme === 'wavy'){                              // bord gauche, en remontant
-    const A = 30, n = 5, sommet = 34;
-    const g = [];
-    for(let k=1;k<=120;k++){
-      const t=1-k/120, y=sommet+(hb-sommet)*t;
-      g.push([A*0.5-A*0.5*Math.cos(2*Math.PI*n*t+Math.PI), y]);
-    }
-    d += ' L ' + g.map(q=>q[0].toFixed(1)+' '+q[1].toFixed(1)).join(' L ');
+  return out;
+}
+function decorEtincelles(W, H, g){
+  const rnd = alea(20241225); let out = '';
+  for(let k=0;k<22;k++){
+    const x = 10 + rnd()*(W-20), y = 6 + Math.pow(rnd(),1.6)*(H*0.75), sz = 2.5 + rnd()*4.5;
+    const o = (0.55 + rnd()*0.45).toFixed(2);
+    out += `<path d="M ${fx(x)} ${fx(y-sz)} Q ${fx(x)} ${fx(y)} ${fx(x+sz)} ${fx(y)} Q ${fx(x)} ${fx(y)} ${fx(x)} ${fx(y+sz)} Q ${fx(x)} ${fx(y)} ${fx(x-sz)} ${fx(y)} Q ${fx(x)} ${fx(y)} ${fx(x)} ${fx(y-sz)} Z" fill="#FFFFFF" opacity="${o}"/>`;
   }
-  return d + ' Z';
+  return out;
+}
+
+/* Contenu SVG complet du panneau : forme, dégradé, sol, rayons, décor.
+   g = boîte de la grille d'alvéoles {x, y, w, h} en px dans la scène. */
+function skinSVG(forme, W, H, g){
+  const d = silhouetteD(forme, W, H); if(!d) return '';
+  const c = couleurRuche(), dec = HIVE_SKIN_DECOR[hiveSkin] || {};
+  const sep = g.y + g.h + 2;
+  const bord = dec.bord || nuance(c, -0.32);
+  let fond = `<rect x="0" y="0" width="${W}" height="${H}" fill="url(#sk-g)"/>`;
+  if(dec.sol) fond += `<rect x="0" y="${fx(sep)}" width="${W}" height="${fx(H-sep)}" fill="${dec.sol}"/>`;
+  if(dec.rayons) fond += `<rect x="${fx(g.x-10)}" y="${fx(g.y-10)}" width="${fx(g.w+20)}" height="${fx(g.h+20)}" rx="18" fill="${dec.rayons}" stroke="${nuance(dec.rayons,-0.2)}" stroke-width="2"/>`;
+  if(dec.glace) fond += `<ellipse cx="${fx(g.x+g.w/2)}" cy="${fx(g.y+g.h/2)}" rx="${fx(g.w*0.75)}" ry="${fx(g.h*0.62)}" fill="url(#sk-lueur)"/>`;
+  if(dec.doodle) fond += decorDoodle(W, H, g);
+  if(dec.glace)  fond += decorEtincelles(W, H, g);
+  const haut = dec.glace ? nuance(c, 0.35) : nuance(c, 0.10), bas = dec.glace ? c : nuance(c, -0.06);
+  return `<defs>
+      <linearGradient id="sk-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${haut}"/><stop offset="1" stop-color="${bas}"/></linearGradient>
+      <radialGradient id="sk-lueur"><stop offset="0" stop-color="#E9FEFF" stop-opacity=".95"/><stop offset=".6" stop-color="#CFF6FA" stop-opacity=".5"/><stop offset="1" stop-color="#CFF6FA" stop-opacity="0"/></radialGradient>
+      <clipPath id="sk-clip"><path d="${d}"/></clipPath>
+    </defs>
+    <g clip-path="url(#sk-clip)">${fond}</g>
+    <path d="${d}" fill="none" stroke="${bord}" stroke-width="${dec.doodle?7:5}" stroke-linejoin="round" opacity="${dec.doodle?1:.9}"/>`;
 }
 
 function formeRuche(){
@@ -6425,6 +6542,12 @@ function formeRuche(){
   if(hiveSkin === 'Icy Crowned Hive Skin') return 'icy';
   if(/^Wavy |^Doodle /.test(hiveSkin)) return 'wavy';
   return 'basic';
+}
+/* boîte de la grille d'alvéoles dans la scène affichée */
+function boiteGrille(st){
+  const h = st.querySelector('#hive');
+  if(!h) return { x:ALV, y:ALV*2, w:st.offsetWidth-2*ALV, h:st.offsetHeight-ALV*8 };
+  return { x:h.offsetLeft, y:h.offsetTop, w:h.offsetWidth, h:h.offsetHeight };
 }
 function appliquerSkin(){
   const st = document.getElementById('hive-stage'); if(!st) return;
@@ -6439,17 +6562,12 @@ function appliquerSkin(){
       svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
       svg.setAttribute('class','hive-shape');
       svg.setAttribute('preserveAspectRatio','none');
-      svg.innerHTML = '<path></path>';
+      svg.setAttribute('aria-hidden','true');
       st.prepend(svg);
     }
     const W = st.offsetWidth || 384, H = st.offsetHeight || 1000;
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-    const path = svg.querySelector('path');
-    path.setAttribute('d', silhouetteD(forme, W, H));
-    path.setAttribute('fill', couleurRuche());
-    path.setAttribute('stroke', 'rgba(0,0,0,.22)');
-    path.setAttribute('stroke-width', '0.6');
-    path.setAttribute('vector-effect', 'non-scaling-stroke');
+    svg.innerHTML = skinSVG(forme, W, H, boiteGrille(st));
   }
   if(!st.querySelector('.hive-pad')){
     const pad = document.createElement('div'); pad.className = 'hive-pad';
@@ -7073,9 +7191,13 @@ function downloadHiveImage(){
     forme2D.lineTo(0,r);  forme2D.quadraticCurveTo(0,0,r,0);
     forme2D.closePath();
   }
-  ctx.fillStyle=couleurRuche(); ctx.fill(forme2D);
-  ctx.lineWidth=3; ctx.strokeStyle='rgba(0,0,0,.22)'; ctx.stroke(forme2D);
+  if(!dSil){
+    ctx.fillStyle=couleurRuche(); ctx.fill(forme2D);
+    ctx.lineWidth=3; ctx.strokeStyle='rgba(0,0,0,.22)'; ctx.stroke(forme2D);
+  }
   ctx.clip(forme2D);
+  /* skins Wavy / Icy : on dessine exactement le même SVG que l'écran */
+  const svgSkin = dSil ? `<svg xmlns="http://www.w3.org/2000/svg" width="${cw}" height="${ch}" viewBox="0 0 ${cw} ${ch}">${skinSVG(forme, cw, ch, {x:pad, y:padH, w:gridW, h:gridH})}</svg>` : '';
 
   ctx.clip(forme2D);
   const padR=gridW/2, padCx=cw/2, padCy=ch-W-padR;   // cercle à 1 alvéole du bas
@@ -7108,6 +7230,7 @@ function downloadHiveImage(){
   });
   hsPosed.forEach(pp=>{ const st=STICKERS.find(x=>x.nom===pp.nom)||{nom:pp.nom}; ajouter('stickers',st); });
 
+  if(svgSkin) aCharger.set('__skin', ['data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svgSkin)]);
   const imgMap={}; let pending=aCharger.size;
   const done=()=>{ if(--pending<=0) render(); };
   if(pending===0){ render(); }
@@ -7120,6 +7243,7 @@ function downloadHiveImage(){
   });
 
   function render(){
+    if(imgMap.__skin) ctx.drawImage(imgMap.__skin, 0, 0, cw, ch);
     // --- Passage 1 : alvéoles, faces, images, badges beequip ---
     for(let i=0;i<HIVE_SIZE;i++){
       const c=hive[i]; if(!c) continue;
