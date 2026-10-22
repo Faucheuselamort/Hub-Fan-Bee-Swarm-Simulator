@@ -1422,6 +1422,177 @@ footer.site{
 #th-compte{font-family:'Fredoka',system-ui,'Segoe UI',Roboto,sans-serif;font-weight:700;color:var(--vert)}
 
 </style>
+<style id="fiches-v2">
+/* ============================================================
+   CARTES ET FICHES — version 2
+   L'élément signature : l'image posée dans une alvéole de ruche
+   (hexagone), teintée à la couleur de la catégorie.
+   ============================================================ */
+
+/* Les visuels du wiki sont dessinés en lissé, pas en pixel-art :
+   on les affiche lissés partout. */
+.card img,.modal img,.ing-img img,.dr-i img,.mob-img img,.mf-img img,.amu-head-i img,
+.amu-b-i img,.tagx-i img,.pan-img img,.tr-ic img,.tl-ic img,.bl-ic img,.champ-i img,.fx-ing img{
+  image-rendering:auto !important}
+
+/* ---------- Cartes ---------- */
+.card-grid{grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:1rem}
+.card{border-radius:16px;transition:border-color .15s,box-shadow .15s}
+.card:hover{transform:none;box-shadow:0 0 0 1px var(--accent,var(--vert)),0 14px 30px rgba(0,0,0,.38)}
+.card:focus-visible{outline:2px solid var(--accent,var(--vert));outline-offset:3px}
+.card .accent-bar{display:none}
+.card .card-top{min-height:0;padding:1.1rem .8rem .4rem;
+  background:
+    radial-gradient(150px 90px at 50% 55%,var(--glow,rgba(143,232,107,.16)),transparent 75%)}
+.card .card-img{width:104px;height:104px;padding:16px 14px;border:0;border-radius:0;
+  background:rgba(0,0,0,.26);
+  clip-path:polygon(25% 3%,75% 3%,100% 50%,75% 97%,25% 97%,0 50%)}
+.card:hover .card-img{transform:none}
+.card .card-img img{width:100%;height:100%;max-width:none;max-height:none;object-fit:contain;
+  filter:drop-shadow(0 3px 4px rgba(0,0,0,.45))}
+.card .tag{left:.7rem;right:auto;top:.7rem;text-transform:none;letter-spacing:0;font-size:.72rem;font-weight:600;
+  max-width:calc(100% - 1.4rem)}
+.card .card-body{padding:.35rem 1rem 1rem;text-align:center}
+.card h3{font-size:1.04rem;margin-bottom:.3rem}
+.card .desc{-webkit-line-clamp:2;font-size:.84rem;margin-bottom:.8rem}
+.card .keyline{justify-content:center;gap:.4rem;background:rgba(0,0,0,.22);border:0;border-radius:10px;
+  padding:.45rem .6rem}
+.card .keyline .k{font-size:.74rem}
+.card .keyline .v{display:inline-flex;align-items:center;gap:.3rem;text-align:left;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.card .keyline .v img{width:16px;height:16px;object-fit:contain;flex:0 0 auto}
+
+/* ---------- Fiche (modale) ---------- */
+.modal-back{padding:1.4rem}
+.modal{max-width:880px;border-radius:22px;display:grid;grid-template-columns:300px 1fr;
+  max-height:min(90vh,820px);overflow:hidden;background:var(--ink-900)}
+.modal .m-close{top:.85rem;right:.85rem;width:36px;height:36px}
+.modal .m-close:focus-visible,.fx-nav button:focus-visible,.fx-chip:focus-visible,.fx-ing:focus-visible{
+  outline:2px solid var(--vert);outline-offset:2px}
+
+/* colonne gauche : l'alvéole et l'identité */
+.fx-side{position:relative;padding:2.2rem 1.6rem 1.4rem;display:flex;flex-direction:column;align-items:center;
+  text-align:center;gap:.9rem;border-right:1px solid var(--line-soft);overflow:auto;
+  background:
+    radial-gradient(260px 220px at 50% 28%,var(--glow,rgba(143,232,107,.18)),transparent 72%),
+    linear-gradient(180deg,var(--panel) 0%,var(--ink-900) 100%)}
+.fx-cell{position:relative;width:196px;height:180px;flex:0 0 auto;display:grid;place-items:center}
+.fx-cell::before,.fx-cell::after{content:"";position:absolute;inset:0;
+  clip-path:polygon(25% 2%,75% 2%,100% 50%,75% 98%,25% 98%,0 50%)}
+.fx-cell::before{background:var(--accent,var(--vert));opacity:.55}
+.fx-cell::after{inset:3px;background:
+  radial-gradient(circle at 50% 40%,rgba(255,255,255,.07),transparent 65%),var(--ink-950)}
+.fx-cell img,.fx-cell .ph{position:relative;z-index:1;width:132px;height:132px;object-fit:contain;
+  filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
+.fx-cell .ph{display:grid;place-items:center;font-family:'Fredoka',system-ui,sans-serif;font-weight:700;
+  font-size:2.6rem;color:var(--accent,var(--vert))}
+.fx-name{font-size:1.65rem;line-height:1.15;margin:0}
+.fx-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:.35rem}
+.fx-tag{font-family:'Fredoka',system-ui,sans-serif;font-weight:600;font-size:.76rem;padding:.24rem .65rem;
+  border-radius:20px;background:rgba(0,0,0,.3);border:1px solid var(--line-soft);color:var(--accent,var(--vert))}
+.fx-tag.neutre{color:var(--muted)}
+.fx-facts{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:.45rem;margin-top:.3rem}
+.fx-fact{background:rgba(0,0,0,.24);border:1px solid var(--line-soft);border-radius:12px;padding:.55rem .6rem;text-align:left}
+.fx-fact.large{grid-column:1/-1}
+.fx-fact span{display:block;font-size:.72rem;color:var(--muted);margin-bottom:.1rem}
+.fx-fact b{font-family:'Fredoka',system-ui,sans-serif;font-weight:700;font-size:1.02rem;color:var(--cream);
+  display:flex;align-items:center;gap:.35rem;word-break:break-word}
+.fx-fact b.acc{color:var(--accent,var(--vert))}
+.fx-fact b img{width:18px;height:18px;object-fit:contain}
+.fx-nav{margin-top:auto;width:100%;display:flex;align-items:center;justify-content:space-between;gap:.5rem;
+  padding-top:.8rem;border-top:1px solid var(--line-soft)}
+.fx-nav button{background:rgba(0,0,0,.28);border:1px solid var(--line-soft);color:var(--cream);border-radius:10px;
+  padding:.45rem .75rem;font:inherit;font-size:.84rem;cursor:pointer}
+.fx-nav button:hover:not(:disabled){border-color:var(--vert);color:var(--vert)}
+.fx-nav button:disabled{opacity:.35;cursor:default}
+.fx-nav .pos{font-size:.8rem;color:var(--muted);white-space:nowrap}
+
+/* colonne droite : le détail */
+.fx-main{overflow:auto;padding:1.9rem 1.8rem 1.8rem;display:flex;flex-direction:column;gap:1.5rem}
+.fx-desc{font-size:1rem;line-height:1.65;color:var(--cream);max-width:62ch;padding-right:2.4rem}
+.fx-sec h4{font-family:'Fredoka',system-ui,sans-serif;font-weight:600;font-size:1.02rem;color:var(--cream);
+  margin:0 0 .65rem;display:flex;align-items:center;gap:.5rem}
+.fx-sec h4 small{font-family:'Inter',system-ui,sans-serif;font-weight:500;font-size:.78rem;color:var(--muted)}
+.fx-sec h4::before{content:"";width:9px;height:10px;flex:0 0 auto;background:var(--accent,var(--vert));
+  clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%)}
+
+/* bonus : une ligne par statistique, signe coloré */
+.fx-stats{display:grid;gap:.35rem}
+.fx-stat{display:flex;align-items:baseline;gap:.6rem;padding:.5rem .7rem;border-radius:10px;
+  background:rgba(255,255,255,.035);border:1px solid var(--line-soft);font-size:.9rem}
+.fx-stat .val{font-family:'Fredoka',system-ui,sans-serif;font-weight:700;white-space:nowrap;color:#8FE86B;min-width:6.5rem}
+.fx-stat.neg .val{color:#F0736A}
+.fx-stat.abil .val{color:#B8A5ED}
+.fx-stat .lab{flex:1;color:var(--cream)}
+.fx-badge{font-size:.7rem;font-weight:600;padding:.12rem .45rem;border-radius:20px;white-space:nowrap;
+  background:rgba(184,165,237,.14);color:#C9BBF2;border:1px solid rgba(184,165,237,.3)}
+.fx-badge.cire{background:rgba(224,196,106,.12);color:#E7CF7E;border-color:rgba(224,196,106,.3)}
+.fx-badge.parfois{background:rgba(255,255,255,.06);color:var(--muted);border-color:var(--line-soft)}
+
+/* abeilles autorisées */
+.fx-bees{display:flex;flex-wrap:wrap;gap:.45rem}
+.fx-bee{display:inline-flex;align-items:center;gap:.4rem;padding:.25rem .65rem .25rem .3rem;border-radius:20px;
+  background:rgba(0,0,0,.25);border:1px solid var(--line-soft);font-size:.86rem}
+.fx-bee .bi{position:relative;width:26px;height:26px;border-radius:50%;overflow:hidden;flex:0 0 auto;display:grid;place-items:center}
+.fx-bee .bi img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.fx-bee .bi .ic-fb{font-size:.55rem;font-weight:700;color:#1b1b1b}
+.fx-note{font-size:.86rem;color:var(--muted);line-height:1.5;margin-top:.5rem}
+
+/* recette */
+.fx-recipe{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:.45rem}
+.fx-ing{display:flex;flex-direction:column;align-items:center;gap:.2rem;padding:.6rem .4rem;border-radius:12px;
+  background:rgba(0,0,0,.24);border:1px solid var(--line-soft);text-align:center;color:inherit;font:inherit}
+button.fx-ing{cursor:pointer}
+button.fx-ing:hover{border-color:var(--vert)}
+.fx-ing img{width:38px;height:38px;object-fit:contain}
+.fx-ing b{font-family:'Fredoka',system-ui,sans-serif;font-size:.98rem;color:#8FE86B}
+.fx-ing span{font-size:.74rem;color:var(--muted);line-height:1.25}
+.fx-pre{display:flex;gap:.5rem;align-items:flex-start;margin-top:.6rem;padding:.6rem .75rem;border-radius:10px;
+  background:rgba(240,180,41,.08);border:1px solid rgba(240,180,41,.25);font-size:.86rem;color:#F3D27A}
+.fx-calc{margin-top:.7rem;background:transparent;border:1px solid var(--vert);color:var(--vert);border-radius:10px;
+  padding:.5rem .85rem;font:inherit;font-size:.86rem;font-weight:600;cursor:pointer}
+.fx-calc:hover{background:var(--vert);color:var(--ink-950)}
+
+/* où l'obtenir */
+.fx-where{list-style:none;margin:0;padding:0;display:grid;gap:.35rem}
+.fx-where li{position:relative;padding:.5rem .7rem .5rem 1.75rem;border-radius:10px;background:rgba(255,255,255,.035);
+  border:1px solid var(--line-soft);font-size:.9rem;line-height:1.45}
+.fx-where li::before{content:"";position:absolute;left:.7rem;top:.85rem;width:7px;height:8px;background:var(--accent,var(--vert));
+  clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%)}
+
+/* liens vers d'autres objets */
+.fx-links{display:flex;flex-wrap:wrap;gap:.4rem}
+.fx-chip{display:inline-flex;align-items:center;gap:.4rem;padding:.3rem .7rem .3rem .35rem;border-radius:20px;cursor:pointer;
+  background:rgba(0,0,0,.25);border:1px solid var(--line-soft);color:var(--cream);font:inherit;font-size:.86rem}
+.fx-chip:hover{border-color:var(--vert)}
+.fx-chip img{width:24px;height:24px;object-fit:contain}
+.fx-chip i{font-style:normal;color:var(--muted);font-size:.78rem}
+
+.fx-goto{align-self:flex-start}
+
+.fx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.45rem}
+.fx-quote{margin:0;padding:.75rem 1rem .8rem;border-left:3px solid var(--accent,var(--vert));border-radius:0 12px 12px 0;
+  background:rgba(255,255,255,.035);font-style:italic;color:var(--cream);font-size:.92rem;line-height:1.55}
+.fx-quote span{display:block;font-style:normal;font-size:.72rem;color:var(--muted);margin-bottom:.2rem}
+.fx-nectar{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.55rem}
+.fx-nectar span{font-size:.8rem;padding:.25rem .6rem;border-radius:20px;background:rgba(127,228,224,.1);
+  border:1px solid rgba(127,228,224,.28);color:#9FECE8}
+@media (max-width:760px){
+  .modal-back{padding:0;align-items:flex-end}
+  .modal{grid-template-columns:1fr;max-height:94vh;border-radius:22px 22px 0 0;overflow:auto}
+  .fx-side{border-right:0;border-bottom:1px solid var(--line-soft);padding:1.8rem 1.1rem 1.1rem;overflow:visible}
+  .fx-cell{width:150px;height:138px}
+  .fx-cell img,.fx-cell .ph{width:100px;height:100px}
+  .fx-name{font-size:1.4rem}
+  .fx-nav{order:10}
+  .fx-main{overflow:visible;padding:1.3rem 1.1rem 1.6rem}
+  .fx-desc{padding-right:0}
+  .card-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.7rem}
+  .card .card-img{width:84px;height:84px;padding:13px 11px}
+  .card .desc{display:none}
+}
+@media (prefers-reduced-motion:reduce){ .modal-back.open{animation:none} }
+</style>
 </head>
 <body>
 
@@ -1950,16 +2121,10 @@ footer.site{
 
 <!-- ============================ MODALE DE DÉTAIL ============================ -->
 <div class="modal-back" id="modal-back">
-  <div class="modal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="fx-name">
     <button class="m-close" aria-label="Fermer">✕</button>
-    <div class="m-head">
-      <div class="m-img"></div>
-      <div class="m-title"></div>
-    </div>
-    <div class="m-body">
-      <div class="m-desc"></div>
-      <div class="m-rows"></div>
-    </div>
+    <aside class="fx-side"></aside>
+    <div class="fx-main"></div>
   </div>
 </div>
 
@@ -2427,116 +2592,116 @@ if(typeof Nuage !== 'undefined') Nuage.surEtat(function(nom){
    Les images vont dans images/item/<nom exact>.png */
 const ITEMS = [
   /* ================= OUTILS ================= */
-  { nom:"Scooper", categorie:"Outils", miel:0, desc:"L'outil de départ de tout joueur. Petite portée, mais il fait le travail au tout début.", lieu:"Donné au début du jeu" },
-  { nom:"Rake", categorie:"Outils", miel:800, desc:"Râteau qui gratte le pollen des fleurs sans abîmer leur tige.", lieu:"Noob Shop" },
-  { nom:"Clippers", categorie:"Outils", miel:2200, desc:"Sécateur rapide. Ne cours pas avec ça.", lieu:"Noob Shop" },
-  { nom:"Magnet", categorie:"Outils", miel:5500, desc:"Aimant qui attire le pollen des fleurs alentour.", lieu:"Noob Shop" },
-  { nom:"Vacuum", categorie:"Outils", miel:14000, desc:"Aspirateur à pollen : large zone de collecte.", lieu:"Noob Shop" },
-  { nom:"Super-Scooper", categorie:"Outils", miel:40000, desc:"Version améliorée du Scooper, peinture bleu et jaune plus aérodynamique.", lieu:"Pro Shop" },
-  { nom:"Pulsar", categorie:"Outils", miel:125000, desc:"Outil à impulsions. Possiblement radioactif.", lieu:"Pro Shop" },
-  { nom:"Electro-Magnet", categorie:"Outils", miel:300000, desc:"Deux aimants en un, pour deux fois plus de pollen.", lieu:"Pro Shop" },
-  { nom:"Scissors", categorie:"Outils", miel:850000, desc:"Ciseaux à grande portée. Ça coupe et ça claque.", lieu:"Pro Shop" },
-  { nom:"Honey Dipper", categorie:"Outils", miel:1500000, desc:"L'outil de fabrication de miel par excellence. Bonus de conversion.", lieu:"Pro Shop" },
-  { nom:"Bubble Wand", categorie:"Outils", miel:3500000, desc:"Recouvre les fleurs d'eau savonneuse. Favorise le pollen bleu.", lieu:"Blue HQ" },
-  { nom:"Scythe", categorie:"Outils", miel:3500000, desc:"Faux enflammée : tranche et brûle. Favorise le pollen rouge.", lieu:"Red HQ" },
-  { nom:"Sticker-Seeker", categorie:"Outils", miel:7000000, mats:[[1,"Glue"],[1,"Oil"],[5,"Soft Wax"],[5,"Neonberry"],[10,"Micro-Converter"]], desc:"Le plus récent outil du jeu. Rend visibles les Seeker Stickers cachés sur la carte.", lieu:"Hub Field Shop (fabrication)", lieuEn:"Hub Field Shop (crafted)" },
-  { nom:"Golden Rake", categorie:"Outils", miel:20000000, desc:"Un râteau de jardinage totalement superflu… mais très efficace.", lieu:"Mountain Top Shop" },
-  { nom:"Spark Staff", categorie:"Outils", miel:60000000, desc:"Bâton électrique. Zap zap zap.", lieu:"Mountain Top Shop" },
-  { nom:"Porcelain Dipper", categorie:"Outils", miel:150000000, desc:"Le cuiller de ceux qui sont encore en « early-mid game ».", lieu:"Mountain Top Shop" },
-  { nom:"Petal Wand", categorie:"Outils", miel:1500000000, mats:[[1,"Spirit Petal"],[10,"Star Jelly"],[25,"Glitter"],[75,"Enzymes"]], desc:"Le parasol de Spirit Bear. Très gros bonus de collecte.", lieu:"Petal Shop (fabrication)", lieuEn:"Petal Shop (crafted)" },
-  { nom:"Tide Popper", categorie:"Outils", miel:2500000000000, mats:[[1500,"Blue Extract"],[150,"Stinger"],[150,"Tropical Drink"],[75,"Swirled Wax"],[50,"Super Smoothie"],[3,"Comforting Vial"]], prealable:"250 quêtes de Gifted Bucko Bee terminées", prealableEn:"250 Gifted Bucko Bee quests completed", desc:"Le secouer crée des vagues. Outil bleu haut de gamme, à fabriquer.", lieu:"Blue HQ (fabrication)", lieuEn:"Blue HQ (crafted)" },
-  { nom:"Dark Scythe", categorie:"Outils", miel:2500000000000, mats:[[1500,"Red Extract"],[150,"Stinger"],[100,"Hard Wax"],[50,"Caustic Wax"],[50,"Super Smoothie"],[3,"Invigorating Vial"]], prealable:"250 quêtes de Gifted Riley Bee terminées", prealableEn:"250 Gifted Riley Bee quests completed", desc:"Pour moissonner les flammes. Outil rouge haut de gamme, à fabriquer.", lieu:"Red HQ (fabrication)", lieuEn:"Red HQ (crafted)" },
-  { nom:"Gummyballer", categorie:"Outils", miel:10000000000000, mats:[[1500,"Glue"],[2000,"Gumdrops"],[50,"Caustic Wax"],[50,"Super Smoothie"],[5,"Turpentine"],[3,"Satisfying Vial"]], prealable:"Accès au repaire : badge Goo Hotshot ou mieux", prealableEn:"Lair access: Goo Hotshot badge or higher", desc:"L'arme préférée des Gummy Soldiers. Seul outil capable de retirer directement le goo d'un champ. Outil le plus cher du jeu.", lieu:"Gummy Bear's Lair (fabrication)", lieuEn:"Gummy Bear's Lair (crafted)" },
+  { nom:"Scooper", categorie:"Outils", miel:0, desc:"L'outil de départ de tout joueur. Petite portée, mais il fait le travail au tout début.", lieu:"Donné au début du jeu", fiche:{ outil:{ portee:"2", motif:"Line", cadence:"0.8 s", recolte:"2" } } },
+  { nom:"Rake", categorie:"Outils", miel:800, desc:"Râteau qui gratte le pollen des fleurs sans abîmer leur tige.", lieu:"Noob Shop", fiche:{ outil:{ portee:"3", motif:"Line", cadence:"0.7 s", recolte:"2" } } },
+  { nom:"Clippers", categorie:"Outils", miel:2200, desc:"Sécateur rapide. Ne cours pas avec ça.", lieu:"Noob Shop", fiche:{ outil:{ portee:"1", motif:"Single", cadence:"0.6 s", recolte:"9" } } },
+  { nom:"Magnet", categorie:"Outils", miel:5500, desc:"Aimant qui attire le pollen des fleurs alentour.", lieu:"Noob Shop", fiche:{ outil:{ portee:"9", motif:"Surround", cadence:"0.8 s", recolte:"2" } } },
+  { nom:"Vacuum", categorie:"Outils", miel:14000, desc:"Aspirateur à pollen : large zone de collecte.", lieu:"Noob Shop", fiche:{ outil:{ portee:"13", motif:"Surround", cadence:"0.8 s", recolte:"2" } } },
+  { nom:"Super-Scooper", categorie:"Outils", miel:40000, desc:"Version améliorée du Scooper, peinture bleu et jaune plus aérodynamique.", lieu:"Pro Shop", fiche:{ outil:{ portee:"5", motif:"Line", cadence:"0.5 s", recolte:"4" } } },
+  { nom:"Pulsar", categorie:"Outils", miel:125000, desc:"Outil à impulsions. Possiblement radioactif.", lieu:"Pro Shop", fiche:{ outil:{ portee:"29", motif:"Surround", cadence:"1 s", recolte:"2" } } },
+  { nom:"Electro-Magnet", categorie:"Outils", miel:300000, desc:"Deux aimants en un, pour deux fois plus de pollen.", lieu:"Pro Shop", fiche:{ outil:{ portee:"9", motif:"Surround", cadence:"0.5 s", recolte:"4" } } },
+  { nom:"Scissors", categorie:"Outils", miel:850000, desc:"Ciseaux à grande portée. Ça coupe et ça claque.", lieu:"Pro Shop", fiche:{ outil:{ portee:"1", motif:"Single", cadence:"0.5 s", recolte:"all" } } },
+  { nom:"Honey Dipper", categorie:"Outils", miel:1500000, desc:"L'outil de fabrication de miel par excellence. Bonus de conversion.", lieu:"Pro Shop", fiche:{ outil:{ portee:"49", motif:"Surround", cadence:"0.9 s", recolte:"2" } } },
+  { nom:"Bubble Wand", categorie:"Outils", miel:3500000, desc:"Recouvre les fleurs d'eau savonneuse. Favorise le pollen bleu.", lieu:"Blue HQ", fiche:{ outil:{ portee:"16", motif:"Ring", cadence:"0.8 s", recolte:"6" } } },
+  { nom:"Scythe", categorie:"Outils", miel:3500000, desc:"Faux enflammée : tranche et brûle. Favorise le pollen rouge.", lieu:"Red HQ", fiche:{ outil:{ portee:"7", motif:"Line", cadence:"0.47 s", recolte:"7 (14 red)" } } },
+  { nom:"Sticker-Seeker", categorie:"Outils", miel:7000000, mats:[[1,"Glue"],[1,"Oil"],[5,"Soft Wax"],[5,"Neonberry"],[10,"Micro-Converter"]], desc:"Le plus récent outil du jeu. Rend visibles les Seeker Stickers cachés sur la carte.", lieu:"Hub Field Shop (fabrication)", lieuEn:"Hub Field Shop (crafted)", fiche:{ outil:{ portee:"13", motif:"Diamond", cadence:"1 s", recolte:"10" } } },
+  { nom:"Golden Rake", categorie:"Outils", miel:20000000, desc:"Un râteau de jardinage totalement superflu… mais très efficace.", lieu:"Mountain Top Shop", fiche:{ outil:{ portee:"26", motif:"4 lines of 4", cadence:"0.75 s", recolte:"7" } } },
+  { nom:"Spark Staff", categorie:"Outils", miel:60000000, desc:"Bâton électrique. Zap zap zap.", lieu:"Mountain Top Shop", fiche:{ outil:{ portee:"81", motif:"3 fullest flowers", cadence:"0.5 s", recolte:"all +20%" } } },
+  { nom:"Porcelain Dipper", categorie:"Outils", miel:150000000, desc:"Le cuiller de ceux qui sont encore en « early-mid game ».", lieu:"Mountain Top Shop", fiche:{ outil:{ portee:"49", motif:"Surround", cadence:"0.7 s", recolte:"3" } } },
+  { nom:"Petal Wand", categorie:"Outils", miel:1500000000, mats:[[1,"Spirit Petal"],[10,"Star Jelly"],[25,"Glitter"],[75,"Enzymes"]], desc:"Le parasol de Spirit Bear. Très gros bonus de collecte.", lieu:"Petal Shop (fabrication)", lieuEn:"Petal Shop (crafted)", fiche:{ outil:{ portee:"37", motif:"Flower", cadence:"0.7 s", recolte:"6" } } },
+  { nom:"Tide Popper", categorie:"Outils", miel:2500000000000, mats:[[1500,"Blue Extract"],[150,"Stinger"],[150,"Tropical Drink"],[75,"Swirled Wax"],[50,"Super Smoothie"],[3,"Comforting Vial"]], prealable:"250 quêtes de Gifted Bucko Bee terminées", prealableEn:"250 Gifted Bucko Bee quests completed", desc:"Le secouer crée des vagues. Outil bleu haut de gamme, à fabriquer.", lieu:"Blue HQ (fabrication)", lieuEn:"Blue HQ (crafted)", fiche:{ outil:{ portee:"22", motif:"Spike", cadence:"1 s", recolte:"5 red / 6 white / 12.5 blue" } } },
+  { nom:"Dark Scythe", categorie:"Outils", miel:2500000000000, mats:[[1500,"Red Extract"],[150,"Stinger"],[100,"Hard Wax"],[50,"Caustic Wax"],[50,"Super Smoothie"],[3,"Invigorating Vial"]], prealable:"250 quêtes de Gifted Riley Bee terminées", prealableEn:"250 Gifted Riley Bee quests completed", desc:"Pour moissonner les flammes. Outil rouge haut de gamme, à fabriquer.", lieu:"Red HQ (fabrication)", lieuEn:"Red HQ (crafted)", fiche:{ outil:{ portee:"31 – 36", motif:"Crescent", cadence:"0.5 s", recolte:"13" } } },
+  { nom:"Gummyballer", categorie:"Outils", miel:10000000000000, mats:[[1500,"Glue"],[2000,"Gumdrops"],[50,"Caustic Wax"],[50,"Super Smoothie"],[5,"Turpentine"],[3,"Satisfying Vial"]], prealable:"Accès au repaire : badge Goo Hotshot ou mieux", prealableEn:"Lair access: Goo Hotshot badge or higher", desc:"L'arme préférée des Gummy Soldiers. Seul outil capable de retirer directement le goo d'un champ. Outil le plus cher du jeu.", lieu:"Gummy Bear's Lair (fabrication)", lieuEn:"Gummy Bear's Lair (crafted)", fiche:{ outil:{ portee:"29", motif:"Ball", cadence:"1 s", recolte:"9" } } },
 
   /* ================= BACKPACK ================= */
-  { nom:"Pouch", categorie:"Backpack", miel:0, desc:"Le sac de départ. Capacité minuscule, mais c'est un début.", lieu:"Donné au début du jeu" },
-  { nom:"Jar", categorie:"Backpack", miel:650, desc:"Bocal : le premier vrai gain de capacité.", lieu:"Noob Shop" },
-  { nom:"Backpack", categorie:"Backpack", miel:5500, desc:"Sac à dos classique.", lieu:"Noob Shop" },
-  { nom:"Canister", categorie:"Backpack", miel:22000, desc:"Bidon métallique à bonne capacité.", lieu:"Noob Shop" },
-  { nom:"Mega-Jug", categorie:"Backpack", miel:50000, desc:"Jerrycan géant.", lieu:"Pro Shop" },
-  { nom:"Compressor", categorie:"Backpack", miel:160000, desc:"Compresse le pollen pour en stocker davantage.", lieu:"Pro Shop" },
-  { nom:"Elite Barrel", categorie:"Backpack", miel:650000, desc:"Tonneau d'élite. Grosse capacité de milieu de jeu.", lieu:"Pro Shop" },
-  { nom:"Port-O-Hive", categorie:"Backpack", miel:1250000, desc:"Ruche portative : capacité énorme et bonus de conversion.", lieu:"Pro Shop" },
-  { nom:"Blue Port-O-Hive", categorie:"Backpack", miel:12500000, mats:[[2,"Blue Extract"],[2,"Soft Wax"]], desc:"Version bleue de la ruche portative : bonus orientés pollen bleu.", lieu:"Blue HQ" },
-  { nom:"Red Port-O-Hive", categorie:"Backpack", miel:12500000, mats:[[2,"Red Extract"],[2,"Soft Wax"]], desc:"Version rouge de la ruche portative : bonus orientés pollen rouge.", lieu:"Red HQ" },
-  { nom:"Porcelain Port-O-Hive", categorie:"Backpack", miel:250000000, mats:[[3,"Glitter"],[3,"Soft Wax"],[10,"Moon Charm"]], desc:"Ruche portative en porcelaine : sac blanc haut de gamme.", lieu:"Mountain Top Shop" },
-  { nom:"Coconut Canister", categorie:"Backpack", miel:25000000000, mats:[[250,"Coconut"],[150,"Tropical Drink"],[150,"Red Extract"],[150,"Blue Extract"],[2,"Refreshing Vial"]], prealable:"Accès : vaincre le Coconut Crab", prealableEn:"Access: defeat the Coconut Crab", desc:"Bidon en noix de coco : un des meilleurs sacs de fin de jeu.", lieu:"Coconut Cave" },
+  { nom:"Pouch", categorie:"Backpack", miel:0, desc:"Le sac de départ. Capacité minuscule, mais c'est un début.", lieu:"Donné au début du jeu", fiche:{ jeu:"A small bag.", cap:"200" } },
+  { nom:"Jar", categorie:"Backpack", miel:650, desc:"Bocal : le premier vrai gain de capacité.", lieu:"Noob Shop", fiche:{ jeu:"A durable plastic jar. Holds over twice as much as the Pouch!", cap:"750" } },
+  { nom:"Backpack", categorie:"Backpack", miel:5500, desc:"Sac à dos classique.", lieu:"Noob Shop", fiche:{ jeu:"A heavy-duty backpack.", cap:"3,500" } },
+  { nom:"Canister", categorie:"Backpack", miel:22000, desc:"Bidon métallique à bonne capacité.", lieu:"Noob Shop", fiche:{ jeu:"A high-tech container that improves conversion speed.", stats:["+30% Convert Rate"], cap:"10,000" } },
+  { nom:"Mega-Jug", categorie:"Backpack", miel:50000, desc:"Jerrycan géant.", lieu:"Pro Shop", fiche:{ jeu:"A humongous jug!", stats:["+40% Convert Rate"], cap:"25,000" } },
+  { nom:"Compressor", categorie:"Backpack", miel:160000, desc:"Compresse le pollen pour en stocker davantage.", lieu:"Pro Shop", fiche:{ jeu:"A machine which packs pollen to increase storage.", stats:["+55% Convert Rate"], cap:"50,000" } },
+  { nom:"Elite Barrel", categorie:"Backpack", miel:650000, desc:"Tonneau d'élite. Grosse capacité de milieu de jeu.", lieu:"Pro Shop", fiche:{ jeu:"The worlds [sic] most advanced barrel. Increases pollen from certain fields.", stats:["+70% Convert Rate"], cap:"125,000" } },
+  { nom:"Port-O-Hive", categorie:"Backpack", miel:1250000, desc:"Ruche portative : capacité énorme et bonus de conversion.", lieu:"Pro Shop", fiche:{ jeu:"A miniature hive you can wear on your back! Instantly converts some pollen to honey.", stats:["+100% Convert Rate","+5% Instant Conversion"], cap:"250,000" } },
+  { nom:"Blue Port-O-Hive", categorie:"Backpack", miel:12500000, mats:[[2,"Blue Extract"],[2,"Soft Wax"]], desc:"Version bleue de la ruche portative : bonus orientés pollen bleu.", lieu:"Blue HQ", fiche:{ jeu:"A Port-O-Hive dipped in shiney [sic] blue paint.", stats:["+150% Convert Rate","+10% Blue Bee Convert Rate","+10% Instant Blue Conversion","+10% Blue Pollen"], cap:"400,000" } },
+  { nom:"Red Port-O-Hive", categorie:"Backpack", miel:12500000, mats:[[2,"Red Extract"],[2,"Soft Wax"]], desc:"Version rouge de la ruche portative : bonus orientés pollen rouge.", lieu:"Red HQ", fiche:{ jeu:"A Port-O-Hive dipped in shiney [sic] red paint.", stats:["+150% Convert Rate","+10% Red Bee Convert Rate","+10% Instant Red Conversion","+10% Red Pollen"], cap:"400,000" } },
+  { nom:"Porcelain Port-O-Hive", categorie:"Backpack", miel:250000000, mats:[[3,"Glitter"],[3,"Soft Wax"],[10,"Moon Charm"]], desc:"Ruche portative en porcelaine : sac blanc haut de gamme.", lieu:"Mountain Top Shop", fiche:{ jeu:"A rare and precious Port-O-Hive that boosts white pollen.", stats:["+250% Convert Rate","x1.25 Convert Rate at Hive","+10% Instant Conversion","+50% White Pollen"], cap:"600,000" } },
+  { nom:"Coconut Canister", categorie:"Backpack", miel:25000000000, mats:[[250,"Coconut"],[150,"Tropical Drink"],[150,"Red Extract"],[150,"Blue Extract"],[2,"Refreshing Vial"]], prealable:"Accès : vaincre le Coconut Crab", prealableEn:"Access: defeat the Coconut Crab", desc:"Bidon en noix de coco : un des meilleurs sacs de fin de jeu.", lieu:"Coconut Cave", fiche:{ jeu:"A back-mounted coconut that protects you during emergencies.", stats:["+400% Convert Rate","x1.5 Convert Rate At Hive","+10% Instant Conversion","+10% Instant White Conversion","+100% White Pollen","+Passive: Inspire Coconuts","+Passive: Emergency Coconut Shield"], cap:"1,000,000" } },
 
   /* ================= MASQUE ================= */
-  { nom:"Helmet", categorie:"Masque", miel:30000, mats:[[5,"Pineapple"],[1,"Moon Charm"]], desc:"Casque de base : un peu de défense et de pollen.", lieu:"Noob Shop" },
-  { nom:"Strange Goggles", categorie:"Masque", miel:77, mats:[[1,"Micro-Converter"],[7,"7-Pronged Cog"]], desc:"Lunettes étranges : accessoire de tête à l'allure décalée.", lieu:"Noob Shop jusqu'en juillet 2024 (retiré de la boutique)", lieuEn:"Noob Shop until July 2024 (removed from the shop)" },
-  { nom:"Propeller Hat", categorie:"Masque", miel:2500000, mats:[[25,"Gumdrops"],[100,"Pineapple"],[5,"Moon Charm"]], desc:"Chapeau à hélice : bonus de collecte et style garanti.", lieu:"Pro Shop" },
-  { nom:"Beekeeper's Mask", categorie:"Masque", miel:20000000, mats:[[5,"Enzymes"],[3,"Glue"],[1,"Glitter"]], desc:"Masque d'apiculteur : le premier vrai masque de progression.", lieu:"Mountain Top Shop" },
-  { nom:"Bubble Mask", categorie:"Masque", miel:100000000, mats:[[500,"Blueberry"],[50,"Blue Extract"],[25,"Oil"],[15,"Glitter"]], desc:"Masque à bulles : orienté pollen bleu et bulles.", lieu:"Blue HQ" },
-  { nom:"Fire Mask", categorie:"Masque", miel:100000000, mats:[[500,"Strawberry"],[50,"Red Extract"],[25,"Enzymes"],[15,"Glue"]], desc:"Masque de feu : orienté pollen rouge et flammes.", lieu:"Red HQ" },
-  { nom:"Honey Mask", categorie:"Masque", miel:100000000, mats:[[9999,"Treat"],[50,"Oil"],[25,"Enzymes"],[5,"Gold Egg"]], prealable:"Au moins un badge Ace pour entrer", prealableEn:"At least one Ace badge to enter", desc:"Masque de miel : bonus de conversion et de miel.", lieu:"Ace Shop du Badge Bearer's Guild", lieuEn:"Ace Shop in the Badge Bearer's Guild" },
-  { nom:"Diamond Mask", categorie:"Masque", miel:5000000000, mats:[[250,"Blue Extract"],[150,"Oil"],[100,"Glitter"],[5,"Diamond Egg"],[1,"Comforting Vial"]], desc:"Masque de diamant, fabriqué dans la Diamond Room après le parcours des nuages. Il rend les plateformes de la salle solides de jour comme de nuit.", lieu:"Diamond Room, au bout du parcours qui suit le Cloud Obby", lieuEn:"Diamond Room, at the end of the course past the Cloud Obby" },
-  { nom:"Demon Mask", categorie:"Masque", miel:5000000000, mats:[[500,"Stinger"],[250,"Red Extract"],[150,"Enzymes"],[100,"Glue"],[1,"Invigorating Vial"]], desc:"Masque démoniaque : gros bonus d'attaque et de flammes.", lieu:"Au fond du Lava Obby (derrière le Honey Dispenser)", lieuEn:"At the far end of the Lava Obby (behind the Honey Dispenser)" },
-  { nom:"Gummy Mask", categorie:"Masque", miel:5000000000, mats:[[250,"Glue"],[100,"Enzymes"],[100,"Oil"],[100,"Glitter"],[1,"Satisfying Vial"]], prealable:"Accès au repaire : badge Goo Hotshot ou mieux", prealableEn:"Lair access: Goo Hotshot badge or higher", desc:"Masque gélifié : bonus de goo et de conversion du goo.", lieu:"Gummy Bear's Lair" },
-  { nom:"B.B.M. Mask", categorie:"Masque", desc:"Le masque du Bubble Bee Man : orienté bulles et pollen bleu.", lieu:"Quête « Helping B.B.M. » de Beesmas 2018 ; on peut encore le rééquiper auprès de Bubble Bee Man (zone des 30 abeilles)", lieuEn:"\"Helping B.B.M.\" quest from Beesmas 2018; can still be re-equipped by talking to Bubble Bee Man (30 Bee Zone)" },
-  { nom:"Mondo B.B.M. Mask", categorie:"Masque", desc:"Version améliorée du masque du Bubble Bee Man, bien plus puissante.", lieu:"Quête « B.B.M. Mission » de Beesmas 2018 ; on peut encore le rééquiper auprès de Bubble Bee Man (zone des 30 abeilles)", lieuEn:"\"B.B.M. Mission\" quest from Beesmas 2018; can still be re-equipped by talking to Bubble Bee Man (30 Bee Zone)" },
+  { nom:"Helmet", categorie:"Masque", miel:30000, mats:[[5,"Pineapple"],[1,"Moon Charm"]], desc:"Casque de base : un peu de défense et de pollen.", lieu:"Noob Shop", fiche:{ jeu:"A hard hat that grants bonus pollen and helps prevent head injuries.", stats:["+10% Pollen","+25% Defense"] } },
+  { nom:"Strange Goggles", categorie:"Masque", miel:77, mats:[[1,"Micro-Converter"],[7,"7-Pronged Cog"]], desc:"Lunettes étranges : accessoire de tête à l'allure décalée.", lieu:"Noob Shop jusqu'en juillet 2024 (retiré de la boutique)", lieuEn:"Noob Shop until July 2024 (removed from the shop)", fiche:{ jeu:"This futuristic looking headset doesn't seem to do very much...", stats:["+77 Capacity","+7% Defense"] } },
+  { nom:"Propeller Hat", categorie:"Masque", miel:2500000, mats:[[25,"Gumdrops"],[100,"Pineapple"],[5,"Moon Charm"]], desc:"Chapeau à hélice : bonus de collecte et style garanti.", lieu:"Pro Shop", fiche:{ jeu:"A playful hat that keeps the sun out of your eyes.", stats:["+15% Pollen","+5% Bee Ability Rate","+10% Defense","+10 Jump Power"] } },
+  { nom:"Beekeeper's Mask", categorie:"Masque", miel:20000000, mats:[[5,"Enzymes"],[3,"Glue"],[1,"Glitter"]], desc:"Masque d'apiculteur : le premier vrai masque de progression.", lieu:"Mountain Top Shop", fiche:{ jeu:"A veiled hat only worn by real-deal beekeepers.", stats:["+20% Pollen","+20% Bee Gather Pollen","+10% Bee Ability Rate","+25% Defense"] } },
+  { nom:"Bubble Mask", categorie:"Masque", miel:100000000, mats:[[500,"Blueberry"],[50,"Blue Extract"],[25,"Oil"],[15,"Glitter"]], desc:"Masque à bulles : orienté pollen bleu et bulles.", lieu:"Blue HQ", fiche:{ jeu:"Harness the power of the sea to enhance your Blue pollen gathering.", stats:["x1.5 Blue Pollen","x1.5 Capacity","x1.25 Blue Field Capacity","x1.25 Bubble Pollen","+30% Defense","+15% Bee Ability Rate","+Passive: Bubble Bombs"] } },
+  { nom:"Fire Mask", categorie:"Masque", miel:100000000, mats:[[500,"Strawberry"],[50,"Red Extract"],[25,"Enzymes"],[15,"Glue"]], desc:"Masque de feu : orienté pollen rouge et flammes.", lieu:"Red HQ", fiche:{ jeu:"Ignite your mind to enhance your Red Bees.", stats:["x1.5 Red Pollen","+15% Instant Red Conversion","x1.5 Capacity","+50% Instant Flame Conversion","+15% Bee Attack","+35% Defense","+15% Bee Ability Rate","+Passive: Ignite"] } },
+  { nom:"Honey Mask", categorie:"Masque", miel:100000000, mats:[[9999,"Treat"],[50,"Oil"],[25,"Enzymes"],[5,"Gold Egg"]], prealable:"Au moins un badge Ace pour entrer", prealableEn:"At least one Ace badge to enter", desc:"Masque de miel : bonus de conversion et de miel.", lieu:"Ace Shop du Badge Bearer's Guild", lieuEn:"Ace Shop in the Badge Bearer's Guild", fiche:{ jeu:"This handsome mask is guaranteed to bring satisfaction into your life.", stats:["+25% Pollen","+25% Bee Gather Pollen","x1.25 Capacity","+50% Honey From Tokens","+80 Convert Amount","+30% Defense","+15% Bee Ability Rate","+Passive: Coin Scatter"] } },
+  { nom:"Diamond Mask", categorie:"Masque", miel:5000000000, mats:[[250,"Blue Extract"],[150,"Oil"],[100,"Glitter"],[5,"Diamond Egg"],[1,"Comforting Vial"]], desc:"Masque de diamant, fabriqué dans la Diamond Room après le parcours des nuages. Il rend les plateformes de la salle solides de jour comme de nuit.", lieu:"Diamond Room, au bout du parcours qui suit le Cloud Obby", lieuEn:"Diamond Room, at the end of the course past the Cloud Obby", fiche:{ jeu:"Proudly show your extreme wealth to the world. Shine so brightly that others will complain.", stats:["x1.5 Blue Pollen","+15% Instant Blue Conversion","+25% Pollen","x3 Capacity","x1.5 Bubble Pollen","+35% Defense","+20% Bee Ability Rate","+Passive: Bubble Bombs (Needs Bubble Mask)","+Passive: Diamond Drain"] } },
+  { nom:"Demon Mask", categorie:"Masque", miel:5000000000, mats:[[500,"Stinger"],[250,"Red Extract"],[150,"Enzymes"],[100,"Glue"],[1,"Invigorating Vial"]], desc:"Masque démoniaque : gros bonus d'attaque et de flammes.", lieu:"Au fond du Lava Obby (derrière le Honey Dispenser)", lieuEn:"At the far end of the Lava Obby (behind the Honey Dispenser)", fiche:{ jeu:"Embrace hate to take on the form of a Demon Bee. Become both extremely unpleasant and powerful.", stats:["x1.5 Red Pollen","+25% Pollen","x1.5 Capacity","x1.5 Red Field Capacity","+20% Instant Red Conversion","+50% Instant Flame Conversion","x1.25 Flame Pollen","+25% Bee Attack","+35% Defense","+20% Bee Ability Rate","+Passive: Ignite (Needs Fire Mask)","+Passive: X-Flame"] } },
+  { nom:"Gummy Mask", categorie:"Masque", miel:5000000000, mats:[[250,"Glue"],[100,"Enzymes"],[100,"Oil"],[100,"Glitter"],[1,"Satisfying Vial"]], prealable:"Accès au repaire : badge Goo Hotshot ou mieux", prealableEn:"Lair access: Goo Hotshot badge or higher", desc:"Masque gélifié : bonus de goo et de conversion du goo.", lieu:"Gummy Bear's Lair", fiche:{ jeu:"The official mask of a Gummy Soldier.", stats:["+75% Goo","+10% Goo Conversion","x1.25 White Pollen","+25% Pollen","x1.5 Capacity","x1.5 White Field Capacity","+30% Defense","+20% Bee Ability Rate","+Passive: Coin Scatter (Needs Honey Mask)","+Passive: Gummy Morph"] } },
+  { nom:"B.B.M. Mask", categorie:"Masque", desc:"Le masque du Bubble Bee Man : orienté bulles et pollen bleu.", lieu:"Quête « Helping B.B.M. » de Beesmas 2018 ; on peut encore le rééquiper auprès de Bubble Bee Man (zone des 30 abeilles)", lieuEn:"\"Helping B.B.M.\" quest from Beesmas 2018; can still be re-equipped by talking to Bubble Bee Man (30 Bee Zone)", fiche:{ stats:["+75,000 Capacity","+25 Convert Amount","+50% Honey From Tokens","+1 Blue Bee Attack"] } },
+  { nom:"Mondo B.B.M. Mask", categorie:"Masque", desc:"Version améliorée du masque du Bubble Bee Man, bien plus puissante.", lieu:"Quête « B.B.M. Mission » de Beesmas 2018 ; on peut encore le rééquiper auprès de Bubble Bee Man (zone des 30 abeilles)", lieuEn:"\"B.B.M. Mission\" quest from Beesmas 2018; can still be re-equipped by talking to Bubble Bee Man (30 Bee Zone)", fiche:{ stats:["+250,000 Capacity","+50 Convert Amount","+100% Honey From Tokens","+1 Bee Attack"] } },
 
   /* ================= LEFT GUARD ================= */
-  { nom:"Bomber Guard", categorie:"Left Guard", miel:300000, mats:[[25,"Sunflower Seed"]], desc:"Protection liée à Bomber Bee : bonus de bombes.", lieu:"Pro Shop" },
-  { nom:"Looker Guard", categorie:"Left Guard", miel:300000, mats:[[25,"Sunflower Seed"]], desc:"Protection liée à Looker Bee : bonus de critique.", lieu:"Pro Shop" },
-  { nom:"Red Guard", categorie:"Left Guard", miel:750000, mats:[[50,"Strawberry"],[1,"Royal Jelly"],[1,"Stinger"]], desc:"Protection rouge : pollen et attaque rouges.", lieu:"Red HQ" },
-  { nom:"Elite Red Guard", categorie:"Left Guard", miel:5000000, mats:[[3,"Red Extract"],[50,"Strawberry"],[5,"Royal Jelly"],[5,"Stinger"]], desc:"Version élite de la protection rouge.", lieu:"Red HQ" },
-  { nom:"Riley Guard", categorie:"Left Guard", miel:30000000, mats:[[10,"Red Extract"],[100,"Strawberry"],[5,"Glue"],[25,"Stinger"]], desc:"Protection liée à Riley Bee.", lieu:"Red HQ" },
-  { nom:"Crimson Guard", categorie:"Left Guard", miel:200000000, mats:[[100,"Red Extract"],[100,"Stinger"],[50,"Oil"],[25,"Glitter"]], prealable:"Au moins un badge Ace pour entrer", prealableEn:"At least one Ace badge to enter", desc:"Protection liée à Crimson Bee : haut de gamme rouge.", lieu:"Ace Shop du Badge Bearer's Guild", lieuEn:"Ace Shop in the Badge Bearer's Guild" },
+  { nom:"Bomber Guard", categorie:"Left Guard", miel:300000, mats:[[25,"Sunflower Seed"]], desc:"Protection liée à Bomber Bee : bonus de bombes.", lieu:"Pro Shop", fiche:{ jeu:"A left shoulder pad crafted by a Bomber Bee.", stats:["+15,000 Capacity","+5% White Pollen","+15% Bomb Pollen"] } },
+  { nom:"Looker Guard", categorie:"Left Guard", miel:300000, mats:[[25,"Sunflower Seed"]], desc:"Protection liée à Looker Bee : bonus de critique.", lieu:"Pro Shop", fiche:{ jeu:"A left shoulder pad crafted by a Looker Bee.", stats:["+15,000 Capacity","+1% Critical Chance","+25% Critical Power"] } },
+  { nom:"Red Guard", categorie:"Left Guard", miel:750000, mats:[[50,"Strawberry"],[1,"Royal Jelly"],[1,"Stinger"]], desc:"Protection rouge : pollen et attaque rouges.", lieu:"Red HQ", fiche:{ jeu:"A durable pad worn on the left shoulder of Red Beekeepers.", stats:["+25,000 Capacity","+15% Red Pollen","+5% Defense","+1 Red Bee Attack"] } },
+  { nom:"Elite Red Guard", categorie:"Left Guard", miel:5000000, mats:[[3,"Red Extract"],[50,"Strawberry"],[5,"Royal Jelly"],[5,"Stinger"]], desc:"Version élite de la protection rouge.", lieu:"Red HQ", fiche:{ jeu:"A Red Guard reserved for the most dedicated Red Beekeepers.", stats:["+75,000 Capacity","+25% Red Pollen","+7% Defense","+5% Critical Chance","+1 Red Bee Attack"] } },
+  { nom:"Riley Guard", categorie:"Left Guard", miel:30000000, mats:[[10,"Red Extract"],[100,"Strawberry"],[5,"Glue"],[25,"Stinger"]], desc:"Protection liée à Riley Bee.", lieu:"Red HQ", fiche:{ jeu:"A piece of armor forged by the leader of Red Bees!", stats:["+150,000 Capacity","+35% Red Pollen","+10% Defense","+8% Critical Chance","+2 Red Bee Attack"] } },
+  { nom:"Crimson Guard", categorie:"Left Guard", miel:200000000, mats:[[100,"Red Extract"],[100,"Stinger"],[50,"Oil"],[25,"Glitter"]], prealable:"Au moins un badge Ace pour entrer", prealableEn:"At least one Ace badge to enter", desc:"Protection liée à Crimson Bee : haut de gamme rouge.", lieu:"Ace Shop du Badge Bearer's Guild", lieuEn:"Ace Shop in the Badge Bearer's Guild", fiche:{ jeu:"A guard bestowed with the heroic power of Crimson Bee - Defender of the Red Bees.", stats:["+250,000 Capacity","+50% Red Pollen","+20% Red Bomb Pollen","+3 Red Bee Attack","+10% Defense","+10% Critical Chance","+Passive: Focus Pulser"] } },
 
   /* ================= RIGHT GUARD ================= */
-  { nom:"Brave Guard", categorie:"Right Guard", miel:300000, mats:[[3,"Stinger"]], desc:"Protection liée à Brave Bee : bonus d'attaque.", lieu:"Pro Shop" },
-  { nom:"Hasty Guard", categorie:"Right Guard", miel:300000, mats:[[5,"Moon Charm"]], desc:"Protection liée à Hasty Bee : bonus de vitesse.", lieu:"Pro Shop" },
-  { nom:"Blue Guard", categorie:"Right Guard", miel:1000000, mats:[[50,"Blueberry"],[1,"Royal Jelly"],[3,"Moon Charm"]], desc:"Protection bleue : pollen et attaque bleus.", lieu:"Blue HQ" },
-  { nom:"Elite Blue Guard", categorie:"Right Guard", miel:5000000, mats:[[3,"Blue Extract"],[50,"Blueberry"],[5,"Royal Jelly"],[15,"Moon Charm"]], desc:"Version élite de la protection bleue.", lieu:"Blue HQ" },
-  { nom:"Bucko Guard", categorie:"Right Guard", miel:30000000, mats:[[10,"Blue Extract"],[100,"Blueberry"],[5,"Glue"],[75,"Moon Charm"]], desc:"Protection liée à Bucko Bee.", lieu:"Blue HQ" },
-  { nom:"Cobalt Guard", categorie:"Right Guard", miel:200000000, mats:[[100,"Blue Extract"],[100,"Stinger"],[50,"Enzymes"],[25,"Glitter"]], prealable:"Au moins un badge Ace pour entrer", prealableEn:"At least one Ace badge to enter", desc:"Protection liée à Cobalt Bee : haut de gamme bleu.", lieu:"Ace Shop du Badge Bearer's Guild", lieuEn:"Ace Shop in the Badge Bearer's Guild" },
+  { nom:"Brave Guard", categorie:"Right Guard", miel:300000, mats:[[3,"Stinger"]], desc:"Protection liée à Brave Bee : bonus d'attaque.", lieu:"Pro Shop", fiche:{ jeu:"A right shoulder pad crafted by a Brave Bee.", stats:["+15,000 Capacity","+5% White Pollen","+1 Colorless Bee Attack"] } },
+  { nom:"Hasty Guard", categorie:"Right Guard", miel:300000, mats:[[5,"Moon Charm"]], desc:"Protection liée à Hasty Bee : bonus de vitesse.", lieu:"Pro Shop", fiche:{ jeu:"A right shoulder pad crafted by a Hasty Bee.", stats:["+15,000 Capacity","+1% Bee Movespeed","x1.1 Player Movespeed"] } },
+  { nom:"Blue Guard", categorie:"Right Guard", miel:1000000, mats:[[50,"Blueberry"],[1,"Royal Jelly"],[3,"Moon Charm"]], desc:"Protection bleue : pollen et attaque bleus.", lieu:"Blue HQ", fiche:{ jeu:"A durable pad worn on the right shoulder of Blue Beekeepers.", stats:["+25,000 Capacity","+15% Blue Pollen","+5% Defense","+1 Blue Bee Attack"] } },
+  { nom:"Elite Blue Guard", categorie:"Right Guard", miel:5000000, mats:[[3,"Blue Extract"],[50,"Blueberry"],[5,"Royal Jelly"],[15,"Moon Charm"]], desc:"Version élite de la protection bleue.", lieu:"Blue HQ", fiche:{ jeu:"A Blue Guard reserved for the most dedicated Blue Beekeepers.", stats:["+75,000 Capacity","+25% Blue Pollen","+7% Defense","+50% Critical Power","+1 Blue Bee Attack"] } },
+  { nom:"Bucko Guard", categorie:"Right Guard", miel:30000000, mats:[[10,"Blue Extract"],[100,"Blueberry"],[5,"Glue"],[75,"Moon Charm"]], desc:"Protection liée à Bucko Bee.", lieu:"Blue HQ", fiche:{ jeu:"A piece of armor forged by the leader of Blue Bees!", stats:["+150,000 Capacity","+35% Blue Pollen","+10% Defense","+75% Critical Power","+2 Blue Bee Attack"] } },
+  { nom:"Cobalt Guard", categorie:"Right Guard", miel:200000000, mats:[[100,"Blue Extract"],[100,"Stinger"],[50,"Enzymes"],[25,"Glitter"]], prealable:"Au moins un badge Ace pour entrer", prealableEn:"At least one Ace badge to enter", desc:"Protection liée à Cobalt Bee : haut de gamme bleu.", lieu:"Ace Shop du Badge Bearer's Guild", lieuEn:"Ace Shop in the Badge Bearer's Guild", fiche:{ jeu:"A guard bestowed with the heroic power of Cobalt Bee - Defender of the Blue Bees.", stats:["+250,000 Capacity","+50% Blue Pollen","+20% Blue Bomb Pollen","+3 Blue Bee Attack","+10% Defense","+100% Critical Power","+Passive: Haste Pulser"] } },
 
   /* ================= BELT ================= */
-  { nom:"Belt Pocket", categorie:"Belt", miel:14000, mats:[[10,"Sunflower Seed"]], desc:"Petite poche de ceinture : la première capacité en plus.", lieu:"Noob Shop" },
-  { nom:"Belt Bag", categorie:"Belt", miel:440000, mats:[[50,"Pineapple"],[50,"Sunflower Seed"],[3,"Stinger"]], desc:"Sacoche de ceinture.", lieu:"Pro Shop" },
-  { nom:"Mondo Belt Bag", categorie:"Belt", miel:12400000, mats:[[150,"Pineapple"],[150,"Sunflower Seed"],[10,"Stinger"],[1,"Soft Wax"]], desc:"Sacoche géante.", lieu:"Mountain Top Shop" },
-  { nom:"Honeycomb Belt", categorie:"Belt", miel:75000000, mats:[[50,"Enzymes"],[50,"Glue"],[25,"Oil"]], prealable:"Au moins un badge Ace pour entrer", prealableEn:"At least one Ace badge to enter", desc:"Ceinture en rayons de miel : bonus de conversion.", lieu:"Ace Shop du Badge Bearer's Guild", lieuEn:"Ace Shop in the Badge Bearer's Guild" },
-  { nom:"Petal Belt", categorie:"Belt", miel:15000000000, mats:[[25,"Star Jelly"],[50,"Glitter"],[100,"Glue"],[1,"Spirit Petal"]], desc:"Ceinture de pétales : haut de gamme du Petal Shop.", lieu:"Petal Shop" },
-  { nom:"Coconut Belt", categorie:"Belt", miel:7500000000000, mats:[[500,"Coconut"],[1500,"Tropical Drink"],[200,"Purple Potion"],[200,"Hard Wax"],[3,"Turpentine"],[3,"Refreshing Vial"]], prealable:"Accès : vaincre le Coconut Crab", prealableEn:"Access: defeat the Coconut Crab", desc:"Ceinture en noix de coco : une des meilleures de fin de jeu.", lieu:"Coconut Cave" },
+  { nom:"Belt Pocket", categorie:"Belt", miel:14000, mats:[[10,"Sunflower Seed"]], desc:"Petite poche de ceinture : la première capacité en plus.", lieu:"Noob Shop", fiche:{ jeu:"Attaches to your waist to expand the size of your container.", stats:["+5,000 Capacity","+10 Convert Amount","+25% Loot Luck"] } },
+  { nom:"Belt Bag", categorie:"Belt", miel:440000, mats:[[50,"Pineapple"],[50,"Sunflower Seed"],[3,"Stinger"]], desc:"Sacoche de ceinture.", lieu:"Pro Shop", fiche:{ jeu:"A convenient pouch designed for easy access.", stats:["+25,000 Capacity","+20 Convert Amount","+50% Loot Luck"] } },
+  { nom:"Mondo Belt Bag", categorie:"Belt", miel:12400000, mats:[[150,"Pineapple"],[150,"Sunflower Seed"],[10,"Stinger"],[1,"Soft Wax"]], desc:"Sacoche géante.", lieu:"Mountain Top Shop", fiche:{ jeu:"A highly-embelished [sic] Belt Bag imported from a far away land.", stats:["+100,000 Capacity","+50 Convert Amount","+75% Loot Luck"] } },
+  { nom:"Honeycomb Belt", categorie:"Belt", miel:75000000, mats:[[50,"Enzymes"],[50,"Glue"],[25,"Oil"]], prealable:"Au moins un badge Ace pour entrer", prealableEn:"At least one Ace badge to enter", desc:"Ceinture en rayons de miel : bonus de conversion.", lieu:"Ace Shop du Badge Bearer's Guild", lieuEn:"Ace Shop in the Badge Bearer's Guild", fiche:{ jeu:"A luxurious faux honeycomb you can wear as a belt to greatly enhance your pollen capacity.", stats:["+150,000 Capacity","+25% Capacity","+75 Convert Amount","+100% Loot Luck","+20% Buzz Bomb Pollen","+50% Honey From Tokens","+1 Colorless Bee Attack"] } },
+  { nom:"Petal Belt", categorie:"Belt", miel:15000000000, mats:[[25,"Star Jelly"],[50,"Glitter"],[100,"Glue"],[1,"Spirit Petal"]], desc:"Ceinture de pétales : haut de gamme du Petal Shop.", lieu:"Petal Shop", fiche:{ jeu:"Drape these petals about your waist to harness unlimited flower power.", stats:["+250,000 Capacity","+50% Capacity","+100 Convert Amount","+101% Loot Luck","+75% Honey From Tokens","+30% Buzz Bomb Pollen","+1 Colorless Bee Attack","+Passive: Petal Storm"] } },
+  { nom:"Coconut Belt", categorie:"Belt", miel:7500000000000, mats:[[500,"Coconut"],[1500,"Tropical Drink"],[200,"Purple Potion"],[200,"Hard Wax"],[3,"Turpentine"],[3,"Refreshing Vial"]], prealable:"Accès : vaincre le Coconut Crab", prealableEn:"Access: defeat the Coconut Crab", desc:"Ceinture en noix de coco : une des meilleures de fin de jeu.", lieu:"Coconut Cave", fiche:{ jeu:"This cumberbund [sic] creates Combo Coconuts that can be juggled for massive boosts!", stats:["+350,000 Capacity","+75% Capacity","+120 Convert Amount","+102% Loot Luck","+100% Honey From Tokens","x1.1 Coconut Field Pollen","+10% Gifted Bee Pollen","+1 Bee Attack","+Passive: Petal Storm (Needs Petal Belt)","+Passive: Combo Coconuts"] } },
 
   /* ================= BOTTES ================= */
-  { nom:"Basic Boots", categorie:"Bottes", miel:4400, mats:[[3,"Sunflower Seed"],[3,"Blueberry"]], desc:"Bottes de base : un peu de vitesse.", lieu:"Noob Shop" },
-  { nom:"Hiking Boots", categorie:"Bottes", miel:2200000, mats:[[50,"Blueberry"],[50,"Strawberry"]], desc:"Chaussures de randonnée : vitesse et collecte en marchant.", lieu:"Pro Shop" },
-  { nom:"Beekeeper's Boots", categorie:"Bottes", miel:15000000, mats:[[5,"Oil"],[3,"Red Extract"],[3,"Blue Extract"]], desc:"Bottes d'apiculteur. À porter avec un chapeau pour que Dapper Bear accepte de te vendre des beequips.", lieu:"Mountain Top Shop" },
-  { nom:"Coconut Clogs", categorie:"Bottes", miel:10000000000, mats:[[150,"Coconut"],[50,"Tropical Drink"],[100,"Glue"],[100,"Oil"],[1,"Refreshing Vial"]], prealable:"Accès : vaincre le Coconut Crab", prealableEn:"Access: defeat the Coconut Crab", desc:"Sabots en noix de coco : bottes de fin de jeu.", lieu:"Coconut Cave" },
-  { nom:"Gummy Boots", categorie:"Bottes", miel:100000000000, mats:[[500,"Glue"],[250,"Glitter"],[250,"Red Extract"],[250,"Blue Extract"],[1,"Satisfying Vial"],[1,"Motivating Vial"]], prealable:"Accès au repaire : badge Goo Hotshot ou mieux", prealableEn:"Lair access: Goo Hotshot badge or higher", desc:"Bottes gélifiées : orientées goo.", lieu:"Gummy Bear's Lair" },
+  { nom:"Basic Boots", categorie:"Bottes", miel:4400, mats:[[3,"Sunflower Seed"],[3,"Blueberry"]], desc:"Bottes de base : un peu de vitesse.", lieu:"Noob Shop", fiche:{ jeu:"Collect pollen as you walk through flowers!", stats:["+4 Player Movespeed","+2 Movement Collection"] } },
+  { nom:"Hiking Boots", categorie:"Bottes", miel:2200000, mats:[[50,"Blueberry"],[50,"Strawberry"]], desc:"Chaussures de randonnée : vitesse et collecte en marchant.", lieu:"Pro Shop", fiche:{ jeu:"A durable pair of boots helpful for traversing the mountain.", stats:["+5 Player Movespeed","+10 Jump Power","+6 Movement Collection","+1 Bee Attack"] } },
+  { nom:"Beekeeper's Boots", categorie:"Bottes", miel:15000000, mats:[[5,"Oil"],[3,"Red Extract"],[3,"Blue Extract"]], desc:"Bottes d'apiculteur. À porter avec un chapeau pour que Dapper Bear accepte de te vendre des beequips.", lieu:"Mountain Top Shop", fiche:{ jeu:"Practical and stylish boots that aid in the beekeeping process.", stats:["+25% Bee Gather Pollen","+6 Player Movespeed","+20 Jump Power","+10 Movement Collection","+1 Bee Attack"] } },
+  { nom:"Coconut Clogs", categorie:"Bottes", miel:10000000000, mats:[[150,"Coconut"],[50,"Tropical Drink"],[100,"Glue"],[100,"Oil"],[1,"Refreshing Vial"]], prealable:"Accès : vaincre le Coconut Crab", prealableEn:"Access: defeat the Coconut Crab", desc:"Sabots en noix de coco : bottes de fin de jeu.", lieu:"Coconut Cave", fiche:{ jeu:"Kick around Coconuts with this pair of clunky kicks for a surge of speed.", stats:["+15% Pollen","x1.15 Coconut Field Pollen","+25% Honey From Tokens","+2 Bee Attack","+7 Player Movespeed","+22 Jump Power","+14 Movement Collection","+Passive: Coconut Haste"] } },
+  { nom:"Gummy Boots", categorie:"Bottes", miel:100000000000, mats:[[500,"Glue"],[250,"Glitter"],[250,"Red Extract"],[250,"Blue Extract"],[1,"Satisfying Vial"],[1,"Motivating Vial"]], prealable:"Accès au repaire : badge Goo Hotshot ou mieux", prealableEn:"Lair access: Goo Hotshot badge or higher", desc:"Bottes gélifiées : orientées goo.", lieu:"Gummy Bear's Lair", fiche:{ jeu:"Squishy boots that leave a trail of Goo wherever you go.", stats:["+25% Goo","+20% Pollen","+50% Honey From Tokens","+3 Bee Attack","+9 Player Movespeed","+22 Jump Power","+16 Movement Collection","+Passive: Coconut Haste","+Passive: Goo Trail"] } },
 
   /* ================= SPRINKLER ================= */
-  { nom:"Basic Sprinkler", categorie:"Sprinkler", miel:1111111, prealable:"10 badges Cadet différents", prealableEn:"10 different Cadet badges", desc:"Arroseur de base : fait pousser les fleurs autour de lui.", lieu:"Badge Bearer's Guild" },
-  { nom:"Silver Soakers", categorie:"Sprinkler", miel:22222222, prealable:"10 badges Hotshot différents", prealableEn:"10 different Hotshot badges", desc:"Arroseurs argentés : plus grande zone d'effet.", lieu:"Badge Bearer's Guild" },
-  { nom:"Golden Gushers", categorie:"Sprinkler", miel:333333333, prealable:"10 badges Ace différents", prealableEn:"10 different Ace badges", desc:"Arroseurs dorés : zone et rendement nettement supérieurs.", lieu:"Badge Bearer's Guild" },
-  { nom:"Diamond Drenchers", categorie:"Sprinkler", miel:4444444444, prealable:"10 badges Master différents", prealableEn:"10 different Master badges", desc:"Arroseurs de diamant : haut de gamme.", lieu:"Badge Bearer's Guild" },
-  { nom:"The Supreme Saturator", categorie:"Sprinkler", miel:55555555555, prealable:"10 badges Grandmaster différents", prealableEn:"10 different Grandmaster badges", desc:"L'arroseur ultime du jeu.", lieu:"Badge Bearer's Guild" },
+  { nom:"Basic Sprinkler", categorie:"Sprinkler", miel:1111111, prealable:"10 badges Cadet différents", prealableEn:"10 different Cadet badges", desc:"Arroseur de base : fait pousser les fleurs autour de lui.", lieu:"Badge Bearer's Guild", fiche:{ jeu:"When planted in the ground, causes [sic] nearby flowers to regrow faster!", arroseur:{ n:"1", rayon:"7", puissance:"7", rythme:"5 s", montage:"6 s" } } },
+  { nom:"Silver Soakers", categorie:"Sprinkler", miel:22222222, prealable:"10 badges Hotshot différents", prealableEn:"10 different Hotshot badges", desc:"Arroseurs argentés : plus grande zone d'effet.", lieu:"Badge Bearer's Guild", fiche:{ jeu:"Two sprinklers which fire faster!", arroseur:{ n:"2", rayon:"7", puissance:"7", rythme:"4.5 s", montage:"5 s" } } },
+  { nom:"Golden Gushers", categorie:"Sprinkler", miel:333333333, prealable:"10 badges Ace différents", prealableEn:"10 different Ace badges", desc:"Arroseurs dorés : zone et rendement nettement supérieurs.", lieu:"Badge Bearer's Guild", fiche:{ jeu:"Three gorgeous sprinklers with enormous range.", arroseur:{ n:"3", rayon:"8", puissance:"8", rythme:"4.5 s", montage:"5 s" } } },
+  { nom:"Diamond Drenchers", categorie:"Sprinkler", miel:4444444444, prealable:"10 badges Master différents", prealableEn:"10 different Master badges", desc:"Arroseurs de diamant : haut de gamme.", lieu:"Badge Bearer's Guild", fiche:{ jeu:"Four enhanced sprinklers made of durable artificial diamond!", arroseur:{ n:"4", rayon:"8", puissance:"9", rythme:"4 s", montage:"4 s" } } },
+  { nom:"The Supreme Saturator", categorie:"Sprinkler", miel:55555555555, prealable:"10 badges Grandmaster différents", prealableEn:"10 different Grandmaster badges", desc:"L'arroseur ultime du jeu.", lieu:"Badge Bearer's Guild", fiche:{ jeu:"The ultimate sprinkler. Nobody knows how it works or where it came from.", arroseur:{ n:"1", rayon:"16", puissance:"10", rythme:"1 s", montage:"3 s" } } },
 
   /* ================= ACCESSOIRE ================= */
-  { nom:"Parachute", categorie:"Accessoire", miel:500000, desc:"Parachute : ralentit la chute pour traverser la carte en douceur.", lieu:"Pro Shop" },
-  { nom:"Glider", categorie:"Accessoire", miel:5000000, desc:"Deltaplane : vol plané sur de longues distances.", lieu:"Mountain Top Shop" },
-  { nom:"Hive Slot", categorie:"Accessoire", miel:3000000, desc:"Emplacement de ruche supplémentaire : de 25 à 50 abeilles maximum. Le prix augmente de façon exponentielle.", lieu:"Mountain Top Shop — 3 M pour le 1ᵉʳ emplacement, puis le prix monte à chaque achat (≈ 2,17 T pour le 25ᵉ)", lieuEn:"Mountain Top Shop — 3M for the first slot, then the price rises with each purchase (≈ 2.17T for the 25th)" },
+  { nom:"Parachute", categorie:"Accessoire", miel:500000, desc:"Parachute : ralentit la chute pour traverser la carte en douceur.", lieu:"Pro Shop", fiche:{ jeu:"A parachute you can use to glide down the mountain and reach new places! Press jump while in the air to open.", vol:{ vitesse:"30", flottement:"-14" } } },
+  { nom:"Glider", categorie:"Accessoire", miel:5000000, desc:"Deltaplane : vol plané sur de longues distances.", lieu:"Mountain Top Shop", fiche:{ jeu:"Floats much faster than the Parachute, allowing you to fly through the sky! Press jump while in the air to open.", vol:{ vitesse:"70", flottement:"-24" } } },
+  { nom:"Hive Slot", categorie:"Accessoire", miel:3000000, desc:"Emplacement de ruche supplémentaire : de 25 à 50 abeilles maximum. Le prix augmente de façon exponentielle.", lieu:"Mountain Top Shop — 3 M pour le 1ᵉʳ emplacement, puis le prix monte à chaque achat (≈ 2,17 T pour le 25ᵉ)", lieuEn:"Mountain Top Shop — 3M for the first slot, then the price rises with each purchase (≈ 2.17T for the 25th)", fiche:{ jeu:"Increases the capacity of your hive, allowing you to hatch an additional bee!" } },
   { nom:"Amulet", categorie:"Accessoire", vue:"amulettes", vueNom:"les 7 amulettes", desc:"Amulette : bonus permanents obtenus via les défis et les générateurs. Une de chaque type peut être portée en même temps.", lieu:"Défis et générateurs" },
   { nom:"Beequip", categorie:"Accessoire", vue:"beequip", vueNom:"les 41 beequips", desc:"Équipement à poser sur une abeille. Stats aléatoires selon un potentiel de 0 à 5 ★, renforçables aux cires.", lieu:"Planteurs, Dapper Bear" },
   { nom:"Sticker", categorie:"Accessoire", vue:"stickers", vueNom:"les 291 stickers", desc:"Autocollant à poser sur sa ruche, à échanger, ou à empiler dans le Sticker Stack pour un bonus permanent.", lieu:"Murs cachés, Sticker Printer, quêtes" },
 
   /* ================= PLANTER ================= */
-  { nom:"Paper Planter", categorie:"Planter", miel:25000, mats:[[1,"Sunflower Seed"]], desc:"Planteur en papier : usage unique, très rapide, petites récompenses. Idéal pour débuter.", lieu:"Pro Shop" },
-  { nom:"Ticket Planter", categorie:"Planter", desc:"Planteur à tickets : usage unique, récompense surtout en tickets.", lieu:"Dapper Bear (3 au premier dialogue), Sticker Sprouts, Retro Swarm Challenge, Sticker Stack", lieuEn:"Dapper Bear (3 on first talk), Sticker Sprouts, Retro Swarm Challenge, Sticker Stack" },
-  { nom:"Sticker Planter", categorie:"Planter", desc:"Planteur à stickers : usage unique, orienté stickers.", lieu:"Robux (100 R$), quêtes, événements", lieuEn:"Robux (100 R$), quests, events" },
-  { nom:"Festive Planter", categorie:"Planter", desc:"Planteur de Beesmas : usage unique, récompenses de l'événement.", lieu:"Événements Beesmas (plus obtenable aujourd'hui)", lieuEn:"Beesmas events (no longer obtainable)" },
-  { nom:"Plastic Planter", categorie:"Planter", miel:750000, mats:[[3,"Magic Bean"],[1,"Soft Wax"]], desc:"Le premier planteur réutilisable, sans bonus particulier.", descEn:"The first reusable planter, with no special bonus.", lieu:"Dapper Bear's Shop" },
-  { nom:"Candy Planter", categorie:"Planter", miel:5000000, mats:[[5,"Magic Bean"],[30,"Gumdrops"],[3,"Jelly Beans"],[5,"Soft Wax"]], desc:"Planteur bonbon : orienté gumdrops et goo.", lieu:"Dapper Bear's Shop" },
-  { nom:"Red Clay Planter", categorie:"Planter", miel:10000000, mats:[[5,"Magic Bean"],[15,"Red Extract"],[20,"Soft Wax"]], desc:"Planteur d'argile rouge : boosté sur les champs rouges. Peut lâcher un Thumbtack.", lieu:"Red HQ" },
-  { nom:"Blue Clay Planter", categorie:"Planter", miel:10000000, mats:[[5,"Magic Bean"],[15,"Blue Extract"],[20,"Soft Wax"]], desc:"Planteur d'argile bleue : boosté sur les champs bleus.", lieu:"Blue HQ" },
-  { nom:"Tacky Planter", categorie:"Planter", miel:50000000, mats:[[10,"Magic Bean"],[1,"Purple Potion"],[5,"Hard Wax"],[20,"Soft Wax"]], desc:"Planteur collant : très bon rendement en cires et beequips.", lieu:"Dapper Bear's Shop" },
-  { nom:"Pesticide Planter", categorie:"Planter", miel:750000000, mats:[[25,"Magic Bean"],[25,"Neonberry"],[15,"Glue"],[3,"Caustic Wax"],[10,"Hard Wax"]], desc:"Planteur pesticide : élimine les mobs. Meilleure chance de Bang Snap et Bead Lizard.", lieu:"Dapper Bear's Shop" },
-  { nom:"Hydroponic Planter", categorie:"Planter", miel:750000000000, mats:[[75,"Magic Bean"],[750,"Blue Extract"],[500,"Soft Wax"],[25,"Caustic Wax"],[1,"Turpentine"]], prealable:"150 quêtes de Gifted Bucko Bee terminées", prealableEn:"150 Gifted Bucko Bee quests completed", desc:"Planteur hydroponique : gros rendement, temps de pousse long.", lieu:"Blue HQ" },
-  { nom:"Heat-Treated Planter", categorie:"Planter", miel:750000000000, mats:[[75,"Magic Bean"],[750,"Red Extract"],[150,"Hard Wax"],[25,"Swirled Wax"],[1,"Turpentine"]], prealable:"150 quêtes de Gifted Riley Bee terminées", prealableEn:"150 Gifted Riley Bee quests completed", desc:"Planteur traité à la chaleur : orienté rouge. Peut lâcher un Thumbtack.", lieu:"Red HQ" },
-  { nom:"Petal Planter", categorie:"Planter", miel:5000000000000, mats:[[100,"Magic Bean"],[100,"Glitter"],[250,"Soft Wax"],[50,"Swirled Wax"],[25,"Super Smoothie"]], desc:"Planteur pétale : la seule voie réaliste pour le Lei et le Charm Bracelet.", lieu:"Petal Shop" },
-  { nom:"The Planter Of Plenty", categorie:"Planter", miel:100000000000000, mats:[[500,"Magic Bean"],[100,"Super Smoothie"],[100,"Swirled Wax"],[100,"Caustic Wax"],[25,"Turpentine"]], desc:"Le planteur ultime du jeu : le plus long, mais le plus rentable.", lieu:"Dapper Bear's Shop" },
+  { nom:"Paper Planter", categorie:"Planter", miel:25000, mats:[[1,"Sunflower Seed"]], desc:"Planteur en papier : usage unique, très rapide, petites récompenses. Idéal pour débuter.", lieu:"Pro Shop", fiche:{ jeu:"A biodegradable pot that grows in about 1hr. Harvest to collect pollen, items, and Nectar boosts!", planteur:{ pousse:"~1 h", pollen:"50,000", reutil:false, nectar:["x0.75 Refreshing","x0.75 Comforting","x0.75 Satisfying","x0.75 Motivating","x0.75 Invigorating"], max:"100" } } },
+  { nom:"Ticket Planter", categorie:"Planter", desc:"Planteur à tickets : usage unique, récompense surtout en tickets.", lieu:"Dapper Bear (3 au premier dialogue), Sticker Sprouts, Retro Swarm Challenge, Sticker Stack", lieuEn:"Dapper Bear (3 on first talk), Sticker Sprouts, Retro Swarm Challenge, Sticker Stack", fiche:{ jeu:"Grows in about 2 hours of playtime. Grants Tickets and spawns a Puffshroom!", planteur:{ pousse:"~2 h", pollen:"50,000", reutil:false, nectar:["x2 Refreshing","x2 Comforting","x2 Satisfying","x2 Motivating","x2 Invigorating"] } } },
+  { nom:"Sticker Planter", categorie:"Planter", desc:"Planteur à stickers : usage unique, orienté stickers.", lieu:"Robux (100 R$), quêtes, événements", lieuEn:"Robux (100 R$), quests, events", fiche:{ jeu:"Grows in about 3 hours of playtime. Always grants some Stickers and spawns a Puffshroom (Rare+)!", planteur:{ pousse:"~3 h", pollen:"200,000", reutil:false, nectar:["x2 Refreshing","x2 Comforting","x2 Satisfying","x2 Motivating","x2 Invigorating"], max:"25" } } },
+  { nom:"Festive Planter", categorie:"Planter", desc:"Planteur de Beesmas : usage unique, récompenses de l'événement.", lieu:"Événements Beesmas (plus obtenable aujourd'hui)", lieuEn:"Beesmas events (no longer obtainable)", fiche:{ jeu:"Grows in about 4 hours of playtime. Grants many rewards and x3 Nectar!", planteur:{ pousse:"~4 h", pollen:"250,000", reutil:false, nectar:["x3 Refreshing","x3 Comforting","x3 Satisfying","x3 Motivating","x3 Invigorating"], max:"100" } } },
+  { nom:"Plastic Planter", categorie:"Planter", miel:750000, mats:[[3,"Magic Bean"],[1,"Soft Wax"]], desc:"Le premier planteur réutilisable, sans bonus particulier.", descEn:"The first reusable planter, with no special bonus.", lieu:"Dapper Bear's Shop", fiche:{ jeu:"Grows in about 2 hours. Harvest to collect pollen, items, and Nectar boosts!", planteur:{ pousse:"~2 h", pollen:"250,000", reutil:true } } },
+  { nom:"Candy Planter", categorie:"Planter", miel:5000000, mats:[[5,"Magic Bean"],[30,"Gumdrops"],[3,"Jelly Beans"],[5,"Soft Wax"]], desc:"Planteur bonbon : orienté gumdrops et goo.", lieu:"Dapper Bear's Shop", fiche:{ jeu:"Alone, grows in about 4 hours and stores around 1 million Pollen. Grants bonus Gumdrops and Jelly Beans.", planteur:{ pousse:"~4 h", pollen:"1,000,000", reutil:true, nectar:["+20% Motivating"], bonusFr:"+25 % dans le Strawberry Field, le Pineapple Patch et le Coconut Field", bonusEn:"+25% in the Strawberry Field, Pineapple Patch and Coconut Field" } } },
+  { nom:"Red Clay Planter", categorie:"Planter", miel:10000000, mats:[[5,"Magic Bean"],[15,"Red Extract"],[20,"Soft Wax"]], desc:"Planteur d'argile rouge : boosté sur les champs rouges. Peut lâcher un Thumbtack.", lieu:"Red HQ", fiche:{ jeu:"Alone, grows in about 6 hours. Stores around 3 million Pollen. Grants bonus Red Extract and Waxes", planteur:{ pousse:"~6 h", pollen:"3,000,000", reutil:true, nectar:["+20% Invigorating","+20% Satisfying"], bonusFr:"+25 % dans les champs à fleurs rouges", bonusEn:"+25% in fields with red flowers" } } },
+  { nom:"Blue Clay Planter", categorie:"Planter", miel:10000000, mats:[[5,"Magic Bean"],[15,"Blue Extract"],[20,"Soft Wax"]], desc:"Planteur d'argile bleue : boosté sur les champs bleus.", lieu:"Blue HQ", fiche:{ jeu:"Grows in about 6hrs, but faster near Blue flowers. Grants bonus Blue Extract, Micro-Converters, and x1.2 Refreshing and Comforting Nectar.", planteur:{ pousse:"~6 h", pollen:"3,000,000", reutil:true, nectar:["+20% Refreshing","+20% Comforting"], bonusFr:"+25 % dans les champs à fleurs bleues", bonusEn:"+25% in fields with blue flowers" } } },
+  { nom:"Tacky Planter", categorie:"Planter", miel:50000000, mats:[[10,"Magic Bean"],[1,"Purple Potion"],[5,"Hard Wax"],[20,"Soft Wax"]], desc:"Planteur collant : très bon rendement en cires et beequips.", lieu:"Dapper Bear's Shop", fiche:{ jeu:"Grows in about 8hrs, but faster near the hives. Grants bonus Field Dice, Sunflower Seeds, and x1.25 Satisfying and Comforting Nectar.", planteur:{ pousse:"~8 h", pollen:"15,000,000", reutil:true, nectar:["+25% Satisfying","+25% Comforting"], bonusFr:"−25 % de temps dans la zone de départ", bonusEn:"−25% grow time in the Starter Zone" } } },
+  { nom:"Pesticide Planter", categorie:"Planter", miel:750000000, mats:[[25,"Magic Bean"],[25,"Neonberry"],[15,"Glue"],[3,"Caustic Wax"],[10,"Hard Wax"]], desc:"Planteur pesticide : élimine les mobs. Meilleure chance de Bang Snap et Bead Lizard.", lieu:"Dapper Bear's Shop", fiche:{ jeu:"Alone, grows in about 10 hours (Playtime). Stores around 200m Pollen. Grants bonus Bitterberries and Neonberries.", planteur:{ pousse:"~10 h", pollen:"200,000,000", reutil:true, nectar:["+30% Satisfying","+30% Motivating"], bonusFr:"+30 % (7 h) dans la zone des 5 abeilles", bonusEn:"+30% (7 h) in the 5 Bee Zone" } } },
+  { nom:"Hydroponic Planter", categorie:"Planter", miel:750000000000, mats:[[75,"Magic Bean"],[750,"Blue Extract"],[500,"Soft Wax"],[25,"Caustic Wax"],[1,"Turpentine"]], prealable:"150 quêtes de Gifted Bucko Bee terminées", prealableEn:"150 Gifted Bucko Bee quests completed", desc:"Planteur hydroponique : gros rendement, temps de pousse long.", lieu:"Blue HQ", fiche:{ jeu:"Alone, grows in about 12 hours. Stores around 10 [sic] billion Pollen. Grants bonus Blue Extract and Oils.", planteur:{ pousse:"12 h", pollen:"10,000,000,000", reutil:true, nectar:["+40% Refreshing","+40% Comforting"], bonusFr:"Jusqu'à +50 % dans les champs à fleurs bleues", bonusEn:"Up to +50% in fields with blue flowers" } } },
+  { nom:"Heat-Treated Planter", categorie:"Planter", miel:750000000000, mats:[[75,"Magic Bean"],[750,"Red Extract"],[150,"Hard Wax"],[25,"Swirled Wax"],[1,"Turpentine"]], prealable:"150 quêtes de Gifted Riley Bee terminées", prealableEn:"150 Gifted Riley Bee quests completed", desc:"Planteur traité à la chaleur : orienté rouge. Peut lâcher un Thumbtack.", lieu:"Red HQ", fiche:{ jeu:"Alone, grows in about 12 hours. Stores around 10 [sic] billion Pollen. Grants Red Extracts and Enzymes.", planteur:{ pousse:"12 h", pollen:"25,000,000,000", reutil:true, nectar:["+40% Invigorating","+40% Motivating"], bonusFr:"Jusqu'à +50 % dans les champs à fleurs rouges", bonusEn:"Up to +50% in fields with red flowers" } } },
+  { nom:"Petal Planter", categorie:"Planter", miel:5000000000000, mats:[[100,"Magic Bean"],[100,"Glitter"],[250,"Soft Wax"],[50,"Swirled Wax"],[25,"Super Smoothie"]], desc:"Planteur pétale : la seule voie réaliste pour le Lei et le Charm Bracelet.", lieu:"Petal Shop", fiche:{ jeu:"Alone, grows in about 14 hours. Stores around 100 billion Pollen. Grants bonus Jelly Beans, Field Dice, and Glitter.", planteur:{ pousse:"~14 h", pollen:"100,000,000,000", reutil:true, nectar:["+50% Comforting","+50% Satisfying"], bonusFr:"+50 % dans les champs à fleurs blanches", bonusEn:"+50% in fields with white flowers" } } },
+  { nom:"The Planter Of Plenty", categorie:"Planter", miel:100000000000000, mats:[[500,"Magic Bean"],[100,"Super Smoothie"],[100,"Swirled Wax"],[100,"Caustic Wax"],[25,"Turpentine"]], desc:"Le planteur ultime du jeu : le plus long, mais le plus rentable.", lieu:"Dapper Bear's Shop", fiche:{ jeu:"Alone, grows in about 16 hours. Stores around 1 Trillion Pollen. Grants many bonus items, including Neonberries, Waxes, and Turpentine.", planteur:{ pousse:"16 h", pollen:"1,000,000,000,000", reutil:true, nectar:["+50% Refreshing","+50% Comforting","+50% Satisfying","+50% Motivating","+50% Invigorating"], bonusFr:"+50 % dans le Pepper Patch, le Stump Field, le Coconut Field et le Mountain Top Field", bonusEn:"+50% in the Pepper Patch, Stump Field, Coconut Field and Mountain Top Field" } } },
 
   /* ================= ŒUFS ================= */
   { nom:"Basic Egg", categorie:"Œufs", desc:"Fait éclore une abeille Commune ou Rare. Le premier œuf du jeu.", lieu:"Noob Shop, quêtes, tokens" },
@@ -2596,93 +2761,93 @@ const ITEMS = [
   { img:"images/item/Royal_Jelly.webp", nom:"Digital Bee Jelly", categorie:"Gelées", desc:"Gelée d'événement : transforme l'abeille visée en Digital Bee.", lieu:"Événements, codes" },
 
   /* ================= TREATS ================= */
-  { nom:"Coconut", categorie:"Treats", desc:"Noix de coco : friandise du Coconut Field, aussi utilisée en fabrication.", lieu:"Coconut Field, Coconut Crab" },
-  { nom:"Treat", categorie:"Treats", desc:"Friandise de base : donne de l'XP et du bond à une abeille.", lieu:"Treat Shop, quêtes, tokens" },
-  { nom:"Star Treat", categorie:"Treats", desc:"Friandise étoilée : donne énormément de bond, et peut mutter l'abeille nourrie.", lieu:"Ticket Tent (1 000 tickets), quêtes, événements", lieuEn:"Ticket Tent (1,000 tickets), quests, events" },
-  { nom:"Atomic Treat", categorie:"Treats", desc:"Friandise atomique : garantit une mutation sur l'abeille nourrie, radioactive ou non.", lieu:"Quêtes de haut niveau, événements" },
-  { nom:"Sunflower Seed", categorie:"Treats", desc:"Graine de tournesol : friandise préférée de plusieurs abeilles.", lieu:"Sunflower Field" },
-  { nom:"Strawberry", categorie:"Treats", desc:"Fraise : friandise préférée des abeilles rouges.", lieu:"Strawberry Field" },
-  { nom:"Pineapple", categorie:"Treats", desc:"Ananas : friandise préférée de plusieurs abeilles incolores.", lieu:"Pineapple Patch" },
-  { nom:"Blueberry", categorie:"Treats", desc:"Myrtille : friandise préférée des abeilles bleues.", lieu:"Distributeur Blue HQ" },
-  { nom:"Bitterberry", categorie:"Treats", desc:"Baie amère : 1 chance sur 1 000 de donner une mutation (1 sur 100 si l'abeille est radioactive).", lieu:"Quêtes, planteurs, mobs" },
-  { nom:"Neonberry", categorie:"Treats", desc:"Baie néon : friandise rare qui donne beaucoup de bond.", lieu:"Quêtes, planteurs" },
-  { nom:"Moon Charm", categorie:"Treats", mats:[[5,"Pineapple"],[5,"Gumdrops"],[1,"Royal Jelly"]], desc:"Charme lunaire : gros bond, peut mutter une abeille. Sert aussi à fabriquer et à générer le Moon Amulet.", lieu:"Blender, Memory Match, Wind Shrine, King Beetle et Tunnel Bear, lucioles la nuit", lieuEn:"Blender, Memory Match, Wind Shrine, King Beetle and Tunnel Bear, fireflies at night" },
+  { nom:"Coconut", categorie:"Treats", desc:"Noix de coco : friandise du Coconut Field, aussi utilisée en fabrication.", lieu:"Coconut Field, Coconut Crab", fiche:{ jeu:"Drops a huge Coconut into the field. Catch it to convert Pollen to Honey Tokens.", conso:{ recharge:"10 s", max:"500" } } },
+  { nom:"Treat", categorie:"Treats", desc:"Friandise de base : donne de l'XP et du bond à une abeille.", lieu:"Treat Shop, quêtes, tokens", fiche:{ jeu:"Increases your bond with a bee by 10." } },
+  { nom:"Star Treat", categorie:"Treats", desc:"Friandise étoilée : donne énormément de bond, et peut mutter l'abeille nourrie.", lieu:"Ticket Tent (1 000 tickets), quêtes, événements", lieuEn:"Ticket Tent (1,000 tickets), quests, events", fiche:{ jeu:"Turns a bee into a Gifted bee!" } },
+  { nom:"Atomic Treat", categorie:"Treats", desc:"Friandise atomique : garantit une mutation sur l'abeille nourrie, radioactive ou non.", lieu:"Quêtes de haut niveau, événements", fiche:{ jeu:"Always causes a random Mutation in a bee! Mutations grant bonus stats." } },
+  { nom:"Sunflower Seed", categorie:"Treats", desc:"Graine de tournesol : friandise préférée de plusieurs abeilles.", lieu:"Sunflower Field", fiche:{ jeu:"Increases your bond with a bee by 25." } },
+  { nom:"Strawberry", categorie:"Treats", desc:"Fraise : friandise préférée des abeilles rouges.", lieu:"Strawberry Field", fiche:{ jeu:"Increases your bond with a bee by 25." } },
+  { nom:"Pineapple", categorie:"Treats", desc:"Ananas : friandise préférée de plusieurs abeilles incolores.", lieu:"Pineapple Patch", fiche:{ jeu:"Increases your bond with a bee by 25." } },
+  { nom:"Blueberry", categorie:"Treats", desc:"Myrtille : friandise préférée des abeilles bleues.", lieu:"Distributeur Blue HQ", fiche:{ jeu:"Increases your bond with a bee by 25." } },
+  { nom:"Bitterberry", categorie:"Treats", desc:"Baie amère : 1 chance sur 1 000 de donner une mutation (1 sur 100 si l'abeille est radioactive).", lieu:"Quêtes, planteurs, mobs", fiche:{ jeu:"Increases bond with a bee by 100. Small chance to cause Mutations." } },
+  { nom:"Neonberry", categorie:"Treats", desc:"Baie néon : friandise rare qui donne beaucoup de bond.", lieu:"Quêtes, planteurs", fiche:{ jeu:"Increases bond with a bee by 500 and makes it Radioactive for a while." } },
+  { nom:"Moon Charm", categorie:"Treats", mats:[[5,"Pineapple"],[5,"Gumdrops"],[1,"Royal Jelly"]], desc:"Charme lunaire : gros bond, peut mutter une abeille. Sert aussi à fabriquer et à générer le Moon Amulet.", lieu:"Blender, Memory Match, Wind Shrine, King Beetle et Tunnel Bear, lucioles la nuit", lieuEn:"Blender, Memory Match, Wind Shrine, King Beetle and Tunnel Bear, fireflies at night", fiche:{ jeu:"Increases your bond with a bee by 250." } },
 
   /* ================= FABRICATION ================= */
-  { nom:"Red Extract", mats:[[50,"Strawberry"],[10,"Royal Jelly"]], categorie:"Fabrication", desc:"Extrait rouge : boost du pollen rouge, ingrédient de fabrication.", lieu:"Blender, quêtes" },
-  { nom:"Blue Extract", mats:[[50,"Blueberry"],[10,"Royal Jelly"]], categorie:"Fabrication", desc:"Extrait bleu : boost du pollen bleu, ingrédient de fabrication. Se fabrique avec 50 Blueberries et 10 Royal Jellies.", lieu:"Blender, quêtes" },
-  { nom:"Enzymes", mats:[[50,"Pineapple"],[10,"Royal Jelly"]], categorie:"Fabrication", desc:"Boost de conversion en miel. Ingrédient de très nombreuses recettes.", lieu:"Blender, quêtes, mobs" },
-  { nom:"Oil", mats:[[50,"Sunflower Seed"],[10,"Royal Jelly"]], categorie:"Fabrication", desc:"Huile : accélère les abeilles. Se fabrique avec 50 Sunflower Seeds et 10 Royal Jellies.", lieu:"Blender, quêtes" },
-  { nom:"Glue", categorie:"Fabrication", mats:[[50,"Gumdrops"],[10,"Royal Jelly"]], desc:"Colle : ×1,25 pollen des outils et des abeilles pendant 10 minutes.", lieu:"Blender, quêtes, planteurs, Sticker Stack", lieuEn:"Blender, quests, planters, Sticker Stack" },
-  { nom:"Tropical Drink", categorie:"Fabrication", mats:[[10,"Coconut"],[2,"Enzymes"],[2,"Oil"]], desc:"Boisson tropicale : boost lié aux champs de fin de jeu.", lieu:"Blender, quêtes", lieuEn:"Blender, quests" },
-  { nom:"Glitter", mats:[[25,"Moon Charm"],[1,"Magic Bean"]], categorie:"Fabrication", desc:"Paillettes : boost puissant et ingrédient rare. Se fabrique avec 25 Moon Charms et 1 Magic Bean.", lieu:"Blender, quêtes" },
-  { nom:"Purple Potion", categorie:"Fabrication", mats:[[3,"Neonberry"],[3,"Blue Extract"],[3,"Red Extract"],[3,"Glue"]], desc:"×1,25 capacité et convert rate à la ruche, ×1,5 pollen rouge et bleu, ×1,3 bee gather et pollen d'outils, pendant 15 minutes.", lieu:"Blender, quêtes", lieuEn:"Blender, quests" },
-  { nom:"Super Smoothie", categorie:"Fabrication", mats:[[3,"Neonberry"],[3,"Star Jelly"],[3,"Purple Potion"],[6,"Tropical Drink"]], desc:"Smoothie : gros boost combiné de fin de jeu.", lieu:"Blender, quêtes", lieuEn:"Blender, quests" },
-  { nom:"Turpentine", categorie:"Divers", mats:[[10,"Super Smoothie"],[10,"Caustic Wax"],[100,"Star Jelly"],[1000,"Honeysuckle"]], desc:"Térébenthine : ingrédient obtenu par certaines quêtes seulement.", lieu:"Blender, quêtes", lieuEn:"Blender, quests" },
-  { nom:"Field Dice", categorie:"Dés", mats:[[1,"Soft Wax"],[1,"Whirligig"],[1,"Red Extract"],[1,"Blue Extract"]], desc:"Dé de champ : relance le multiplicateur de boost d'un champ.", lieu:"Blender, quêtes, cadeaux", lieuEn:"Blender, quests, gifts" },
-  { nom:"Smooth Dice", categorie:"Dés", mats:[[3,"Field Dice"],[3,"Soft Wax"],[3,"Whirligig"],[3,"Oil"]], desc:"Dé lisse : version intermédiaire, meilleur résultat moyen.", lieu:"Blender, Sticker Stack, quêtes", lieuEn:"Blender, Sticker Stack, quests" },
-  { nom:"Loaded Dice", categorie:"Dés", mats:[[3,"Smooth Dice"],[3,"Hard Wax"],[3,"Oil"],[1,"Glue"]], desc:"Dé pipé : garantit un bon résultat sur un boost de champ.", lieu:"Blender, quêtes, événements", lieuEn:"Blender, quests, events" },
+  { nom:"Red Extract", mats:[[50,"Strawberry"],[10,"Royal Jelly"]], categorie:"Fabrication", desc:"Extrait rouge : boost du pollen rouge, ingrédient de fabrication.", lieu:"Blender, quêtes", fiche:{ jeu:"Grants x1.25 Red Pollen for 10 minutes.", conso:{ recharge:"1 s" } } },
+  { nom:"Blue Extract", mats:[[50,"Blueberry"],[10,"Royal Jelly"]], categorie:"Fabrication", desc:"Extrait bleu : boost du pollen bleu, ingrédient de fabrication. Se fabrique avec 50 Blueberries et 10 Royal Jellies.", lieu:"Blender, quêtes", fiche:{ jeu:"Grants x1.25 Blue Pollen for 10 minutes.", conso:{ recharge:"1 s" } } },
+  { nom:"Enzymes", mats:[[50,"Pineapple"],[10,"Royal Jelly"]], categorie:"Fabrication", desc:"Boost de conversion en miel. Ingrédient de très nombreuses recettes.", lieu:"Blender, quêtes, mobs", fiche:{ jeu:"Grants +10% Instant Conversion and x1.25 Convert Rate for 10 minutes.", conso:{ recharge:"1 s" } } },
+  { nom:"Oil", mats:[[50,"Sunflower Seed"],[10,"Royal Jelly"]], categorie:"Fabrication", desc:"Huile : accélère les abeilles. Se fabrique avec 50 Sunflower Seeds et 10 Royal Jellies.", lieu:"Blender, quêtes", fiche:{ jeu:"Grants x1.2 Bee and Player Movespeed for 10 minutes", conso:{ recharge:"1 s" } } },
+  { nom:"Glue", categorie:"Fabrication", mats:[[50,"Gumdrops"],[10,"Royal Jelly"]], desc:"Colle : ×1,25 pollen des outils et des abeilles pendant 10 minutes.", lieu:"Blender, quêtes, planteurs, Sticker Stack", lieuEn:"Blender, quests, planters, Sticker Stack", fiche:{ jeu:"Grants x1.25 Bee Gather Pollen and Tools for 10 minutes.", conso:{ recharge:"1 s" } } },
+  { nom:"Tropical Drink", categorie:"Fabrication", mats:[[10,"Coconut"],[2,"Enzymes"],[2,"Oil"]], desc:"Boisson tropicale : boost lié aux champs de fin de jeu.", lieu:"Blender, quêtes", lieuEn:"Blender, quests", fiche:{ jeu:"Grants x1.25 White Pollen, +10% Instant Conversion and +5% Critical Chance for 10 minutes.", conso:{ recharge:"1 s" } } },
+  { nom:"Glitter", mats:[[25,"Moon Charm"],[1,"Magic Bean"]], categorie:"Fabrication", desc:"Paillettes : boost puissant et ingrédient rare. Se fabrique avec 25 Moon Charms et 1 Magic Bean.", lieu:"Blender, quêtes", fiche:{ jeu:"Boosts the field you're standing in, granting +100% pollen for 15 minutes.", conso:{ recharge:"15 min 5 s" } } },
+  { nom:"Purple Potion", categorie:"Fabrication", mats:[[3,"Neonberry"],[3,"Blue Extract"],[3,"Red Extract"],[3,"Glue"]], desc:"×1,25 capacité et convert rate à la ruche, ×1,5 pollen rouge et bleu, ×1,3 bee gather et pollen d'outils, pendant 15 minutes.", lieu:"Blender, quêtes", lieuEn:"Blender, quests", fiche:{ jeu:"Grants x1.25 Capacity and the improved boosts of Red and Blue Extracts and Glue for 15 minutes.", conso:{ recharge:"1 s" } } },
+  { nom:"Super Smoothie", categorie:"Fabrication", mats:[[3,"Neonberry"],[3,"Star Jelly"],[3,"Purple Potion"],[6,"Tropical Drink"]], desc:"Smoothie : gros boost combiné de fin de jeu.", lieu:"Blender, quêtes", lieuEn:"Blender, quests", fiche:{ jeu:"Grants the improved boosts of many consumable items combined for 20 minutes!", conso:{ recharge:"20 min" } } },
+  { nom:"Turpentine", categorie:"Divers", mats:[[10,"Super Smoothie"],[10,"Caustic Wax"],[100,"Star Jelly"],[1000,"Honeysuckle"]], desc:"Térébenthine : ingrédient obtenu par certaines quêtes seulement.", lieu:"Blender, quêtes", lieuEn:"Blender, quests", fiche:{ jeu:"A strong solvent that can remove all Waxes from a bee's Beequip.", conso:{ max:"25" } } },
+  { nom:"Field Dice", categorie:"Dés", mats:[[1,"Soft Wax"],[1,"Whirligig"],[1,"Red Extract"],[1,"Blue Extract"]], desc:"Dé de champ : relance le multiplicateur de boost d'un champ.", lieu:"Blender, quêtes, cadeaux", lieuEn:"Blender, quests, gifts", fiche:{ jeu:"Boosts a random field, granting +100% pollen for 15 minutes.", conso:{ recharge:"1 s" } } },
+  { nom:"Smooth Dice", categorie:"Dés", mats:[[3,"Field Dice"],[3,"Soft Wax"],[3,"Whirligig"],[3,"Oil"]], desc:"Dé lisse : version intermédiaire, meilleur résultat moyen.", lieu:"Blender, Sticker Stack, quêtes", lieuEn:"Blender, Sticker Stack, quests", fiche:{ jeu:"Boosts 2 random fields for 200% pollen for 15 minutes.", conso:{ recharge:"2 s" } } },
+  { nom:"Loaded Dice", categorie:"Dés", mats:[[3,"Smooth Dice"],[3,"Hard Wax"],[3,"Oil"],[1,"Glue"]], desc:"Dé pipé : garantit un bon résultat sur un boost de champ.", lieu:"Blender, quêtes, événements", lieuEn:"Blender, quests, events", fiche:{ jeu:"Boosts 3 random fields with 300% pollen for 15 minutes. A bit biased towards the field you're in...", conso:{ recharge:"3 s", max:"25" } } },
 
   /* ================= WAX ================= */
-  { nom:"Soft Wax", categorie:"Wax", mats:[[5,"Honeysuckle"],[1,"Oil"],[1,"Enzymes"],[10,"Royal Jelly"]], desc:"Cire tendre : +1 point de cire sur un beequip.", lieu:"Blender, planteurs, quêtes, Sticker Stack", lieuEn:"Blender, planters, quests, Sticker Stack" },
-  { nom:"Hard Wax", categorie:"Wax", mats:[[3,"Soft Wax"],[3,"Enzymes"],[33,"Bitterberry"],[33,"Royal Jelly"]], desc:"Cire dure : +2 points de cire sur un beequip.", lieu:"Blender, planteurs, quêtes", lieuEn:"Blender, planters, quests" },
-  { nom:"Swirled Wax", categorie:"Wax", mats:[[3,"Hard Wax"],[9,"Soft Wax"],[6,"Purple Potion"],[3333,"Royal Jelly"]], desc:"Cire marbrée : 0 point, mais elle régénère les stats de base et relance tous les points déjà posés. La seule vraie reroll.", lieu:"Blender, quêtes avancées, événements", lieuEn:"Blender, advanced quests, events" },
-  { nom:"Caustic Wax", categorie:"Wax", mats:[[5,"Hard Wax"],[5,"Enzymes"],[25,"Neonberry"],[5252,"Royal Jelly"]], desc:"Cire caustique : +4 points de cire, et débloque les stats rares.", lieu:"Blender, quêtes avancées, boss", lieuEn:"Blender, advanced quests, bosses" },
-  { nom:"Debug Wax", categorie:"Quêtes exclusives", desc:"Cire de débogage : +4 points comme la caustique. Obtenable uniquement par certaines quêtes.", lieu:"Quête « Naughty List » de Bubble Bee Man pendant Beesmas 2024 (plus obtenable)", lieuEn:"Bubble Bee Man's Naughty List quest during Beesmas 2024 (no longer obtainable)" },
+  { nom:"Soft Wax", categorie:"Wax", mats:[[5,"Honeysuckle"],[1,"Oil"],[1,"Enzymes"],[10,"Royal Jelly"]], desc:"Cire tendre : +1 point de cire sur un beequip.", lieu:"Blender, planteurs, quêtes, Sticker Stack", lieuEn:"Blender, planters, quests, Sticker Stack", fiche:{ jeu:"A squishy hunk of beeswax. Has a 100% chance to slightly improve a bee's Beequip." } },
+  { nom:"Hard Wax", categorie:"Wax", mats:[[3,"Soft Wax"],[3,"Enzymes"],[33,"Bitterberry"],[33,"Royal Jelly"]], desc:"Cire dure : +2 points de cire sur un beequip.", lieu:"Blender, planteurs, quêtes", lieuEn:"Blender, planters, quests", fiche:{ jeu:"A firm hunk of beeswax. Has a 60% chance to improve a bee's Beequip." } },
+  { nom:"Swirled Wax", categorie:"Wax", mats:[[3,"Hard Wax"],[9,"Soft Wax"],[6,"Purple Potion"],[3333,"Royal Jelly"]], desc:"Cire marbrée : 0 point, mais elle régénère les stats de base et relance tous les points déjà posés. La seule vraie reroll.", lieu:"Blender, quêtes avancées, événements", lieuEn:"Blender, advanced quests, events", fiche:{ jeu:"A spiraled hunk of beeswax. Used to redetermine the stats of a Bee's Beequip." } },
+  { nom:"Caustic Wax", categorie:"Wax", mats:[[5,"Hard Wax"],[5,"Enzymes"],[25,"Neonberry"],[5252,"Royal Jelly"]], desc:"Cire caustique : +4 points de cire, et débloque les stats rares.", lieu:"Blender, quêtes avancées, boss", lieuEn:"Blender, advanced quests, bosses", fiche:{ jeu:"A glowing hunk of beeswax. Has a 25% chance to GREATLY improve a Beequip - but a 75% chance to DESTROY it!" } },
+  { nom:"Debug Wax", categorie:"Quêtes exclusives", desc:"Cire de débogage : +4 points comme la caustique. Obtenable uniquement par certaines quêtes.", lieu:"Quête « Naughty List » de Bubble Bee Man pendant Beesmas 2024 (plus obtenable)", lieuEn:"Bubble Bee Man's Naughty List quest during Beesmas 2024 (no longer obtainable)", fiche:{ jeu:"100% chance to greatly improve a Beequip." } },
 
   /* ================= ACHETABLE ================= */
-  { nom:"Ticket", categorie:"Monnaie", desc:"Monnaie secondaire : emplacements de stickers et de beequips, Ticket Tent, boutiques spéciales.", lieu:"Mobs, quêtes, cadeaux quotidiens" },
-  { nom:"Brick", categorie:"Monnaie", desc:"Brique : monnaie d'échange utilisée par certains marchands.", lieu:"Quêtes, événements" },
-  { nom:"Stinger", categorie:"Divers", desc:"Dard : ingrédient de fabrication, et il déclenche la Star Saw du Supreme Star Amulet.", lieu:"Rogue Vicious Bee (surtout la nuit, garanti avec une Night Bell), quêtes", lieuEn:"Rogue Vicious Bee (mostly at night, guaranteed with a Night Bell), quests" },
-  { nom:"Gumdrops", categorie:"Divers", mats:[[3,"Blueberry"],[3,"Strawberry"],[3,"Pineapple"]], desc:"Bonbons gélifiés : monnaie et ingrédient liés au Gummy Bear.", lieu:"Blender, Gummy Bear, planteurs, mobs", lieuEn:"Blender, Gummy Bear, planters, mobs" },
-  { nom:"Ant Pass", categorie:"Divers", desc:"Passe fourmi : donne accès à l'Ant Challenge dans le Ant Field.", lieu:"Quêtes, planteurs, mobs" },
-  { nom:"Robo Pass", categorie:"Divers", desc:"Passe robot : lance le Robo Bear Challenge.", lieu:"Robo Pass Dispenser, quêtes" },
+  { nom:"Ticket", categorie:"Monnaie", desc:"Monnaie secondaire : emplacements de stickers et de beequips, Ticket Tent, boutiques spéciales.", lieu:"Mobs, quêtes, cadeaux quotidiens", fiche:{ jeu:"Used to activate and purchase special things!" } },
+  { nom:"Brick", categorie:"Monnaie", desc:"Brique : monnaie d'échange utilisée par certains marchands.", lieu:"Quêtes, événements", fiche:{ jeu:"Used for purchases during the Retro Challenge" } },
+  { nom:"Stinger", categorie:"Divers", desc:"Dard : ingrédient de fabrication, et il déclenche la Star Saw du Supreme Star Amulet.", lieu:"Rogue Vicious Bee (surtout la nuit, garanti avec une Night Bell), quêtes", lieuEn:"Rogue Vicious Bee (mostly at night, guaranteed with a Night Bell), quests", fiche:{ jeu:"Grants your bees x1.5 attack for 30 seconds.", conso:{ recharge:"1 s" } } },
+  { nom:"Gumdrops", categorie:"Divers", mats:[[3,"Blueberry"],[3,"Strawberry"],[3,"Pineapple"]], desc:"Bonbons gélifiés : monnaie et ingrédient liés au Gummy Bear.", lieu:"Blender, Gummy Bear, planteurs, mobs", lieuEn:"Blender, Gummy Bear, planters, mobs", fiche:{ jeu:"Use while standing in a field to cover flowers in goo. Goo grants bonus honey.", conso:{ recharge:"2 s" } } },
+  { nom:"Ant Pass", categorie:"Divers", desc:"Passe fourmi : donne accès à l'Ant Challenge dans le Ant Field.", lieu:"Quêtes, planteurs, mobs", fiche:{ jeu:"Grants you 1 admission to the Ant Challenge.", conso:{ max:"10" } } },
+  { nom:"Robo Pass", categorie:"Divers", desc:"Passe robot : lance le Robo Bear Challenge.", lieu:"Robo Pass Dispenser, quêtes", fiche:{ jeu:"Used to activate Robo Bear's Challenge.", conso:{ max:"10" } } },
 
   /* ================= BALLOON ================= */
-  { nom:"Pink Balloon", categorie:"Balloon", desc:"Ballon rose : fait pleuvoir des tokens sur un champ.", lieu:"Quêtes, cadeaux" },
-  { nom:"Red Balloon", categorie:"Balloon", desc:"Ballon rouge : version orientée pollen rouge.", lieu:"Quêtes, cadeaux" },
-  { nom:"White Balloon", categorie:"Balloon", desc:"Ballon blanc : version orientée pollen blanc.", lieu:"Quêtes, cadeaux" },
-  { nom:"Black Balloon", categorie:"Balloon", desc:"Ballon noir : le plus puissant des ballons.", lieu:"Quêtes avancées, Sticker Stack" },
+  { nom:"Pink Balloon", categorie:"Balloon", desc:"Ballon rose : fait pleuvoir des tokens sur un champ.", lieu:"Quêtes, cadeaux", fiche:{ jeu:"Floats on the field for 3 minutes, storing and doubling pollen you collect beneath it. Then it floats to your hive!", conso:{ recharge:"5 min", max:"25" } } },
+  { nom:"Red Balloon", categorie:"Balloon", desc:"Ballon rouge : version orientée pollen rouge.", lieu:"Quêtes, cadeaux", fiche:{ jeu:"Floats over the field for 3 minutes. Stores up to 5x your capacity and works best with Red flowers.", conso:{ recharge:"5 min", max:"25" } } },
+  { nom:"White Balloon", categorie:"Balloon", desc:"Ballon blanc : version orientée pollen blanc.", lieu:"Quêtes, cadeaux", fiche:{ jeu:"Floats over the field for 5m. Stores up to 10x your capacity and works best with White flowers.", conso:{ recharge:"7 min", max:"25" } } },
+  { nom:"Black Balloon", categorie:"Balloon", desc:"Ballon noir : le plus puissant des ballons.", lieu:"Quêtes avancées, Sticker Stack", fiche:{ jeu:"Floats over the field for 5m. Stores up to x25 your capacity and increases pollen inside 4x.", conso:{ recharge:"15 min", max:"25" } } },
 
   /* ================= NECTAR ================= */
-  { nom:"Nectar Tester", img:"images/item/Basic_Egg.webp", categorie:"Quêtes exclusives", desc:"Testeur de nectar : objet de quête pour analyser le nectar.", lieu:"Quête « Naughty List » de Bubble Bee Man pendant Beesmas 2024 (plus obtenable)", lieuEn:"Bubble Bee Man's Naughty List quest during Beesmas 2024 (no longer obtainable)" },
-  { nom:"Comforting Vial", categorie:"Nectar", desc:"Fiole de nectar apaisant : applique le buff Comforting, orienté pollen bleu.", lieu:"Nectar Pot, Sticker Stack" },
-  { nom:"Invigorating Vial", categorie:"Nectar", desc:"Fiole de nectar revigorant : buff orienté pollen rouge.", lieu:"Nectar Pot, Sticker Stack" },
-  { nom:"Motivating Vial", categorie:"Nectar", desc:"Fiole de nectar motivant : buff orienté bee ability rate.", lieu:"Nectar Pot, Sticker Stack" },
-  { nom:"Refreshing Vial", categorie:"Nectar", desc:"Fiole de nectar rafraîchissant : buff orienté conversion instantanée.", lieu:"Nectar Pot, Sticker Stack" },
-  { nom:"Satisfying Vial", categorie:"Nectar", desc:"Fiole de nectar satisfaisant : buff orienté pollen blanc.", lieu:"Nectar Pot, Sticker Stack" },
-  { nom:"Nectar Shower Vial", categorie:"Nectar", desc:"Fiole de pluie de nectar : applique plusieurs buffs de nectar d'un coup.", lieu:"Nectar Condenser, quêtes" },
+  { nom:"Nectar Tester", img:"images/item/Basic_Egg.webp", categorie:"Quêtes exclusives", desc:"Testeur de nectar : objet de quête pour analyser le nectar.", lieu:"Quête « Naughty List » de Bubble Bee Man pendant Beesmas 2024 (plus obtenable)", lieuEn:"Bubble Bee Man's Naughty List quest during Beesmas 2024 (no longer obtainable)", fiche:{ jeu:"This test item grants 24 hours of all Nectars.", conso:{ recharge:"1 h" } } },
+  { nom:"Comforting Vial", categorie:"Nectar", desc:"Fiole de nectar apaisant : applique le buff Comforting, orienté pollen bleu.", lieu:"Nectar Pot, Sticker Stack", fiche:{ jeu:"Grants 4 hours of Comforting Nectar. (Boosts: Blue Pollen, Convert Rate, Convert Rate at hive.)", conso:{ recharge:"1 s", max:"10" } } },
+  { nom:"Invigorating Vial", categorie:"Nectar", desc:"Fiole de nectar revigorant : buff orienté pollen rouge.", lieu:"Nectar Pot, Sticker Stack", fiche:{ jeu:"Grants 4 hours of Invigorating Nectar. (Boosts: Red Pollen, Convert Rate, Bee Attack.)", conso:{ recharge:"1 s", max:"10" } } },
+  { nom:"Motivating Vial", categorie:"Nectar", desc:"Fiole de nectar motivant : buff orienté bee ability rate.", lieu:"Nectar Pot, Sticker Stack", fiche:{ jeu:"Grants 4 hours of Motivating Nectar. (Boosts: Blue Pollen, Convert Rate, Bee Ability Rate)", conso:{ recharge:"1 s", max:"10" } } },
+  { nom:"Refreshing Vial", categorie:"Nectar", desc:"Fiole de nectar rafraîchissant : buff orienté conversion instantanée.", lieu:"Nectar Pot, Sticker Stack", fiche:{ jeu:"Grants 4 hours of Refreshing Nectar. (Boosts: Red Pollen, Blue Convert Rate, Bee Ability Pollen)", conso:{ recharge:"1 s", max:"10" } } },
+  { nom:"Satisfying Vial", categorie:"Nectar", desc:"Fiole de nectar satisfaisant : buff orienté pollen blanc.", lieu:"Nectar Pot, Sticker Stack", fiche:{ jeu:"Grants 4 hours of Satisfying Nectar. (Boosts: White Pollen, Red Convert Rate, Honey at Hive)", conso:{ recharge:"1 s", max:"10" } } },
+  { nom:"Nectar Shower Vial", categorie:"Nectar", desc:"Fiole de pluie de nectar : applique plusieurs buffs de nectar d'un coup.", lieu:"Nectar Condenser, quêtes", fiche:{ jeu:"Grants 4 hours of all Nectar types to every player in the server!", conso:{ recharge:"5 s", max:"10" } } },
 
   /* ================= DRIVE / COG ================= */
-  { nom:"Cog", categorie:"Monnaie", desc:"Engrenage : monnaie du Robo Bear Challenge.", lieu:"Robo Bear Challenge" },
+  { nom:"Cog", categorie:"Monnaie", desc:"Engrenage : monnaie du Robo Bear Challenge.", lieu:"Robo Bear Challenge", fiche:{ jeu:"Used for purchases during Robo Bear's Challenge. Removed when the challenge ends." } },
   { nom:"White Drive", categorie:"Drive", desc:"Disque blanc : ingrédient mécanique du Robo Bear.", lieu:"Robo Bear Challenge" },
   { nom:"Red Drive", categorie:"Drive", desc:"Disque rouge : ingrédient mécanique orienté rouge.", lieu:"Robo Bear Challenge" },
   { nom:"Blue Drive", categorie:"Drive", desc:"Disque bleu : ingrédient mécanique orienté bleu.", lieu:"Robo Bear Challenge" },
   { nom:"Glitched Drive", categorie:"Drive", desc:"Disque corrompu : le plus rare des disques.", lieu:"Robo Bear Challenge (rare)" },
-  { nom:"Broken Drive", categorie:"Drive", desc:"Disque cassé : version endommagée, à réparer ou à recycler.", lieu:"Robo Bear Challenge" },
-  { nom:"7-Pronged Cog", categorie:"Inobtenable", desc:"Engrenage à 7 dents. Devenu inobtenable : il ne se trouve plus dans le jeu.", lieu:"Inobtenable aujourd'hui" },
+  { nom:"Broken Drive", categorie:"Drive", desc:"Disque cassé : version endommagée, à réparer ou à recycler.", lieu:"Robo Bear Challenge", fiche:{ jeu:"Looks like a poorly preserved computer part. Maybe someone can fix it..." } },
+  { nom:"7-Pronged Cog", categorie:"Inobtenable", desc:"Engrenage à 7 dents. Devenu inobtenable : il ne se trouve plus dans le jeu.", lieu:"Inobtenable aujourd'hui", fiche:{ jeu:"A component used in mysterious electronics." } },
 
   /* ================= MISC ================= */
-  { nom:"Micro-Converter", categorie:"Divers", desc:"Convertit instantanément une part du pollen en miel.", lieu:"Quêtes, Sticker Stack" },
-  { nom:"Honeysuckle", categorie:"Divers", desc:"Chèvrefeuille : attire des tokens sur un champ.", lieu:"Quêtes, Sticker Stack" },
-  { nom:"Whirligig", categorie:"Divers", desc:"Hélice : téléporte instantanément le joueur à la ruche.", lieu:"Quêtes, planteurs" },
-  { nom:"Jelly Beans", categorie:"Divers", desc:"Bonbons haricots : friandise donnée par de nombreuses quêtes.", lieu:"Quêtes, cadeaux" },
-  { nom:"Marshmallow Bee", categorie:"Autre", desc:"Abeille en guimauve : objet spécial, hors des catégories habituelles.", lieu:"Codes, Egg Hunt 2019", lieuEn:"Codes, Egg Hunt 2019" },
-  { nom:"Magic Bean", categorie:"Divers", desc:"Haricot magique : fait pousser un Sprout géant, qui produit du pollen et des tokens sur un champ pendant plusieurs minutes. C'est aussi l'ingrédient du Glitter.", lieu:"Magic Bean Shop, quêtes" },
-  { nom:"Festive Bean", categorie:"Beesmas", desc:"Haricot festif : version Beesmas du haricot magique.", lieu:"Événement Beesmas" },
-  { nom:"Cloud Vial", categorie:"Divers", desc:"Fiole de nuage : invoque un nuage qui fait pleuvoir des tokens sur un champ.", lieu:"Wind Shrine, quêtes" },
-  { nom:"Bloom Shaker", categorie:"Divers", desc:"Secoueur de floraison : fait fleurir un champ pour booster la récolte.", lieu:"Quêtes, événements" },
-  { nom:"Night Bell", categorie:"Divers", desc:"Cloche de nuit : fait tomber la nuit, utile pour les Moon Charms et le Diamond Mask.", lieu:"Quêtes, catalogue de Bee Bear, cadeaux Beesmas, Robux", lieuEn:"Quests, Bee Bear's Catalog, Beesmas gifts, Robux" },
-  { nom:"Box-O-Frogs", categorie:"Divers", desc:"Boîte de grenouilles : invoque des grenouilles qui produisent des tokens.", lieu:"Quêtes de Brown Bear (111 et 333 quêtes) et de Black Bear, Sticker Stack (sticker BBM From Below)", lieuEn:"Brown Bear quests (111 and 333 quests) and Black Bear quests, Sticker Stack (BBM From Below sticker)" },
-  { nom:"Translator", categorie:"Quêtes exclusives", desc:"Traducteur : objet de quête exclusif, sert à comprendre certains personnages.", lieu:"Science Bear : 21ᵉ, 26ᵉ et 31ᵉ quêtes (3 au total)", lieuEn:"Science Bear: 21st, 26th and 31st quests (3 in total)" },
-  { nom:"Spirit Petal", categorie:"Quêtes exclusives", desc:"Pétale spirituel : objet de quête exclusif lié à Spirit Bear.", lieu:"Spirit Bear : une toutes les 10 quêtes (3 au total)", lieuEn:"Spirit Bear: one every 10 quests (3 in total)" },
-  { nom:"BBM's Apology", categorie:"Quêtes exclusives", desc:"Les excuses du Bubble Bee Man : objet de quête exclusif.", lieu:"Bubble Bee Man, après la série de quêtes de Bee Bear qui suit Beesmas 2025", lieuEn:"Bubble Bee Man, after Bee Bear's questline following Beesmas 2025" },
-  { nom:"Present", categorie:"Beesmas", desc:"Cadeau de Beesmas : à ouvrir pour recevoir une récompense aléatoire.", lieu:"Événement Beesmas" },
-  { nom:"Snowflake", categorie:"Beesmas", desc:"Flocon de neige : matériau de l'événement Beesmas.", lieu:"Événement Beesmas" },
-  { nom:"Gingerbread Bear", categorie:"Beesmas", desc:"Ours en pain d'épices : objet de Beesmas, donné notamment par les Reindeer Antlers.", lieu:"Événement Beesmas" },
+  { nom:"Micro-Converter", categorie:"Divers", desc:"Convertit instantanément une part du pollen en miel.", lieu:"Quêtes, Sticker Stack", fiche:{ jeu:"Instantly converts all Pollen in your bag to Honey.", conso:{ recharge:"5 s", max:"15" } } },
+  { nom:"Honeysuckle", categorie:"Divers", desc:"Chèvrefeuille : attire des tokens sur un champ.", lieu:"Quêtes, Sticker Stack", fiche:{ jeu:"Automatically makes bees instantly convert some Pollen into Honey when your bag becomes full. (Cooldown 30s)", conso:{ recharge:"30 s" } } },
+  { nom:"Whirligig", categorie:"Divers", desc:"Hélice : téléporte instantanément le joueur à la ruche.", lieu:"Quêtes, planteurs", fiche:{ jeu:"Teleports you and your bees back to your hive and briefly increases Convert Rate.", conso:{ recharge:"3 min", max:"100" } } },
+  { nom:"Jelly Beans", categorie:"Divers", desc:"Bonbons haricots : friandise donnée par de nombreuses quêtes.", lieu:"Quêtes, cadeaux", fiche:{ jeu:"Scatters various buff-granting beans on nearby flowers. Works best when shared.", conso:{ recharge:"30 s", max:"100" } } },
+  { nom:"Marshmallow Bee", categorie:"Autre", desc:"Abeille en guimauve : objet spécial, hors des catégories habituelles.", lieu:"Codes, Egg Hunt 2019", lieuEn:"Codes, Egg Hunt 2019", fiche:{ jeu:"+50% White Pollen, +50% Capacity, and +250% Convert Rate for 30 minutes.", conso:{ recharge:"1 s", max:"25" } } },
+  { nom:"Magic Bean", categorie:"Divers", desc:"Haricot magique : fait pousser un Sprout géant, qui produit du pollen et des tokens sur un champ pendant plusieurs minutes. C'est aussi l'ingrédient du Glitter.", lieu:"Magic Bean Shop, quêtes", fiche:{ jeu:"Plants a random Sprout in the field you're in", conso:{ recharge:"5 s" } } },
+  { nom:"Festive Bean", categorie:"Beesmas", desc:"Haricot festif : version Beesmas du haricot magique.", lieu:"Événement Beesmas", fiche:{ jeu:"Plants a Festive Sprout in the field you're standing in.", conso:{ recharge:"2 h" } } },
+  { nom:"Cloud Vial", categorie:"Divers", desc:"Fiole de nuage : invoque un nuage qui fait pleuvoir des tokens sur un champ.", lieu:"Wind Shrine, quêtes", fiche:{ jeu:"Summons a Cloud in the field you're standing in. Lasts for 3 minutes.", conso:{ recharge:"1 s", max:"10" } } },
+  { nom:"Bloom Shaker", categorie:"Divers", desc:"Secoueur de floraison : fait fleurir un champ pour booster la récolte.", lieu:"Quêtes, événements", fiche:{ jeu:"Grows Blooms in the field you're standing in. Catch their Petals for Honey and boosts.", conso:{ recharge:"3 min", max:"100" } } },
+  { nom:"Night Bell", categorie:"Divers", desc:"Cloche de nuit : fait tomber la nuit, utile pour les Moon Charms et le Diamond Mask.", lieu:"Quêtes, catalogue de Bee Bear, cadeaux Beesmas, Robux", lieuEn:"Quests, Bee Bear's Catalog, Beesmas gifts, Robux", fiche:{ jeu:"Summons nighttime. A Moon Sprout and a Vicious Bee are guaranteed to appear.", conso:{ recharge:"1 s" } } },
+  { nom:"Box-O-Frogs", categorie:"Divers", desc:"Boîte de grenouilles : invoque des grenouilles qui produisent des tokens.", lieu:"Quêtes de Brown Bear (111 et 333 quêtes) et de Black Bear, Sticker Stack (sticker BBM From Below)", lieuEn:"Brown Bear quests (111 and 333 quests) and Black Bear quests, Sticker Stack (BBM From Below sticker)", fiche:{ jeu:"Summons 3 Frogs that last for 3 minutes.", conso:{ max:"15" } } },
+  { nom:"Translator", categorie:"Quêtes exclusives", desc:"Traducteur : objet de quête exclusif, sert à comprendre certains personnages.", lieu:"Science Bear : 21ᵉ, 26ᵉ et 31ᵉ quêtes (3 au total)", lieuEn:"Science Bear: 21st, 26th and 31st quests (3 in total)", fiche:{ jeu:"A device used to decipher languages you don't understand." } },
+  { nom:"Spirit Petal", categorie:"Quêtes exclusives", desc:"Pétale spirituel : objet de quête exclusif lié à Spirit Bear.", lieu:"Spirit Bear : une toutes les 10 quêtes (3 au total)", lieuEn:"Spirit Bear: one every 10 quests (3 in total)", fiche:{ jeu:"A delicate flower petal used in rituals." } },
+  { nom:"BBM's Apology", categorie:"Quêtes exclusives", desc:"Les excuses du Bubble Bee Man : objet de quête exclusif.", lieu:"Bubble Bee Man, après la série de quêtes de Bee Bear qui suit Beesmas 2025", lieuEn:"Bubble Bee Man, after Bee Bear's questline following Beesmas 2025", fiche:{ jeu:"Grants Honeyday and buffs because BBM is SORRY." } },
+  { nom:"Present", categorie:"Beesmas", desc:"Cadeau de Beesmas : à ouvrir pour recevoir une récompense aléatoire.", lieu:"Événement Beesmas", fiche:{ jeu:"A festively wrapped gift. Exchange it with an NPC for prizes!" } },
+  { nom:"Snowflake", categorie:"Beesmas", desc:"Flocon de neige : matériau de l'événement Beesmas.", lieu:"Événement Beesmas", fiche:{ jeu:"Sends a cool, soothing breeze to all the players on the server (Melts after Beesmas!).", conso:{ recharge:"3 s" } } },
+  { nom:"Gingerbread Bear", categorie:"Beesmas", desc:"Ours en pain d'épices : objet de Beesmas, donné notamment par les Reindeer Antlers.", lieu:"Événement Beesmas", fiche:{ jeu:"A cookie shaped like a bear! Gives 250 bond to the fed bee and has a 1% chance to turn that bee Gifted." } },
   { nom:"Aged Gingerbread Bear", categorie:"Beesmas", desc:"Ours en pain d'épices rassis : version vieillie, plus rare.", lieu:"Événement Beesmas" },
-  { nom:"Eviction", categorie:"Retiré", desc:"Avis d'expulsion : servait à retirer une abeille de la ruche. Retiré du jeu.", lieu:"Mountain Top Shop pour 50 000 miel, avant son retrait du jeu", lieuEn:"Mountain Top Shop for 50,000 honey, before it was removed from the game" },
-  { nom:"Plastic Egg", categorie:"Retiré", desc:"Œuf en plastique : objet d'un ancien événement. Retiré du jeu.", lieu:"Chasse aux œufs de Brown Bear en 2019 (3 à trouver sur la carte)", lieuEn:"Brown Bear's 2019 Egg Hunt (3 hidden on the map)" },
+  { nom:"Eviction", categorie:"Retiré", desc:"Avis d'expulsion : servait à retirer une abeille de la ruche. Retiré du jeu.", lieu:"Mountain Top Shop pour 50 000 miel, avant son retrait du jeu", lieuEn:"Mountain Top Shop for 50,000 honey, before it was removed from the game", fiche:{ jeu:"Removes a bee from the hive." } },
+  { nom:"Plastic Egg", categorie:"Retiré", desc:"Œuf en plastique : objet d'un ancien événement. Retiré du jeu.", lieu:"Chasse aux œufs de Brown Bear en 2019 (3 à trouver sur la carte)", lieuEn:"Brown Bear's 2019 Egg Hunt (3 hidden on the map)", fiche:{ jeu:"Turn in 3 to Brown Bear for a prize!", conso:{ max:"3" } } },
 ];
 const ITEMS_CATS = ["Tous","Outils","Backpack","Masque","Left Guard","Right Guard","Belt","Bottes","Sprinkler","Accessoire","Planter","Œufs","Gelées","Treats","Fabrication","Dés","Wax","Balloon","Nectar","Drive","Divers","Monnaie","Quêtes exclusives","Beesmas","Retiré","Inobtenable","Autre"];
 
@@ -3950,7 +4115,7 @@ const PRIX_NIVEAU = [
    ██  IMAGES — dossier "images/" avec un sous-dossier par type  ██
    Arborescence attendue (à la racine du dépôt, à côté de index.html) :
      images/bees/       -> ex : images/bees/Basic.png
-     images/beequip/    -> ex : images/beequip/Thimble.png
+     images/beequip/    -> ex : images/beequip/Thimble.webp
      images/item/       -> images/stickers/ -> images/amulette/
    Le nom du fichier = le nom exact affiché + ".png". Si le fichier n'existe
    pas encore, un rendu de secours (couleur + nom) s'affiche automatiquement.
@@ -3965,7 +4130,7 @@ const IMG_EXT = {
   item:     'webp',
   stickers: 'webp',
   amulette: 'png',
-  beequip:  'png',
+  beequip:  'webp',
   bees:     'png',
   mobs:     'webp',
   bears:    'webp',
@@ -4247,10 +4412,15 @@ function carteHTML(o, folder, key, idx){
   const img = `<div class="card-img"><img ${imgAttrs(folder,o)} alt="${esc(o.nom)}"
       loading="lazy" decoding="async"
       onerror="imgFallback(this,'ph','${esc(initiales(o.nom))}')"></div>`;
-  return `<div class="card" data-name="${esc(o.nom.toLowerCase())}" data-cat="${esc(tag)}"
-      data-key="${key}" data-idx="${idx}"
-      style="--accent:${accent};--glow:${hexToGlow(accent,.18)}">
-    <span class="accent-bar"></span>
+  const miel = o.miel !== undefined && !o.vue;
+  const pied = o.vue
+    ? `<div class="keyline"><span class="v">${window.LANG==='en'?'Dedicated page':'Page dédiée'}</span></div>`
+    : miel
+      ? `<div class="keyline"><span class="v">${o.miel===0 ? t('gratuit') : `<img src="${imgSrc('item',{nom:'Honey'})}" alt="">${esc(fmtMiel(o.miel))}`}${o.mats?` <span class="k">+ ${o.mats.length} ${window.LANG==='en'?'materials':'matériaux'}</span>`:''}</span></div>`
+      : (kl?`<div class="keyline"><span class="k">${kl.k}</span><span class="v">${esc(kl.v)}</span></div>`:'');
+  return `<div class="card" role="button" tabindex="0" data-name="${esc(o.nom.toLowerCase())}" data-cat="${esc(tag)}"
+      data-key="${key}" data-idx="${idx}" aria-label="${esc(o.nom)}"
+      style="--accent:${accent};--glow:${hexToGlow(accent,.2)}">
     <div class="card-top">
       ${tag?`<span class="tag">${esc(tag)}</span>`:''}
       ${img}
@@ -4258,57 +4428,261 @@ function carteHTML(o, folder, key, idx){
     <div class="card-body">
       <h3>${esc(o.nom)}</h3>
       ${o.desc?`<div class="desc">${esc(o.desc)}</div>`:''}
-      ${o.vue?`<div class="keyline"><span class="k">Page dédiée</span><span class="v">Voir →</span></div>`
-             :(kl?`<div class="keyline"><span class="k">${kl.k}</span><span class="v">${esc(kl.v)}</span></div>`:'')}
+      ${pied}
     </div>
   </div>`;
 }
 
-/* ---------- Modale de détail ---------- */
+/* ---------- Fiche détaillée (modale) ---------- */
+const LG = (fr, en) => window.LANG === 'en' ? en : fr;
+let FICHE = null;                       // { key, idx } de la fiche ouverte
+
+/* Index des items par nom, pour relier recettes et « sert à fabriquer » */
+function indexItems(){
+  if(indexItems.m) return indexItems.m;
+  const m = {}; (DATASETS.items ? DATASETS.items.data : ITEMS).forEach((o,i)=>{ m[o.nom] = i; });
+  return indexItems.m = m;
+}
+
+/* Découpe une liste « A · B · C » (et « A, B » quand ce sont de courts éléments),
+   sans couper à l'intérieur des parenthèses. */
+function decouper(txt, sep){
+  const out = []; let cur = '', prof = 0;
+  for(let i=0; i<txt.length; i++){
+    const c = txt[i];
+    if(c==='(') prof++; else if(c===')') prof = Math.max(0, prof-1);
+    if(prof===0 && txt.startsWith(sep, i)){ out.push(cur.trim()); cur=''; i += sep.length-1; continue; }
+    cur += c;
+  }
+  if(cur.trim()) out.push(cur.trim());
+  return out.filter(Boolean);
+}
+function lieux(txt){
+  let parts = decouper(txt, ' · ');
+  if(parts.length === 1){
+    const v = decouper(txt, ', ');
+    if(v.length > 1 && v.every(p => p.length <= 40 && /^[A-ZÀ-ÖØ-Þ0-9]/.test(p))) parts = v;
+  }
+  return parts.map(p => p.charAt(0).toUpperCase() + p.slice(1));
+}
+
+/* Une statistique de beequip → { val, lab, neg, abil, badges } */
+function lireStat(txt){
+  let t = txt.trim(); const badges = [];
+  const sortir = (re, cls, lib) => { if(re.test(t)){ t = t.replace(re,'').trim(); badges.push([cls, lib]); } };
+  sortir(/\((?:cire caustique|Caustic Wax)\)/, 'cire', LG('cire caustique','Caustic Wax'));
+  sortir(/\((?:via les cires|via waxes)\)/, 'cire', LG('via les cires','via waxes'));
+  sortir(/\((?:pas toujours présent|not always rolled)\)/, 'parfois', LG('pas toujours présent','not always rolled'));
+  let m = t.match(/^ability (.+)$/i) || t.match(/^(.+) ability$/i);
+  if(m) return { val:LG('Ability','Ability'), lab:m[1], abil:true, badges };
+  m = t.match(/^\+?Passive:\s*(.+?)(?:\s*\(Needs (.+)\))?$/);
+  if(m){ if(m[2]) badges.push(['parfois', LG('avec ','with ')+m[2]]);
+    return { val:LG('Passif','Passive'), lab:m[1], abil:true, badges }; }
+  t = t.replace(/^x(?=\d)/, '×');
+  m = t.match(/^((?:jusqu'à |up to )?[+−\-×][\d\s.,%]+(?:(?: à | to )[+−\-×][\d\s.,%]+)?)\s+(.+)$/);
+  if(!m) return { val:'', lab:t, badges };
+  const val = m[1].trim(), neg = /^[−\-]/.test(val.replace(/^(jusqu'à |up to )/,'')) || /^×0[,.]/.test(val);
+  return { val, lab:m[2], neg, badges };
+}
+function statsHTML(txt){
+  if(!txt || /^(Aucun|None)$/.test(txt)) return `<p class="fx-note">${LG('Aucun bonus de ruche.','No hive bonus.')}</p>`;
+  const liste = Array.isArray(txt) ? txt.map(x => window.LANG==='en' ? x : nbFr(x)) : decouper(txt, ', ');
+  return `<div class="fx-stats">${liste.map(lireStat).map(s=>`
+    <div class="fx-stat${s.neg?' neg':''}${s.abil?' abil':''}">
+      <span class="val">${esc(s.val)}</span><span class="lab">${esc(s.lab)}</span>
+      ${s.badges.map(([c,l])=>`<span class="fx-badge ${c}">${esc(l)}</span>`).join('')}
+    </div>`).join('')}</div>`;
+}
+
+/* abeilles autorisées : pastilles avec le visage de chaque abeille */
+function abeillesHTML(txt){
+  const noms = ABEILLES.map(b=>b.nom);
+  const morceaux = decouper(txt.replace(/ — /g, ', '), ', ');
+  const bees = [], reste = [];
+  morceaux.forEach(m=>{
+    const n = m.replace(/ Bee (uniquement|only)$/,'').trim();
+    if(noms.includes(n)) bees.push(ABEILLES.find(b=>b.nom===n)); else reste.push(m);
+  });
+  return (bees.length ? `<div class="fx-bees">${bees.map(b=>`<span class="fx-bee">${beeIconHTML(b,'bi')}${esc(b.nom)}</span>`).join('')}</div>` : '')
+       + (reste.length ? `<p class="fx-note">${reste.map(esc).join(' · ')}</p>` : '');
+}
+
+/* une vignette d'objet cliquable (ouvre sa propre fiche) */
+function puceItem(nom, note){
+  const i = indexItems()[nom];
+  const img = `<img src="${imgSrc('item',{nom})}" alt="" loading="lazy" onerror="imgFallback(this,'gone')">`;
+  if(i === undefined) return `<span class="fx-chip" style="cursor:default">${img}${esc(nom)}${note?` <i>${esc(note)}</i>`:''}</span>`;
+  return `<button class="fx-chip" data-ouvre="items:${i}">${img}${esc(nom)}${note?` <i>${esc(note)}</i>`:''}</button>`;
+}
+
+function ficheRecette(o){
+  if(!o.mats && !(o.miel > 0)) return '';
+  const idx = indexItems();
+  const cases = [];
+  if(o.miel > 0) cases.push(`<div class="fx-ing"><img src="${imgSrc('item',{nom:'Honey'})}" alt=""><b>${fmtMiel(o.miel)}</b><span>${t('u_miel_c')}</span></div>`);
+  (o.mats||[]).forEach(([q,n])=>{
+    const i = idx[n], tag = i===undefined ? 'div' : 'button';
+    cases.push(`<${tag} class="fx-ing"${i===undefined?'':` data-ouvre="items:${i}" title="${esc(LG('Voir la fiche de ','Open ')+n)}"`}>
+      <img src="${imgSrc('item',{nom:n})}" alt="" loading="lazy" onerror="imgFallback(this,'gone')">
+      <b>${esc(fmtEntier(q))}</b><span>${esc(n)}</span></${tag}>`);
+  });
+  const total = o.mats ? (1 + o.mats.length) : 1;
+  return `<section class="fx-sec"><h4>${o.mats ? LG('Coût de fabrication','Crafting cost') : LG('Prix','Price')}
+      ${o.mats ? `<small>${total} ${LG('ingrédients','ingredients')}</small>`:''}</h4>
+    <div class="fx-recipe">${cases.join('')}</div>
+    ${o.prealable ? `<div class="fx-pre"><span>⚑</span><span>${esc(o.prealable)}</span></div>` : ''}
+    ${o.mats && typeof CATALOGUE!=='undefined' && CATALOGUE[o.nom] ? `<button class="fx-calc" data-calc="${esc(o.nom)}">${LG('Calculer toutes les ressources de base','Work out every base resource')}</button>` : ''}
+  </section>`;
+}
+
+function ficheUtilisations(o){
+  const liste = (DATASETS.items ? DATASETS.items.data : ITEMS)
+    .filter(x => x.mats && x.mats.some(([q,n]) => n === o.nom))
+    .map(x => [x.nom, x.mats.find(([q,n]) => n === o.nom)[0]]);
+  if(!liste.length) return '';
+  return `<section class="fx-sec"><h4>${LG('Sert à fabriquer','Used to craft')} <small>${liste.length}</small></h4>
+    <div class="fx-links">${liste.map(([n,q])=>puceItem(n, '×'+fmtEntier(q))).join('')}</div></section>`;
+}
+
+/* « 1,000,000 » → « 1 000 000 », « 0.8 s » → « 0,8 s » (seulement en français) */
+function nbFr(x){
+  if(window.LANG==='en' || x==null) return x;
+  return String(x).replace(/(\d),(?=\d{3}\b)/g,'$1\u202f').replace(/(\d)\.(\d)/g,'$1,$2');
+}
+const MOTIFS = {
+  'Line':['En ligne','In a line'], 'Single':['Une seule fleur','One flower'], 'Surround':['Tout autour','All around'],
+  'Ring':['En anneau','Ring'], 'Diamond':['En losange','Diamond'], 'Flower':['En fleur','Flower'], 'Spike':['En pointes','Spikes'],
+  'Crescent':['En croissant','Crescent'], 'Ball':['En boule','Ball'], '4 lines of 4':['4 lignes de 4','4 lines of 4'],
+  '3 fullest flowers':['Les 3 fleurs les plus pleines','The 3 fullest flowers'],
+};
+const RECOLTE = { 'all':['Toute la fleur','The whole flower'], 'all +20%':['Toute la fleur, +20 %','The whole flower, +20%'] };
+
+function ficheCaracs(o){
+  const f = o.fiche || {}; const tuiles = [];
+  const tu = (lab, val) => { if(val!=null && val!=='') tuiles.push(`<div class="fx-fact"><span>${lab}</span><b>${esc(nbFr(val))}</b></div>`); };
+  if(f.cap) tu(LG('Capacité','Capacity'), f.cap + ' pollen');
+  if(f.outil){ const u=f.outil;
+    tu(LG('Fleurs touchées','Flowers reached'), u.portee);
+    tu(LG('Motif','Pattern'), (MOTIFS[u.motif]||[u.motif,u.motif])[window.LANG==='en'?1:0]);
+    tu(LG('Pollen par fleur','Pollen per flower'), (RECOLTE[u.recolte]||[u.recolte,u.recolte])[window.LANG==='en'?1:0].replace('red',LG('rouge','red')).replace('white',LG('blanc','white')).replace('blue',LG('bleu','blue')));
+    tu(LG('Durée d\'un coup','Time per swing'), u.cadence); }
+  if(f.arroseur){ const a=f.arroseur;
+    tu(LG('Arroseurs','Sprinklers'), a.n); tu(LG('Rayon','Radius'), a.rayon+' '+LG('fleurs','flowers'));
+    tu(LG('Puissance','Power'), a.puissance); tu(LG('Rythme','Rate'), LG('toutes les ','every ')+a.rythme);
+    tu(LG('Installation','Setup'), a.montage); }
+  if(f.planteur){ const p=f.planteur;
+    tu(LG('Pousse','Grow time'), p.pousse); tu(LG('Pollen stocké','Pollen stored'), p.pollen);
+    tu(LG('Réutilisable','Reusable'), p.reutil ? LG('Oui','Yes') : LG('Non, usage unique','No, single use'));
+    if(p.max) tu(LG('Maximum en stock','Max in inventory'), p.max); }
+  if(f.vol){ tu(LG('Vitesse','Speed'), f.vol.vitesse); tu(LG('Chute','Fall rate'), f.vol.flottement); }
+  if(f.conso){ tu(LG('Recharge','Cooldown'), f.conso.recharge); tu(LG('Maximum en stock','Max in inventory'), f.conso.max); }
+  let html = tuiles.length ? `<section class="fx-sec"><h4>${LG('Caractéristiques','Stats')}</h4><div class="fx-grid">${tuiles.join('')}</div>` : '';
+  if(f.planteur){ const p=f.planteur;
+    if(p.bonusFr) html += (html?'':'<section class="fx-sec">') + `<p class="fx-note">${esc(LG(p.bonusFr,p.bonusEn))}</p>`;
+    if(p.nectar && p.nectar.length) html += `<div class="fx-nectar">${p.nectar.map(n=>`<span>${esc(nbFr(n))}</span>`).join('')}</div>`; }
+  if(html) html += '</section>';
+  if(f.stats && f.stats.length) html += `<section class="fx-sec"><h4>${LG('Bonus quand tu le portes','Bonuses when equipped')}</h4>${statsHTML(f.stats)}</section>`;
+  return html;
+}
+
+function fact(lab, val, cls, large){
+  return val==null || val==='' ? '' : `<div class="fx-fact${large?' large':''}"><span>${lab}</span><b class="${cls||''}">${val}</b></div>`;
+}
+
 function ouvrirModale(key, idx){
   const ds = DATASETS[key]; if(!ds) return;
   const o = ds.data[idx]; if(!o) return;
+  FICHE = { key, idx };
   const accent = accentOf(o);
-  const rows = [];
-  if(o.valeur !== undefined) rows.push(["Valeur estimée", o.valeur==='TBD'?'TBD':(o.valeur?o.valeur+' signs':'—'), true]);
-  if(o.boost)   rows.push(["Stack Boost", o.boost, true]);
-  if(o.reward)  rows.push(["Stack Reward", o.reward, false]);
-  if(o.miel !== undefined) rows.push(["Prix en miel", (o.miel===0?t('gratuit'):mielExact(o.miel)), true]);
-  if(o.cout)    rows.push(["Coût", o.cout, true]);
-  if(o.niveau!==undefined)  rows.push(["Niveau minimum de l'abeille", (o.niveau==='?'?'à vérifier':t('u_niveau')+' '+o.niveau), true]);
-  if(o.limite!==undefined)  rows.push(["Limite dans la ruche", (o.limite==='?'?'à vérifier':o.limite+' max'), true]);
-  if(o.couleur) rows.push(["Couleur de ruche", o.couleur, false]);
-  if(o.abeilles)rows.push(["Abeilles autorisées", o.abeilles, false]);
-  if(o.stats)   rows.push(["Bonus sur l'abeille", o.stats, false]);
-  if(o.hive)    rows.push(["Bonus de ruche", o.hive, false]);
-  if(o.effet)   rows.push(["Effet", o.effet, false]);
-  if(o.paliers) rows.push(["Paliers", o.paliers, false]);
-  if(o.requis)  rows.push(["Condition", o.requis, false]);
-  if(o.notes)   rows.push(["À savoir", o.notes, false]);
-  if(o.lieu)    rows.push(["Où l'obtenir", o.lieu, false]);
-  if(o.rarete)  rows.push(["Rareté", o.rarete, false]);
-  if(o.categorie) rows.push(["Catégorie", o.categorie, false]);
-
   const back = document.getElementById('modal-back');
   back.style.setProperty('--accent', accent);
-  back.style.setProperty('--glow', hexToGlow(accent,.18));
-  back.querySelector('.m-img').innerHTML =
-    `<img ${imgAttrs(ds.folder,o)} alt="${esc(o.nom)}"
-      onerror="imgFallback(this,'ph','${esc(initiales(o.nom))}')">`;
-  back.querySelector('.m-title').innerHTML =
-    `<h3>${esc(o.nom)}</h3>${o.categorie?`<span class="m-tag">${esc(o.categorie)}</span>`:''}`;
-  back.querySelector('.m-desc').innerHTML = o.desc ? esc(o.desc) : '';
-  back.querySelector('.m-rows').innerHTML = rows.map(([k,v,hl])=>
-    `<div class="m-row"><span class="k">${k}</span><span class="v${hl?' hl':''}">${esc(v)}</span></div>`).join('')
-    + recetteHTML(o)
-    + (o.tiersId ? tiersTableHTML(o.tiersId) : '')
-    + (o.vue ? `<button class="btn btn-primary m-goto" data-vue="${o.vue}">${tf('voir_page', esc(o.vueNom||t('la_page')))}</button>` : '');
+  back.style.setProperty('--glow', hexToGlow(accent,.2));
+
+  /* chiffres clés */
+  let facts = '';
+  const iconeMiel = `<img src="${imgSrc('item',{nom:'Honey'})}" alt="">`;
+  if(o.miel !== undefined) facts += fact(o.mats?LG('Miel + matériaux','Honey + materials'):LG('Prix','Price'),
+      o.miel===0 ? t('gratuit') : iconeMiel + esc(fmtMiel(o.miel)), 'acc', true);
+  if(o.niveau !== undefined) facts += fact(LG('Niveau minimum','Minimum level'), esc(t('u_niveau')+' '+o.niveau), 'acc');
+  if(o.limite !== undefined) facts += fact(LG('Limite par ruche','Hive limit'), esc(o.limite), 'acc');
+  if(o.couleur) facts += fact(LG('Couleur','Colour'), esc(o.couleur), '', o.niveau===undefined);
+  if(o.valeur !== undefined) facts += fact(LG('Valeur de trade','Trade value'), o.valeur==='TBD'?'TBD':(o.valeur?esc(o.valeur)+' signs':'—'), 'acc', true);
+  if(o.boost) facts += fact('Stack Boost', esc(o.boost), 'acc', true);
+  if(o.reward) facts += fact('Stack Reward', esc(o.reward), '', true);
+
+  /* navigation dans la liste affichée (respecte la recherche et les filtres) */
+  const visibles = [...document.querySelectorAll(`#${key}-grid .card`)].filter(c=>c.style.display!=='none').map(c=>+c.dataset.idx);
+  const pos = visibles.indexOf(idx);
+  const nav = pos === -1 ? '' : `<nav class="fx-nav" aria-label="${LG('Fiches voisines','Nearby entries')}">
+      <button data-nav="-1" ${pos<=0?'disabled':''} aria-label="${LG('Fiche précédente','Previous')}">← ${LG('Préc.','Prev')}</button>
+      <span class="pos">${pos+1} / ${visibles.length}</span>
+      <button data-nav="1" ${pos>=visibles.length-1?'disabled':''} aria-label="${LG('Fiche suivante','Next')}">${LG('Suiv.','Next')} →</button></nav>`;
+
+  back.querySelector('.fx-side').innerHTML = `
+    <div class="fx-cell"><img ${imgAttrs(ds.folder,o)} alt="${esc(o.nom)}" onerror="imgFallback(this,'ph','${esc(initiales(o.nom))}')"></div>
+    <h3 class="fx-name" id="fx-name">${esc(o.nom)}</h3>
+    <div class="fx-tags">${o.categorie?`<span class="fx-tag">${esc(o.categorie)}</span>`:''}${o.rarete&&o.rarete!==o.categorie?`<span class="fx-tag neutre">${esc(o.rarete)}</span>`:''}</div>
+    ${facts ? `<div class="fx-facts">${facts}</div>` : ''}
+    ${nav}`;
+
+  /* détail */
+  const secs = [];
+  if(o.desc) secs.push(`<p class="fx-desc">${esc(o.desc)}</p>`);
+  if(o.fiche && o.fiche.jeu) secs.push(`<blockquote class="fx-quote"><span>${LG('Dans le jeu','In game')}</span>${esc(o.fiche.jeu)}</blockquote>`);
+  if(o.fiche) secs.push(ficheCaracs(o));
+  if(o.abeilles) secs.push(`<section class="fx-sec"><h4>${LG('Abeilles autorisées','Allowed bees')}</h4>${abeillesHTML(o.abeilles)}</section>`);
+  if(o.stats) secs.push(`<section class="fx-sec"><h4>${LG("Bonus sur l'abeille",'Bee bonuses')}</h4>${statsHTML(o.stats)}</section>`);
+  if(o.hive) secs.push(`<section class="fx-sec"><h4>${LG('Bonus de ruche','Hive bonuses')}</h4>${statsHTML(o.hive)}
+      ${/cire|wax/i.test(o.hive)?`<p class="fx-note">${LG('Les bonus marqués « cire » se débloquent en améliorant le beequip avec des cires.','Bonuses marked “wax” unlock when you upgrade the beequip with waxes.')}</p>`:''}</section>`);
+  if(o.effet) secs.push(`<section class="fx-sec"><h4>${LG('Effet','Effect')}</h4><p class="fx-note" style="color:var(--cream)">${esc(o.effet)}</p></section>`);
+  secs.push(ficheRecette(o));
+  if(o.lieu) secs.push(`<section class="fx-sec"><h4>${LG("Où l'obtenir",'Where to get it')}</h4>
+      <ul class="fx-where">${lieux(o.lieu).map(l=>`<li>${esc(l)}</li>`).join('')}</ul></section>`);
+  if(key === 'items') secs.push(ficheUtilisations(o));
+  if(o.paliers) secs.push(`<section class="fx-sec"><h4>${LG('Paliers','Tiers')}</h4><p class="fx-note" style="color:var(--cream)">${esc(o.paliers)}</p></section>`);
+  if(o.tiersId) secs.push(tiersTableHTML(o.tiersId));
+  if(o.notes) secs.push(`<section class="fx-sec"><h4>${LG('À savoir','Good to know')}</h4><p class="fx-note" style="color:var(--cream)">${esc(o.notes)}</p></section>`);
+  if(o.vue) secs.push(`<button class="btn btn-primary m-goto fx-goto" data-vue="${o.vue}">${tf('voir_page', esc(o.vueNom||t('la_page')))}</button>`);
+
+  const main = back.querySelector('.fx-main');
+  main.innerHTML = secs.filter(Boolean).join('');
+  main.scrollTop = 0; back.querySelector('.modal').scrollTop = 0;
+  const dejaOuverte = back.classList.contains('open');
   back.classList.add('open');
   document.body.style.overflow='hidden';
+  if(!dejaOuverte){ FICHE.retour = document.activeElement; back.querySelector('.m-close').focus({preventScroll:true}); }
 }
+
+/* clics dans la fiche : objets liés, précédent / suivant, calculateur */
+document.getElementById('modal-back').addEventListener('click', e=>{
+  const lien = e.target.closest('[data-ouvre]');
+  if(lien){ const [k,i] = lien.dataset.ouvre.split(':');
+    if(k==='items' && vueActive!=='items'){ /* l'item est ouvert sans changer de page */ }
+    ouvrirModale(k, +i); return; }
+  const nav = e.target.closest('[data-nav]');
+  if(nav && FICHE){ const vis = [...document.querySelectorAll(`#${FICHE.key}-grid .card`)].filter(c=>c.style.display!=='none').map(c=>+c.dataset.idx);
+    const p = vis.indexOf(FICHE.idx) + (+nav.dataset.nav); if(vis[p]!==undefined) ouvrirModale(FICHE.key, vis[p]); return; }
+  const calc = e.target.closest('[data-calc]');
+  if(calc){ const nom = calc.dataset.calc; fermerModale();
+    const l = PANIER.find(x=>x.nom===nom); if(l) l.qte += 1; else PANIER.push({nom, qte:1});
+    showView('outils'); ouvrirRubrique('outils','ingredients'); renderPanier(); renderCourses(); }
+});
+document.addEventListener('keydown', e=>{
+  const back = document.getElementById('modal-back');
+  if(!back.classList.contains('open') || !FICHE) return;
+  if(e.key==='ArrowRight' || e.key==='ArrowLeft'){
+    const b = back.querySelector(`[data-nav="${e.key==='ArrowRight'?1:-1}"]`);
+    if(b && !b.disabled){ e.preventDefault(); b.click(); }
+  }
+});
+
 function fermerModale(){
-  document.getElementById('modal-back').classList.remove('open');
+  const back = document.getElementById('modal-back');
+  if(!back.classList.contains('open')) return;
+  back.classList.remove('open');
   document.body.style.overflow='';
+  if(FICHE && FICHE.retour && FICHE.retour.focus) FICHE.retour.focus({preventScroll:true});
+  FICHE = null;
 }
 
 /* ---------- Rendu d'un onglet ---------- */
@@ -4404,7 +4778,11 @@ document.addEventListener('click',e=>{
   if(card){ ouvrirModale(card.dataset.key, +card.dataset.idx); return; }
   if(e.target.id==='modal-back' || e.target.closest('.m-close')) fermerModale();
 });
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') fermerModale(); });
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') fermerModale();
+  if((e.key==='Enter' || e.key===' ') && e.target.classList && e.target.classList.contains('card')){
+    e.preventDefault(); ouvrirModale(e.target.dataset.key, +e.target.dataset.idx); }
+});
 
 /* Version anglaise des données : quand le site est en anglais, chaque champ
    « xxxEn » (lieuEn, statsEn…) remplace le champ français « xxx ». */
