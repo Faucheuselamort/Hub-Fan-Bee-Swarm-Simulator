@@ -17,7 +17,7 @@ const VERSION_MODELE = 5;      // à augmenter quand on change les modèles de p
 /* intention → types de fiche attendus (pour départager les homonymes) */
 const TYPES_ATTENDUS = {
   prix: ['item'], recette: ['item'], lieu: ['item', 'sticker', 'beequip', 'amulette', 'mob'], stats: ['beequip', 'item', 'amulette', 'sticker'],
-  combat: ['mob'], valeur: ['sticker'], comparaison: [], definition: [], conseil: [], aide: [], hors_sujet: [],
+  combat: ['mob'], valeur: ['sticker'], temps: ['item', 'mob'], comparaison: [], definition: [], conseil: [], aide: [], hors_sujet: [],
 };
 
 let modele = null;      // { reseau, detecteur, empreinte, rapport }
