@@ -23,15 +23,31 @@ Toutes ses réponses viennent du site : il le relit tout seul toutes les heures,
 Les noms se complètent pendant la frappe, et chaque fiche a un bouton **« Voir sur le site »** qui ouvre directement la bonne fiche.
 Le bot répond dans la langue de Discord du membre (français ou anglais).
 
+### Ruche IA, l'IA maison
+
+Le bot a sa **propre IA**, entraînée sur les données du site, sans aucun service extérieur ni clé :
+
+- **Elle comprend ce que veut le joueur** grâce à un petit réseau de neurones : prix, recette, où l'obtenir, stats, PV et réapparition d'un monstre, valeur en trade, comparaison de deux objets, définition, conseil de jeu, aide sur le bot… ou hors sujet (« salut », « gg », « qui veut jouer ? »), auquel cas elle se tait.
+- **Elle repère de quoi on parle**, même mal écrit, abrégé ou à moitié en français : « le taky planteur », « porcelaine dipper », « ssa », « kb amulet », « le tacky ».
+- **Elle a appris sur environ 27 000 questions** fabriquées automatiquement à partir du site (français, anglais, langage de joueur, fautes de frappe). Sur des questions écrites à la main comme sur un vrai Discord, elle trouve la bonne intention et le bon objet dans presque tous les cas (`npm run entrainer` affiche le score).
+- **Elle se ré-entraîne toute seule** (une dizaine de secondes) quand le site change ou quand tu ajoutes des modèles de phrases dans `src/ia-maison/questions.js`.
+- Sous chaque réponse libre, des boutons 👍 / 👎 notent les questions mal comprises dans `data/avis.jsonl` ; `npm run avis` les affiche pour améliorer l'IA.
+
+Exemples de ce qu'elle sait faire :
+
+| Question | Réponse |
+|---|---|
+| combien coûte le tacky planter ? | le prix et la recette, avec la fiche |
+| faut combien de blue extract pour le tide popper | « Pour Tide Popper, il faut 1 500 Blue Extract » |
+| kazoo ou thimble ? | les deux fiches côte à côte |
+| je fais quoi après le porcelain dipper ? | les outils suivants par prix + les passages des guides |
+| best red hive for endgame | les sections du guide ruche rouge |
+| pv du king beetle | PV, niveau, réapparition, fiche du monstre |
+| gg bien joué | rien : elle se tait |
+
 ### Le salon questions-réponses
 
-Un admin tape `/config salon-questions` dans un salon. Ensuite, quand quelqu'un y pose une question (« combien coûte le Tacky Planter ? », « où trouver du Glitter ? », « pv du King Beetle »), le bot répond tout seul :
-
-1. son **moteur de recherche** comprend la question (français ou anglais, fautes de frappe comprises), reconnaît les noms du jeu et trouve les bonnes fiches du site ;
-2. il répond avec une phrase, la fiche et des boutons vers le site ;
-3. si une **IA** est branchée (facultatif, voir plus bas), c'est elle qui rédige la réponse, **uniquement à partir des fiches trouvées sur le site** : elle n'invente rien.
-
-On peut aussi mentionner le bot dans n'importe quel salon (désactivable avec `/config mention`).
+Un admin tape `/config salon-questions` dans un salon. Ensuite, quand quelqu'un y pose une question, Ruche IA répond toute seule avec une phrase, la fiche et des boutons vers le site. Elle répond aussi aux messages sans point d'interrogation quand elle est sûre qu'on parle du jeu (« prix du tacky planter »), et reste silencieuse sur les discussions hors sujet. On peut aussi mentionner le bot dans n'importe quel salon (désactivable avec `/config mention`).
 
 ## Installation
 
@@ -64,13 +80,14 @@ Quand tout va bien, la console affiche :
 
 ```
 [site] 811 fiches chargées (site)
+[ruche ia] ré-entraînée sur 27170 questions en 9.3 s (réussite 99.4 %)
 [discord] connecté en tant que Ruche & Outils#1234
 [discord] 15 commandes publiées sur le serveur …
 ```
 
-### 3. Choisir l'IA (facultatif)
+### 3. Ajouter une IA extérieure (facultatif, pas nécessaire)
 
-Sans IA (`IA_FOURNISSEUR=aucune`), le bot marche déjà très bien avec son moteur de recherche, gratuitement. Avec une IA, ses réponses aux questions sont des vraies phrases.
+Ruche IA suffit pour faire tourner le bot. Si un jour tu veux en plus des réponses rédigées librement (des phrases plus naturelles sur les questions compliquées), tu peux brancher une IA extérieure ; elle reçoit seulement les fiches trouvées par Ruche IA.
 
 | Choix | Coût | Réglages dans `.env` |
 |---|---|---|
@@ -79,7 +96,7 @@ Sans IA (`IA_FOURNISSEUR=aucune`), le bot marche déjà très bien avec son mote
 | **Claude** | payant, quelques centimes par mois pour un serveur moyen | `IA_FOURNISSEUR=anthropic` · `IA_MODELE=claude-haiku-5-5` · `IA_CLE=` ta clé sur [console.anthropic.com](https://console.anthropic.com) |
 | **Ollama** (sur ton PC) | gratuit, hors ligne | installe [Ollama](https://ollama.com), puis `ollama pull llama3.1` · `IA_FOURNISSEUR=openai` · `IA_URL=http://localhost:11434/v1` · `IA_MODELE=llama3.1` |
 
-Si l'IA ne répond pas (quota atteint, coupure…), le bot repasse automatiquement sur son moteur de recherche.
+Si l'IA extérieure ne répond pas (quota atteint, coupure…), Ruche IA reprend la main automatiquement.
 
 ## Le garder allumé
 
@@ -96,9 +113,11 @@ Le bot télécharge `app.html`, `lang-fr.js` et `lang-en.js` du site, puis en ex
 
 Les liens « Voir sur le site » utilisent les adresses directes du site, par exemple `app.html#fiche/items/Tacky Planter`.
 
-## Vérifier
+## Vérifier et améliorer
 
-`npm test` lance une série de tests sans Discord ni Internet (à faire depuis ce dossier, avec le site dans le dossier parent) : lecture du site, toutes les fiches dans les deux langues, recherche, recettes, réponses automatiques, commandes et IA simulée.
+- `npm test` : tests sans Discord ni Internet (depuis ce dossier, avec le site dans le dossier parent) : lecture du site, toutes les fiches dans les deux langues, Ruche IA sur des questions réelles, réponses, silence sur le hors-sujet, commandes, IA extérieure simulée.
+- `npm run entrainer` : ré-entraîne Ruche IA et affiche sa réussite question par question (ajoute `-- --local` pour utiliser le site du dossier parent).
+- `npm run avis` : les questions que les membres ont marquées 👎.
 
 ## Fichiers
 
@@ -109,14 +128,17 @@ bot-discord/
 │   ├── commandes.js    les commandes « / »
 │   ├── site.js         lecture du site, images, liens
 │   ├── extraction.js   extraction des données de app.html
+│   ├── ia-maison/      Ruche IA : réseau de neurones, détecteur d'objets, questions d'entraînement
+│   ├── avis.js         boutons 👍 / 👎
 │   ├── recherche.js    moteur de recherche (FR/EN, fautes de frappe)
 │   ├── reponse.js      réponse aux questions libres
-│   ├── ia.js           IA facultative (Claude ou compatible OpenAI)
+│   ├── ia.js           IA extérieure facultative (Claude ou compatible OpenAI)
 │   ├── fiches.js       mise en forme des fiches Discord
 │   ├── recette.js      calcul des ressources de base
 │   ├── config.js       réglages par serveur
 │   └── outils.js       petites fonctions communes
-├── tests/hors-ligne.js
+├── scripts/          entraîner Ruche IA, lire les avis
+├── tests/            tests hors ligne et questions réelles
 ├── .env.example        modèle de configuration
 ├── lancer.bat / lancer.sh
 └── package.json

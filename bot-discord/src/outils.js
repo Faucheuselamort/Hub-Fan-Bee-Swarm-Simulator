@@ -90,4 +90,7 @@ function distance(a, b, max = 3) {
   return v[b.length];
 }
 
-module.exports = { normaliser, texteBrut, versDiscord, fmtMiel, fmtEntier, tr, trTexte, langueDe, devinerLangue, couper, distance };
+/* quantité d'objets : « 1 500 » jusqu'au million, puis « 2,5 M » */
+function fmtQte(n, lang = 'fr') { return Math.abs(n) < 1e6 ? fmtEntier(Math.round(n * 100) / 100, lang) : fmtMiel(n, lang); }
+
+module.exports = { fmtQte, normaliser, texteBrut, versDiscord, fmtMiel, fmtEntier, tr, trTexte, langueDe, devinerLangue, couper, distance };

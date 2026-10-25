@@ -19,6 +19,8 @@ const { messageFiche } = require('../src/fiches');
 const { repondre } = require('../src/reponse');
 const commandes = require('../src/commandes');
 const { decomposer } = require('../src/recette');
+const ruche = require('../src/ia-maison');
+const REELLES = require('./questions-reelles');
 
 function tailleEmbed(e) {
   const d = e.data || e;
@@ -34,6 +36,16 @@ function tailleEmbed(e) {
   construireIndex();
   const nb = {}; site.etat.fiches.forEach(f => { nb[f.type] = (nb[f.type] || 0) + 1; });
   console.log('fiches :', nb);
+  const ia = ruche.preparerIA(site.etat.fiches);
+  console.log(`Ruche IA : ${ia.source}, ${ia.rapport.exemples} questions, ${(ia.rapport.precision * 100).toFixed(1)} %`);
+  let okI = 0, okE = 0, nE = 0;
+  for (const [q, intention, fiche] of REELLES) {
+    const c = ruche.comprendre(q);
+    if (c.intention === intention) okI++;
+    if (fiche) { nE++; if (c.entites[0] && c.entites[0].fiche.id === fiche) okE++; }
+  }
+  console.log(`✓ questions réelles : intention ${okI}/${REELLES.length}, objet ${okE}/${nE}`);
+  assert(okI / REELLES.length >= 0.9 && okE / nE >= 0.9, 'Ruche IA comprend trop mal les questions réelles');
   assert(nb.item > 150 && nb.sticker > 250 && nb.beequip > 30 && nb.amulette === 7 && nb.mob > 30);
 
   /* toutes les fiches, dans les deux langues, respectent les limites Discord */
@@ -70,10 +82,16 @@ function tailleEmbed(e) {
   console.log('✓ recette Tacky Planter ×2 :', r.miel, [...r.base.entries()].slice(0, 4));
 
   /* réponses sans IA */
-  for (const q of ['combien coute le tacky planter ?', 'where do I get the Glitter?', 'recette du coconut canister', 'quelle est la meilleure ruche bleue', 'blablabla zzz']) {
+  for (const q of ['combien coute le tacky planter ?', 'where do I get the Glitter?', 'recette du coconut canister', 'faut combien de blue extract pour le tide popper',
+    'kazoo ou thimble ?', 'je fais quoi après le porcelain dipper ?', 'quelle est la meilleure ruche bleue', 'pv du king beetle', 'tu sers à quoi ?', 'blablabla zzz']) {
     const m = await repondre(q);
-    console.log('\nQ :', q, '\nR :', (m.content || (m.embeds && m.embeds[0].data.title) || '').slice(0, 220));
+    const e = (m.embeds || []).map(x => (x.data || x).title).join(' + ');
+    console.log('\nQ :', q, '\nR :', (m.content || '').slice(0, 260), e ? `\n   [fiche${m.embeds.length > 1 ? 's' : ''} : ${e}]` : '');
+    (m.embeds || []).forEach(x => tailleEmbed(x));
   }
+  assert((await repondre('salut tout le monde', { discret: true })) === null, 'le bot doit se taire sur le hors-sujet');
+  assert((await repondre('gg bien joué', { discret: true })) === null, 'le bot doit se taire sur le hors-sujet');
+  console.log('\n✓ silence sur le hors-sujet dans le salon');
 
   /* commandes valides */
   const defs = commandes.definitions();
@@ -94,6 +112,7 @@ function tailleEmbed(e) {
   process.env.IA_FOURNISSEUR = 'openai'; process.env.IA_URL = `http://127.0.0.1:${serveur.address().port}/v1`; process.env.IA_MODELE = 'test';
   const m = await repondre('combien coute le tacky planter ?');
   serveur.close();
+  delete process.env.IA_FOURNISSEUR;
   assert(recu && recu.messages[1].content.includes('Tacky Planter') && recu.messages[1].content.includes('50'), 'extraits non transmis à l\'IA');
   assert(m.content.includes('réponse simulée') && m.embeds && m.components.length);
   console.log('✓ IA simulée : extraits transmis, réponse + fiche + boutons');

@@ -2,7 +2,7 @@
 /* Mise en forme des fiches pour Discord (embeds + bouton vers le site). */
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { etat, imageValide, lien } = require('./site');
-const { versDiscord, texteBrut, fmtMiel, tr, trTexte, couper } = require('./outils');
+const { versDiscord, texteBrut, fmtMiel, fmtQte, tr, trTexte, couper } = require('./outils');
 const { decomposer } = require('./recette');
 
 const L = (lang, fr, en) => (lang === 'en' ? en : fr);
@@ -66,7 +66,7 @@ function ficheItem(f, lang) {
   const fields = [
     champ(L(lang, 'Catégorie', 'Category'), T(o.categorie, lang)),
     o.miel !== undefined ? champ(o.mats ? L(lang, 'Miel + matériaux', 'Honey + materials') : L(lang, 'Prix', 'Price'), '🍯 ' + fmtMiel(o.miel, lang)) : null,
-    o.mats ? champ(L(lang, 'Recette', 'Recipe'), liste(o.mats.map(([q, n]) => `${fmtMiel(q, lang)} × ${n}`)), false) : null,
+    o.mats ? champ(L(lang, 'Recette', 'Recipe'), liste(o.mats.map(([q, n]) => `${fmtQte(q, lang)} × ${n}`)), false) : null,
     champ(L(lang, 'Condition', 'Requirement'), tr(o, 'prealable', lang, dico()), false),
     champ(L(lang, "Où l'obtenir", 'Where to get it'), tr(o, 'lieu', lang, dico()), false),
     champ(L(lang, 'Caractéristiques', 'Stats'), caracsItem(o, lang), false),
@@ -77,7 +77,7 @@ function ficheItem(f, lang) {
   if (o.mats) {
     const r = decomposer(o.nom, 1);
     if (r.etapes.size) e.addFields({ name: L(lang, 'Total en ressources de base', 'Total in base resources'),
-      value: couper(`🍯 **${fmtMiel(r.miel, lang)}**\n` + [...r.base.entries()].map(([n, q]) => `${fmtMiel(q, lang)} × ${n}`).join(' · '), 1024) });
+      value: couper(`🍯 **${fmtMiel(r.miel, lang)}**\n` + [...r.base.entries()].map(([n, q]) => `${fmtQte(q, lang)} × ${n}`).join(' · '), 1024) });
   }
   return e;
 }

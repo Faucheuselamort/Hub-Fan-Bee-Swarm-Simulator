@@ -11,7 +11,9 @@ const { repondre } = require('./reponse');
 const { decomposer, catalogue } = require('./recette');
 const { iaActive, config: configIA } = require('./ia');
 const cfg = require('./config');
-const { langueDe, fmtMiel, fmtEntier, couper } = require('./outils');
+const ruche = require('./ia-maison');
+const avis = require('./avis');
+const { langueDe, fmtMiel, fmtEntier, fmtQte, couper } = require('./outils');
 
 /* ---------- définitions ---------- */
 const nomOption = (o, fr, en) => o.setName('nom').setNameLocalizations({ 'en-US': 'name', 'en-GB': 'name' })
@@ -119,6 +121,8 @@ async function executer(i) {
     const q = i.options.getString('question');
     const msg = await repondre(q, { lang: null });
     msg.content = `> ${couper(q, 200)}\n${msg.content || ''}`;
+    let intention = null; try { intention = ruche.comprendre(q).intention; } catch (e) { /* */ }
+    msg.components = [...(msg.components || []), avis.rangeeAvis(q, intention)].slice(0, 5);
     return i.editReply(msg);
   }
 
@@ -143,9 +147,9 @@ async function cmdRecette(i, lang) {
   if (!r || !r.connu) return i.reply({ content: L(lang, `« ${nom} » ne se fabrique pas (ou n'a pas de recette sur le site).`, `"${nom}" can't be crafted (or has no recipe on the site).`), flags: MessageFlags.Ephemeral });
   const o = f.data;
   const e = new EmbedBuilder().setColor(0x8FE86B).setTitle(`${L(lang, 'Recette', 'Recipe')} : ${qte > 1 ? qte + ' × ' : ''}${f.nom}`).setURL(f.url)
-    .addFields({ name: L(lang, 'Recette directe', 'Direct recipe'), value: `🍯 ${fmtMiel((o.miel || 0) * qte, lang)}\n` + o.mats.map(([q, n]) => `• ${fmtMiel(q * qte, lang)} × ${n}`).join('\n') });
-  if (r.etapes.size) e.addFields({ name: L(lang, 'À fabriquer en chemin', 'To craft along the way'), value: couper([...r.etapes.entries()].map(([n, q]) => `• ${fmtMiel(q, lang)} × ${n}`).join('\n'), 1024) });
-  e.addFields({ name: L(lang, 'Total en ressources de base', 'Total in base resources'), value: couper(`🍯 **${fmtMiel(r.miel, lang)}**\n` + [...r.base.entries()].sort((a, b) => b[1] - a[1]).map(([n, q]) => `• **${fmtMiel(q, lang)}** × ${n}`).join('\n'), 1024) });
+    .addFields({ name: L(lang, 'Recette directe', 'Direct recipe'), value: `🍯 ${fmtMiel((o.miel || 0) * qte, lang)}\n` + o.mats.map(([q, n]) => `• ${fmtQte(q * qte, lang)} × ${n}`).join('\n') });
+  if (r.etapes.size) e.addFields({ name: L(lang, 'À fabriquer en chemin', 'To craft along the way'), value: couper([...r.etapes.entries()].map(([n, q]) => `• ${fmtQte(q, lang)} × ${n}`).join('\n'), 1024) });
+  e.addFields({ name: L(lang, 'Total en ressources de base', 'Total in base resources'), value: couper(`🍯 **${fmtMiel(r.miel, lang)}**\n` + [...r.base.entries()].sort((a, b) => b[1] - a[1]).map(([n, q]) => `• **${fmtQte(q, lang)}** × ${n}`).join('\n'), 1024) });
   e.setFooter({ text: L(lang, 'Même calcul que le calculateur d\'ingrédients du site', 'Same maths as the site\'s ingredient calculator') });
   return i.reply({ embeds: [e], components: [boutonSite(lien('outils/ingredients'), lang, L(lang, 'Ouvrir le calculateur', 'Open the calculator'))] });
 }
@@ -169,7 +173,7 @@ async function cmdNiveau(i, lang) {
 }
 
 function aide(lang, gid) {
-  const ia = iaActive() ? L(lang, `IA activée (${configIA().fournisseur})`, `AI enabled (${configIA().fournisseur})`) : L(lang, 'moteur de recherche intégré', 'built-in search engine');
+  const ia = L(lang, 'Ruche IA, l\'IA maison entraînée sur le site', 'Hive AI, the home-made AI trained on the site') + (iaActive() ? ` + ${configIA().fournisseur}` : '');
   const salons = gid ? cfg.salons(gid).map(([id]) => `<#${id}>`).join(', ') : '';
   return new EmbedBuilder().setColor(0x8FE86B).setTitle(L(lang, 'Ce que je sais faire', 'What I can do'))
     .setDescription(L(lang,
@@ -210,7 +214,9 @@ async function cmdConfig(i, lang) {
   const e = new EmbedBuilder().setColor(0x8FE86B).setTitle(L(lang, 'Réglages', 'Settings')).addFields(
     { name: L(lang, 'Salons questions-réponses', 'Q&A channels'), value: s.length ? s.map(([id, v]) => `<#${id}> · ${v.mode}`).join('\n') : '—' },
     { name: L(lang, 'Réponse aux mentions', 'Reply to mentions'), value: cfg.mention(i.guildId) ? '✅' : '❌', inline: true },
-    { name: 'IA', value: iaActive() ? `${configIA().fournisseur} · ${configIA().modele || 'défaut'}` : L(lang, 'aucune (moteur de recherche)', 'none (search engine)'), inline: true },
+    { name: 'Ruche IA', value: (() => { const r = ruche.etatIA(); return r.pret ? L(lang, `entraînée sur ${r.exemples} questions · ${(r.precision * 100).toFixed(1)} % de réussite`, `trained on ${r.exemples} questions · ${(r.precision * 100).toFixed(1)}% accuracy`) : '—'; })(), inline: false },
+    { name: L(lang, 'IA externe', 'External AI'), value: iaActive() ? `${configIA().fournisseur} · ${configIA().modele || 'défaut'}` : L(lang, 'aucune', 'none'), inline: true },
+    { name: L(lang, 'Avis des membres', 'Member feedback'), value: (() => { const a = avis.lireAvis(); return `👍 ${a.filter(x => x.avis === 'bon').length} · 👎 ${a.filter(x => x.avis === 'mauvais').length}`; })(), inline: true },
     { name: L(lang, 'Données du site', 'Site data'), value: `${etat.fiches.length} ${L(lang, 'fiches', 'cards')} · ${etat.source} · ${etat.chargeLe ? `<t:${Math.floor(etat.chargeLe / 1000)}:R>` : '—'}`, inline: false });
   return i.reply({ embeds: [e], flags: MessageFlags.Ephemeral });
 }

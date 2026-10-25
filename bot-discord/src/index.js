@@ -7,6 +7,8 @@ const { construireIndex } = require('./recherche');
 const commandes = require('./commandes');
 const { repondre } = require('./reponse');
 const { iaActive, config: configIA } = require('./ia');
+const ruche = require('./ia-maison');
+const avis = require('./avis');
 const cfg = require('./config');
 const { normaliser } = require('./outils');
 
@@ -33,6 +35,8 @@ async function chargerSite() {
   if (ok) {
     construireIndex();
     console.log(`[site] ${site.etat.fiches.length} fiches chargées (${site.etat.source})`);
+    const m = ruche.preparerIA(site.etat.fiches);
+    console.log(`[ruche ia] ${m.source === 'sauvegarde' ? 'modèle à jour rechargé' : `ré-entraînée sur ${m.rapport.exemples} questions en ${m.rapport.secondes.toFixed(1)} s`} (réussite ${(m.rapport.precision * 100).toFixed(1)} %)`);
     if (client.user) client.user.setActivity(`${site.etat.fiches.length} fiches · /aide`, { type: ActivityType.Watching });
   }
 }
@@ -52,7 +56,7 @@ async function publierCommandes() {
 
 client.once(Events.ClientReady, async (c) => {
   console.log(`[discord] connecté en tant que ${c.user.tag}`);
-  console.log(`[ia] ${iaActive() ? `${configIA().fournisseur} (${configIA().modele || 'modèle par défaut'})` : 'aucune — moteur de recherche intégré'}`);
+  console.log(`[ia externe] ${iaActive() ? `${configIA().fournisseur} (${configIA().modele || 'modèle par défaut'})` : 'aucune — Ruche IA répond seule'}`);
   c.user.setActivity(`${site.etat.fiches.length} fiches · /aide`, { type: ActivityType.Watching });
   try { await publierCommandes(); } catch (e) { console.error('[discord] publication des commandes impossible :', e.message); }
 });
@@ -62,6 +66,7 @@ client.on(Events.InteractionCreate, async (i) => {
     if (i.isAutocomplete()) return await commandes.autocompletion(i);
     if (i.isChatInputCommand()) return await commandes.executer(i);
     if (i.isStringSelectMenu()) return await commandes.menu(i);
+    if (i.isButton() && i.customId.startsWith('avis:')) return await avis.bouton(i);
   } catch (err) {
     console.error('[commande]', err);
     const msg = { content: '⚠️ Oups, une erreur est survenue. Réessaie dans un instant.', flags: MessageFlags.Ephemeral };
@@ -85,8 +90,13 @@ client.on(Events.MessageCreate, async (m) => {
   if (!reglage && !(mentionne && cfg.mention(m.guild.id))) return;
 
   const texte = m.content.replace(/<@!?\d+>/g, '').trim();
-  if (texte.length < 3 || texte.length > 600) return;
-  if (!mentionne && reglage.mode !== 'tout' && !ressembleQuestion(texte)) return;
+  if (texte.length < 2 || texte.length > 600) return;
+  /* mode « questions » : on répond si ça ressemble à une question, ou si Ruche IA
+     est sûre qu'on parle du jeu (« prix du tacky planter » sans point d'interrogation) */
+  if (!mentionne && reglage.mode !== 'tout' && !ressembleQuestion(texte)) {
+    let c = null; try { c = ruche.comprendre(texte); } catch (e) { /* pas prête */ }
+    if (!c || c.intention === 'hors_sujet' || c.confiance < 0.9 || !c.entites.length) return;
+  }
 
   const maintenant = Date.now();
   if (maintenant - (dernier.get(m.author.id) || 0) < DELAI_Q) return;
@@ -94,9 +104,13 @@ client.on(Events.MessageCreate, async (m) => {
 
   try {
     await m.channel.sendTyping().catch(() => {});
-    const discret = !mentionne && reglage && reglage.mode === 'tout' && !ressembleQuestion(texte);
+    const discret = !mentionne;      // dans le salon : silence si hors sujet ou rien trouvé
     const msg = await repondre(texte, { discret });
-    if (msg) await m.reply({ ...msg, allowedMentions: { repliedUser: false, parse: [] } });
+    if (msg) {
+      let intention = null; try { intention = ruche.comprendre(texte).intention; } catch (e) { /* */ }
+      msg.components = [...(msg.components || []), avis.rangeeAvis(texte, intention)].slice(0, 5);
+      await m.reply({ ...msg, allowedMentions: { repliedUser: false, parse: [] } });
+    }
   } catch (err) { console.error('[question]', err); }
 });
 

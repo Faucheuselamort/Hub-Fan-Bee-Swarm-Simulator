@@ -6,9 +6,13 @@
   "private": true,
   "scripts": {
     "start": "node src/index.js",
-    "test": "node tests/hors-ligne.js"
+    "test": "node tests/hors-ligne.js",
+    "entrainer": "node scripts/entrainer.js",
+    "avis": "node scripts/avis.js"
   },
-  "engines": { "node": ">=18.17" },
+  "engines": {
+    "node": ">=18.17"
+  },
   "dependencies": {
     "discord.js": "^14.16.3",
     "dotenv": "^16.4.5"

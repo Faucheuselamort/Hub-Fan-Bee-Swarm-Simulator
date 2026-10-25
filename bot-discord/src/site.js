@@ -219,7 +219,7 @@ function construireFiches() {
   /* guides et explications générales (pour les questions « comment… ») */
   const guides = (g, lang) => Object.entries(g || {}).forEach(([cat, sections]) => (sections || []).forEach((s, k) => {
     const texte = aplatir(s.blocs).join('\n');
-    if (texte.length < 40) return;
+    if (texte.length < 40 || /cr[ée]dit|remerciement|thanks to/i.test(s.titre || '')) return;
     ajouter({
       type: 'guide', nom: `${cat} · ${texteBrut(s.titre)}`, lang, data: { cat, titre: texteBrut(s.titre), texte }, url: lien(`guide/${cat}`),
       images: [], motsCles: ['guide', cat],
