@@ -1,0 +1,16 @@
+{
+  "name": "ruche-et-outils-bot",
+  "version": "1.0.0",
+  "description": "Bot Discord du site Ruche & Outils (Bee Swarm Simulator) : fiches, calculs et réponses automatiques tirées du site.",
+  "main": "src/index.js",
+  "private": true,
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node tests/hors-ligne.js"
+  },
+  "engines": { "node": ">=18.17" },
+  "dependencies": {
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.5"
+  }
+}

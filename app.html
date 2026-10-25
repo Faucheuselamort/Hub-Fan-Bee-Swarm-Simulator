@@ -7973,9 +7973,29 @@ if(typeof Nuage !== 'undefined' && Nuage.disponible()){
   }
   ['showView', 'ouvrirRubrique', 'fermerRubrique'].forEach(envelopper);
 
+  /* app.html#fiche/items/Tacky Planter → ouvre directement la fiche (liens du bot Discord) */
+  function ouvrirFicheDepuisAdresse(brut){
+    const [, key, ...reste] = brut.split('/');
+    const nom = reste.join('/').toLowerCase();
+    const ds = DATASETS[key]; if(!ds) return false;
+    const idx = ds.data.findIndex(o => String(o.nom).toLowerCase() === nom);
+    if(idx < 0) return false;
+    enApplication = true;
+    try{ if(NAV.hasOwnProperty(key)) NAV[key] = null; showView(key); } finally { enApplication = false; }
+    ouvrirModale(key, idx);
+    return true;
+  }
+  if(typeof window.fermerModale === 'function'){
+    const fermer = window.fermerModale;
+    window.fermerModale = function(){ const r = fermer.apply(this, arguments);
+      if(location.hash.startsWith('#fiche/')) history.replaceState(null, '', adresseActuelle());
+      return r; };
+  }
+
   /* lit l'adresse et affiche la page correspondante */
   function appliquer(){
     const brut = decodeURIComponent((location.hash || '').slice(1));
+    if(brut.startsWith('fiche/') && ouvrirFicheDepuisAdresse(brut)) return;
     const i = brut.indexOf('/');
     let vue = i < 0 ? brut : brut.slice(0, i);
     let rub = i < 0 ? null : brut.slice(i + 1);
