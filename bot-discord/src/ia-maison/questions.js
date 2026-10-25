@@ -48,10 +48,13 @@ const M = {
     fr: ['stats du {X}', 'le {X} donne quoi', 'quels bonus donne {X}', '{X} stats', 'c est quoi les stats du {X}', 'ca fait quoi le {X}', 'effet du {X}',
       'bonus {X}', 'les bonus du {X}', 'il donne quoi le {X}', 'le {X} sert a quoi', 'a quoi sert le {X}', 'il est bien le {X}', 'il vaut le coup le {X}',
       'le {X} c est bien', 'quels buffs sur le {X}', 'c est quoi le boost du {X}', 'il fait quoi {X}', 'statistiques du {X}', 'que donne {X}',
+      'qu est ce qu on peut drop sur une {X}', 'qu est ce qu on peut avoir sur une {X}', 'quelles stats sur une {X}', 'quelles stats peut avoir la {X}',
+      'les stats possibles de la {X}', 'on peut avoir quoi comme bonus sur une {X}', 'quelles lignes sur une {X}', 'c est quoi les meilleures stats sur une {X}',
       'le {X} augmente la capa de combien', 'combien de capa le {X}', 'le {X} donne combien de capacite', 'combien de pollen par fleur avec le {X}',
       'le {X} il collecte combien', 'le {X} il ramasse combien de fleurs', 'combien de convert rate le {X}', 'le {X} donne combien de bonus'],
     en: ['{X} stats', 'what does {X} do', 'what bonuses does {X} give', 'stats of {X}', 'what does the {X} give', '{X} buffs', 'is {X} good',
       'is the {X} worth it', 'what is {X} good for', 'what are the stats on {X}', '{X} bonus', 'what does {X} boost',
+      'what stats can roll on a {X}', 'what can i get on a {X}', 'possible stats on {X}', 'what can drop on a {X}',
       'how much capacity does {X} give', 'how many flowers does {X} collect', 'how much convert rate does {X} give'],
   },
   combat: {
@@ -181,6 +184,7 @@ function varianteNom(f, r, lang) {
   if (n.startsWith('the ') && r() < 0.6) n = n.slice(4);
   if (f.type === 'abeille' && r() < 0.4) n = n.replace(/ bee$/, '');
   if (f.type === 'amulette' && r() < 0.3) n = n.replace(/ amulet$/, ' amu');
+  if (f.type === 'amulette' && r() < 0.4) n = (lang === 'fr' ? ['supreme', 'diamant', 'or', 'argent', 'bronze', 'diamond'] : ['supreme', 'diamond', 'gold', 'silver', 'bronze'])[Math.floor(r() * 5)] + ' ' + n;
   if (lang === 'fr' && r() < 0.25) VERS_FR.forEach(([re, fr]) => { n = n.replace(re, fr); });
   const surnoms = Object.entries(SURNOMS).filter(([, id]) => id === f.id).map(([s]) => s);
   if (surnoms.length && r() < 0.25) n = surnoms[Math.floor(r() * surnoms.length)];

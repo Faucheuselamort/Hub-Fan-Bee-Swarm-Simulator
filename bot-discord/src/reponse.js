@@ -82,6 +82,17 @@ function suivants(f, lang) {
 }
 const T = (txt, lang) => (lang === 'en' && dico()[txt]) || txt;
 
+/* palier d'amulette écrit dans la question */
+function palierDe(question) {
+  const q = ' ' + normaliser(question) + ' ';
+  if (/ (supreme|supremes|supr) /.test(q)) return 'Suprême';
+  if (/ (diamond|diamant|diams?) /.test(q)) return 'Diamant';
+  if (/ (gold|golden|doree?) /.test(q) || / or (star|ant|cog|shell|stick|moon|king|amulet|amulette)/.test(q)) return 'Or';
+  if (/ (silver|argent) /.test(q)) return 'Argent';
+  if (/ bronze /.test(q)) return 'Bronze';
+  return null;
+}
+
 /* 3700 min → « 61 h 40 min (2 j 13 h 40) » */
 function duree(min, lang) {
   const h = Math.floor(min / 60), m = Math.round(min % 60);
@@ -221,6 +232,30 @@ async function reponseMaison(question, lang, discret) {
     const bloc = blocConseil(question, lang, objet);
     const apres = objet ? suivants(objet, lang) : null;
     if (bloc || apres) return msg(apres || L(lang, 'Voici ce que les guides du site conseillent :', 'Here is what the site guides recommend:'), bloc ? [bloc.embed] : [], bloc ? bloc.fiches : [objet].filter(Boolean));
+  }
+
+  /* amulette avec un palier (« supreme cog amulet ») : les stats possibles de ce palier */
+  const amu = ents.find(e => e.fiche.type === 'amulette');
+  const palier = palierDe(question);
+  if (amu && (palier || c.intention === 'stats')) {
+    const f = amu.fiche, buffs = etat.donnees.AMULETTES_BUFFS[f.nom] || {};
+    const paliers = buffs.paliers ? Object.keys(buffs.paliers) : [];
+    const p = paliers.includes(palier) ? palier : (paliers.length ? paliers[paliers.length - 1] : null);
+    const groupes = buffs.unique || (p && buffs.paliers[p]) || [];
+    if (groupes.length) {
+      const PEN = { Bronze: 'Bronze', Argent: 'Silver', Or: 'Gold', Diamant: 'Diamond', 'Suprême': 'Supreme' };
+      const titre = p ? L(lang, `${f.nom} ${p}`, `${PEN[p]} ${f.nom}`) : f.nom;
+      let phrase = (palier && !paliers.includes(palier) && paliers.length)
+        ? L(lang, `**${f.nom}** n'existe pas en ${palier} (paliers : ${paliers.join(', ')}). Voici le palier ${p} :\n`, `**${f.nom}** has no ${PEN[palier] || palier} tier (tiers: ${paliers.map(x => PEN[x]).join(', ')}). Here is ${PEN[p]}:\n`)
+        : L(lang, `Sur une **${titre}**, tu peux avoir :\n`, `On a **${titre}** you can roll:\n`);
+      phrase += groupes.map(g => {
+        const nb = g.stats.length;
+        const tete = /Garanti/i.test(g.prise) ? L(lang, '✅ Toujours', '✅ Always') : `🎲 ${T(g.prise, lang)}${nb > 1 ? L(lang, ` parmi ${nb}`, ` of ${nb}`) : ''}`;
+        return `${tete} : ` + g.stats.map(st => `${st.nom} ${T(st.plage, lang)}${nb > 1 && !/Garanti/i.test(g.prise) ? ` (${st.proba})` : ''}`).join(' · ');
+      }).join('\n');
+      const fiche = await messageFiche(f, lang, { palier: p });
+      return msg(phrase, fiche.embeds, [f]);
+    }
   }
 
   if (QUOI[c.intention] && ents.length) {

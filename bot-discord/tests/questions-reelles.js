@@ -54,6 +54,8 @@ module.exports = [
   ['Combien de temps mais le Planter of Plenty pour être à 100%', 'temps', 'item:The Planter Of Plenty'],
   ['le tacky planter pousse en combien de temps ?', 'temps', 'item:Tacky Planter'],
   ['how long does the blender take for 50 super smoothie', 'temps', 'item:Super Smoothie'],
+  ["Qu'est ce que l'on peut drop sur une supreme cog amulet ?", 'stats', 'amulette:Cog Amulet'],
+  ['quelles stats sur une diamond star amulet', 'stats', 'amulette:Star Amulet'],
   ['tu sers à quoi le bot ?', 'aide', null],
   ['what can you do bot', 'aide', null],
   ['salut tout le monde', 'hors_sujet', null],

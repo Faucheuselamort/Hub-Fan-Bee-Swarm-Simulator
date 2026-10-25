@@ -56,7 +56,7 @@ class DetecteurEntites {
     }
     for (const [s, id] of Object.entries(SURNOMS)) if (parId.has(id)) ajouter(s, parId.get(id), 1);
     /* mot distinctif d'un nom composé, s'il n'appartient qu'à un seul objet : « tacky », « porcelain »… */
-    const GENERIQUES = new Set('planter mask field bee hive skin sticker egg amulet boots belt bag guard wax vial potion extract the of and with star cub stamp bear blue red white black green pink golden gold diamond basic small big super mega mondo festive'.split(' '));
+    const GENERIQUES = new Set('supreme silver bronze argent diamant planter mask field bee hive skin sticker egg amulet boots belt bag guard wax vial potion extract the of and with star cub stamp bear blue red white black green pink golden gold diamond basic small big super mega mondo festive'.split(' '));
     const compte = new Map();
     for (const f of fiches) {
       if (f.type === 'guide' || f.type === 'info') continue;

@@ -1,7 +1,7 @@
 'use strict';
 /* Bot Discord « Ruche & Outils » — point d'entrée. */
 require('dotenv').config({ path: require('node:path').join(__dirname, '..', '.env') });
-const { Client, GatewayIntentBits, Partials, Events, REST, Routes, ActivityType, MessageFlags } = require('discord.js');
+const { Client, GatewayIntentBits, Partials, Events, REST, Routes, ActivityType, MessageFlags, PermissionFlagsBits } = require('discord.js');
 const site = require('./site');
 const { construireIndex } = require('./recherche');
 const commandes = require('./commandes');
@@ -83,6 +83,27 @@ function ressembleQuestion(txt) {
 }
 const dernier = new Map();   // membre → horodatage de sa dernière question
 
+/* Sans la permission « Intégrer des liens », Discord efface les fiches en silence :
+   on les transforme alors en texte, et on prévient une fois dans la console. */
+const prevenus = new Set();
+function sansIntegrations(msg, salon) {
+  if (!msg.embeds || !msg.embeds.length) return msg;
+  if (!prevenus.has(salon.id)) {
+    prevenus.add(salon.id);
+    console.warn(`[discord] ⚠️ il manque la permission « Intégrer des liens » dans #${salon.name} : les fiches sont envoyées en texte. Donne-la au bot dans les paramètres du salon.`);
+  }
+  const textes = msg.embeds.map(e => {
+    const d = e.data || e;
+    const l = [];
+    if (d.title) l.push(`**${d.title}**`);
+    if (d.description) l.push(d.description);
+    (d.fields || []).forEach(f => l.push(`**${f.name}** : ${f.value.replace(/\n/g, ' · ')}`));
+    return l.join('\n');
+  });
+  const contenu = [msg.content, ...textes].filter(Boolean).join('\n\n');
+  return { ...msg, embeds: [], content: contenu.length > 1990 ? contenu.slice(0, 1985) + '…' : contenu };
+}
+
 client.on(Events.MessageCreate, async (m) => {
   if (m.author.bot || !m.guild || !m.content) return;
   const mentionne = m.mentions.users.has(client.user.id);
@@ -109,7 +130,9 @@ client.on(Events.MessageCreate, async (m) => {
     if (msg) {
       let intention = null; try { intention = ruche.comprendre(texte).intention; } catch (e) { /* */ }
       msg.components = [...(msg.components || []), avis.rangeeAvis(texte, intention)].slice(0, 5);
-      await m.reply({ ...msg, allowedMentions: { repliedUser: false, parse: [] } });
+      const perms = m.channel.permissionsFor(m.guild.members.me);
+      const final = perms && !perms.has(PermissionFlagsBits.EmbedLinks) ? sansIntegrations(msg, m.channel) : msg;
+      await m.reply({ ...final, allowedMentions: { repliedUser: false, parse: [] } });
     }
   } catch (err) { console.error('[question]', err); }
 });
