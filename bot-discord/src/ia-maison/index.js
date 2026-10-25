@@ -68,8 +68,28 @@ function preparerIA(fiches, { forcer = false, journal = null } = {}) {
 }
 
 /* Comprendre une question → { intention, confiance, alternatives, entites, texteMasque } */
+/* « 1 500 » → « 1500 », « 1.5k » → « 1500 », « 2m » → « 2000000 » */
+function fusionnerNombres(q) {
+  let s = String(q);
+  for (let k = 0; k < 3; k++) s = s.replace(/(\d)[ \u202f\u00a0.](\d{3})(?!\d)/g, '$1$2');
+  const mult = { k: 1e3, m: 1e6, b: 1e9, t: 1e12 };
+  s = s.replace(/(\d+(?:[.,]\d+)?)\s*([kmbt])\b/gi, (_, n, u) => String(Math.round(parseFloat(n.replace(',', '.')) * mult[u.toLowerCase()])));
+  return s;
+}
+
+/* quantité écrite juste avant ou juste après un objet : « les 1500 glue », « 10 x tacky », « glue x20 » */
+function quantiteDe(mots, e) {
+  const nombre = (m) => { const r = /^x?(\d{1,12})x?$/.exec(m || ''); return r ? +r[1] : null; };
+  const avant = mots.slice(Math.max(0, e.debut - 3), e.debut).reverse().filter(m => !['x', 'fois', 'de', 'd'].includes(m));
+  if (avant.length && nombre(avant[0])) return nombre(avant[0]);
+  const apres = mots.slice(e.fin, e.fin + 2).filter(m => m !== 'x' && m !== 'fois');
+  if (apres.length && /^x?\d+$/.test(apres[0]) && (mots[e.fin] === 'x' || /^x\d+$/.test(mots[e.fin]))) return nombre(apres[0]);
+  return 1;
+}
+
 function comprendre(question) {
   if (!modele) throw new Error('Ruche IA pas encore prête');
+  question = fusionnerNombres(question);
   const { reseau, detecteur } = modele;
   /* 1re passe : objets cités, puis intention sur la phrase masquée */
   let { entites, mots } = detecteur.detecter(preparer(question).replace(/\bqmark\b/g, ' '));
@@ -88,7 +108,8 @@ function comprendre(question) {
     const vus = new Set();
     entites = entites.filter(e => { const k = e.debut + ':' + e.fin; if (vus.has(k)) return false; vus.add(k); return true; });
   }
-  return { intention, confiance: pred[0].p, alternatives: pred.slice(1, 3), entites, texteMasque };
+  entites = entites.map(e => ({ ...e, quantite: quantiteDe(mots, e) }));
+  return { intention, confiance: pred[0].p, alternatives: pred.slice(1, 3), entites, texteMasque, mots };
 }
 
 function etatIA() { return modele ? { pret: true, source: modele.source, ...modele.rapport } : { pret: false }; }
