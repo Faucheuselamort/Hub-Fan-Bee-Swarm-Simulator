@@ -49,6 +49,40 @@ Exemples de ce qu'elle sait faire :
 
 Un admin tape `/config salon-questions` dans un salon. Ensuite, quand quelqu'un y pose une question, Ruche IA répond toute seule avec une phrase, la fiche et des boutons vers le site. Elle répond aussi aux messages sans point d'interrogation quand elle est sûre qu'on parle du jeu (« prix du tacky planter »), et reste silencieuse sur les discussions hors sujet. On peut aussi mentionner le bot dans n'importe quel salon (désactivable avec `/config mention`).
 
+## Gestion du serveur (façon DraftBot)
+
+En plus des infos du site, le bot gère ton serveur :
+
+| Module | Ce qu'il fait | Commandes |
+|---|---|---|
+| Modération | sanctions enregistrées, MP au membre, sanctions automatiques selon le nombre d'avertissements | `/ban` `/unban` `/kick` `/mute` `/unmute` `/warn` `/sanctions` `/clear` |
+| Bienvenue | message d'arrivée (avec aperçu dans le dashboard), MP, message de départ, rôles automatiques | — |
+| Niveaux | XP en écrivant, annonces, rôles récompenses, salons/rôles sans XP, multiplicateur | `/rang` `/classement` `/xp` |
+| Logs | messages supprimés/modifiés, arrivées, départs, rôles, pseudos, sanctions, salons | — |
+| Tickets | panneau avec bouton, salon privé avec le staff, transcription à la fermeture | `/ticket panneau` `/ticket fermer` `/ticket ajouter` |
+| Rôles à boutons | panneaux de rôles (plusieurs ou un seul à la fois) | `/roles-boutons` |
+| Giveaways & sondages | tirage au sort avec bouton, nouveau tirage ; sondages avec résultats en direct | `/giveaway` `/sondage` |
+
+Tout se règle dans le **dashboard** du site.
+
+## Le dashboard
+
+`dashboard.html` sur le site : connexion avec Discord, et **seul ton compte** (le propriétaire de l'application Discord du bot) peut l'ouvrir. Le bouton « 🛠️ Dashboard » apparaît sur le site uniquement quand tu es connecté avec ce compte. Pour un aperçu sans connexion : `dashboard.html?demo=1`.
+
+Il permet de régler chaque module, d'envoyer des annonces, de publier les panneaux (tickets, rôles), de lancer des giveaways et des sondages, de voir et supprimer les sanctions, et de corriger l'XP des membres. Les réglages sont appliqués par le bot en moins de 15 secondes.
+
+### Mise en place (une seule fois)
+
+1. **Créer les tables** : dans [Supabase](https://supabase.com/dashboard), ouvre ton projet ▸ **SQL Editor** ▸ **New query**, colle tout le fichier `supabase-bot.sql`, puis **Run**. Le résultat doit afficher `ok`.
+2. **Donner la clé secrète au bot** : Supabase ▸ **Project Settings** ▸ **API Keys** ▸ copie la **Secret key** (`sb_secret_…`) et colle-la dans `.env` après `SUPABASE_CLE_SECRETE=`. ⚠️ Cette clé donne tous les droits sur la base : elle reste dans `.env`, jamais sur le site ni sur GitHub.
+3. **Autoriser la page du dashboard pour la connexion Discord** : Supabase ▸ **Authentication** ▸ **URL Configuration** ▸ **Redirect URLs** ▸ ajoute `https://faucheuselamort.github.io/Hub-Fan-Bee-Swarm-Simulator/dashboard.html`.
+4. **Discord** : sur le portail développeur, active **Server Members Intent** (Bot ▸ Privileged Gateway Intents). Ré-invite le bot avec le lien ci-dessus pour lui donner les nouvelles permissions, et place son rôle **au-dessus** des rôles qu'il doit donner (Paramètres du serveur ▸ Rôles).
+5. Relance le bot : la console affiche `[dashboard] relié à Supabase` et `accès autorisé pour : <ton identifiant>`.
+
+Comment c'est protégé : le site n'utilise que la clé publique de Supabase. Les règles de la base (« row level security ») n'autorisent la lecture et l'écriture des tables du bot qu'aux comptes Discord inscrits dans `bot_admins`, et le bot y inscrit uniquement le propriétaire de l'application. Quelqu'un d'autre qui ouvre la page voit « Accès réservé ».
+
+Sans Supabase dans `.env`, les modules marchent quand même (réglages gardés dans `data/base-locale.json`), mais sans dashboard.
+
 ## Installation
 
 ### 1. Créer le bot sur Discord
@@ -57,14 +91,14 @@ Un admin tape `/config salon-questions` dans un salon. Ensuite, quand quelqu'un 
 2. Dans **General Information**, copie l'**Application ID** : c'est `DISCORD_CLIENT_ID`.
 3. Dans **Bot** :
    - **Reset Token** → copie le jeton : c'est `DISCORD_TOKEN`. Ne le montre à personne.
-   - Active **Message Content Intent** (obligatoire pour le salon questions-réponses).
+   - Active **Message Content Intent** et **Server Members Intent** (obligatoires pour le salon questions-réponses, la bienvenue, les niveaux et les logs).
 4. Invite le bot sur ton serveur avec ce lien (remplace `TON_ID` par l'Application ID) :
 
    ```
-   https://discord.com/oauth2/authorize?client_id=TON_ID&scope=bot+applications.commands&permissions=274877991936
+   https://discord.com/oauth2/authorize?client_id=TON_ID&scope=bot+applications.commands&permissions=1374658358486
    ```
 
-   Il demande seulement : voir les salons, envoyer des messages (et dans les fils), intégrer des liens, lire l'historique.
+   Il demande les permissions utiles à la modération, aux tickets et aux rôles : gérer les messages, les salons et les rôles, expulser, bannir, rendre muet, voir les logs du serveur.
 
 ### 2. Lancer le bot
 
@@ -135,10 +169,13 @@ bot-discord/
 │   ├── ia.js           IA extérieure facultative (Claude ou compatible OpenAI)
 │   ├── fiches.js       mise en forme des fiches Discord
 │   ├── recette.js      calcul des ressources de base
-│   ├── config.js       réglages par serveur
+│   ├── config.js       salons questions-réponses
+│   ├── stockage.js     base de données (Supabase ou fichier local)
+│   ├── serveurs/       modules de gestion : modération, bienvenue, niveaux, logs, tickets, rôles, giveaways, lien avec le dashboard
 │   └── outils.js       petites fonctions communes
 ├── scripts/          entraîner Ruche IA, lire les avis
 ├── tests/            tests hors ligne et questions réelles
+├── supabase-bot.sql    tables du dashboard (à exécuter une fois dans Supabase)
 ├── .env.example        modèle de configuration
 ├── lancer.bat / lancer.sh
 └── package.json

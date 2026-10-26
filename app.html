@@ -1756,6 +1756,7 @@ button.fx-ing:hover{border-color:var(--vert)}
     <div class="nav-actions">
       <button class="tab-btn lang-btn" onclick="changerLangue()"
         title="Changer de langue / Switch language"><span id="lang-lbl">EN</span></button>
+      <a class="tab-btn" id="dash-btn" href="dashboard.html" hidden title="Dashboard du bot Discord">🛠️ Dashboard</a>
       <button class="tab-btn compte-btn" id="compte-btn" onclick="cliqueCompte()"
         title="Mon compte"><span class="cb-etat" id="cb-etat"></span><span id="compte-lbl">Se connecter</span></button>
     </div>
@@ -2637,6 +2638,12 @@ function majBoutonCompte(){
   lbl.textContent = u ? u.pseudo : 'Se connecter';
   btn.title = u ? 'Mon compte' : 'Se connecter pour sauvegarder';
   if(!u && pas) pas.className = 'cb-etat hors';
+  /* bouton « Dashboard » : seulement pour le propriétaire du bot */
+  const dash = document.getElementById('dash-btn');
+  if(dash){
+    dash.hidden = true;
+    if(u && typeof Nuage.estAdminBot === 'function') Nuage.estAdminBot().then(ok => { dash.hidden = !ok; });
+  }
   majPanneauRuches();
 }
 

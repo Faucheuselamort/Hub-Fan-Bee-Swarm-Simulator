@@ -48,10 +48,13 @@ const M = {
     fr: ['stats du {X}', 'le {X} donne quoi', 'quels bonus donne {X}', '{X} stats', 'c est quoi les stats du {X}', 'ca fait quoi le {X}', 'effet du {X}',
       'bonus {X}', 'les bonus du {X}', 'il donne quoi le {X}', 'le {X} sert a quoi', 'a quoi sert le {X}', 'il est bien le {X}', 'il vaut le coup le {X}',
       'le {X} c est bien', 'quels buffs sur le {X}', 'c est quoi le boost du {X}', 'il fait quoi {X}', 'statistiques du {X}', 'que donne {X}',
+      'qu est ce qu on peut drop sur une {X}', 'qu est ce qu on peut avoir sur une {X}', 'quelles stats sur une {X}', 'quelles stats peut avoir la {X}',
+      'les stats possibles de la {X}', 'on peut avoir quoi comme bonus sur une {X}', 'quelles lignes sur une {X}', 'c est quoi les meilleures stats sur une {X}',
       'le {X} augmente la capa de combien', 'combien de capa le {X}', 'le {X} donne combien de capacite', 'combien de pollen par fleur avec le {X}',
       'le {X} il collecte combien', 'le {X} il ramasse combien de fleurs', 'combien de convert rate le {X}', 'le {X} donne combien de bonus'],
     en: ['{X} stats', 'what does {X} do', 'what bonuses does {X} give', 'stats of {X}', 'what does the {X} give', '{X} buffs', 'is {X} good',
       'is the {X} worth it', 'what is {X} good for', 'what are the stats on {X}', '{X} bonus', 'what does {X} boost',
+      'what stats can roll on a {X}', 'what can i get on a {X}', 'possible stats on {X}', 'what can drop on a {X}',
       'how much capacity does {X} give', 'how many flowers does {X} collect', 'how much convert rate does {X} give'],
   },
   combat: {
@@ -76,6 +79,16 @@ const M = {
       'dis moi tout sur le {X}', 'explique moi le {X}', 'la {X} c est quoi'],
     en: ['what is {X}', 'whats the {X}', 'tell me about {X}', 'info on {X}', '{X}', 'show me {X}', 'what s a {X}', 'explain {X}', 'details on {X}', '{X} info'],
   },
+  temps: {
+    types: ['item_temps'],
+    fr: ['combien de temps de blender pour {N} {X}', 'combien de temps pour craft {N} {X}', 'combien de temps pour faire {N} {X} au blender', 'le blender met combien de temps pour {X}',
+      'temps de craft du {X}', 'temps blender {X}', 'combien de temps au blender pour le {X}', 'ca prend combien de temps de faire {N} {X}', 'en combien de temps je craft {N} {X}',
+      'combien de temps met le {X} pour etre a 100%', 'combien de temps mais le {X} pour etre a 100', 'le {X} pousse en combien de temps', 'combien de temps pour que le {X} soit plein',
+      'temps de pousse du {X}', 'le {X} met combien de temps', 'combien d heures pour le {X}', 'en combien de temps le {X} est pret', 'le {X} il faut attendre combien',
+      'combien de temps il faut laisser le {X}', 'le {X} il met cb de temps a pousser', 'cooldown du {X}', 'recharge du {X}', 'combien de temps de recharge le {X}', 'duree du {X}'],
+    en: ['how long to craft {N} {X}', 'blender time for {X}', 'how long does the blender take for {N} {X}', 'how long does {X} take to grow', 'how long for {X} to be 100%',
+      '{X} grow time', 'how many hours for {X}', '{X} cooldown', 'how long is the {X} cooldown', 'how long until {X} is fully grown', 'crafting time for {N} {X}'],
+  },
   comparaison: {
     types: ['beequip', 'item_stats', 'amulette', 'sticker'],
     fr: ['est ce que le {X} est mieux que le {Y}', '{X} ou {Y}', '{X} vs {Y}', 'le {X} ou le {Y} c est quoi le mieux', 'lequel est le mieux {X} ou {Y}',
@@ -97,12 +110,12 @@ const M = {
       'j ai {N} abeilles je fais quoi maintenant', 'avec {N} abeilles je fais quelle ruche', 'je suis a {N} abeilles des conseils',
       'c est quoi l ordre des outils', 'comment faire le ant challenge', 'comment avoir beaucoup de tickets', 'comment debloquer les zones',
       'comment avoir des mutations', 'comment faire monter le blessing', 'c est quoi le meilleur planteur', 'quel planteur mettre ou',
-      'comment avoir des stickers', 'c est quoi une bonne ruche pour le midgame', 'comment passer endgame', 'quelle ruche pour le rbc', 'tips pour le stick bug'],
+      'comment avoir des stickers', 'c est quoi le blender', 'comment marche le blender', 'a quoi sert le blender', 'le blender ca sert a quoi', 'ou est le blender', 'c est quoi une bonne ruche pour le midgame', 'comment passer endgame', 'quelle ruche pour le rbc', 'tips pour le stick bug'],
     en: ['best blue hive', 'what hive should i go', 'how to progress faster', 'best amulet', 'best beequip for red hive', 'what bees should i use',
       'which field should i farm', 'how to make honey fast', 'tips for my hive', 'red or blue hive', 'how to get gifted bees', 'how to get mythic bees',
       'what should i buy next', 'what should i get after {X}', 'what do i do after getting {X}', 'whats next after {X}',
       'what should i upgrade after the {X}', 'i have {N} bees what now', 'what hive at {N} bees', 'best tool for beginners', 'how to do ant challenge', 'how to get more tickets',
-      'how to boost properly', 'how to get mutations', 'best planter', 'how to unlock zones', 'best hive for midgame', 'endgame tips', 'how to level bees faster'],
+      'how to boost properly', 'how to get mutations', 'what is the blender', 'how does the blender work', 'best planter', 'how to unlock zones', 'best hive for midgame', 'endgame tips', 'how to level bees faster'],
   },
   aide: {
     types: [],
@@ -159,6 +172,7 @@ function reservoirs(fiches) {
     item_prix: par(f => f.type === 'item' && f.data.miel !== undefined),
     item_recette: par(f => f.type === 'item' && f.data.mats),
     item_stats: par(f => f.type === 'item' && f.data.fiche && (f.data.fiche.stats || f.data.fiche.outil || f.data.fiche.cap)),
+    item_temps: par(f => f.type === 'item' && ((f.data.fiche && (f.data.fiche.planteur || f.data.fiche.conso)) || (f.data.mats && /blender/i.test(f.data.lieu || '')))),
     sticker: par(f => f.type === 'sticker'), beequip: par(f => f.type === 'beequip'), amulette: par(f => f.type === 'amulette'),
     mob: par(f => f.type === 'mob'), abeille: par(f => f.type === 'abeille'), mutation: par(f => f.type === 'mutation'), champ: par(f => f.type === 'champ'),
     tout: par(f => !['guide', 'info'].includes(f.type)),
@@ -170,6 +184,7 @@ function varianteNom(f, r, lang) {
   if (n.startsWith('the ') && r() < 0.6) n = n.slice(4);
   if (f.type === 'abeille' && r() < 0.4) n = n.replace(/ bee$/, '');
   if (f.type === 'amulette' && r() < 0.3) n = n.replace(/ amulet$/, ' amu');
+  if (f.type === 'amulette' && r() < 0.4) n = (lang === 'fr' ? ['supreme', 'diamant', 'or', 'argent', 'bronze', 'diamond'] : ['supreme', 'diamond', 'gold', 'silver', 'bronze'])[Math.floor(r() * 5)] + ' ' + n;
   if (lang === 'fr' && r() < 0.25) VERS_FR.forEach(([re, fr]) => { n = n.replace(re, fr); });
   const surnoms = Object.entries(SURNOMS).filter(([, id]) => id === f.id).map(([s]) => s);
   if (surnoms.length && r() < 0.25) n = surnoms[Math.floor(r() * surnoms.length)];

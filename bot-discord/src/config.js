@@ -1,26 +1,19 @@
 'use strict';
-/* Réglages par serveur Discord (salons questions-réponses), gardés dans data/config.json */
-const fs = require('node:fs');
-const path = require('node:path');
+/* Salons questions-réponses de Ruche IA (réglages « ia » de chaque serveur). */
+const reglages = require('./serveurs/reglages');
 
-const FICHIER = path.join(__dirname, '..', 'data', 'config.json');
-let cfg = {};
-try { cfg = JSON.parse(fs.readFileSync(FICHIER, 'utf8')); } catch (e) { cfg = {}; }
+const ia = (gid) => reglages.get(gid).ia;
 
-function sauver() {
-  fs.mkdirSync(path.dirname(FICHIER), { recursive: true });
-  fs.writeFileSync(FICHIER, JSON.stringify(cfg, null, 2));
-}
-function serveur(id) {
-  if (!cfg[id]) cfg[id] = { salons: {}, mention: true };
-  return cfg[id];
-}
 /* mode : 'questions' (répond aux messages qui ressemblent à une question) ou 'tout' */
-function ajouterSalon(gid, cid, mode) { serveur(gid).salons[cid] = { mode }; sauver(); }
-function retirerSalon(gid, cid) { const s = serveur(gid); const ok = !!s.salons[cid]; delete s.salons[cid]; sauver(); return ok; }
-function salon(gid, cid) { return cfg[gid] && cfg[gid].salons[cid] || null; }
-function salons(gid) { return Object.entries(serveur(gid).salons); }
-function mention(gid) { return serveur(gid).mention !== false; }
-function reglerMention(gid, v) { serveur(gid).mention = !!v; sauver(); }
+function ajouterSalon(gid, cid, mode) { const s = { ...ia(gid).salons, [cid]: { mode } }; return reglages.remplacer(gid, ['ia', 'salons'], s); }
+function retirerSalon(gid, cid) {
+  const s = { ...ia(gid).salons }; const ok = !!s[cid]; delete s[cid];
+  reglages.remplacer(gid, ['ia', 'salons'], s).catch(e => console.warn('[config]', e.message));
+  return ok;
+}
+function salon(gid, cid) { return (ia(gid).salons || {})[cid] || null; }
+function salons(gid) { return Object.entries(ia(gid).salons || {}); }
+function mention(gid) { return ia(gid).mention !== false; }
+function reglerMention(gid, v) { return reglages.set(gid, { ia: { mention: !!v } }); }
 
 module.exports = { ajouterSalon, retirerSalon, salon, salons, mention, reglerMention };

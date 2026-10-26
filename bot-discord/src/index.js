@@ -1,7 +1,7 @@
 'use strict';
 /* Bot Discord « Ruche & Outils » — point d'entrée. */
 require('dotenv').config({ path: require('node:path').join(__dirname, '..', '.env') });
-const { Client, GatewayIntentBits, Partials, Events, REST, Routes, ActivityType, MessageFlags } = require('discord.js');
+const { Client, GatewayIntentBits, Partials, Events, REST, Routes, ActivityType, MessageFlags, PermissionFlagsBits } = require('discord.js');
 const site = require('./site');
 const { construireIndex } = require('./recherche');
 const commandes = require('./commandes');
@@ -11,6 +11,8 @@ const ruche = require('./ia-maison');
 const avis = require('./avis');
 const cfg = require('./config');
 const { normaliser } = require('./outils');
+const stockage = require('./stockage');
+const serveurs = require('./serveurs');
 
 const TOKEN = process.env.DISCORD_TOKEN;
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
@@ -25,9 +27,11 @@ if (!TOKEN || !CLIENT_ID) {
 }
 
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent],
-  partials: [Partials.Channel],
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildModeration],
+  partials: [Partials.Channel, Partials.Message, Partials.GuildMember],
 });
+const DEMARRE = new Date().toISOString();
 
 /* ---------- données du site ---------- */
 async function chargerSite() {
@@ -44,7 +48,7 @@ async function chargerSite() {
 /* ---------- commandes « / » ---------- */
 async function publierCommandes() {
   const rest = new REST({ version: '10' }).setToken(TOKEN);
-  const corps = commandes.definitions();
+  const corps = [...commandes.definitions(), ...serveurs.commandes()];
   if (GUILD_ID) {
     await rest.put(Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), { body: corps });
     console.log(`[discord] ${corps.length} commandes publiées sur le serveur ${GUILD_ID}`);
@@ -59,14 +63,17 @@ client.once(Events.ClientReady, async (c) => {
   console.log(`[ia externe] ${iaActive() ? `${configIA().fournisseur} (${configIA().modele || 'modèle par défaut'})` : 'aucune — Ruche IA répond seule'}`);
   c.user.setActivity(`${site.etat.fiches.length} fiches · /aide`, { type: ActivityType.Watching });
   try { await publierCommandes(); } catch (e) { console.error('[discord] publication des commandes impossible :', e.message); }
+  serveurs.demarrer(client, { depuis: DEMARRE, fiches: () => site.etat.fiches.length, ia: () => ruche.etatIA() });
+  console.log(`[dashboard] ${stockage.mode() === 'supabase' ? 'relié à Supabase : le dashboard du site est actif' : 'pas de Supabase dans .env : réglages gardés sur ce PC (pas de dashboard)'}`);
 });
 
 client.on(Events.InteractionCreate, async (i) => {
   try {
-    if (i.isAutocomplete()) return await commandes.autocompletion(i);
-    if (i.isChatInputCommand()) return await commandes.executer(i);
+    if (i.isAutocomplete()) return (await serveurs.autocompletion(i)) || await commandes.autocompletion(i);
+    if (i.isChatInputCommand()) return (await serveurs.commande(i)) || await commandes.executer(i);
     if (i.isStringSelectMenu()) return await commandes.menu(i);
     if (i.isButton() && i.customId.startsWith('avis:')) return await avis.bouton(i);
+    if (i.isButton()) return await serveurs.bouton(i);
   } catch (err) {
     console.error('[commande]', err);
     const msg = { content: '⚠️ Oups, une erreur est survenue. Réessaie dans un instant.', flags: MessageFlags.Ephemeral };
@@ -82,6 +89,27 @@ function ressembleQuestion(txt) {
   return MOTS_QUESTION.test(normaliser(t));
 }
 const dernier = new Map();   // membre → horodatage de sa dernière question
+
+/* Sans la permission « Intégrer des liens », Discord efface les fiches en silence :
+   on les transforme alors en texte, et on prévient une fois dans la console. */
+const prevenus = new Set();
+function sansIntegrations(msg, salon) {
+  if (!msg.embeds || !msg.embeds.length) return msg;
+  if (!prevenus.has(salon.id)) {
+    prevenus.add(salon.id);
+    console.warn(`[discord] ⚠️ il manque la permission « Intégrer des liens » dans #${salon.name} : les fiches sont envoyées en texte. Donne-la au bot dans les paramètres du salon.`);
+  }
+  const textes = msg.embeds.map(e => {
+    const d = e.data || e;
+    const l = [];
+    if (d.title) l.push(`**${d.title}**`);
+    if (d.description) l.push(d.description);
+    (d.fields || []).forEach(f => l.push(`**${f.name}** : ${f.value.replace(/\n/g, ' · ')}`));
+    return l.join('\n');
+  });
+  const contenu = [msg.content, ...textes].filter(Boolean).join('\n\n');
+  return { ...msg, embeds: [], content: contenu.length > 1990 ? contenu.slice(0, 1985) + '…' : contenu };
+}
 
 client.on(Events.MessageCreate, async (m) => {
   if (m.author.bot || !m.guild || !m.content) return;
@@ -109,7 +137,9 @@ client.on(Events.MessageCreate, async (m) => {
     if (msg) {
       let intention = null; try { intention = ruche.comprendre(texte).intention; } catch (e) { /* */ }
       msg.components = [...(msg.components || []), avis.rangeeAvis(texte, intention)].slice(0, 5);
-      await m.reply({ ...msg, allowedMentions: { repliedUser: false, parse: [] } });
+      const perms = m.channel.permissionsFor(m.guild.members.me);
+      const final = perms && !perms.has(PermissionFlagsBits.EmbedLinks) ? sansIntegrations(msg, m.channel) : msg;
+      await m.reply({ ...final, allowedMentions: { repliedUser: false, parse: [] } });
     }
   } catch (err) { console.error('[question]', err); }
 });
@@ -118,8 +148,14 @@ client.on(Events.MessageCreate, async (m) => {
 (async () => {
   try { await chargerSite(); }
   catch (e) { console.error('❌ Impossible de lire le site :', e.message); process.exit(1); }
+  console.log(`[stockage] ${stockage.initialiser() === 'supabase' ? 'Supabase' : 'fichier local (data/base-locale.json)'}`);
+  await serveurs.preparer(client);
   setInterval(() => chargerSite().catch(e => console.warn('[site]', e.message)), RAFRAICHIR * 60 * 1000);
-  await client.login(TOKEN);
+  await client.login(TOKEN).catch((e) => {
+    if (/disallowed intents/i.test(e.message)) console.error('❌ Discord refuse la connexion : sur le portail développeur (Bot ▸ Privileged Gateway Intents), active « Server Members Intent » ET « Message Content Intent », enregistre, puis relance.');
+    else console.error('❌ Connexion à Discord impossible :', e.message);
+    process.exit(1);
+  });
 })();
 
 process.on('unhandledRejection', (e) => console.error('[erreur]', e));

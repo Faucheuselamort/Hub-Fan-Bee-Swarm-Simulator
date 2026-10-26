@@ -182,6 +182,7 @@ function aide(lang, gid) {
 **Calculs** : \`/recette\` (ressources de base) · \`/niveau\` (miel et treats)
 **Chercher** : \`/recherche\` dans tout le site · \`/question\` pour une question en français ou en anglais
 **Liens** : \`/site\`
+**Serveur** : \`/rang\` \`/classement\` \`/sondage\` · staff : \`/ban\` \`/kick\` \`/mute\` \`/warn\` \`/sanctions\` \`/clear\` \`/giveaway\` \`/ticket\` \`/roles-boutons\` \`/xp\`
 **Questions libres** : ${salons ? `écris ta question dans ${salons}` : 'un admin peut choisir un salon avec `/config salon-questions`'}${cfg.mention(gid) ? ', ou mentionne-moi n\'importe où' : ''}.\n
 Réponses : ${ia}.`,
       `All my answers come from the **Hive & Tools** site, which I re-read regularly.\n
@@ -189,6 +190,7 @@ Réponses : ${ia}.`,
 **Maths**: \`/recipe\` (base resources) · \`/level\` (honey and treats)
 **Search**: \`/search\` the whole site · \`/question\` for a question in English or French
 **Links**: \`/site\`
+**Server**: \`/rank\` \`/leaderboard\` \`/poll\` · staff: \`/ban\` \`/kick\` \`/mute\` \`/warn\` \`/sanctions\` \`/clear\` \`/giveaway\` \`/ticket\` \`/roles-boutons\` \`/xp\`
 **Free questions**: ${salons ? `ask in ${salons}` : 'an admin can pick a channel with `/config salon-questions`'}${cfg.mention(gid) ? ', or mention me anywhere' : ''}.\n
 Answers: ${ia}.`));
 }

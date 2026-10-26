@@ -26,4 +26,8 @@ function decomposer(nom, qte = 1) {
   return { miel, base, etapes, connu: !!cat[nom] };
 }
 
-module.exports = { decomposer, catalogue };
+/* Durée d'un craft au Blender : 5 minutes par objet, quel qu'il soit. */
+const MINUTES_BLENDER = 5;
+const auBlender = (o) => !!(o && o.mats && /blender/i.test(o.lieu || ''));
+
+module.exports = { decomposer, catalogue, MINUTES_BLENDER, auBlender };

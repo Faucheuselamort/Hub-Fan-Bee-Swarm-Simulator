@@ -6,7 +6,7 @@ const { chercher, intention } = require('./recherche');
 const { messageFiche, texteFiche, L } = require('./fiches');
 const { iaActive, rediger } = require('./ia');
 const { comprendre } = require('./ia-maison');
-const { decomposer } = require('./recette');
+const { decomposer, MINUTES_BLENDER, auBlender } = require('./recette');
 const { etat } = require('./site');
 const { normaliser, fmtMiel, fmtQte, tr, versDiscord, texteBrut, couper, devinerLangue } = require('./outils');
 
@@ -82,6 +82,36 @@ function suivants(f, lang) {
 }
 const T = (txt, lang) => (lang === 'en' && dico()[txt]) || txt;
 
+/* palier d'amulette écrit dans la question */
+function palierDe(question) {
+  const q = ' ' + normaliser(question) + ' ';
+  if (/ (supreme|supremes|supr) /.test(q)) return 'Suprême';
+  if (/ (diamond|diamant|diams?) /.test(q)) return 'Diamant';
+  if (/ (gold|golden|doree?) /.test(q) || / or (star|ant|cog|shell|stick|moon|king|amulet|amulette)/.test(q)) return 'Or';
+  if (/ (silver|argent) /.test(q)) return 'Argent';
+  if (/ bronze /.test(q)) return 'Bronze';
+  return null;
+}
+
+/* 3700 min → « 61 h 40 min (2 j 13 h 40) » */
+function duree(min, lang) {
+  const h = Math.floor(min / 60), m = Math.round(min % 60);
+  let t = h ? `${h} h${m ? ` ${m} min` : ''}` : `${m} min`;
+  if (h >= 24) { const j = Math.floor(h / 24), r = h % 24; t += ` (${j} ${L(lang, 'j', 'd')}${r ? ` ${r} h` : ''}${m ? ` ${m}` : ''})`; }
+  return t;
+}
+
+/* recette multipliée : « 1 500 Glue » → ingrédients directs × 1 500 + total décomposé */
+function phraseRecette(f, qte, lang) {
+  const o = f.data, d = decomposer(f.nom, qte);
+  const mats = o.mats.map(([q, m]) => `**${fmtQte(q * qte, lang)}** ${m}`).join(', ');
+  const miel = (o.miel || 0) * qte;
+  let p = L(lang, `Pour **${fmtQte(qte, lang)} ${f.nom}** : `, `For **${fmtQte(qte, lang)} ${f.nom}**: `) + (miel ? `🍯 **${fmtMiel(miel, lang)}** + ` : '') + mats + '.';
+  if (d.etapes.size) p += L(lang, `\nEn ressources de base : `, `\nIn base resources: `) + (d.miel ? `🍯 **${fmtMiel(d.miel, lang)}**, ` : '')
+    + [...d.base.entries()].map(([n, q]) => `**${fmtQte(q, lang)}** ${n}`).join(', ') + '.';
+  return p;
+}
+
 /* « faut combien de Blue Extract pour le Tide Popper » : quelle fiche est la recette ? */
 function cibleRecette(entites) {
   const fiches = entites.map(e => e.fiche).filter(f => f.type === 'item');
@@ -148,16 +178,53 @@ async function reponseMaison(question, lang, discret) {
   if (c.intention === 'recette' && ents.length) {
     const { cible, ingredient } = cibleRecette(ents);
     if (cible) {
+      const qte = (ents.find(e => e.fiche === cible) || {}).quantite || 1;
       const fiche = await messageFiche(cible, lang);
-      let phrase = phraseAuto(cible, 'recette', lang);
+      let phrase = qte > 1 && cible.data.mats ? phraseRecette(cible, qte, lang) : phraseAuto(cible, 'recette', lang);
       if (ingredient && cible.data.mats) {
-        const direct = (cible.data.mats.find(m => m[1] === ingredient.nom) || [0])[0];
-        const total = decomposer(cible.nom, 1).base.get(ingredient.nom);
-        phrase = L(lang, `Pour **${cible.nom}**, il faut **${fmtQte(direct, lang)} ${ingredient.nom}**`, `**${cible.nom}** needs **${fmtQte(direct, lang)} ${ingredient.nom}**`)
-          + (total && total !== direct ? L(lang, ` (${fmtQte(total, lang)} en tout, une fois les autres ingrédients décomposés).`, ` (${fmtQte(total, lang)} in total once the other ingredients are broken down).`) : '.');
+        const direct = (cible.data.mats.find(m => m[1] === ingredient.nom) || [0])[0] * qte;
+        const d = decomposer(cible.nom, qte);
+        const total = d.base.get(ingredient.nom) || d.etapes.get(ingredient.nom) || direct;
+        const pour = qte > 1 ? `${fmtQte(qte, lang)} ${cible.nom}` : cible.nom;
+        phrase = L(lang, `Pour **${pour}**, il faut **${fmtQte(direct, lang)} ${ingredient.nom}**`, `**${pour}** needs **${fmtQte(direct, lang)} ${ingredient.nom}**`)
+          + (qte > 1 ? L(lang, ` (${fmtQte(direct / qte, lang)} par ${cible.nom})`, ` (${fmtQte(direct / qte, lang)} per ${cible.nom})`) : '')
+          + (total !== direct ? L(lang, `, soit **${fmtQte(total, lang)}** en tout une fois les autres ingrédients décomposés.`, `, so **${fmtQte(total, lang)}** in total once the other ingredients are broken down.`) : '.');
       }
       return msg(phrase, fiche.embeds, [cible]);
     }
+  }
+
+  if (c.intention === 'temps' && ents.length) {
+    const e = ents.find(x => x.fiche.type === 'item' && auBlender(x.fiche.data)) || ents.find(x => x.fiche.data.fiche && x.fiche.data.fiche.planteur) || ents[0];
+    const f = e.fiche, o = f.data, fi = o.fiche || {}, q = e.quantite || 1;
+    let phrase = null;
+    const parleBlender = /\bblender\b/.test(normaliser(question));
+    if (parleBlender && !auBlender(o) && f.type === 'item') {
+      phrase = L(lang, `**${f.nom}** ne se fabrique pas au Blender : il s'obtient ${tr(o, 'lieu', lang, dico()) ? `ici : ${tr(o, 'lieu', lang, dico())}` : 'autrement'}.`, `**${f.nom}** isn't made in the Blender: you get it from ${tr(o, 'lieu', lang, dico()) || 'elsewhere'}.`);
+      if (fi.planteur) phrase += ' ' + L(lang, `Il met **${fi.planteur.pousse}** à pousser.`, `It takes **${fi.planteur.pousse}** to grow.`);
+    } else if (fi.planteur) {
+      phrase = L(lang, `**${f.nom}** met **${fi.planteur.pousse}** à pousser jusqu'à 100 %.`, `**${f.nom}** takes **${fi.planteur.pousse}** to grow to 100%.`);
+      if (fi.planteur.bonusFr) phrase += ' ' + L(lang, fi.planteur.bonusFr, fi.planteur.bonusEn || fi.planteur.bonusFr) + '.';
+    } else if (auBlender(o)) {
+      const min = q * MINUTES_BLENDER;
+      phrase = L(lang, `Au Blender, chaque craft prend **${MINUTES_BLENDER} min** : **${fmtQte(q, lang)} ${f.nom}** = **${duree(min, lang)}**.`, `In the Blender, each craft takes **${MINUTES_BLENDER} min**: **${fmtQte(q, lang)} ${f.nom}** = **${duree(min, lang)}**.`);
+      phrase += '\n' + L(lang, 'Ingrédients : ', 'Ingredients: ') + o.mats.map(([n, m]) => `**${fmtQte(n * q, lang)}** ${m}`).join(', ') + '.';
+    } else if (fi.conso && fi.conso.recharge) {
+      phrase = L(lang, `**${f.nom}** a une recharge de **${fi.conso.recharge}**.`, `**${f.nom}** has a **${fi.conso.recharge}** cooldown.`);
+    } else if (f.type === 'mob') {
+      phrase = phraseAuto(f, 'mob', lang);
+    } else if (o.mats) {
+      phrase = L(lang, `**${f.nom}** ne se fabrique pas au Blender : il s'obtient ${tr(o, 'lieu', lang, dico()) ? `ici : ${tr(o, 'lieu', lang, dico())}` : 'autrement'}.`, `**${f.nom}** isn't made in the Blender: you get it from ${tr(o, 'lieu', lang, dico()) || 'elsewhere'}.`);
+    }
+    if (phrase) { const fiche = await messageFiche(f, lang); return msg(phrase, fiche.embeds, [f]); }
+  }
+
+  if (c.intention === 'prix' && ents[0] && ents[0].quantite > 1 && ents[0].fiche.data.miel !== undefined) {
+    const f = ents[0].fiche, q = ents[0].quantite;
+    const fiche = await messageFiche(f, lang);
+    const phrase = f.data.mats ? phraseRecette(f, q, lang)
+      : L(lang, `**${fmtQte(q, lang)} ${f.nom}** coûtent 🍯 **${fmtMiel(f.data.miel * q, lang)}** (🍯 ${fmtMiel(f.data.miel, lang)} l'unité).`, `**${fmtQte(q, lang)} ${f.nom}** cost 🍯 **${fmtMiel(f.data.miel * q, lang)}** (🍯 ${fmtMiel(f.data.miel, lang)} each).`);
+    return msg(phrase, fiche.embeds, [f]);
   }
 
   if (c.intention === 'conseil' && sur) {
@@ -165,6 +232,30 @@ async function reponseMaison(question, lang, discret) {
     const bloc = blocConseil(question, lang, objet);
     const apres = objet ? suivants(objet, lang) : null;
     if (bloc || apres) return msg(apres || L(lang, 'Voici ce que les guides du site conseillent :', 'Here is what the site guides recommend:'), bloc ? [bloc.embed] : [], bloc ? bloc.fiches : [objet].filter(Boolean));
+  }
+
+  /* amulette avec un palier (« supreme cog amulet ») : les stats possibles de ce palier */
+  const amu = ents.find(e => e.fiche.type === 'amulette');
+  const palier = palierDe(question);
+  if (amu && (palier || c.intention === 'stats')) {
+    const f = amu.fiche, buffs = etat.donnees.AMULETTES_BUFFS[f.nom] || {};
+    const paliers = buffs.paliers ? Object.keys(buffs.paliers) : [];
+    const p = paliers.includes(palier) ? palier : (paliers.length ? paliers[paliers.length - 1] : null);
+    const groupes = buffs.unique || (p && buffs.paliers[p]) || [];
+    if (groupes.length) {
+      const PEN = { Bronze: 'Bronze', Argent: 'Silver', Or: 'Gold', Diamant: 'Diamond', 'Suprême': 'Supreme' };
+      const titre = p ? L(lang, `${f.nom} ${p}`, `${PEN[p]} ${f.nom}`) : f.nom;
+      let phrase = (palier && !paliers.includes(palier) && paliers.length)
+        ? L(lang, `**${f.nom}** n'existe pas en ${palier} (paliers : ${paliers.join(', ')}). Voici le palier ${p} :\n`, `**${f.nom}** has no ${PEN[palier] || palier} tier (tiers: ${paliers.map(x => PEN[x]).join(', ')}). Here is ${PEN[p]}:\n`)
+        : L(lang, `Sur une **${titre}**, tu peux avoir :\n`, `On a **${titre}** you can roll:\n`);
+      phrase += groupes.map(g => {
+        const nb = g.stats.length;
+        const tete = /Garanti/i.test(g.prise) ? L(lang, '✅ Toujours', '✅ Always') : `🎲 ${T(g.prise, lang)}${nb > 1 ? L(lang, ` parmi ${nb}`, ` of ${nb}`) : ''}`;
+        return `${tete} : ` + g.stats.map(st => `${st.nom} ${T(st.plage, lang)}${nb > 1 && !/Garanti/i.test(g.prise) ? ` (${st.proba})` : ''}`).join(' · ');
+      }).join('\n');
+      const fiche = await messageFiche(f, lang, { palier: p });
+      return msg(phrase, fiche.embeds, [f]);
+    }
   }
 
   if (QUOI[c.intention] && ents.length) {
