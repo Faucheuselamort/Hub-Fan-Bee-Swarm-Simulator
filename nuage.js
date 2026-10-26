@@ -132,6 +132,7 @@ window.Nuage = (function(){
     arreterBoucle();
     await client.auth.signOut();
     session = null;
+    adminBot = null;
     emplacements.forEach(function(e){ e.dernier = undefined; });
   }
 
@@ -282,6 +283,16 @@ window.Nuage = (function(){
     return m;
   }
 
+  /* compte autorisé à ouvrir le dashboard du bot Discord ? (table bot_admins) */
+  var adminBot = null;
+  async function estAdminBot(){
+    if(!client || !session) return false;
+    if(adminBot !== null) return adminBot;
+    try { var r = await client.rpc("est_admin_bot"); adminBot = !r.error && r.data === true; }
+    catch(e){ adminBot = false; }
+    return adminBot;
+  }
+
   /* ---------- ce que le reste du site peut utiliser ---------- */
 
   return {
@@ -302,6 +313,7 @@ window.Nuage = (function(){
     demarrerBoucle: demarrerBoucle,
     arreterBoucle: arreterBoucle,
     toutEffacer: toutEffacer,
-    surEtat: surEtat
+    surEtat: surEtat,
+    estAdminBot: estAdminBot
   };
 })();
