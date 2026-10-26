@@ -93,8 +93,8 @@ async function reprendreAnciens() {
       const actuel = cache.get(gid) || {};
       if (!actuel.ia) await set(gid, { ia: { salons: c.salons || {}, mention: c.mention !== false } });
     }
-    fs.renameSync(ancien, ancien + '.repris');
-    console.log('[réglages] anciens salons questions-réponses repris');
+    /* on ne garde le fichier qu'en mode local : il sera repris dans Supabase quand il sera configuré */
+    if (db.mode() === 'supabase') { fs.renameSync(ancien, ancien + '.repris'); console.log('[réglages] anciens salons questions-réponses repris dans Supabase'); }
   } catch (e) { console.warn('[réglages] reprise :', e.message); }
 }
 
