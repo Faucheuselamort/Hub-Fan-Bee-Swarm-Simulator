@@ -19,7 +19,7 @@ create table if not exists bot_admins (
 
 -- Identifiant Discord du compte connecté au site (connexion « avec Discord »)
 create or replace function bot_discord_id() returns text
-language sql stable as $$
+language sql stable set search_path = public as $$
   select coalesce(auth.jwt() -> 'user_metadata' ->> 'provider_id', auth.jwt() -> 'user_metadata' ->> 'sub')
 $$;
 
@@ -27,6 +27,12 @@ create or replace function est_admin_bot() returns boolean
 language sql stable security definer set search_path = public as $$
   select exists (select 1 from bot_admins where discord_id = bot_discord_id())
 $$;
+
+-- seuls les comptes connectés peuvent poser la question « suis-je admin ? »
+revoke execute on function est_admin_bot() from public, anon;
+grant execute on function est_admin_bot() to authenticated;
+revoke execute on function bot_discord_id() from public, anon;
+grant execute on function bot_discord_id() to authenticated;
 
 -- Réglages de chaque serveur Discord (écrits par le dashboard, lus par le bot)
 create table if not exists bot_config (
