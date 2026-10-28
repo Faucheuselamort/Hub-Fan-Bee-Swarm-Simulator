@@ -123,6 +123,37 @@ create table if not exists bot_giveaways (
   cree         timestamptz default now()
 );
 
+-- Économie : soldes et inventaires
+create table if not exists bot_economie (
+  guild_id   text not null,
+  user_id    text not null,
+  nom        text,
+  avatar     text,
+  solde      bigint default 0,
+  gagne      bigint default 0,
+  depense    bigint default 0,
+  inventaire jsonb default '{}'::jsonb,
+  serie      integer default 0,
+  daily      timestamptz,
+  travail    timestamptz,
+  maj        timestamptz default now(),
+  primary key (guild_id, user_id)
+);
+create index if not exists bot_economie_solde on bot_economie (guild_id, solde desc);
+
+-- Historique des achats en boutique
+create table if not exists bot_achats (
+  id         bigserial primary key,
+  guild_id   text not null,
+  user_id    text,
+  nom        text,
+  article    text,
+  article_id text,
+  prix       bigint,
+  date       timestamptz default now()
+);
+create index if not exists bot_achats_guild on bot_achats (guild_id, date desc);
+
 -- Actions demandées depuis le dashboard (publier un panneau, lancer un giveaway…)
 create table if not exists bot_actions (
   id        bigserial primary key,
@@ -138,7 +169,7 @@ create table if not exists bot_actions (
 do $$
 declare t text;
 begin
-  foreach t in array array['bot_admins','bot_config','bot_serveurs','bot_etat','bot_sanctions','bot_niveaux','bot_tickets','bot_giveaways','bot_actions'] loop
+  foreach t in array array['bot_admins','bot_config','bot_serveurs','bot_etat','bot_sanctions','bot_niveaux','bot_tickets','bot_giveaways','bot_actions','bot_economie','bot_achats'] loop
     execute format('alter table %I enable row level security', t);
     execute format('drop policy if exists "admins du bot" on %I', t);
     execute format('create policy "admins du bot" on %I for all to authenticated using (est_admin_bot()) with check (est_admin_bot())', t);

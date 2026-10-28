@@ -36,6 +36,15 @@ const DEFAUT = {
     couleur: '#8FE86B',
   },
   rolesBoutons: { panneaux: [] },   // [{ id, titre, description, salon, mode, couleur, roles:[{role, label, emoji, style}], messageId }]
+  economie: {
+    actif: false, nom: 'Miel', emoji: '🍯', depart: 100, salonsIgnores: [],
+    messages: { actif: true, min: 1, max: 5, delai: 60 },
+    daily: { montant: 200, bonusSerie: 25 },
+    travail: { min: 50, max: 150, delai: 60, phrases: ['Tu as récolté du pollen toute la journée et gagné {gain}.', 'Tu as aidé Black Bear à finir ses quêtes : {gain} !', 'Tu as converti ton sac à la ruche et touché {gain}.', 'Tu as défendu le champ de pin contre les mantes : {gain} de récompense.'] },
+    boutique: { titre: '🛒 Boutique', description: 'Dépense ton miel ici !', couleur: '#F4C542', articles: [], messageId: null, salonPublie: null },
+    // articles : [{ id, nom, description, emoji, prix, type:'role'|'objet', role, roleRequis, stock (vide = illimité), max, message, actif }]
+  },
+  embeds: { modeles: [] },          // [{ id, nom, salon, contenu, titre, url, description, couleur, auteur, auteurIcone, champs:[{nom, valeur, ligne}], image, miniature, pied, piedIcone, horodatage, messageId, salonPublie }]
   giveaways: { couleur: '#F4C542', emoji: '🎉' },
   sondages: { couleur: '#5BA7E0' },
 };
@@ -56,8 +65,15 @@ function fusion(base, ajout) {
 /* réglages complets d'un serveur (valeurs par défaut + modifications) */
 function get(gid) { return fusion(JSON.parse(JSON.stringify(DEFAUT)), cache.get(gid) || {}); }
 
+/* relit la ligne d'un serveur juste avant d'écrire, pour ne pas écraser
+   ce que le dashboard vient d'enregistrer (le bot ne relit que toutes les 15 s) */
+async function relire(gid) {
+  try { const l = await db.lire('bot_config', { guild_id: gid }); if (l[0]) cache.set(gid, l[0].config || {}); } catch (e) { /* base injoignable : on garde le cache */ }
+}
+
 /* modification partielle, ex. set(gid, { bienvenue: { actif: true } }) */
 async function set(gid, partiel) {
+  await relire(gid);
   const nouveau = fusion(cache.get(gid) || {}, partiel);
   cache.set(gid, nouveau);
   await db.enregistrer('bot_config', { guild_id: gid, config: nouveau, maj: new Date().toISOString() });
@@ -66,6 +82,7 @@ async function set(gid, partiel) {
 
 /* remplace une valeur sans fusion (pour pouvoir retirer des clés), ex. remplacer(gid, ['ia','salons'], {...}) */
 async function remplacer(gid, chemin, valeur) {
+  await relire(gid);
   const brut = JSON.parse(JSON.stringify(cache.get(gid) || {}));
   let o = brut;
   chemin.slice(0, -1).forEach(k => { if (!o[k] || typeof o[k] !== 'object') o[k] = {}; o = o[k]; });
