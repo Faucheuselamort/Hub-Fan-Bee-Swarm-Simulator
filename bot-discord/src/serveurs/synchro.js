@@ -65,6 +65,13 @@ async function executerAction(client, a, modules) {
       const m = await s.send({ ...msg, allowedMentions: { parse: d.mention ? ['everyone', 'roles'] : [] } });
       return `annonce envoyée (${m.url})`;
     }
+    case 'publier_embed': {
+      const { message, modifie } = await modules.embeds.publier(g, d.id, { nouveau: !!d.nouveau });
+      return `embed ${modifie ? 'mis à jour' : 'publié'} (${message.url})`;
+    }
+    case 'retirer_embed': return (await modules.embeds.retirer(g, d.id)) ? 'message supprimé sur Discord' : 'le message n\'existait plus';
+    case 'publier_boutique': { const m = await modules.economie.publierBoutique(g, d.salon); return `boutique publiée (${m.url})`; }
+    case 'argent': return await modules.economie.actionDashboard(g, d);
     case 'tester_bienvenue': {
       const m = await g.members.fetch(d.membre || g.ownerId);
       const ok = await modules.bienvenue.envoyerBienvenue(m, { test: true });

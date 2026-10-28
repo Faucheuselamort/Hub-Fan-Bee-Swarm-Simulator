@@ -37,7 +37,7 @@ input,select,textarea{font:inherit;color:var(--cream)}
 .porte-carte code{background:rgba(0,0,0,.3);padding:.15rem .4rem;border-radius:6px;font-size:.85rem}
 
 /* ---------- structure ---------- */
-.appli{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+.appli{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh}
 .cote{background:var(--ink-900);border-right:1px solid var(--line-soft);padding:1rem .8rem;position:sticky;top:0;height:100vh;overflow:auto;display:flex;flex-direction:column;gap:.9rem}
 .marque{display:flex;align-items:center;gap:.6rem;padding:.3rem .4rem}
 .marque img{width:38px;height:38px;border-radius:50%;background:var(--panel)}
@@ -131,7 +131,7 @@ input[type=color].saisie{padding:.2rem;height:40px;cursor:pointer}
 .defile{overflow-x:auto}
 
 /* vue d'ensemble */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.8rem;margin-bottom:1rem}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));gap:.8rem;margin-bottom:1rem}
 .stat{background:var(--surface);border:1px solid var(--line-soft);border-radius:14px;padding:.9rem 1rem}
 .stat span{font-size:.78rem;color:var(--muted)}
 .stat b{display:block;font-family:'Fredoka',system-ui,sans-serif;font-size:1.6rem;margin-top:.1rem}
@@ -162,8 +162,48 @@ input[type=color].saisie{padding:.2rem;height:40px;cursor:pointer}
 @keyframes entre{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 .chargement{color:var(--muted);padding:2rem;text-align:center}
 
+/* éditeur d'embeds : formulaire + aperçu Discord */
+.emb-ed{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,460px);gap:1.1rem;align-items:start}
+.emb-ed .apercu-col{position:sticky;top:1rem}
+.emb-ed fieldset{border:0;border-top:1px solid var(--line-soft);padding-top:.8rem;margin-top:.9rem}
+.emb-ed legend{font-family:'Fredoka',system-ui,sans-serif;font-size:.95rem;color:var(--vert);padding-right:.5rem}
+.emb-ed fieldset > .champ textarea{min-height:170px}
+.outils-md{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.35rem}
+.outils-md select,.outils-md button{background:rgba(0,0,0,.25);border:1px solid var(--line-soft);border-radius:7px;padding:.2rem .45rem;font-size:.78rem;color:var(--cream)}
+.champ-emb{grid-template-columns:1fr 1.6fr auto auto}
+.champ-emb textarea{min-height:42px}
+.case{display:flex;align-items:center;gap:.3rem;font-size:.78rem;color:var(--muted);white-space:nowrap}
+.dc{background:#313338;border-radius:10px;padding:1rem;display:flex;gap:.8rem;font-size:.94rem;color:#dbdee1;line-height:1.375}
+.dc .av{width:40px;height:40px;border-radius:50%;flex:0 0 auto;object-fit:cover}
+.dc .nom{font-weight:600;color:#fff}
+.dc .nom small{background:#5865F2;color:#fff;font-size:.62rem;padding:.05rem .3rem;border-radius:4px;margin-left:.3rem;vertical-align:middle}
+.dc .nom time{color:#949ba4;font-size:.72rem;font-weight:400;margin-left:.4rem}
+.dc-emb{margin-top:.3rem;background:#2b2d31;border-left:4px solid #8FE86B;border-radius:4px;padding:.6rem 1rem .8rem .75rem;max-width:432px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:0 1rem}
+.dc-emb .au{display:flex;align-items:center;gap:.45rem;font-size:.86rem;font-weight:600;color:#fff;margin-top:.15rem}
+.dc-emb .au img,.dc-emb .pd img{width:22px;height:22px;border-radius:50%}
+.dc-emb .ti{font-weight:600;color:#fff;margin-top:.35rem}
+.dc-emb .ti a{color:#00a8fc;text-decoration:none}
+.dc-emb .de{font-size:.88rem;margin-top:.35rem;white-space:normal;word-wrap:break-word}
+.dc-emb .mi{grid-column:2;grid-row:1 / span 3;width:80px;height:80px;border-radius:4px;object-fit:cover;margin-top:.4rem}
+.dc-emb .chps{grid-column:1 / -1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem .6rem;margin-top:.55rem}
+.dc-emb .chp{grid-column:1 / -1;font-size:.86rem}
+.dc-emb .chp.ligne{grid-column:auto}
+.dc-emb .chp b{display:block;color:#fff;font-size:.86rem;margin-bottom:.1rem}
+.dc-emb .im{grid-column:1 / -1;max-width:100%;border-radius:4px;margin-top:.7rem}
+.dc-emb .pd{grid-column:1 / -1;display:flex;align-items:center;gap:.45rem;font-size:.74rem;color:#b5bac1;margin-top:.55rem}
+.dc .mention{background:rgba(88,101,242,.3);color:#c9cdfb;border-radius:3px;padding:0 2px;font-weight:500}
+.dc code{background:#1e1f22;border-radius:3px;padding:0 .2rem;font-size:.82rem}
+.dc h4{font-family:inherit;font-size:1.05rem;color:#fff;margin:.3rem 0 .1rem}
+.dc h5{font-size:.95rem;color:#fff;margin:.25rem 0 .1rem}
+.dc a{color:#00a8fc;text-decoration:none}
+.dc .gris{color:#949ba4;font-size:.8rem}
+.dc-menu{margin-top:.5rem;background:#1e1f22;border:1px solid #111214;border-radius:6px;padding:.55rem .7rem;color:#949ba4;font-size:.86rem;max-width:432px}
+.tag-pub{font-size:.72rem;background:rgba(143,232,107,.15);color:var(--vert);border-radius:6px;padding:.1rem .4rem}
+@media (max-width:1100px){.emb-ed{grid-template-columns:1fr}.emb-ed .apercu-col{position:static}}
+@media (max-width:640px){.item-ed .grille{grid-template-columns:1fr 1fr !important}.champ-emb{grid-template-columns:1fr}.dc-emb .chps{grid-template-columns:1fr}.dc-emb .chp.ligne{grid-column:1 / -1}}
+
 @media (max-width:860px){
-  .appli{grid-template-columns:1fr}
+  .appli{grid-template-columns:minmax(0,1fr)}
   .cote{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line-soft)}
   .nav{flex-direction:row;overflow-x:auto;padding-bottom:.3rem}
   .nav-titre{display:none}
@@ -244,6 +284,10 @@ const DEFAUT = {
   tickets: { actif: false, categorie: '', rolesStaff: [], salonTranscripts: '', maxParMembre: 1, titre: "🎫 Besoin d'aide ?", description: 'Clique sur le bouton pour ouvrir un ticket privé avec le staff.',
     bouton: 'Ouvrir un ticket', messageOuverture: 'Salut {membre} ! Explique ta demande, un membre du staff va te répondre.', couleur: '#8FE86B' },
   rolesBoutons: { panneaux: [] },
+  economie: { actif: false, nom: 'Miel', emoji: '🍯', depart: 100, salonsIgnores: [], messages: { actif: true, min: 1, max: 5, delai: 60 }, daily: { montant: 200, bonusSerie: 25 },
+    travail: { min: 50, max: 150, delai: 60, phrases: ['Tu as récolté du pollen toute la journée et gagné {gain}.', 'Tu as aidé Black Bear à finir ses quêtes : {gain} !', 'Tu as converti ton sac à la ruche et touché {gain}.', 'Tu as défendu le champ de pin contre les mantes : {gain} de récompense.'] },
+    boutique: { titre: '🛒 Boutique', description: 'Dépense ton miel ici !', couleur: '#F4C542', articles: [], messageId: null, salonPublie: null } },
+  embeds: { modeles: [] },
   giveaways: { couleur: '#F4C542', emoji: '🎉' },
   sondages: { couleur: '#5BA7E0' },
 };
@@ -322,6 +366,12 @@ const C = {   // contrôles liés à la configuration (data-path)
     return `<div class="champ"><label>${label}</label><div class="puces">${ids.map(id => { const r = roleDe(id); return `<span class="puce"><i class="pastille" style="background:${r && r.couleur !== '#000000' ? r.couleur : '#99aab5'}"></i>${esc(r ? r.nom : 'rôle supprimé')}<button type="button" data-retirer="${path}" data-val="${id}" aria-label="Retirer">✕</button></span>`; }).join('')}
       <select data-ajouter="${path}"><option value="">+ Ajouter un rôle</option>${dispo.map(r => `<option value="${r.id}">@${esc(r.nom)}</option>`).join('')}</select></div>${aide ? `<span class="aide">${aide}</span>` : ''}</div>`;
   },
+  basculeMini(path, titre) {
+    return `<label class="case" style="margin-top:.45rem"><input type="checkbox" data-path="${path}" ${lirePath(E.cfg, path) ? 'checked' : ''}>${titre}</label>`;
+  },
+  lignes(path, label) {
+    return `<div class="champ"><label>${label}</label><textarea class="saisie" data-path="${path}" data-type="lignes" style="min-height:110px">${esc((lirePath(E.cfg, path) || []).join('\n'))}</textarea></div>`;
+  },
   tete(path, titre, txt) {
     return `<div class="module-tete"><div class="txt"><b>${titre}</b><span>${txt}</span></div>
       <label class="bascule"><input type="checkbox" data-path="${path}" ${lirePath(E.cfg, path) ? 'checked' : ''}><i></i></label></div>`;
@@ -333,12 +383,14 @@ const SECTIONS = [
   { id: 'accueil', ico: '🏠', nom: "Vue d'ensemble", groupe: 'Général' },
   { id: 'ia', ico: '🐝', nom: 'Ruche IA', groupe: 'Général', actif: c => Object.keys(c.ia.salons || {}).length > 0 },
   { id: 'annonces', ico: '📣', nom: 'Annonces', groupe: 'Général' },
+  { id: 'embeds', ico: '🧩', nom: 'Embeds', groupe: 'Général', actif: c => (c.embeds.modeles || []).some(m => m.messageId) },
   { id: 'bienvenue', ico: '👋', nom: 'Bienvenue', groupe: 'Modules', actif: c => c.bienvenue.actif || c.bienvenue.autoroles.length > 0 },
   { id: 'niveaux', ico: '⭐', nom: 'Niveaux', groupe: 'Modules', actif: c => c.niveaux.actif },
   { id: 'moderation', ico: '🔨', nom: 'Modération', groupe: 'Modules', actif: c => c.moderation.actif },
   { id: 'logs', ico: '📜', nom: 'Logs', groupe: 'Modules', actif: c => c.logs.actif },
   { id: 'tickets', ico: '🎫', nom: 'Tickets', groupe: 'Modules', actif: c => c.tickets.actif },
   { id: 'roles', ico: '🎭', nom: 'Rôles à boutons', groupe: 'Modules', actif: c => (c.rolesBoutons.panneaux || []).length > 0 },
+  { id: 'economie', ico: '💰', nom: 'Économie & boutique', groupe: 'Modules', actif: c => c.economie.actif },
   { id: 'giveaways', ico: '🎉', nom: 'Giveaways & sondages', groupe: 'Modules' },
 ];
 
@@ -373,8 +425,8 @@ const RENDUS = {
       </div>
       <div class="carte"><h3>Modules</h3><p class="sous">Clique sur un module pour le régler.</p>
         <div class="modules">${SECTIONS.filter(x => x.actif).map(x => `<button class="mod" data-section="${x.id}"><span class="ico">${x.ico}</span><span><b>${x.nom}</b><small>${x.actif(c) ? '<span class="badge on">activé</span>' : 'désactivé'}</small></span></button>`).join('')}</div></div>
-      <div class="carte"><h3>Les plus actifs</h3><p class="sous">Top 5 du système de niveaux.</p>${tableNiveaux(top, false)}</div>
-      <div class="carte"><h3>Dernières sanctions</h3>${tableSanctions(sanctions.slice(0, 5), false)}</div>`;
+      <div class="carte"><h3>Les plus actifs</h3><p class="sous">Top 5 du système de niveaux.</p><div class="defile">${tableNiveaux(top, false)}</div></div>
+      <div class="carte"><h3>Dernières sanctions</h3><div class="defile">${tableSanctions(sanctions.slice(0, 5), false)}</div></div>`;
   },
 
   async ia() {
@@ -504,6 +556,51 @@ const RENDUS = {
         <div class="rangee-actions"><button class="btn prim" data-action="sondage">Publier le sondage</button></div></div>
       <div class="carte"><div class="grille">${C.couleur('giveaways.couleur', 'Couleur des giveaways')}${C.texte('giveaways.emoji', 'Emoji des giveaways', { max: 10 })}${C.couleur('sondages.couleur', 'Couleur des sondages')}</div></div>`;
   },
+  async embeds() {
+    const l = E.cfg.embeds.modeles || [];
+    return entete('Embeds', 'Écris des messages encadrés (présentation des rôles, règlement, infos…), publie-les, puis modifie-les quand tu veux : le message posté se met à jour.',
+      '<button class="btn" data-action="emb-modele" data-modele="roles">🎭 Présentation des rôles</button><button class="btn" data-action="emb-modele" data-modele="reglement">📜 Règlement</button><button class="btn prim" data-action="emb-modele" data-modele="vide">+ Nouvel embed</button>') +
+      (l.map((m, k) => editeurEmbed(m, k)).join('') || '<div class="carte vide">Aucun embed. Crée-en un avec les boutons en haut à droite.</div>');
+  },
+
+  async economie() {
+    const c = E.cfg.economie, b = c.boutique;
+    const [comptes, achats] = await Promise.all([
+      BASE.lire('bot_economie', { guild_id: E.gid }, { ordre: 'solde', desc: true, limite: 50 }).catch(() => []),
+      BASE.lire('bot_achats', { guild_id: E.gid }, { ordre: 'date', desc: true, limite: 15 }).catch(() => []),
+    ]);
+    const m = (n) => `${esc(c.emoji || '')} ${(+n || 0).toLocaleString('fr-FR')}`;
+    const totalMasse = comptes.reduce((s, x) => s + (+x.solde || 0), 0);
+    return entete('Économie & boutique', `Les membres gagnent du ${esc(c.nom || 'Miel')} en écrivant, avec /daily et /travail, et le dépensent dans la boutique (/boutique, /acheter).`) +
+      C.tete('economie.actif', 'Économie', 'Active la monnaie, les commandes et la boutique sur ce serveur.') +
+      `<div class="stats"><div class="stat"><span>Comptes</span><b>${comptes.length}${comptes.length === 50 ? '+' : ''}</b></div><div class="stat"><span>En circulation (top 50)</span><b>${m(totalMasse)}</b></div>
+        <div class="stat"><span>Articles en boutique</span><b>${(b.articles || []).filter(a => a.actif !== false).length}</b></div><div class="stat"><span>Achats récents</span><b>${achats.length}</b></div></div>
+      <div class="carte"><h3>Monnaie</h3><div class="grille" style="margin-top:.6rem">${C.texte('economie.nom', 'Nom de la monnaie', { max: 30, ph: 'Miel' })}${C.texte('economie.emoji', 'Emoji', { max: 60, ph: '🍯' })}
+        ${C.nombre('economie.depart', 'Solde de départ', { max: 1e9, aide: 'Donné à chaque nouveau compte.' })}</div></div>
+      <div class="carte"><h3>Gagner de l'argent</h3>
+        ${C.bascule('economie.messages.actif', 'En écrivant des messages', 'Un gain au hasard, au plus une fois par délai.')}
+        <div class="grille" style="margin-top:.4rem">${C.nombre('economie.messages.min', 'Gain minimum', { max: 1e6 })}${C.nombre('economie.messages.max', 'Gain maximum', { max: 1e6 })}${C.nombre('economie.messages.delai', 'Délai entre deux gains (secondes)', { min: 5, max: 86400 })}</div>
+        <div class="grille" style="margin-top:1rem">${C.nombre('economie.daily.montant', '/daily : montant', { max: 1e9 })}${C.nombre('economie.daily.bonusSerie', '/daily : bonus par jour de série', { max: 1e9, aide: 'Jusqu\'à 7 jours d\'affilée.' })}</div>
+        <div class="grille" style="margin-top:1rem">${C.nombre('economie.travail.min', '/travail : gain minimum', { max: 1e9 })}${C.nombre('economie.travail.max', '/travail : gain maximum', { max: 1e9 })}${C.nombre('economie.travail.delai', '/travail : délai (minutes)', { min: 1, max: 10080 })}</div>
+        <div style="margin-top:.9rem">${C.lignes('economie.travail.phrases', 'Phrases de /travail (une par ligne, {gain} = le montant)')}</div>
+        <div style="margin-top:.9rem">${C.salons('economie.salonsIgnores', 'Salons sans gains', { aide: 'Ex. salon de spam ou de commandes.' })}</div></div>
+      <div class="carte"><div class="entete" style="margin:0 0 .6rem"><div><h3>🛒 Boutique</h3><p class="sous" style="margin:0">Rôles à acheter ou objets (le staff voit qui les a avec /inventaire).</p></div>
+        <div class="droite"><button class="btn" data-action="art-ajouter" data-type="role">+ Rôle</button><button class="btn" data-action="art-ajouter" data-type="objet">+ Objet</button></div></div>
+        <div class="grille">${C.texte('economie.boutique.titre', 'Titre de la boutique', { max: 256 })}${C.couleur('economie.boutique.couleur', 'Couleur')}</div>
+        <div style="margin-top:.9rem">${C.texte('economie.boutique.description', 'Description', { multi: true, max: 1500 })}</div>
+        <div class="liste-ed" style="margin-top:.9rem">${(b.articles || []).map((a, k) => ligneArticle(a, k)).join('') || '<div class="vide">Aucun article. Ajoute un rôle ou un objet.</div>'}</div>
+        <div class="rangee-actions"><select class="saisie" id="bq-salon" style="max-width:260px">${salonsDe().map(s => `<option value="${s.id}" ${s.id === b.salonPublie ? 'selected' : ''}># ${esc(s.nom)}</option>`).join('')}</select>
+          <button class="btn prim" data-action="publier-boutique">${b.messageId ? 'Mettre à jour la boutique publiée' : 'Publier la boutique dans ce salon'}</button></div></div>
+      <div class="carte"><h3>Soldes des membres</h3><p class="sous">Les corrections passent par le bot (il doit être allumé).</p>
+        <div class="defile"><table class="tableau"><thead><tr><th>#</th><th>Membre</th><th>Solde</th><th>Gagné</th><th>Dépensé</th><th>Corriger</th></tr></thead><tbody>
+        ${comptes.map((x, k) => `<tr><td>${k + 1}</td><td>${x.avatar ? `<img class="av" src="${esc(x.avatar)}" alt="">` : ''}${esc(x.nom || x.user_id)}</td><td><b>${m(x.solde)}</b></td><td>${m(x.gagne)}</td><td>${m(x.depense)}</td>
+          <td style="white-space:nowrap"><input class="saisie" type="number" min="0" style="width:100px;display:inline-block;padding:.3rem .5rem" data-eco="${x.user_id}" placeholder="montant">
+          <button class="btn petit" data-action="eco" data-op="ajouter" data-id="${x.user_id}" title="Ajouter">+</button><button class="btn petit" data-action="eco" data-op="retirer" data-id="${x.user_id}" title="Retirer">−</button><button class="btn petit" data-action="eco" data-op="definir" data-id="${x.user_id}" title="Fixer le solde">=</button></td></tr>`).join('') || '<tr><td colspan="6" class="vide">Personne n\'a encore de compte.</td></tr>'}</tbody></table></div>
+        <div class="rangee-actions"><input class="saisie" id="eco-id" placeholder="Identifiant Discord d'un membre" style="max-width:240px"><input class="saisie" id="eco-montant" type="number" min="0" placeholder="Montant" style="max-width:120px">
+          <button class="btn" data-action="eco-libre" data-op="ajouter">Donner</button><span style="flex:1"></span><button class="btn dang" data-action="eco-reset">Tout remettre à zéro</button></div></div>
+      <div class="carte"><h3>Derniers achats</h3><div class="defile"><table class="tableau"><thead><tr><th>Membre</th><th>Article</th><th>Prix</th><th>Date</th></tr></thead><tbody>
+        ${achats.map(a => `<tr><td>${esc(a.nom || a.user_id)}</td><td>${esc(a.article)}</td><td>${m(a.prix)}</td><td>${dateCourte(a.date)}</td></tr>`).join('') || '<tr><td colspan="4" class="vide">Aucun achat.</td></tr>'}</tbody></table></div></div>`;
+  },
 };
 
 function C_basculeLibre(id, titre, coche) { return `<div class="ligne-bascule" style="padding:0"><label class="bascule"><input type="checkbox" id="${id}" ${coche ? 'checked' : ''}><i></i></label><div class="txt"><b style="font-size:.88rem">${titre}</b></div></div>`; }
@@ -530,6 +627,111 @@ function apercuBienvenue() {
   return `<div class="apercu"><img class="av" src="${esc((E.etat && E.etat.avatar) || 'images/item/Beequip.webp')}" alt=""><div><span class="nom">${esc((E.etat && E.etat.nom) || 'Hive & Tools')}<small>APP</small></span>
     ${c.embed ? `<div><span class="mention">@Kuro</span></div><div class="emb" style="border-color:${esc(c.couleur)}"><div style="flex:1">${txt}<div style="font-size:.75rem;color:#949ba4;margin-top:.4rem">${esc(serveur().nom || '')} · ${serveur().membres || 42} membres</div></div>${c.image ? '<div class="mini"></div>' : ''}</div>` : `<div>${txt}</div>`}</div></div>`;
 }
+
+/* ---------- embeds ---------- */
+function editeurEmbed(m, k) {
+  const b = `embeds.modeles.${k}`;
+  const outils = (path) => `<div class="outils-md">
+      <button type="button" data-inserer="${path}" data-var="**texte**"><b>G</b></button><button type="button" data-inserer="${path}" data-var="*texte*"><i>I</i></button>
+      <button type="button" data-inserer="${path}" data-var="__texte__"><u>S</u></button><button type="button" data-inserer="${path}" data-var="~~texte~~"><s>B</s></button>
+      <button type="button" data-inserer="${path}" data-var="## Titre\n">Titre</button><button type="button" data-inserer="${path}" data-var="- ">• Liste</button>
+      <button type="button" data-inserer="${path}" data-var="[texte](https://)">Lien</button><button type="button" data-inserer="${path}" data-var="{serveur}">{serveur}</button>
+      <select data-inserer-select="${path}"><option value="">@ Rôle…</option>${serveur().roles.filter(r => !r.gere).map(r => `<option value="<@&${r.id}>">@${esc(r.nom)}</option>`).join('')}</select>
+      <select data-inserer-select="${path}"><option value="">#️ Salon…</option>${salonsDe(['texte', 'annonces', 'forum', 'vocal']).map(s => `<option value="<#${s.id}>">#${esc(s.nom)}</option>`).join('')}</select></div>`;
+  const pub = m.messageId ? `<span class="tag-pub">publié dans ${esc(nomSalon(m.salonPublie))}</span>` : '<span class="aide">brouillon</span>';
+  return `<div class="panneau"><div class="panneau-tete" data-action="emb-plier" data-k="${k}"><span>🧩</span><b>${esc(m.nom || m.titre || 'Embed sans nom')}</b>${pub}</div>
+    <div class="panneau-corps ${m._plie ? 'cache' : ''}"><div class="emb-ed"><div>
+      <div class="grille">${C.texte(b + '.nom', 'Nom (pour toi seulement)', { max: 80, ph: 'Ex. Présentation des rôles' })}${C.salon(b + '.salon', 'Salon où publier', { vide: '— Choisir —' })}${C.couleur(b + '.couleur', 'Couleur de la bande')}</div>
+      <div style="margin-top:.9rem">${C.texte(b + '.contenu', 'Texte au-dessus de l\'embed (facultatif)', { max: 2000, ph: 'Ex. @everyone ou une phrase d\'intro' })}
+        ${C.basculeMini(b + '.pingMentions', 'Les mentions de ce texte notifient vraiment')}</div>
+      <fieldset><legend>En-tête</legend><div class="grille">${C.texte(b + '.auteur', 'Auteur', { max: 256 })}${C.texte(b + '.auteurIcone', 'Icône de l\'auteur (adresse)', { ph: 'https://…' })}</div>
+        <div class="grille" style="margin-top:.6rem">${C.texte(b + '.titre', 'Titre', { max: 256 })}${C.texte(b + '.url', 'Lien du titre', { ph: 'https://…' })}</div></fieldset>
+      <fieldset><legend>Description</legend>${C.texte(b + '.description', '', { multi: true, max: 4096, ph: 'Écris ici. Utilise les boutons pour mettre en forme ou mentionner un rôle.' })}${outils(b + '.description')}</fieldset>
+      <fieldset><legend>Champs (${(m.champs || []).length}/25)</legend><div class="liste-ed">${(m.champs || []).map((c, j) => `<div class="item-ed champ-emb">
+          <input class="saisie" placeholder="Nom du champ" maxlength="256" data-path="${b}.champs.${j}.nom" value="${esc(c.nom || '')}">
+          <textarea class="saisie" placeholder="Valeur (mentions possibles : <@&id>)" maxlength="1024" data-path="${b}.champs.${j}.valeur">${esc(c.valeur || '')}</textarea>
+          <label class="case"><input type="checkbox" data-path="${b}.champs.${j}.ligne" ${c.ligne ? 'checked' : ''}>côte à côte</label>
+          <button class="btn petit dang" data-action="emb-champ-retirer" data-k="${k}" data-j="${j}" aria-label="Retirer le champ">✕</button></div>`).join('')}</div>
+        <div class="rangee-actions" style="margin-top:.5rem"><button class="btn petit" data-action="emb-champ-ajouter" data-k="${k}">+ Ajouter un champ</button></div></fieldset>
+      <fieldset><legend>Images</legend><div class="grille">${C.texte(b + '.image', 'Grande image (adresse)', { ph: 'https://…' })}${C.texte(b + '.miniature', 'Miniature à droite (adresse)', { ph: 'https://…' })}</div></fieldset>
+      <fieldset><legend>Pied de page</legend><div class="grille">${C.texte(b + '.pied', 'Texte', { max: 2048 })}${C.texte(b + '.piedIcone', 'Icône (adresse)', { ph: 'https://…' })}</div>
+        <div style="margin-top:.5rem">${C.basculeMini(b + '.horodatage', 'Afficher la date de publication')}</div></fieldset>
+      <div class="rangee-actions">
+        <button class="btn prim" data-action="emb-publier" data-k="${k}">${m.messageId ? '💾 Mettre à jour le message' : '📤 Publier'}</button>
+        ${m.messageId ? `<button class="btn" data-action="emb-publier" data-k="${k}" data-nouveau="1">Publier une copie</button><button class="btn" data-action="emb-retirer" data-k="${k}">Retirer de Discord</button>` : ''}
+        <span style="flex:1"></span><button class="btn" data-action="emb-dupliquer" data-k="${k}">Dupliquer</button><button class="btn dang" data-action="emb-suppr" data-k="${k}">Supprimer</button></div>
+    </div><div class="apercu-col"><label class="aide" style="display:block;margin-bottom:.4rem">Aperçu sur Discord</label><div id="emb-ap-${k}">${apercuEmbed(m)}</div>
+      <p class="aide" style="margin-top:.5rem">${longueurEmbed(m)} / 6000 caractères</p></div></div></div></div>`;
+}
+const longueurEmbed = (m) => [m.titre, m.description, m.auteur, m.pied].reduce((s, x) => s + String(x || '').length, 0) + (m.champs || []).reduce((s, c) => s + String(c.nom || '').length + String(c.valeur || '').length, 0);
+
+/* rendu Markdown façon Discord (sous-ensemble) */
+function mdDiscord(t) {
+  const s = serveur();
+  let h = esc(String(t || '').replace(/\{serveur\}/g, s.nom || 'Serveur').replace(/\{compte\}/g, String(s.membres || 42)));
+  const codes = []; h = h.replace(/`([^`\n]+)`/g, (_, c) => `\u0002${codes.push(c) - 1}\u0002`);
+  h = h.replace(/&lt;@&amp;(\w+)&gt;/g, (_, id) => { const r = roleDe(id); const c = r && r.couleur !== '#000000' ? r.couleur : '#c9cdfb'; return `<span class="mention" style="color:${c};background:${c}22">@${esc(r ? r.nom : 'rôle inconnu')}</span>`; })
+    .replace(/&lt;#(\w+)&gt;/g, (_, id) => `<span class="mention"># ${esc(nomSalon(id).replace(/^#/, '') || 'salon')}</span>`)
+    .replace(/&lt;@!?(\d+)&gt;/g, '<span class="mention">@membre</span>')
+    .replace(/@(everyone|here)/g, '<span class="mention">@$1</span>')
+    .replace(/\[([^\]\n]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+    .replace(/\*\*\*(.+?)\*\*\*/g, '<b><i>$1</i></b>').replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/__(.+?)__/g, '<u>$1</u>')
+    .replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<i>$2</i>').replace(/~~(.+?)~~/g, '<s>$1</s>').replace(/\|\|(.+?)\|\|/g, '<span style="background:#1e1f22;border-radius:3px">$1</span>');
+  h = h.split('\n').map(l => l.replace(/^### (.*)$/, '<h5>$1</h5>').replace(/^## (.*)$/, '<h4>$1</h4>').replace(/^# (.*)$/, '<h4 style="font-size:1.2rem">$1</h4>')
+    .replace(/^-# (.*)$/, '<span class="gris">$1</span>').replace(/^[-*] (.*)$/, '&nbsp;• $1').replace(/^&gt; (.*)$/, '<span style="border-left:3px solid #4e5058;padding-left:.5rem;display:inline-block">$1</span>')).join('<br>')
+    .replace(/(<\/h[45]>)<br>/g, '$1');
+  return h.replace(/\u0002(\d+)\u0002/g, (_, n) => `<code>${codes[+n]}</code>`);
+}
+const urlOk = (u) => /^https?:\/\/\S+$/i.test(String(u || '').trim());
+function apercuEmbed(m) {
+  const bot = esc((E.etat && E.etat.avatar) || 'images/item/Beequip.webp'), nom = esc((E.etat && E.etat.nom) || 'Hive & Tools');
+  const champs = (m.champs || []).filter(c => c.nom || c.valeur);
+  const vide = !m.titre && !m.description && !m.auteur && !champs.length && !urlOk(m.image) && !urlOk(m.miniature) && !m.pied;
+  const emb = vide ? '' : `<div class="dc-emb" style="border-color:${esc(m.couleur || '#8FE86B')}"><div>
+      ${m.auteur ? `<div class="au">${urlOk(m.auteurIcone) ? `<img src="${esc(m.auteurIcone)}" alt="">` : ''}${esc(m.auteur)}</div>` : ''}
+      ${m.titre ? `<div class="ti">${urlOk(m.url) ? `<a href="${esc(m.url)}" target="_blank" rel="noopener">${mdDiscord(m.titre)}</a>` : mdDiscord(m.titre)}</div>` : ''}
+      ${m.description ? `<div class="de">${mdDiscord(m.description)}</div>` : ''}</div>
+      ${urlOk(m.miniature) ? `<img class="mi" src="${esc(m.miniature)}" alt="">` : ''}
+      ${champs.length ? `<div class="chps">${champs.map(c => `<div class="chp ${c.ligne ? 'ligne' : ''}"><b>${mdDiscord(c.nom) || '&nbsp;'}</b>${mdDiscord(c.valeur)}</div>`).join('')}</div>` : ''}
+      ${urlOk(m.image) ? `<img class="im" src="${esc(m.image)}" alt="">` : ''}
+      ${m.pied || m.horodatage ? `<div class="pd">${urlOk(m.piedIcone) ? `<img src="${esc(m.piedIcone)}" alt="">` : ''}${esc(m.pied || '')}${m.pied && m.horodatage ? ' • ' : ''}${m.horodatage ? "Aujourd'hui à " + new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : ''}</div>` : ''}</div>`;
+  return `<div class="dc"><img class="av" src="${bot}" alt=""><div style="min-width:0;flex:1"><span class="nom">${nom}<small>APP</small><time>Aujourd'hui</time></span>
+    ${m.contenu ? `<div>${mdDiscord(m.contenu)}</div>` : ''}${emb || (m.contenu ? '' : '<div class="gris">Message vide : écris un titre, une description ou un champ.</div>')}</div></div>`;
+}
+const MODELES_EMBED = {
+  vide: () => ({ nom: 'Nouvel embed', titre: '', description: '', couleur: '#8FE86B', champs: [] }),
+  roles: () => {
+    const r = serveur().roles.filter(x => !x.gere).slice(0, 12);
+    return { nom: 'Présentation des rôles', titre: '🎭 Les rôles du serveur', couleur: '#8FE86B',
+      description: 'Voici à quoi correspond chaque rôle :\n\n' + r.map(x => `<@&${x.id}> — à compléter`).join('\n'), champs: [], pied: '{serveur}' };
+  },
+  reglement: () => ({ nom: 'Règlement', titre: '📜 Règlement de {serveur}', couleur: '#F4C542',
+    description: 'Merci de respecter ces règles pour que tout le monde passe un bon moment 🐝',
+    champs: [{ nom: '1. Respect', valeur: 'Pas d\'insultes, de harcèlement ni de discrimination.' }, { nom: '2. Pas de spam', valeur: 'Ni flood, ni pub sans autorisation.' },
+      { nom: '3. Bons salons', valeur: 'Poste chaque sujet dans le salon prévu.' }, { nom: '4. Discord ToS', valeur: 'Les règles de Discord et de Roblox s\'appliquent ici aussi.' }],
+    pied: 'Le staff peut sanctionner tout comportement inapproprié', horodatage: false }),
+};
+
+/* ---------- boutique ---------- */
+function ligneArticle(a, k) {
+  const b = `economie.boutique.articles.${k}`;
+  const roles = serveur().roles.filter(x => !x.gere);
+  return `<div class="item-ed" style="grid-template-columns:1fr;gap:.6rem">
+    <div class="grille" style="grid-template-columns:70px minmax(140px,1.4fr) 120px minmax(150px,1fr) auto;align-items:end">
+      <div class="champ"><label>Emoji</label><input class="saisie" maxlength="60" data-path="${b}.emoji" value="${esc(a.emoji || '')}"></div>
+      <div class="champ"><label>${a.type === 'role' ? 'Rôle à vendre' : 'Objet'}</label><input class="saisie" maxlength="100" data-path="${b}.nom" value="${esc(a.nom || '')}" placeholder="Nom affiché"></div>
+      <div class="champ"><label>Prix</label><input class="saisie" type="number" min="0" data-type="nombre" data-path="${b}.prix" value="${+a.prix || 0}"></div>
+      ${a.type === 'role' ? `<div class="champ"><label>Rôle donné</label><select class="saisie" data-path="${b}.role"><option value="">Choisir…</option>${roles.map(x => `<option value="${x.id}" ${x.id === a.role ? 'selected' : ''} ${x.assignable ? '' : 'disabled'}>@${esc(x.nom)}${x.assignable ? '' : ' (au-dessus du bot)'}</option>`).join('')}</select></div>`
+      : `<div class="champ"><label>Max par membre</label><input class="saisie" type="number" min="0" data-type="nombre" data-path="${b}.max" value="${+a.max || 0}" title="0 = illimité"></div>`}
+      <div style="display:flex;gap:.4rem;align-items:center;padding-bottom:.2rem"><label class="bascule" title="En vente"><input type="checkbox" data-path="${b}.actif" ${a.actif !== false ? 'checked' : ''}><i></i></label>
+        <button class="btn petit dang" data-action="art-retirer" data-k="${k}" aria-label="Retirer l'article">✕</button></div></div>
+    <div class="grille" style="grid-template-columns:minmax(200px,2fr) 120px minmax(150px,1fr)">
+      <div class="champ"><label>Description</label><input class="saisie" maxlength="300" data-path="${b}.description" value="${esc(a.description || '')}"></div>
+      <div class="champ"><label>Stock</label><input class="saisie" type="number" min="0" data-path="${b}.stock" value="${a.stock === '' || a.stock == null ? '' : +a.stock}" placeholder="illimité"></div>
+      <div class="champ"><label>Rôle requis pour acheter</label><select class="saisie" data-path="${b}.roleRequis"><option value="">Aucun</option>${roles.map(x => `<option value="${x.id}" ${x.id === a.roleRequis ? 'selected' : ''}>@${esc(x.nom)}</option>`).join('')}</select></div></div>
+    ${a.type === 'objet' ? `<div class="champ"><label>Message après l'achat (facultatif)</label><input class="saisie" maxlength="300" data-path="${b}.message" value="${esc(a.message || '')}" placeholder="Ex. Ouvre un ticket pour recevoir ton lot !"></div>` : ''}</div>`;
+}
+
 function panneauRoles(p, k) {
   const base = `rolesBoutons.panneaux.${k}`;
   return `<div class="panneau"><div class="panneau-tete" data-action="panneau-plier" data-k="${k}"><span>🎭</span><b>${esc(p.titre || 'Panneau sans titre')}</b>
@@ -565,12 +767,16 @@ document.addEventListener('input', (e) => {
   const el = e.target; if (!el.dataset.path) return;
   let v = el.type === 'checkbox' ? el.checked : el.value;
   if (el.dataset.type === 'nombre') v = el.value === '' ? 0 : +el.value;
+  if (el.dataset.type === 'lignes') v = el.value.split('\n').map(x => x.trim()).filter(Boolean);
   ecrirePath(E.cfg, el.dataset.path, v);
   marquerSale();
   if (el.dataset.path.startsWith('bienvenue.')) { const a = $('.apercu'); if (a) a.outerHTML = apercuBienvenue(); }
+  const me = /^embeds\.modeles\.(\d+)\./.exec(el.dataset.path);
+  if (me) { const z = $('#emb-ap-' + me[1]), m = E.cfg.embeds.modeles[+me[1]]; if (z && m) { z.innerHTML = apercuEmbed(m); z.nextElementSibling.textContent = longueurEmbed(m) + ' / 6000 caractères'; } }
 });
 document.addEventListener('change', (e) => {
   const el = e.target;
+  if (el.dataset.insererSelect && el.value) { const champ = document.querySelector(`[data-path="${el.dataset.insererSelect}"]`); if (champ) insererDans(champ, el.value); el.value = ''; return; }
   if (el.dataset.ajouter && el.value) { const l = lirePath(E.cfg, el.dataset.ajouter) || []; ecrirePath(E.cfg, el.dataset.ajouter, [...l, el.value]); marquerSale(); afficher(); return; }
   if (el.dataset.path && (el.dataset.path === 'niveaux.annonce' || el.type === 'checkbox' && el.closest('.module-tete'))) afficher();
 });
@@ -578,9 +784,28 @@ document.addEventListener('click', async (e) => {
   const b = e.target.closest('[data-section],[data-retirer],[data-inserer],[data-action]'); if (!b) return;
   if (b.dataset.section) return afficher(b.dataset.section);
   if (b.dataset.retirer) { ecrirePath(E.cfg, b.dataset.retirer, (lirePath(E.cfg, b.dataset.retirer) || []).filter(x => x !== b.dataset.val)); marquerSale(); return afficher(); }
-  if (b.dataset.inserer) { const champ = document.querySelector(`[data-path="${b.dataset.inserer}"]`); if (champ) { const p = champ.selectionStart ?? champ.value.length; champ.value = champ.value.slice(0, p) + b.dataset.var + champ.value.slice(p); champ.dispatchEvent(new Event('input', { bubbles: true })); champ.focus(); } return; }
+  if (b.dataset.inserer) { const champ = document.querySelector(`[data-path="${b.dataset.inserer}"]`); if (champ) insererDans(champ, b.dataset.var); return; }
   await agir(b.dataset.action, b);
 });
+
+/* insère à la place de la sélection ; « texte » est remplacé par ce qui était sélectionné */
+document.addEventListener('focusout', (e) => { const t = e.target; if (t.matches && t.matches('textarea,input.saisie')) { t._sel = [t.selectionStart, t.selectionEnd]; } });
+function insererDans(champ, modele) {
+  const actif = document.activeElement === champ, memo = champ._sel || [champ.value.length, champ.value.length];
+  const a = actif ? champ.selectionStart : memo[0], z = actif ? champ.selectionEnd : memo[1], sel = champ.value.slice(a, z);
+  const t = modele.includes('texte') && sel ? modele.replace('texte', sel) : modele;
+  champ.value = champ.value.slice(0, a) + t + champ.value.slice(z);
+  const i = t.indexOf('texte'); champ.focus();
+  if (i >= 0 && !sel) champ.setSelectionRange(a + i, a + i + 5); else champ.setSelectionRange(a + t.length, a + t.length);
+  champ.dispatchEvent(new Event('input', { bubbles: true }));
+}
+/* enregistre si besoin, puis demande au bot */
+async function sauverPuis(type, donnees, attente) {
+  if (E.sale && !(await sauver())) return null;
+  const r = await demanderAuBot(type, donnees, attente);
+  if (r && !DEMO) await rechargerConfig();
+  return r;
+}
 
 /* actions envoyées au bot (table bot_actions), avec attente du résultat */
 async function demanderAuBot(type, donnees, attente = 'Demande envoyée au bot…') {
@@ -631,6 +856,29 @@ async function agir(action, b) {
       if (!q) return toast('Écris la question.', true); if (options.length < 2 || options.length > 10) return toast('Il faut entre 2 et 10 choix.', true);
       return demanderAuBot('sondage', { salon: $('#sd-salon').value, question: q, options, dureeMs: dureeMs($('#sd-duree').value) }, 'Publication du sondage…');
     }
+    case 'emb-modele': { const l = c.embeds.modeles || []; if (l.length >= 50) return toast('50 embeds maximum.', true);
+      c.embeds.modeles = [...l, { id: 'e' + Date.now().toString(36), salon: '', ...MODELES_EMBED[b.dataset.modele]() }]; marquerSale(); await afficher();
+      const t = document.querySelectorAll('.panneau'); if (t.length) t[t.length - 1].scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+    case 'emb-plier': { const m = c.embeds.modeles[+b.dataset.k]; Object.defineProperty(m, '_plie', { value: !m._plie, enumerable: false, configurable: true, writable: true }); return afficher(); }
+    case 'emb-champ-ajouter': { const m = c.embeds.modeles[+b.dataset.k]; if ((m.champs || []).length >= 25) return toast('25 champs maximum.', true); m.champs = [...(m.champs || []), { nom: '', valeur: '', ligne: false }]; break; }
+    case 'emb-champ-retirer': { const m = c.embeds.modeles[+b.dataset.k]; m.champs = m.champs.filter((_, j) => j !== +b.dataset.j); break; }
+    case 'emb-dupliquer': { const m = clone(c.embeds.modeles[+b.dataset.k]); c.embeds.modeles = [...c.embeds.modeles, { ...m, id: 'e' + Date.now().toString(36), nom: (m.nom || 'Embed') + ' (copie)', messageId: null, salonPublie: null }]; break; }
+    case 'emb-suppr': if (!confirm('Supprimer cet embed du dashboard ? (le message déjà posté reste sur Discord)')) return; c.embeds.modeles = c.embeds.modeles.filter((_, k) => k !== +b.dataset.k); break;
+    case 'emb-publier': { const m = c.embeds.modeles[+b.dataset.k]; if (!m.salon) return toast('Choisis d\'abord le salon où publier.', true);
+      if (longueurEmbed(m) > 6000) return toast('L\'embed dépasse 6000 caractères.', true);
+      return sauverPuis('publier_embed', { id: m.id, nouveau: !!b.dataset.nouveau }, m.messageId && !b.dataset.nouveau ? 'Mise à jour du message…' : 'Publication…'); }
+    case 'emb-retirer': { const m = c.embeds.modeles[+b.dataset.k]; if (!confirm('Supprimer le message posté sur Discord ? (l\'embed reste ici)')) return; return sauverPuis('retirer_embed', { id: m.id }, 'Suppression du message…'); }
+    case 'art-ajouter': { const l = c.economie.boutique.articles || []; if (l.length >= 25) return toast('25 articles maximum.', true);
+      c.economie.boutique.articles = [...l, { id: 'a' + Date.now().toString(36), type: b.dataset.type, nom: '', emoji: b.dataset.type === 'role' ? '🎭' : '🎁', prix: 1000, description: '', role: '', roleRequis: '', stock: '', max: 0, message: '', actif: true }]; break; }
+    case 'art-retirer': if (!confirm('Retirer cet article de la boutique ?')) return; c.economie.boutique.articles = c.economie.boutique.articles.filter((_, k) => k !== +b.dataset.k); break;
+    case 'publier-boutique': { if (!c.economie.actif) return toast('Active d\'abord l\'économie.', true); const bad = (c.economie.boutique.articles || []).find(a => !a.nom || (a.type === 'role' && !a.role)); if (bad) return toast('Un article n\'a pas de nom ou de rôle.', true);
+      return sauverPuis('publier_boutique', { salon: $('#bq-salon').value }, 'Publication de la boutique…'); }
+    case 'eco': { const n = +document.querySelector(`[data-eco="${b.dataset.id}"]`).value; if (!(n >= 0) || (b.dataset.op !== 'definir' && !n)) return toast('Indique un montant.', true);
+      await demanderAuBot('argent', { user: b.dataset.id, op: b.dataset.op, montant: n }, 'Correction du solde…'); return afficher(); }
+    case 'eco-libre': { const id = $('#eco-id').value.trim(), n = +$('#eco-montant').value; if (!/^\d{15,21}$/.test(id)) return toast('Identifiant Discord invalide (clic droit sur le membre ▸ Copier l\'identifiant).', true); if (!(n > 0)) return toast('Indique un montant.', true);
+      await demanderAuBot('argent', { user: id, op: 'ajouter', montant: n }, 'Envoi…'); return afficher(); }
+    case 'eco-reset': if (prompt('Tous les soldes et inventaires seront effacés. Tape RESET pour confirmer.') !== 'RESET') return;
+      await demanderAuBot('argent', { op: 'tout_reinitialiser' }, 'Remise à zéro…'); return afficher();
     case 'sanction-suppr': if (!confirm('Supprimer cette sanction de l\'historique ?')) return; await BASE.supprimer('bot_sanctions', { id: b.dataset.id }); toast('Sanction supprimée.'); return afficher();
     case 'xp-maj': { const v = Math.max(0, +document.querySelector(`[data-xp="${b.dataset.id}"]`).value || 0); await BASE.modifier('bot_niveaux', { guild_id: E.gid, user_id: b.dataset.id }, { xp: v, niveau: niveauDe(v) }); toast('XP mis à jour (pris en compte par le bot sous 5 minutes).'); return afficher(); }
     default: return;
@@ -640,11 +888,26 @@ async function agir(action, b) {
 
 async function sauver() {
   const btn = $('#btn-sauver'); btn.disabled = true;
+  let ok = false;
   try {
+    if (!DEMO) { const l = await BASE.lire('bot_config', { guild_id: E.gid }); garderChampsDuBot((l[0] && l[0].config) || {}); }
     await BASE.enregistrer('bot_config', { guild_id: E.gid, config: E.cfg, maj: new Date().toISOString() });
-    E.cfgOrig = clone(E.cfg); marquerSale(); toast('✅ Enregistré. Le bot l\'applique dans les 15 secondes.');
+    E.cfgOrig = clone(E.cfg); marquerSale(); toast('✅ Enregistré. Le bot l\'applique dans les 15 secondes.'); ok = true;
   } catch (e) { toast('Enregistrement impossible : ' + e.message, true); }
   btn.disabled = false;
+  return ok;
+}
+/* ce que le bot a écrit entre-temps (messages publiés, stock vendu) n'est pas écrasé */
+function garderChampsDuBot(srv) {
+  const parId = (l) => new Map((l || []).map(x => [x.id, x]));
+  const emb = parId(srv.embeds && srv.embeds.modeles);
+  (E.cfg.embeds.modeles || []).forEach(m => { const s = emb.get(m.id); if (s) { m.messageId = s.messageId || null; m.salonPublie = s.salonPublie || null; } });
+  const pan = parId(srv.rolesBoutons && srv.rolesBoutons.panneaux);
+  (E.cfg.rolesBoutons.panneaux || []).forEach(p => { const s = pan.get(p.id); if (s && s.messageId) p.messageId = s.messageId; });
+  const bq = (srv.economie && srv.economie.boutique) || {};
+  if (bq.messageId) { E.cfg.economie.boutique.messageId = bq.messageId; E.cfg.economie.boutique.salonPublie = bq.salonPublie; }
+  const art = parId(bq.articles), orig = parId(E.cfgOrig.economie.boutique.articles);
+  (E.cfg.economie.boutique.articles || []).forEach(a => { const s = art.get(a.id), o = orig.get(a.id); if (s && o && String(a.stock) === String(o.stock)) a.stock = s.stock; });
 }
 $('#btn-sauver').onclick = sauver;
 $('#btn-annuler').onclick = () => { E.cfg = clone(E.cfgOrig); marquerSale(); afficher(); };
@@ -718,11 +981,17 @@ const demo = (() => {
     bot_etat: [{ id: 1, nom: 'Hive & Tools', avatar: 'images/item/Beequip.webp', vu: new Date().toISOString(), ping: 48, ia: { precision: 0.993, exemples: 29640 } }],
     bot_serveurs: [{ guild_id: 'g1', nom: 'Ruche & Outils', membres: 187, salons, roles }],
     bot_config: [{ guild_id: 'g1', config: { ia: { salons: { 3: { mode: 'questions' } } }, bienvenue: { actif: true, salon: '1', autoroles: ['r3'] }, niveaux: { actif: true, recompenses: [{ niveau: 10, role: 'r7' }] }, logs: { actif: true, salon: '4' },
+      economie: { actif: true, boutique: { articles: [{ id: 'a1', type: 'role', nom: 'Ruche rouge', emoji: '🔴', prix: 5000, role: 'r4', description: 'Affiche ta couleur de ruche', stock: '', actif: true },
+        { id: 'a2', type: 'objet', nom: 'Code Roblox mystère', emoji: '🎁', prix: 25000, description: 'Un code offert par le staff', stock: 3, max: 1, message: 'Ouvre un ticket pour recevoir ton code !', actif: true }] } },
+      embeds: { modeles: [{ id: 'e1', nom: 'Présentation des rôles', salon: '7', titre: '🎭 Les rôles du serveur', couleur: '#8FE86B', description: 'Voici à quoi correspond chaque rôle :\n\n<@&r1> — les fondateurs\n<@&r2> — l\'équipe de modération\n<@&r4> <@&r5> <@&r6> — ta couleur de ruche, à choisir dans <#7>',
+        champs: [{ nom: '⭐ Niveaux', valeur: '<@&r7> s\'obtient au niveau 10.', ligne: true }, { nom: '🛒 Boutique', valeur: 'Certains rôles s\'achètent avec /boutique.', ligne: true }], pied: 'Ruche & Outils', messageId: 'm2', salonPublie: '7' }] },
       rolesBoutons: { panneaux: [{ id: 'p1', titre: 'Choisis ta ruche', description: 'Clique sur la couleur de ta ruche.', salon: '7', mode: 'unique', couleur: '#8FE86B', roles: [{ role: 'r4', label: 'Rouge', emoji: '🔴', style: 'rouge' }, { role: 'r5', label: 'Bleue', emoji: '🔵', style: 'bleu' }, { role: 'r6', label: 'Blanche', emoji: '⚪', style: 'gris' }], messageId: 'm1' }] } } }],
     bot_niveaux: [['Kuro', 15420, 812], ['FauFau_RL', 12890, 640], ['Smiless', 9310, 455], ['Mimi', 4200, 230], ['Asriel', 2650, 140]].map(([nom, xp, messages], k) => ({ guild_id: 'g1', user_id: 'u' + k, nom, xp, messages })),
     bot_sanctions: [{ id: 1, guild_id: 'g1', type: 'warn', cible_nom: 'spammeur42', moderateur_nom: 'FauFau_RL', raison: 'Spam de liens', date: new Date(Date.now() - 36e5).toISOString() },
       { id: 2, guild_id: 'g1', type: 'mute', cible_nom: 'spammeur42', moderateur_nom: 'Hive & Tools', raison: 'Automatique : 3 avertissements', duree: '1 h', date: new Date(Date.now() - 3e6).toISOString() }],
     bot_tickets: [{ id: 1, guild_id: 'g1', auteur_nom: 'Mimi', ouvert: true, cree: new Date().toISOString() }],
+    bot_economie: [['Kuro', 15420, 22000, 6580], ['FauFau_RL', 9800, 12000, 2200], ['Mimi', 3150, 4000, 850]].map(([nom, solde, gagne, depense], k) => ({ guild_id: 'g1', user_id: 'u' + k, nom, solde, gagne, depense })),
+    bot_achats: [{ id: 1, guild_id: 'g1', nom: 'Kuro', article: 'Ruche rouge', prix: 5000, date: new Date(Date.now() - 72e5).toISOString() }],
     bot_giveaways: [{ id: 1, guild_id: 'g1', lot: 'Diamond Mask', fin: new Date(Date.now() + 864e5).toISOString(), participants: ['a', 'b', 'c'], gagnants: 1, termine: false }],
   };
   return {

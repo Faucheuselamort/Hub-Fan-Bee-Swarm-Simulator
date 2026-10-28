@@ -62,6 +62,8 @@ En plus des infos du site, le bot gère ton serveur :
 | Tickets | panneau avec bouton, salon privé avec le staff, transcription à la fermeture | `/ticket panneau` `/ticket fermer` `/ticket ajouter` |
 | Rôles à boutons | panneaux de rôles (plusieurs ou un seul à la fois) | `/roles-boutons` |
 | Giveaways & sondages | tirage au sort avec bouton, nouveau tirage ; sondages avec résultats en direct | `/giveaway` `/sondage` |
+| Embeds | messages encadrés écrits dans le dashboard (présentation des rôles, règlement…), avec aperçu ; republier **modifie** le message déjà posté | — |
+| Économie & boutique | monnaie (🍯 Miel par défaut) gagnée en écrivant, `/daily` avec bonus de série, `/travail` ; boutique de rôles et d'objets (stock, maximum, rôle requis) avec menu d'achat | `/solde` `/daily` `/travail` `/payer` `/richesse` `/boutique` `/acheter` `/inventaire` `/argent` |
 
 Tout se règle dans le **dashboard** du site.
 
@@ -69,7 +71,7 @@ Tout se règle dans le **dashboard** du site.
 
 `dashboard.html` sur le site : connexion avec Discord, et **seul ton compte** (le propriétaire de l'application Discord du bot) peut l'ouvrir. Le bouton « 🛠️ Dashboard » apparaît sur le site uniquement quand tu es connecté avec ce compte. Pour un aperçu sans connexion : `dashboard.html?demo=1`.
 
-Il permet de régler chaque module, d'envoyer des annonces, de publier les panneaux (tickets, rôles), de lancer des giveaways et des sondages, de voir et supprimer les sanctions, et de corriger l'XP des membres. Les réglages sont appliqués par le bot en moins de 15 secondes.
+Il permet de régler chaque module, d'envoyer des annonces, d'écrire et modifier des embeds, de gérer la boutique et les soldes, de publier les panneaux (tickets, rôles), de lancer des giveaways et des sondages, de voir et supprimer les sanctions, et de corriger l'XP des membres. Les réglages sont appliqués par le bot en moins de 15 secondes.
 
 ### Mise en place (une seule fois)
 

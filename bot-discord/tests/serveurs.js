@@ -55,6 +55,47 @@ const cfg = require('../src/config');
   const top = await db.lire('bot_niveaux', { guild_id: G }, { ordre: 'xp', desc: true });
   assert.deepStrictEqual(top.map(x => x.user_id), ['a', 'b']);
   console.log('✓ stockage local : ajout, lecture filtrée, mise à jour, classement');
+  /* embeds */
+  const embeds = require('../src/serveurs/embeds');
+  const g0 = { id: G, name: 'Ruche', memberCount: 5 };
+  const msg = embeds.construire({ titre: 'Rôles de {serveur}', description: '<@&1> — modo', couleur: '#F4C542', champs: [{ nom: 'A', valeur: 'b', ligne: true }, { nom: '', valeur: '' }], image: 'pas une url', pied: 'pied', horodatage: true }, g0);
+  const e0 = msg.embeds[0].toJSON();
+  assert.strictEqual(e0.title, 'Rôles de Ruche'); assert.strictEqual(e0.color, 0xF4C542); assert.strictEqual(e0.fields.length, 1); assert(e0.fields[0].inline);
+  assert(!e0.image, 'une image invalide est ignorée'); assert(e0.timestamp); assert.deepStrictEqual(msg.allowedMentions.parse, []);
+  assert.throws(() => embeds.construire({}, g0), /vide/);
+  assert.strictEqual(embeds.construire({ contenu: 'juste du texte' }, g0).embeds.length, 0);
+  console.log('✓ embeds : construction, champs vides ignorés, liens vérifiés, embed vide refusé');
+
+  /* économie */
+  const eco = require('../src/serveurs/economie');
+  await reglages.set(G, { economie: { actif: true, depart: 100, boutique: { articles: [
+    { id: 'r', type: 'role', nom: 'Ruche rouge', prix: 150, role: 'R', actif: true },
+    { id: 'o', type: 'objet', nom: 'Code', prix: 20, stock: 2, max: 1, actif: true },
+    { id: 'x', type: 'objet', nom: 'Caché', prix: 1, actif: false }] } } });
+  const roles = new Map([['R', { id: 'R', position: 1, managed: false }]]);
+  const guild = { id: G, name: 'Ruche', roles: { cache: roles }, members: { me: { roles: { highest: { position: 5 } } }, fetch: async () => null }, channels: { cache: new Map() } };
+  const membre = (id) => { const mr = new Map(); return { id, guild, user: { id, username: 'u' + id, displayAvatarURL: () => '' }, roles: { cache: mr, add: async (r) => mr.set(r, 1) } }; };
+  const kuro = membre('k');
+  assert.strictEqual((await eco.compte(G, 'k')).solde, 100, 'solde de départ');
+  assert(/manque/.test(await eco.acheter(kuro, 'r')), 'pas assez d\'argent');
+  (await eco.compte(G, 'k')).solde = 200;
+  assert(/✅/.test(await eco.acheter(kuro, 'r'))); assert(kuro.roles.cache.has('R')); assert.strictEqual((await eco.compte(G, 'k')).solde, 50);
+  assert(/déjà le rôle/.test(await eco.acheter(kuro, 'r')));
+  assert(/✅/.test(await eco.acheter(kuro, 'o'))); assert.strictEqual(reglages.get(G).economie.boutique.articles.find(a => a.id === 'o').stock, 1, 'stock décrémenté');
+  assert(/maximum/.test(await eco.acheter(kuro, 'o')));
+  assert(/n'existe pas/.test(await eco.acheter(kuro, 'x')), 'article désactivé invisible');
+  const mimi = membre('m'); (await eco.compte(G, 'm')).solde = 500;
+  assert(/✅/.test(await eco.acheter(mimi, 'o')));
+  assert(/épuisé/.test(await eco.acheter(membre('z'), 'o')));
+  /* deux achats simultanés ne doivent pas dépasser le stock */
+  await reglages.remplacer(G, ['economie', 'boutique', 'articles'], [{ id: 's', type: 'objet', nom: 'Rare', prix: 1, stock: 1, actif: true }]);
+  const res = await Promise.all(['p1', 'p2', 'p3'].map(id => eco.acheter(membre(id), 's')));
+  assert.strictEqual(res.filter(r => r.startsWith('✅')).length, 1, 'un seul achat pour un stock de 1');
+  assert.strictEqual(await eco.actionDashboard(guild, { user: 'k', op: 'definir', montant: 1234 }).then(() => eco.compte(G, 'k')).then(l => l.solde), 1234);
+  await eco.vider();
+  assert((await db.lire('bot_achats', { guild_id: G })).length >= 4, 'achats enregistrés');
+  console.log('✓ économie : départ, achats rôle/objet, stock, maximum, achats simultanés, correction dashboard');
+
   await new Promise(r => setTimeout(r, 700));
   fs.unlinkSync(base);
   if (sauvegarde) fs.renameSync(base + '.test', base);

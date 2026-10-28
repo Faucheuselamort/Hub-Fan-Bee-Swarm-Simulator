@@ -89,7 +89,7 @@ function evenements(client) {
     await donnerXP(m.member, gain, m.channel);
   });
   setInterval(vider, 20000);
-  process.on('SIGINT', async () => { await vider(); process.exit(0); });
+  process.on('SIGINT', async () => { await Promise.all([vider(), require('./economie').vider()]).catch(() => {}); process.exit(0); });
 }
 
 /* ---------- commandes ---------- */

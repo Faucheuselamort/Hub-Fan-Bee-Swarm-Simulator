@@ -23,7 +23,7 @@ let idn = 1000;
 function salon(id, nom) {
   const messages = new Collection();
   return { id, name: nom, type: 0, parentId: null, rawPosition: idn++, isTextBased: () => true, isThread: () => false,
-    send: async (m) => { const msg = { id: String(idn++), url: `https://discord/${id}/${idn}`, ...m, edit: async (x) => Object.assign(msg, x) }; messages.set(msg.id, msg); envoyes.push({ salon: nom, ...m }); return msg; },
+    send: async (m) => { const msg = { id: String(idn++), author: { id: 'bot' }, url: `https://discord/${id}/${idn}`, ...m, edit: async (x) => Object.assign(msg, x) }; messages.set(msg.id, msg); envoyes.push({ salon: nom, ...m }); return msg; },
     messages: { fetch: async (x) => (typeof x === 'string' ? messages.get(x) : messages) } };
 }
 const roleCache = new Collection([['G1', { id: 'G1', name: '@everyone', position: 0, hexColor: '#000', managed: false }], ['r5', { id: 'r5', name: 'Niveau 5', position: 2, hexColor: '#f00', managed: false }], ['r10', { id: 'r10', name: 'Niveau 10', position: 3, hexColor: '#0f0', managed: false }], ['rRouge', { id: 'rRouge', name: 'Ruche rouge', position: 4, hexColor: '#f00', managed: false }]]);
@@ -94,6 +94,49 @@ const client = { guilds: { cache: new Collection([[guild.id, guild]]) }, channel
   const inst = synchro.instantane({ ...guild, channels: { cache: guild.channels.cache.filter(() => true) }, roles: { cache: roleCache }, iconURL: () => null });
   assert(inst.salons.length === 2 && inst.roles.length === 3 && inst.roles[0].nom === 'Ruche rouge');
   console.log('✓ dashboard : action « annonce » et instantané des salons/rôles');
+
+  /* embeds : publication puis modification du même message */
+  guild.client = client;
+  const mods = { embeds: require('../src/serveurs/embeds'), economie: require('../src/serveurs/economie') };
+  await reglages.set('G1', { embeds: { modeles: [{ id: 'e1', salon: 'c-gen', titre: 'Les rôles', description: '<@&rRouge> — ruche rouge', couleur: '#ff0000' }] } });
+  const r1 = await synchro.executerAction(client, { guild_id: 'G1', type: 'publier_embed', donnees: { id: 'e1' } }, mods);
+  const id1 = reglages.get('G1').embeds.modeles[0].messageId;
+  assert(r1.startsWith('embed publié') && id1, r1);
+  await reglages.remplacer('G1', ['embeds', 'modeles'], [{ ...reglages.get('G1').embeds.modeles[0], titre: 'Les rôles (v2)' }]);
+  const n = envoyes.length;
+  const r2 = await synchro.executerAction(client, { guild_id: 'G1', type: 'publier_embed', donnees: { id: 'e1' } }, mods);
+  assert(r2.startsWith('embed mis à jour') && envoyes.length === n, 'mise à jour sans nouveau message');
+  assert.strictEqual((await general.messages.fetch(id1)).embeds[0].data.title, 'Les rôles (v2)');
+  const r3 = await synchro.executerAction(client, { guild_id: 'G1', type: 'publier_embed', donnees: { id: 'e1', nouveau: true } }, mods);
+  assert(r3.startsWith('embed publié') && envoyes.length === n + 1);
+  console.log('✓ embeds : publication, modification du message existant, copie');
+
+  /* boutique : publication avec menu d'achat, puis achat via le menu */
+  await reglages.set('G1', { economie: { actif: true, depart: 1000, boutique: { articles: [{ id: 'a1', type: 'role', nom: 'Ruche rouge', prix: 300, role: 'rRouge', actif: true, emoji: '🔴' }] } } });
+  const rb = await synchro.executerAction(client, { guild_id: 'G1', type: 'publier_boutique', donnees: { salon: 'c-gen' } }, mods);
+  const pub = envoyes[envoyes.length - 1];
+  assert(rb.startsWith('boutique publiée') && pub.components[0].components[0].data.custom_id === 'eco:acheter', rb);
+  const zoe = membre('zoe', 'Zoé'); let rep = null;
+  await serveurs.menu({ customId: 'eco:acheter', values: ['a1'], member: zoe, reply: async (x) => { rep = x; } });
+  assert(/✅/.test(rep.content) && zoe.roles._set.has('rRouge'), rep && rep.content);
+  console.log('✓ boutique : publication avec menu, achat d\'un rôle depuis le menu');
+
+  /* commandes d'argent */
+  const cmd = async (nom, opts = {}, user = zoe) => { let out = null; const i = { commandName: nom, guildId: 'G1', guild, member: user, user: user.user,
+    options: { getUser: (k) => opts[k] || null, getInteger: (k) => opts[k], getString: (k) => opts[k], getSubcommand: () => opts.sous },
+    reply: async (x) => { out = x; } }; assert(await serveurs.commande(i), nom); return out; };
+  const d1 = await cmd('daily'); assert(/reçois/.test(d1.content), d1.content);
+  assert(/Reviens/.test((await cmd('daily')).content));
+  const t1 = await cmd('travail'); assert(/💼/.test(t1.content) && !/\{gain\}/.test(t1.content), t1.content);
+  const bob2 = membre('bob2', 'Bob');
+  const p1 = await cmd('payer', { membre: bob2.user, montant: 100 }); assert(/a donné/.test(p1.content), p1.content);
+  assert(/n'as que/.test((await cmd('payer', { membre: bob2.user, montant: 1e9 })).content));
+  assert((await cmd('solde')).embeds[0].data.description.includes('Solde'));
+  assert((await cmd('inventaire')).embeds[0].data.description.includes('Ruche rouge'));
+  await cmd('argent', { sous: 'definir', membre: bob2.user, montant: 42 });
+  assert.strictEqual((await mods.economie.compte('G1', 'bob2')).solde, 42);
+  const top = await cmd('richesse'); assert(top.embeds[0].data.description.includes('<@zoe>'));
+  console.log('✓ argent : /daily (et délai), /travail, /payer, /solde, /inventaire, /argent, /richesse');
 
   await niveaux.vider();
   await new Promise(r2 => setTimeout(r2, 700));

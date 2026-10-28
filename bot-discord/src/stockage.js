@@ -11,6 +11,7 @@ const FICHIER_LOCAL = path.join(__dirname, '..', 'data', 'base-locale.json');
 const CLES = {   // clé primaire de chaque table
   bot_admins: ['discord_id'], bot_config: ['guild_id'], bot_serveurs: ['guild_id'], bot_etat: ['id'],
   bot_niveaux: ['guild_id', 'user_id'], bot_sanctions: ['id'], bot_tickets: ['id'], bot_giveaways: ['id'], bot_actions: ['id'],
+  bot_economie: ['guild_id', 'user_id'], bot_achats: ['id'],
 };
 
 let sb = null;          // client Supabase

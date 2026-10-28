@@ -71,7 +71,7 @@ client.on(Events.InteractionCreate, async (i) => {
   try {
     if (i.isAutocomplete()) return (await serveurs.autocompletion(i)) || await commandes.autocompletion(i);
     if (i.isChatInputCommand()) return (await serveurs.commande(i)) || await commandes.executer(i);
-    if (i.isStringSelectMenu()) return await commandes.menu(i);
+    if (i.isStringSelectMenu()) return (await serveurs.menu(i)) || await commandes.menu(i);
     if (i.isButton() && i.customId.startsWith('avis:')) return await avis.bouton(i);
     if (i.isButton()) return await serveurs.bouton(i);
   } catch (err) {
